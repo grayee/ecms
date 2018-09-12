@@ -1,0 +1,13 @@
+{
+    "index": {
+        "number_of_shards": "3",
+        "number_of_replicas": "1",
+        "refresh_interval": "10s",
+        "store.type": "fs",
+        "requests.cache.enable": "true",
+        "codec": "best_compression",
+        "translog.durability": "async",
+        "merge.scheduler.max_thread_count": "1",
+        "max_result_window": "100000"
+    }
+}
