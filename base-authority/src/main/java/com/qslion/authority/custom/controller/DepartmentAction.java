@@ -62,12 +62,12 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
         } else {
             //更新
             if (!StringUtils.isNotEmpty(id)) {
-                AuDepartment entity = departmentService.get(id);
-                String parentCode = partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "").getParentId();
+               /* AuDepartment entity = departmentService.get(id);*/
+           /*     String parentCode = partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "").getParentId();
                 if (parentCode != null && !"" .equals(parentCode)) {
                     model.addAttribute("relation", partyRelationService.get(parentCode));
-                }
-                model.addAttribute("entity", entity);
+                }*/
+               /* model.addAttribute("entity", entity);*/
             }
             List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId() + "", false);
             model.addAttribute("data", JSON.toJSON(resultList));
@@ -78,7 +78,7 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
 
     @RequestMapping(value = "/admin/department/deletes.jspx")
     public String delete(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) throws Exception {
-        departmentService.delete(ids);
+        //departmentService.delete(ids);
         return forward("index", true);
     }
 
@@ -96,17 +96,17 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
 
     @RequestMapping(value = "/admin/department/index.jspx")
     public String queryAll(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuDepartment> pager) throws Exception {
-        pager = departmentService.findByPager(pager);
+       // pager = departmentService.findByPager(pager);
         return forward("list", false);
     }
 
     @RequestMapping(value = "/admin/department/view.jspx")
     public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-        entity = departmentService.get(request.getParameter("ids"));
+       /* entity = departmentService.get(request.getParameter("ids"));
         List<TreeNode> resultList = partyRelationService.getPartyDetailRelationTree(entity.getId(), "1099100400000000001");
         model.addAttribute("data", JSON.toJSON(resultList));
         model.addAttribute("rid", request.getParameter("rid"));
-        model.addAttribute("entity", entity);
+        model.addAttribute("entity", entity);*/
         return forward("view", false);
     }
 

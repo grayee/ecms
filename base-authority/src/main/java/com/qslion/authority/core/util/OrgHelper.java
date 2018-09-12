@@ -46,7 +46,7 @@ public class OrgHelper {
     //根据团体ID和团体类型取得关系表CODE数组
     public static String[] getRelationCode(String partyId, String partyType) {
         AuPartyRelation queryVo = new AuPartyRelation();
-        queryVo.getAuParty().setId(partyId);
+       // queryVo.getAuParty().setId(partyId);
         List rel = getPartyRelationService().queryPartyRelation(queryVo);
 
         if ((rel == null) || (rel.size() == 0))
@@ -85,7 +85,7 @@ public class OrgHelper {
     //根据关系ID获得团体ID
     public static String getPartyIDByRelationID(String id) {
         AuPartyRelation vo = new AuPartyRelation();
-        vo.setId(id);
+        //vo.setId(id);
         List list = getPartyRelationService().queryPartyRelation(vo);
         if ((list == null) || (list.size() == 0))
             try {
@@ -95,7 +95,7 @@ public class OrgHelper {
                 e.printStackTrace();
             }
 
-        return ((AuPartyRelation) list.get(0)).getAuParty().getId();
+        return ((AuPartyRelation) list.get(0)).getAuParty().getId()+"";
     }
 
     //根据ID获取下级关系节点的ID

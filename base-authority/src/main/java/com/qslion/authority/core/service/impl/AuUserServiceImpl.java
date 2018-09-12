@@ -6,10 +6,9 @@ package com.qslion.authority.core.service.impl;
 import com.qslion.authority.core.dao.AuUserRepository;
 import com.qslion.authority.core.entity.AuUser;
 import com.qslion.authority.core.service.AuUserService;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.SystemConfig;
-
-import org.apache.commons.lang3.time.DateUtils;
+import com.qslion.framework.service.impl.GenericServiceImpl;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +19,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-
 /**
  * 修改备注：
  */
 @Service("auUserService")
-public class AuUserServiceImpl extends GenericServiceImpl<AuUser, String> implements UserDetailsService,
+public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implements UserDetailsService,
         AuUserService {
 
     private static final Logger logger = LogManager.getLogger();
@@ -53,24 +48,9 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, String> implem
         return 0;
     }
 
-
     @Override
-    public boolean update(AuUser entity) {
-        return false;
-    }
-
-    @Override
-    public boolean delete(String[] ids) {
-        return false;
-    }
-
-    @Override
-    public Pager<AuUser> findByPager(Pager<AuUser> pager) {
-        return null;
-    }
-
-
     public AuUser loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+/*
         logger.info("---------------------系统登录通过用户名载入用户信息开始！--------------------------");
         AuUser loginUser = userRepository.findUserByUsername(username);
         if (loginUser == null) {
@@ -102,6 +82,8 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, String> implem
         loginUser.setAuthorities(getGrantedAuthorities(loginUser));
         logger.info("---------------------系统登录通过用户名载入用户信息结束！用户名：" + loginUser.getUsername() + ",权限信息:" + loginUser.getAuthorities().toString() + "--------------------------");
         return loginUser;
+*/
+return null;
     }
 
     // 获得管理角色数组
@@ -116,6 +98,7 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, String> implem
         return grantedAuthorities;
     }
 
+    @Override
     public String getCurrentUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }

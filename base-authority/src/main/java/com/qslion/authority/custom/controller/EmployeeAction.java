@@ -4,17 +4,13 @@
 package com.qslion.authority.custom.controller;
 
 
-import com.alibaba.fastjson.JSON;
-import com.qslion.authority.core.entity.AuPartyRelationType;
 import com.qslion.authority.core.service.ConnectionRuleService;
 import com.qslion.authority.core.service.PartyRelationService;
-import com.qslion.authority.core.util.TreeNode;
 import com.qslion.authority.custom.entity.AuEmployee;
 import com.qslion.authority.custom.service.AuEmployeeService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.ParameterUtil;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -41,10 +37,6 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
     public ConnectionRuleService connectionRuleService;
 
 
-    @Autowired
-    public void setService(AuEmployeeService employeeService) {
-        super.setService(employeeService);
-    }
 
     /**
      * 从页面表单获取信息注入vo，并插入单条记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
@@ -69,7 +61,7 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
             model.addAttribute("parentRelId", parentRelId);
         } else {
             //更新
-            if (!StringUtils.isNotEmpty(id)) {
+          /*  if (!StringUtils.isNotEmpty(id)) {
                 AuEmployee entity = employeeService.get(id);
                 String parentCode = partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "") == null ? "" : partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "").getParentId();
                 if (parentCode != null && !"".equals(parentCode)) {
@@ -78,7 +70,7 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
                 model.addAttribute("entity", entity);
             }
             List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId() + "", false);
-            model.addAttribute("data", JSON.toJSON(resultList));
+            model.addAttribute("data", JSON.toJSON(resultList));*/
         }
         return forward("input", false);
     }
@@ -89,7 +81,7 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
     //删除
     @RequestMapping(value = "/admin/employee/deletes.jspx")
     public String delete(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) throws Exception {
-        employeeService.delete(ids);
+        //employeeService.delete(ids);
         return forward("index", true);
     }
 
@@ -99,7 +91,7 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
      */
     @RequestMapping(value = "/admin/employee/update.jspx")
     public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        employeeService.update(entity);  //更新单条记录
+        //employeeService.update(entity);  //更新单条记录
 
         String parentRelId = request.getParameter("parentRelId");
         if (parentRelId != null && !"".equals(parentRelId) && !"null".equals(parentRelId)) {
@@ -112,7 +104,7 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
 
     @RequestMapping(value = "/admin/employee/index.jspx")
     public String queryAll(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuEmployee> pager) {
-        pager = employeeService.findByPager(pager);
+        //pager = employeeService.findByPager(pager);
         return forward("list", false);
     }
 
@@ -121,11 +113,11 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
      */
     @RequestMapping(value = "/admin/employee/view.jspx")
     public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-        entity = employeeService.get(request.getParameter("ids"));
+      /*  entity = employeeService.get(request.getParameter("ids"));
         List<TreeNode> resultList = partyRelationService.getPartyDetailRelationTree(entity.getId(), "1099100400000000001");
         model.addAttribute("data", JSON.toJSONString(resultList));
         model.addAttribute("rid", request.getParameter("rid"));
-        model.addAttribute("entity", entity);
+        model.addAttribute("entity", entity);*/
         return forward("view", false);
     }
 

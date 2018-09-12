@@ -9,21 +9,20 @@ import com.qslion.authority.core.entity.AuPartyRelationType;
 import com.qslion.authority.core.service.ConnectionRuleService;
 import com.qslion.authority.core.service.PartyRelationService;
 import com.qslion.authority.core.util.TreeNode;
+import com.qslion.authority.custom.entity.AuPosition;
 import com.qslion.authority.custom.service.AuPositionService;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.ParameterUtil;
-
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 项目名称：authority 类名称：PositionAction 类描述： 创建人：Administrator 创建时间：2011-8-16 下午05:22:19
@@ -44,11 +43,6 @@ public class PositionAction extends BaseController<AuPosition, String> {
     @Autowired
     public ConnectionRuleService connectionRuleService;
 
-
-    @Autowired
-    public void setService(AuPositionService positionService) {
-        super.setService(positionService);
-    }
 
     /**
      * 从页面表单获取信息注入vo，并插入单条记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
@@ -74,12 +68,12 @@ public class PositionAction extends BaseController<AuPosition, String> {
         } else {
             //更新
             if (!StringUtils.isNotEmpty(id)) {
-                AuPosition entity = positionService.get(id);
+             /*   AuPosition entity = positionService.get(id);
                 String parentCode = partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "") == null ? "" : partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "").getParentId();
                 if (parentCode != null && !"" .equals(parentCode)) {
                     model.addAttribute("relation", partyRelationService.get(parentCode));
                 }
-                model.addAttribute("entity", entity);
+                model.addAttribute("entity", entity);*/
             }
             List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId() + "", false);
             model.addAttribute("data", JSON.toJSON(resultList));
@@ -92,7 +86,7 @@ public class PositionAction extends BaseController<AuPosition, String> {
      */
     @RequestMapping(value = "/admin/position/deletes.jspx")
     public String delete(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) throws Exception {
-        positionService.delete(ids);
+        //positionService.delete(ids);
         return forward("index", true);
     }
 
@@ -102,7 +96,7 @@ public class PositionAction extends BaseController<AuPosition, String> {
      */
     @RequestMapping(value = "/admin/position/update.jspx")
     public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        positionService.update(entity);
+        //positionService.update(entity);
         if ("0" .equals(request.getParameter("cmd"))) {
             //返回组织关系管理页面
             return "redirect:/admin/relation/manage.jspx";
@@ -117,7 +111,7 @@ public class PositionAction extends BaseController<AuPosition, String> {
      */
     @RequestMapping(value = "/admin/position/index.jspx")
     public String queryAll(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuPosition> pager) throws Exception {
-        pager = positionService.findByPager(pager);
+        //pager = positionService.findByPager(pager);
         return forward("list", false);
     }
 
@@ -126,11 +120,11 @@ public class PositionAction extends BaseController<AuPosition, String> {
      */
     @RequestMapping(value = "/admin/position/view.jspx")
     public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-        entity = positionService.get(request.getParameter("ids"));
-        List<TreeNode> resultList = partyRelationService.getPartyDetailRelationTree(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "");
-        model.addAttribute("data", JSON.toJSONString(resultList));
+        //entity = positionService.get(request.getParameter("ids"));
+       // List<TreeNode> resultList = partyRelationService.getPartyDetailRelationTree(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "");
+       /* model.addAttribute("data", JSON.toJSONString(resultList));
         model.addAttribute("rid", request.getParameter("rid"));
-        model.addAttribute("entity", entity);
+        model.addAttribute("entity", entity);*/
         return forward("view", false);
     }
 

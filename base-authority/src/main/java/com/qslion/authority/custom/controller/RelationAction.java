@@ -10,31 +10,28 @@ import com.qslion.authority.core.service.ConnectionRuleService;
 import com.qslion.authority.core.service.PartyRelationService;
 import com.qslion.authority.core.service.PartyService;
 import com.qslion.authority.core.util.TreeNode;
+import com.qslion.authority.custom.entity.AuCompany;
 import com.qslion.authority.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
-
+import com.qslion.framework.controller.BaseController;
+import java.util.HashMap;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 @RestController
 @RequestMapping(value = "/organization/relation")
-public class RelationAction extends BaseController<AuPartyRelation, String> {
+public class RelationAction extends BaseController<AuPartyRelation, Long> {
     /**
      *
      */
     private static final long serialVersionUID = 6079505801236907046L;
-    private static final Logger logger = Logger.getLogger(RelationAction.class);
     @Autowired
     public PartyRelationService partyRelationService;
 
@@ -47,10 +44,6 @@ public class RelationAction extends BaseController<AuPartyRelation, String> {
     @Autowired
     public AuCompanyService companyService;
 
-    @Autowired
-    public void setService(PartyRelationService partyRelationService) {
-        super.setService(partyRelationService);
-    }
 
     //管理页
     @RequestMapping(value = "/admin/relation/manage.jspx")
@@ -59,7 +52,7 @@ public class RelationAction extends BaseController<AuPartyRelation, String> {
         if (flag) {
             return forward("manage", false);
         } else {
-            pager = companyService.findByPager(pager);
+
             return forward("init", false);
         }
     }
@@ -85,7 +78,7 @@ public class RelationAction extends BaseController<AuPartyRelation, String> {
     @RequestMapping(value = "/admin/relation/deletes.jspx")
     public String deletes(HttpServletRequest request, HttpServletResponse response, ModelMap model, String id) {
         if (StringUtils.isNotEmpty(id)) {
-            AuParty party = partyService.get(id);
+            AuParty party = null;
 
             if (party.getAuPartyType() == AuPartyType.COMPANY) {
                 return "redirect:/admin/company/deletes.jspx?ids=" + id;
@@ -112,7 +105,7 @@ public class RelationAction extends BaseController<AuPartyRelation, String> {
     public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         //1.根据ID去的团体类型ID 2.根据团体类型ID为父团体类型ID条件查找符合条件的链接规则
         String id = request.getParameter("id");
-        AuParty party = partyService.get(id);
+        AuParty party = null;
         List<AuConnectionRule> rules = connectionRuleService.getRuleByParentPartyTypeId(party.getAuPartyType().getId() + "", AuPartyRelationType.ADMINISTRATIVE.getId() + "");
         HashMap<String, String> ruleMap = new HashMap<String, String>();
         for (AuConnectionRule rule : rules) {
@@ -139,7 +132,7 @@ public class RelationAction extends BaseController<AuPartyRelation, String> {
         String id = request.getParameter("id");
         String relationId = request.getParameter("rid");
         if (StringUtils.isNotEmpty(id)) {
-            AuParty party = partyService.get(id);
+            AuParty party = null;
 
             if (party.getAuPartyType() == AuPartyType.COMPANY) {
                 return "redirect:/admin/company/view.jspx?ids=" + id + "&rid=" + relationId;

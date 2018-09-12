@@ -47,10 +47,7 @@ public class CompanyAction  extends BaseController<AuCompany,String> {
     public ConnectionRuleService connectionRuleService;
     
 
-	@Autowired
-	public void setService(AuCompanyService companyService){
-		super.setService(companyService);
-	}
+
     //组织机构添加
 	@RequestMapping(value = "/admin/company/save.jspx")
     public String insert(HttpServletRequest request,HttpServletResponse response,ModelMap model,@ModelAttribute("entity") AuCompany entity){
@@ -83,12 +80,12 @@ public class CompanyAction  extends BaseController<AuCompany,String> {
 			}else{
 				//更新
 				if(StringUtils.isNotEmpty(id)){
-					AuCompany entity=this.companyService.get(id);
+				/*	AuCompany entity=this.companyService.get(id);
 					String parentCode=partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId()+"").getParentId();
 					if(parentCode!=null&&!"".equals(parentCode)){
 						model.addAttribute("relation", partyRelationService.get(parentCode));
-					}
-		            model.addAttribute("entity", entity);
+					}*/
+		          /*  model.addAttribute("entity", entity);*/
 				}
 				List<TreeNode> resultList=partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId()+"", false);
 				model.addAttribute("data", JSON.toJSON(resultList));
@@ -103,7 +100,7 @@ public class CompanyAction  extends BaseController<AuCompany,String> {
      */
 	@RequestMapping(value = "/admin/company/deletes.jspx")
     public String delete(HttpServletRequest request,HttpServletResponse response,ModelMap model,String []ids) throws Exception {
-        companyService.delete(ids);
+       // companyService.delete(ids);
         return forward("index",true);
     }
 
@@ -127,7 +124,7 @@ public class CompanyAction  extends BaseController<AuCompany,String> {
      */
 	@RequestMapping(value = "/admin/company/index.jspx")
     public String queryAll(HttpServletRequest request,HttpServletResponse response,ModelMap model,@ModelAttribute("pager") Pager<AuCompany> pager){
-        pager=companyService.findByPager(pager); //定义结果集
+        //pager=companyService.findByPager(pager); //定义结果集
         return forward("list",false);
     }
 
@@ -136,11 +133,11 @@ public class CompanyAction  extends BaseController<AuCompany,String> {
      */
 	@RequestMapping(value = "/admin/company/view.jspx")
     public String detail(HttpServletRequest request,HttpServletResponse response,ModelMap model) throws Exception {
-        entity =companyService.get(request.getParameter("ids")); 
-        List<TreeNode> resultList=partyRelationService.getPartyDetailRelationTree(entity.getId(),"1099100400000000001");
+       // entity =companyService.get(request.getParameter("ids"));
+       /* List<TreeNode> resultList=partyRelationService.getPartyDetailRelationTree(entity.getId(),"1099100400000000001");
 		model.addAttribute("data", JSON.toJSONString(resultList));
         model.addAttribute("rid", request.getParameter("rid"));
-        model.addAttribute("entity", entity);
+        model.addAttribute("entity", entity);*/
         return forward("view",false);
     }
 

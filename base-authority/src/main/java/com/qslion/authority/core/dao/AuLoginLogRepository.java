@@ -6,6 +6,6 @@ import com.qslion.framework.dao.IGenericRepository;
 /**
  * Dao实现类 -  登陆日志
  */
-public interface AuLoginLogRepository extends IGenericRepository<AuLoginLog, String> {
+public interface AuLoginLogRepository extends IGenericRepository<AuLoginLog, Long> {
 
 }

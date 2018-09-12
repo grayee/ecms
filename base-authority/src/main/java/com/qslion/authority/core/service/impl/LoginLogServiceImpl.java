@@ -7,18 +7,16 @@ import com.qslion.authority.core.dao.AuLoginLogRepository;
 import com.qslion.authority.core.entity.AuLoginLog;
 import com.qslion.authority.core.service.LoginLogService;
 import com.qslion.authority.core.vo.LoginSessionVo;
-import com.qslion.framework.bean.Pager;
-
+import com.qslion.framework.service.impl.GenericServiceImpl;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 修改备注：
  */
 @Service("loginLogService")
-public class LoginLogServiceImpl extends GenericServiceImpl<AuLoginLog, String> implements
+public class LoginLogServiceImpl extends GenericServiceImpl<AuLoginLog, Long> implements
         LoginLogService {
     @Autowired
     private AuLoginLogRepository loginLogRepository;
@@ -68,18 +66,4 @@ public class LoginLogServiceImpl extends GenericServiceImpl<AuLoginLog, String> 
         return null;
     }
 
-    @Override
-    public boolean update(AuLoginLog entity) {
-        return false;
-    }
-
-    @Override
-    public boolean delete(String[] ids) {
-        return false;
-    }
-
-    @Override
-    public Pager<AuLoginLog> findByPager(Pager<AuLoginLog> pager) {
-        return null;
-    }
 }

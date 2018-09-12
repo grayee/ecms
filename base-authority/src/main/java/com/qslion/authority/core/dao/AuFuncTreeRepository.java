@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Dao实现类 - 功能菜单
  */
-public interface AuFuncTreeRepository extends IGenericRepository<AuFuncMenu, String> {
+public interface AuFuncTreeRepository extends IGenericRepository<AuFuncMenu, Long> {
 
 
     List<AuFuncMenu> findByStatus(AuFuncMenu.MenuStatus status);
