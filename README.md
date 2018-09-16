@@ -1,1 +1,2 @@
-# ecms is the abbreviation of Enterprise cash management system
+# ECMS
+ecms is the abbreviation of Enterprise cash management system
