@@ -7,7 +7,7 @@
     <artifactId>ecms-parent</artifactId>
     <groupId>com.qslion</groupId>
     <version>1.0</version>
-    <relativePath>../ecms/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>

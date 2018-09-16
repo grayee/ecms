@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <!--项目基本信息-->
+  <name>ecms-parent</name>
+  <groupId>com.qslion</groupId>
+  <artifactId>ecms-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0</version>
+  <url>http://www.qslion.com</url>
+  <description>ecms project for Spring Boot</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <junitversion>4.12</junitversion>
+  </properties>
+
+  <!-- Inherit defaults from Spring Boot -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.4.RELEASE</version>
+  </parent>
+
+  <modules>
+    <module>base-authority</module>
+    <module>base-config</module>
+    <module>base-framework</module>
+    <module>ecms-web</module>
+  </modules>
+
+  <!--全局依赖管理 -->
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>com.qslion</groupId>
+        <artifactId>ecms-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.qslion</groupId>
+        <artifactId>base-authority</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.qslion</groupId>
+        <artifactId>base-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.qslion</groupId>
+        <artifactId>base-framework</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>
