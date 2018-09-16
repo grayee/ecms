@@ -1,3 +1,10 @@
+#LOGGING
+logging:
+   config: classpath:config/log4j2.xml
+   level:
+       root: INFO
+       org.springframework.web: ERROR
+       org.hibernate: ERROR
 #spring
 spring:
   profiles:
@@ -5,7 +12,11 @@ spring:
   banner:
     charset: utf-8
     location: classpath:/config/banner.txt
-
+  jpa:
+    show-sql: true
+    hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    hibernate:
+      ddl-auto: update
 debug: false
 trace: false
 #server
@@ -25,13 +36,9 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       maximum-pool-size: 30
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
 server:
   servlet:
-    context-path: /aidoc
+    context-path: /ecms
   address: localhost
   port: 8080
 ---
@@ -45,10 +52,6 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       maximum-pool-size: 30
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
 server:
   servlet:
     context-path: /ecms
@@ -65,10 +68,6 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       maximum-pool-size: 30
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
 server:
   servlet:
     context-path: /ecms

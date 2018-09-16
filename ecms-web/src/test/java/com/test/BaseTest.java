@@ -1,6 +1,6 @@
 package com.test;
 
-import com.qslion.ecms.Startup;
+import com.qslion.Startup;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;

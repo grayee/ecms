@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Gray.Z
  * @date 2018/4/13 10:56.
  */
-@Transactional(value = "jpaTransactionManager")
+@Transactional(value = "transactionManager")
 public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> implements IGenericService<T, ID> {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());
@@ -108,37 +108,37 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     }
 
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public T find(ID id) {
         return genericRepository.findById(id).orElse(null);
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findAll() {
         return genericRepository.findAll();
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findList(ID... ids) {
         return genericRepository.findAllById(Lists.newArrayList(ids));
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findList(Integer count, List<Filter> filters, List<Order> orders) {
         return null;
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders) {
         return null;
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public Page<T> findPage(Pageable pageable) {
         PageRequest pageRequest = getPageRequest(pageable);
@@ -150,13 +150,13 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return new Page<>(result, page.getTotalElements(), pageable);
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public long count() {
         return genericRepository.count();
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public long count(Filter... filters) {
         return genericRepository.count(new Specification<T>() {
@@ -168,49 +168,49 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         });
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public boolean exists(ID id) {
         return genericRepository.existsById(id);
     }
 
-    @Transactional(value = "jpaTransactionManager", readOnly = true)
+    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public boolean exists(Filter... filters) {
         return false;
     }
 
-    @Transactional(value = "jpaTransactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public T save(T entity) {
         return genericRepository.save(entity);
     }
 
-    @Transactional(value = "jpaTransactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public T update(T entity) {
         return genericRepository.saveAndFlush(entity);
     }
 
-    @Transactional(value = "jpaTransactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public T update(T entity, String... ignoreProperties) {
         return null;
     }
 
-    @Transactional(value = "jpaTransactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public void delete(ID id) {
         genericRepository.deleteById(id);
     }
 
-    @Transactional(value = "jpaTransactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public void delete(List<T> entities) {
         genericRepository.deleteAll(entities);
     }
 
-    @Transactional(value = "jpaTransactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public void delete(T entity) {
         genericRepository.delete(entity);
