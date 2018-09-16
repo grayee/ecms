@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.qslion.authority.core.service.impl;
 
 import com.qslion.authority.core.dao.AuResourceRepository;
@@ -17,11 +14,11 @@ import org.springframework.stereotype.Service;
 /**
  * 修改备注：
  */
-@Service("resourceService")
+@Service
 public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> implements AuResourceService {
 
     @Autowired
-    public AuResourceRepository resourceRepository;
+    public AuResourceRepository auResourceRepository;
 
 
     @Override

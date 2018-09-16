@@ -4,11 +4,11 @@ package com.qslion.ecms.controller;
 import com.qslion.authority.core.entity.AuUser;
 import com.qslion.authority.core.service.AuUserService;
 import com.qslion.framework.bean.SystemConfig;
+import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.Localize;
 import com.qslion.framework.util.SystemConfigUtil;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -20,13 +20,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 
 @Controller
-public class LoginController {
-    private static final Logger logger = LogManager.getLogger();
+public class LoginController extends BaseController{
+
     @Autowired
     private AuUserService auUserService;
 

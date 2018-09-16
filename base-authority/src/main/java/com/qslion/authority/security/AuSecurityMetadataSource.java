@@ -8,17 +8,17 @@ import com.google.common.collect.Maps;
 import com.qslion.authority.core.entity.AuPermission;
 import com.qslion.authority.core.entity.AuResource;
 import com.qslion.authority.core.entity.AuRole;
-import com.qslion.authority.custom.service.AuResourceService;
+import com.qslion.authority.core.service.AuResourceService;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -38,8 +38,8 @@ import org.springframework.stereotype.Component;
 public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
     private static Logger logger = LogManager.getLogger(AuSecurityMetadataSource.class);
-    @Resource
-    private AuResourceService resourceService;
+    @Autowired
+    private AuResourceService auResourceService;
 
     private static Map<String, Collection<ConfigAttribute>> resourceMap = Maps.newLinkedHashMap();
 
@@ -52,7 +52,7 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
         Set<ConfigAttribute> allAttributes = new HashSet<>();
-        List<AuResource> resources = resourceService.getAll();
+        List<AuResource> resources = auResourceService.findAll();
         for (AuResource resource : resources) {
             Set<ConfigAttribute> itemAttributes = new HashSet<>();
             Set<AuPermission> permissions = resource.getPermissions();

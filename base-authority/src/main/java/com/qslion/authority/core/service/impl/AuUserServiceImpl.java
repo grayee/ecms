@@ -9,8 +9,6 @@ import com.qslion.authority.core.service.AuUserService;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,18 +18,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * 修改备注：
+ * server
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 19:19.
  */
-@Service("auUserService")
+@Service
 public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implements UserDetailsService,
-        AuUserService {
-
-    private static final Logger logger = LogManager.getLogger();
+    AuUserService {
 
     @Autowired
     public AuUserRepository userRepository;
-
-
 
     @Override
     public AuUser findUserByUsername(String username) {
@@ -83,7 +80,7 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
         logger.info("---------------------系统登录通过用户名载入用户信息结束！用户名：" + loginUser.getUsername() + ",权限信息:" + loginUser.getAuthorities().toString() + "--------------------------");
         return loginUser;
 */
-return null;
+        return null;
     }
 
     // 获得管理角色数组

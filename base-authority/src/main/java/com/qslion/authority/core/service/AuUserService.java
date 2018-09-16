@@ -10,9 +10,7 @@ import com.qslion.framework.service.IGenericService;
  * @version
  *
  */
-
 public interface AuUserService extends IGenericService<AuUser, Long> {
-
 
     AuUser findUserByUsername(String username);
 
