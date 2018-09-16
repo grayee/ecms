@@ -8,7 +8,6 @@ import com.qslion.authority.core.entity.AuResource;
 import com.qslion.authority.core.entity.AuUser;
 import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.util.TreeNode;
-import com.qslion.framework.bean.Pager;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +83,8 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
 
     private List<TreeNode> getChildTreeNode(String parentId, List<AuResource> nodeList, String status, String path) {
         List<TreeNode> resultList = new ArrayList<TreeNode>();
-        for (AuResource funcTree : nodeList) /*{
+        //for (AuResource funcTree : nodeList)
+            /*{
             TreeNode leafNode = null;
             if (funcTree.getParentId() != null && funcTree.getParentId().equals(parentId)) {
                 leafNode = new TreeNode();

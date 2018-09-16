@@ -1,26 +1,21 @@
-package com.qslion.ecms.test;
+package com.test;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qslion.ecms.entity.Book;
 import com.qslion.ecms.service.IBookService;
-
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.*;
 
 /**
  * Created by zhangruigang on 2016/12/7.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:WEB-INF/ecms-servlet.xml")
-public class EsTest {
+public class EsTest extends BaseTest{
 
     @Autowired // 注入
     private IBookService bookService;

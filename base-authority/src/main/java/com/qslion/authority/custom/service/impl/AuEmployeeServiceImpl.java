@@ -4,7 +4,6 @@ package com.qslion.authority.custom.service.impl;
 import com.qslion.authority.core.dao.AuPartyRepository;
 import com.qslion.authority.core.dao.PartyRelationRepository;
 import com.qslion.authority.core.entity.AuParty;
-import com.qslion.authority.core.util.OrgHelper;
 import com.qslion.authority.custom.dao.AuEmployeeRepository;
 import com.qslion.authority.custom.entity.AuEmployee;
 import com.qslion.authority.custom.service.AuEmployeeService;
@@ -54,7 +53,7 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
         //添加团体关系
         if (StringUtils.isNotEmpty(parentRelId) && StringUtils.isNotEmpty(partyId)) {
             String relTypeId = "";//GlobalConstants.getRelTypeComp();
-            OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
+           // OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
         }
         return partyId;
     }
@@ -68,13 +67,13 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
         //注：这里依赖简版连接规则：公司-公司，公司-部门，部门-部门，部门-岗位，部门-人员，岗位-人员
         int n = 0;
         boolean result = false;
-        String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
+   /*     String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
         String codes[] = OrgHelper.getRelationCode(partyid);
         if (codes.length > 1) {//如果是一人多岗或人员既属于部门又属于岗位，只删除当前关系
             //result = OrgHelper.deletePartyRelation(partyRelationId);//调用接口删除当前关系和与其相应的权限等记录
             n = result ? 1 : 0;
         } else if (codes.length == 1) {//如果是一人一岗或人员只属于部门
-          /*  AuPartyRelation parentVo = OrgHelper.getUpRelationVoByID(partyRelationId);
+          *//*  AuPartyRelation parentVo = OrgHelper.getUpRelationVoByID(partyRelationId);
             if ("GlobalConstants.getPartyType_posi()".equals(parentVo.getPartytypeId())) {//如果父节点是岗位，把该人员挂到部门下面
                 AuPartyRelation deptVo = OrgHelper.getUpRelationVoByID(parentVo.getId());//取到部门节点
                 //OrgHelper.addPartyRelation(partyid, deptVo.getId(), deptVo.getRelationtypeId());//将当前节点挂到部门节点底下
@@ -83,8 +82,8 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
             } else if ("GlobalConstants.getPartyType_dept()".equals(parentVo.getPartytypeId())) {//如果父节点是部门，彻底删除该人员
                 result = employeeDao.delete(partyid);
                 OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
-            }*/
-        }
+            }*//*
+        }*/
         return result;
     }
 

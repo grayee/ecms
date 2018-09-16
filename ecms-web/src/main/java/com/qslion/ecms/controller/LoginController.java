@@ -60,7 +60,7 @@ public class LoginController {
                     //登录失败锁定次数，默认5次失败后将锁定帐号5分钟
                     int loginFailureLockCount = getSystemConfig().getLoginFailureLockCount();
                     //系统记录到登录失败的次数
-                    int loginFailureCount = admin.getLoginFailureCount();
+                    int loginFailureCount = 0;//admin.getLoginFailureCount();
                     //锁定开关,默认打开
                     boolean isLoginFailureLock = getSystemConfig().getIsLoginFailureLock();
                     if (isLoginFailureLock && loginFailureLockCount - loginFailureCount <= 3) {

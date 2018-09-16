@@ -7,7 +7,6 @@ import com.qslion.authority.core.dao.PartyRelationRepository;
 import com.qslion.authority.core.entity.AuParty;
 import com.qslion.authority.core.entity.AuPartyRelation;
 import com.qslion.authority.core.entity.AuPartyRelationType;
-import com.qslion.authority.core.util.OrgHelper;
 import com.qslion.authority.custom.dao.AuCompanyRepository;
 import com.qslion.authority.custom.entity.AuCompany;
 import com.qslion.authority.custom.service.AuCompanyService;
@@ -68,7 +67,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         String partyId = this.insert(vo, "");
         String relTypeId = AuPartyRelationType.ADMINISTRATIVE.getId() + "";
         if (StringUtils.isNotEmpty(partyId)) {
-            OrgHelper.addRoot(partyId, relTypeId);
+            //OrgHelper.addRoot(partyId, relTypeId);
         }
         return partyId;
     }
@@ -79,9 +78,9 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
      * @param partyRelationId 用于删除的记录的id
      */
     public boolean delete(String partyRelationId) {
-        String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
+        //String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
         //companyRepository.delete(partyid);
-        OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
+       // OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
         return true;
     }
 

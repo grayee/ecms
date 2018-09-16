@@ -1,26 +1,16 @@
-package com.qslion.ecms.test;
+package com.test;
 
 
 
 import com.alibaba.fastjson.JSON;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.component.VEvent;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by zhangruigang on 2016/11/2.
  */
 public class TestLaunch {
-    public static void main(String[] args) throws IOException, ParserException {
+    public static void main(String[] args) throws IOException {
         //testIcal();
 
         Map<String,String> map=JSON.parseObject("{\n" +
@@ -43,8 +33,8 @@ public class TestLaunch {
         //new TransportClient;
     }
 
-    private static void testIcal() throws IOException, ParserException {
-        File file=new File("d://test.ics");
+    private static void testIcal() throws IOException {
+     /*   File file=new File("d://test.ics");
         List<String> list= FileUtils.readLines(file,"gbk");
         StringBuffer buffer=new StringBuffer();
         for (String s : list) {
@@ -56,7 +46,7 @@ public class TestLaunch {
         List<VEvent> eventList=calendar.getComponents(Component.VEVENT);
         for (VEvent vEvent : eventList) {
             System.out.println(vEvent.getProperty("X-ALT-DESC").getValue());
-        }
+        }*/
     }
 
 }

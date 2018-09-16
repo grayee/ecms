@@ -15,7 +15,8 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 
 /**
- * Created by zhangruigang on 2018/1/5. Zookeeper 从设计模式角度来看，是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，
+ * Created by zhangruigang on 2018/1/5.
+ * Zookeeper 从设计模式角度来看，是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，
  * 一旦这些数据的状态发生变化，Zookeeper 就将负责通知已经在 Zookeeper 上注册的那些观察者做出相应的反应，从而实现集群中类似 Master/Slave 管理模式， 关于
  * Zookeeper 的详细架构等内部细节可以阅读 Zookeeper 的源码 https://www.ibm.com/developerworks/cn/opensource/os-cn-zookeeper/index.html
  * http://www.cnblogs.com/leesf456/p/6239578.html
@@ -45,7 +46,6 @@ public class ZookeeperTest {
         zk.create(path, "test path data1...".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         System.out.println("创建根目录节点" + path + ",数据为：" + new String(zk.getData(path, true, null)));
 
-
         String childPath = path + "/testChildPathOne";
         // 创建一个子目录节点
         zk.create(childPath, "testChildDataOne".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -57,11 +57,9 @@ public class ZookeeperTest {
         zk.setData(childPath, "modifyChildDataOne".getBytes(), -1);
         System.out.println("目录节点状态：[" + zk.exists("/testRootPath", true) + "]");
 
-
         // 创建另外一个子目录节点
         zk.create("/testRootPath/testChildPathTwo", "testChildDataTwo".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         System.out.println(new String(zk.getData("/testRootPath/testChildPathTwo", true, null)));
-
 
         // 删除子目录节点
         zk.delete("/testRootPath/testChildPathTwo", -1);
@@ -81,12 +79,12 @@ public class ZookeeperTest {
         /****************************************************************************************************/
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         CuratorFramework client = CuratorFrameworkFactory.builder()
-                .connectString("172.21.21.106:2181,172.21.21.106:2182,172.21.21.106:2183")
-                .sessionTimeoutMs(5000)
-                .connectionTimeoutMs(5000)
-                .retryPolicy(retryPolicy)
-                .namespace("base")
-                .build();
+            .connectString("172.21.21.106:2181,172.21.21.106:2182,172.21.21.106:2183")
+            .sessionTimeoutMs(5000)
+            .connectionTimeoutMs(5000)
+            .retryPolicy(retryPolicy)
+            .namespace("base")
+            .build();
         client.start();
 
         String path_test = "/path";
@@ -107,7 +105,6 @@ public class ZookeeperTest {
         } else {
             client.create().withMode(CreateMode.PERSISTENT).forPath(path_test, "init".getBytes());
         }
-
 
         for (ChildData data : cache.getCurrentData()) {
             System.out.println("getCurrentData:" + data.getPath() + " = " + new String(data.getData()));

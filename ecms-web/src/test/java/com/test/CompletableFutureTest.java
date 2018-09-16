@@ -14,7 +14,8 @@ import java.util.logging.Logger;
 /**
  * http://colobu.com/2016/02/29/Java-CompletableFuture/
  *
- * Created by zhangruigang on 2017/9/19. CompletableFuture 代表着一个 Future 完成后该干点什么，具体大致有： 1.Future
+ * Created by zhangruigang on 2017/9/19.
+ * CompletableFuture 代表着一个 Future 完成后该干点什么，具体大致有： 1.Future
  * 完成后执行动作，或求取下一个 Future 的值。then... 2.多个 Future 的协调; 同时完成该怎么，其中一个完成该如何。allOf, anyO
  */
 public class CompletableFutureTest {

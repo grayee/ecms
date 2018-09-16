@@ -48,7 +48,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         relation.setIsChief("1");
         relation.setIsInherit("1");
         if (StringUtils.isNotEmpty(parentRelId)) {
-            AuPartyRelation parentRelation = partyRelationRepository.getOne(parentRelId);
+            AuPartyRelation parentRelation = null;
          /*   String parentTypeId = parentRelation.getAuParty().getAuPartyType().getId() + "";
             if (connectRuleRepository.checkRule(parentTypeId, party.getAuPartyType().getId() + "", relTypeId)) {
                 relation.setTypeLevel((short) (parentRelation.getTypeLevel() + 1));

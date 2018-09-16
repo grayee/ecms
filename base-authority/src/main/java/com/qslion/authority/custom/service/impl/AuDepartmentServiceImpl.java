@@ -4,7 +4,6 @@ package com.qslion.authority.custom.service.impl;
 import com.qslion.authority.core.dao.AuPartyRepository;
 import com.qslion.authority.core.dao.PartyRelationRepository;
 import com.qslion.authority.core.entity.AuParty;
-import com.qslion.authority.core.util.OrgHelper;
 import com.qslion.authority.custom.dao.AuDepartmentRepository;
 import com.qslion.authority.custom.entity.AuDepartment;
 import com.qslion.authority.custom.service.AuDepartmentService;
@@ -56,7 +55,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
          //添加团体关系
          if(StringUtils.isNotEmpty(parentRelId)&&StringUtils.isNotEmpty(partyId)) {
              String relTypeId ="";//GlobalConstants.getRelTypeComp();
-             OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
+             //OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
          }
  		return partyId;
     }
@@ -68,9 +67,9 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
      * @return 成功删除的记录数
      */
     public boolean delete(String partyRelationId) {
-    	String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
+    	//String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
     	boolean flag=false;//departmentDao.delete(partyid);
-    	OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
+    	//OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
         return flag;
     }
 
