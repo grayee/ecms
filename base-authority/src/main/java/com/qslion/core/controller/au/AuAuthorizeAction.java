@@ -113,7 +113,7 @@ public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
         String funcIds = ParameterUtil.getParameter(request, "funcIds");
         String[] funcIdArray = funcIds.split(",");
         //团体自身拥有的权限
-        Set<AuAuthorize> partyAuths = auParty.getAuAuthorizes();//auAuthorizeService.getAuthorizeByPartyId(partyId);
+        Set<AuAuthorize> partyAuths =null; //auParty.getAuAuthorizes();//auAuthorizeService.getAuthorizeByPartyId(partyId);
         for (int i = 0; i < funcIdArray.length; i++) {
             AuFuncMenu functree = null;//funcMenuService.get(funcIdArray[i]);
             for (AuAuthorize auth : partyAuths) {
@@ -121,7 +121,7 @@ public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
                 authorize.setAuResource(functree.getAuResource());
                 authorize.setAuParty(auParty);
                 //authorize.setPartyType(auParty.getAuPartyType().getId());
-                auParty.getAuAuthorizes().add(authorize);
+               // auParty.getAuAuthorizes().add(authorize);
             }
         }
         //partyService.insert(auParty);

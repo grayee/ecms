@@ -1,15 +1,22 @@
 package com.qslion.core.entity;
 
+import com.qslion.core.constant.AuPartyRelationType;
+import com.qslion.core.constant.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * 连接规则
+ *
+ * @author Gray.Z
+ * @date 2018/5/1 19:45.
+ */
 @Entity
 @Table(name = "au_connection_rule")
 public class AuConnectionRule extends BaseEntity<Long> {
 
-    private static final long serialVersionUID = 1L;
     private AuPartyType parentPartyType;
     private AuPartyType childPartyType;
     private AuPartyRelationType auPartyRelationType;
@@ -30,8 +37,7 @@ public class AuConnectionRule extends BaseEntity<Long> {
         return this.childPartyType;
     }
 
-    public void setChildPartyType(
-            AuPartyType auPartyTypeByChildPartyTypeId) {
+    public void setChildPartyType(AuPartyType auPartyTypeByChildPartyTypeId) {
         this.childPartyType = auPartyTypeByChildPartyTypeId;
     }
 
@@ -44,7 +50,7 @@ public class AuConnectionRule extends BaseEntity<Long> {
         this.auPartyRelationType = auPartyRelationType;
     }
 
-    @Column(name = "name", nullable = false, length = 300)
+    @Column(name = "name", nullable = false, length = 64)
     public String getName() {
         return this.name;
     }
@@ -53,7 +59,7 @@ public class AuConnectionRule extends BaseEntity<Long> {
         this.name = name;
     }
 
-    @Column(name = "remark", length = 1000)
+    @Column(name = "remark")
     public String getRemark() {
         return this.remark;
     }

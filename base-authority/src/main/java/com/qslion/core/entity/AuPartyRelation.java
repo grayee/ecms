@@ -1,5 +1,6 @@
 package com.qslion.core.entity;
 
+import com.qslion.core.constant.AuPartyRelationType;
 import com.qslion.framework.entity.NestTreeEntity;
 
 import javax.persistence.Column;
@@ -12,13 +13,15 @@ import javax.persistence.Transient;
 
 
 /**
- * AuPartyrelation entity. @author MyEclipse Persistence Tools
+ * 实体类 - 团体关系
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 13:56.
  */
 @Entity
 @Table(name = "au_party_relation")
 public class AuPartyRelation extends NestTreeEntity {
 
-    private static final long serialVersionUID = 1L;
     private AuPartyRelationType auPartyRelationType;
     private AuParty auParty;
 
@@ -33,12 +36,10 @@ public class AuPartyRelation extends NestTreeEntity {
     private String isInherit;
     private String isChief;
     private String email;
-    //private Set<AuVisitor> auVisitors = new HashSet<AuVisitor>(0);
 
     private String parentPartyName;
 
 
-    // Constructors
     @Transient
     public String getParentPartyName() {
         return parentPartyName;
@@ -48,22 +49,6 @@ public class AuPartyRelation extends NestTreeEntity {
         this.parentPartyName = parentPartyName;
     }
 
-    /**
-     * default constructor
-     */
-    public AuPartyRelation() {
-    }
-
-    /**
-     * minimal constructor
-     */
-    public AuPartyRelation(String isLeaf, String typeIsLeaf, String isInherit,
-                           String isChief) {
-        this.isLeaf = isLeaf;
-        this.typeIsLeaf = typeIsLeaf;
-        this.isInherit = isInherit;
-        this.isChief = isChief;
-    }
 
     @Column(name = "relation_type_id")
     public AuPartyRelationType getAuPartyRelationType() {
@@ -167,7 +152,7 @@ public class AuPartyRelation extends NestTreeEntity {
         this.isChief = isChief;
     }
 
-    @Column(name = "email", length = 300)
+    @Column(name = "email")
     public String getEmail() {
         return this.email;
     }
@@ -175,15 +160,5 @@ public class AuPartyRelation extends NestTreeEntity {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
-    /*	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auPartyRelation")
-        public Set<AuVisitor> getAuVisitors() {
-            return this.auVisitors;
-        }
-
-        public void setAuVisitors(Set<AuVisitor> auVisitors) {
-            this.auVisitors = auVisitors;
-        }*/
 
 }

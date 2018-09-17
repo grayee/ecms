@@ -1,7 +1,7 @@
 package com.qslion.core.service;
 
 import com.qslion.core.entity.AuPartyRelation;
-import com.qslion.core.entity.AuPartyType;
+import com.qslion.core.constant.AuPartyType;
 import com.qslion.core.util.TreeNode;
 import com.qslion.framework.service.IGenericService;
 import java.util.List;

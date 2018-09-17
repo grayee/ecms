@@ -4,8 +4,8 @@
 package com.qslion.core.controller.org;
 
 import com.qslion.core.entity.AuConnectionRule;
-import com.qslion.core.entity.AuPartyRelationType;
-import com.qslion.core.entity.AuPartyType;
+import com.qslion.core.constant.AuPartyRelationType;
+import com.qslion.core.constant.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;

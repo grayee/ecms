@@ -2,7 +2,7 @@ package com.qslion.custom.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.qslion.core.entity.AuPartyRelationType;
+import com.qslion.core.constant.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;

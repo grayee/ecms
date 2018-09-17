@@ -20,7 +20,7 @@ import javax.persistence.Version;
 @MappedSuperclass
 public class BaseEntity<T> implements Serializable {
 
-    private static final long serialVersionUID = -6718838800112233445L;
+    private static final long serialVersionUID = 1L;
     /**
      * ID
      */

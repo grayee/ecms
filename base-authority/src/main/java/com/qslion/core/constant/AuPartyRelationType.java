@@ -1,11 +1,29 @@
-package com.qslion.core.entity;
+package com.qslion.core.constant;
 
+/**
+ * 团体关系类型
+ *
+ * @author Gray.Z
+ * @date 2018-09-16
+ */
 public enum AuPartyRelationType {
 
+    /**
+     * 行政关系
+     */
     ADMINISTRATIVE(1, "au_administrative_relation", "行政关系"),
+    /**
+     * 角色关系
+     */
     ROLE(2, "au_role_relation", "角色关系"),
-    PROXY(3, "au_proxy_relation", "代理关系");
-
+    /**
+     * 代理关系
+     */
+    PROXY(3, "au_proxy_relation", "代理关系"),
+    /**
+     * 销售关系
+     */
+    SALE(4, "au_sale_relation", "销售关系");
 
     private int id;
     private String name;
