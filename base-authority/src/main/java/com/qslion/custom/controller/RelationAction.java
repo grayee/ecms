@@ -26,12 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/organization/relation")
+@RequestMapping(value = "/org/relation")
 public class RelationAction extends BaseController<AuPartyRelation, Long> {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 6079505801236907046L;
+
     @Autowired
     public PartyRelationService partyRelationService;
 

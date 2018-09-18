@@ -59,6 +59,11 @@
       <version>4.0.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>com.qslion</groupId>
@@ -76,7 +81,6 @@
     </dependency>
   </dependencies>
 
-
   <build>
     <plugins>
       <plugin>
@@ -84,6 +88,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <executable>true</executable>
+          <fork>true</fork>
         </configuration>
       </plugin>
 

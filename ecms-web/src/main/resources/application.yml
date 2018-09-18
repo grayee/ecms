@@ -25,7 +25,7 @@ server:
     context-path: /ecms
   address: localhost
   port: 8080
----
+--- #dev ---------------------------------------------------------------------------------------------------------
 #spring
 spring:
   profiles: dev
@@ -41,7 +41,7 @@ server:
     context-path: /ecms
   address: localhost
   port: 8080
----
+---  #test ---------------------------------------------------------------------------------------------------------
 #spring
 spring:
   profiles: test
@@ -57,7 +57,7 @@ server:
     context-path: /ecms
   address: localhost
   port: 8080
----
+---  #prod ---------------------------------------------------------------------------------------------------------
 #spring
 spring:
   profiles: prod

@@ -23,7 +23,6 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     private AuCompanyRepository companyRepository;
     @Autowired
     private AuPartyRepository partyRepository;
-
     @Autowired
     private PartyRelationRepository partyRelationRepository;
 

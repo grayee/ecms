@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * server
+ * Controller 基类
  *
  * @author Gray.Z
  * @date 2018/4/21 13:43.
