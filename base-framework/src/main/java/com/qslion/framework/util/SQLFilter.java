@@ -1,6 +1,6 @@
 package com.qslion.framework.util;
 
-import com.qslion.framework.exception.RRException;
+import com.qslion.framework.exception.HandleException;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -34,7 +34,7 @@ public class SQLFilter {
         //判断是否包含非法字符
         for(String keyword : keywords){
             if(str.indexOf(keyword) != -1){
-                throw new RRException("包含非法字符");
+                throw new HandleException("包含非法字符");
             }
         }
 
