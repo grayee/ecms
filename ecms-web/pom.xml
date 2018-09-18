@@ -12,7 +12,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <name>ecms-web</name>
-  <groupId>com.qslion</groupId>
   <artifactId>ecms-web</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
