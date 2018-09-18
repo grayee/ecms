@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Controller 全局异常处理
+ * Controller级全局异常处理
  *
  * @author Gray.Z
  * @date 2018/9/18.
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public Map<String, Object> handlerMyException(Exception ex) {
+  public Map<String, Object> handlerException(Exception ex) {
     Map<String, Object> result = new HashMap<>(2);
     result.put("msg", ex.getMessage());
     result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public Map<String, Object> handlerMyRuntimeException(RuntimeException ex) {
+  public Map<String, Object> handlerRuntimeException(RuntimeException ex) {
     Map<String, Object> result = new HashMap<>(2);
     result.put("msg", ex.getMessage());
     result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
