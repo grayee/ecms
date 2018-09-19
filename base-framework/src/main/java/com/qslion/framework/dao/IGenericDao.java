@@ -1,7 +1,7 @@
 package com.qslion.framework.dao;
 
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -83,5 +83,5 @@ public abstract interface IGenericDao<E, PK extends Serializable> {
      * @param pager Pager对象(封装了数据对象)
      * @return Pager对象
      */
-    public Pager<E> findByPager(Pager<E> pager);
+    public Pager<E> findByPager(Pageable pageable);
 }

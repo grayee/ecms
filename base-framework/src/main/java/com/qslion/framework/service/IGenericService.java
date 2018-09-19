@@ -1,12 +1,10 @@
-/*
- * Copyright (c) 2018. Tianyi AIDOC Company.Inc. All Rights Reserved.
- */
+
 
 package com.qslion.framework.service;
 
 import com.qslion.framework.bean.Filter;
 import com.qslion.framework.bean.Order;
-import com.qslion.framework.bean.Page;
+import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.entity.BaseEntity;
 import java.io.Serializable;
@@ -71,7 +69,7 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
      * @param pageable 分页信息
      * @return 实体对象分页
      */
-    Page<T> findPage(Pageable pageable);
+    Pager<T> findPage(Pageable pageable);
 
     /**
      * 查询实体对象总数

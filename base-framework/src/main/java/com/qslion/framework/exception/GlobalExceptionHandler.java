@@ -1,4 +1,4 @@
-package com.qslion.exception;
+package com.qslion.framework.exception;
 
 import java.util.HashMap;
 import java.util.Map;

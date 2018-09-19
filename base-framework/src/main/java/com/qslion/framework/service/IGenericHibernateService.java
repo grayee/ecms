@@ -1,5 +1,6 @@
 package com.qslion.framework.service;
 
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import java.io.Serializable;
 import java.util.List;
@@ -87,6 +88,6 @@ public interface IGenericHibernateService<T , PK extends Serializable> {
      * @param pager Pager对象
      * @return Pager对象
      */
-    public Pager<T> findByPager(Pager<T> pager, DetachedCriteria detachedCriteria);
+    public Pager<T> findByPager(Pageable pageable, DetachedCriteria detachedCriteria);
 
 }

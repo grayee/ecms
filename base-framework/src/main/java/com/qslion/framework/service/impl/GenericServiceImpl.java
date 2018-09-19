@@ -1,14 +1,11 @@
-/*
- * Copyright (c) 2018. Tianyi AIDOC Company.Inc. All Rights Reserved.
- */
 
 package com.qslion.framework.service.impl;
 
 import com.google.common.collect.Lists;
 import com.qslion.framework.bean.Filter;
 import com.qslion.framework.bean.Order;
-import com.qslion.framework.bean.Page;
 import com.qslion.framework.bean.Pageable;
+import com.qslion.framework.bean.Pager;
 import com.qslion.framework.dao.IGenericRepository;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.service.IGenericService;
@@ -23,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -140,14 +138,13 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public Page<T> findPage(Pageable pageable) {
+    public Pager<T> findPage(Pageable pageable) {
         PageRequest pageRequest = getPageRequest(pageable);
-        org.springframework.data.domain.Page<T> page = genericRepository.findAll(
-            getSpecification(pageable), pageRequest);
+        Page<T> page = genericRepository.findAll(getSpecification(pageable), pageRequest);
 
         List<T> result = Lists.newArrayList();
         page.getContent().stream().forEach(t -> result.add(t));
-        return new Page<>(result, page.getTotalElements(), pageable);
+        return new Pager<>(result, page.getTotalElements(), pageable);
     }
 
     @Transactional(value = "transactionManager", readOnly = true)

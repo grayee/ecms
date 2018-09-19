@@ -1,13 +1,12 @@
 package com.qslion.framework.service.impl;
 
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.dao.IGenericHibernateDao;
 import com.qslion.framework.service.IGenericHibernateService;
-
-import org.hibernate.criterion.DetachedCriteria;
-
 import java.io.Serializable;
 import java.util.List;
+import org.hibernate.criterion.DetachedCriteria;
 
 
 public abstract class GenericHibernateServiceImpl<T, PK extends Serializable> implements IGenericHibernateService<T, PK> {
@@ -90,12 +89,12 @@ public abstract class GenericHibernateServiceImpl<T, PK extends Serializable> im
         baseDao.evict(object);
     }
 
-    public Pager<T> findByPager(Pager<T> pager) {
-        return baseDao.findByPager(pager);
+    public Pager<T> findByPager(Pageable pageable) {
+        return baseDao.findByPager(pageable);
     }
 
-    public Pager<T> findByPager(Pager<T> pager, DetachedCriteria detachedCriteria) {
-        return baseDao.findByPager(pager, detachedCriteria);
+    public Pager<T> findByPager(Pageable pageable, DetachedCriteria detachedCriteria) {
+        return baseDao.findByPager(pageable, detachedCriteria);
     }
 
     public T insert(T entity) {

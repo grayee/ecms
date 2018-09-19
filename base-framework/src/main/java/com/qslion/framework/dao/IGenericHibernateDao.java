@@ -1,11 +1,10 @@
 package com.qslion.framework.dao;
 
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
-
-import org.hibernate.criterion.DetachedCriteria;
-
 import java.io.Serializable;
 import java.util.List;
+import org.hibernate.criterion.DetachedCriteria;
 
 /**
  * Dao接口 - hibernateDao基接口
@@ -90,5 +89,5 @@ public abstract interface IGenericHibernateDao<E, PK extends Serializable> exten
      * @param pager Pager对象
      * @return Pager对象
      */
-    public Pager<E> findByPager(Pager<E> pager, DetachedCriteria detachedCriteria);
+    public Pager<E> findByPager(Pageable pageable, DetachedCriteria detachedCriteria);
 }

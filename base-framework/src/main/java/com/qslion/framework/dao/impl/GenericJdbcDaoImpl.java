@@ -1,5 +1,6 @@
 package com.qslion.framework.dao.impl;
 
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.dao.IGenericJdbcDao;
 import com.qslion.framework.util.DBUtils;
@@ -254,23 +255,26 @@ public class GenericJdbcDaoImpl<T, PK extends Serializable> implements IGenericJ
     }
 
     @SuppressWarnings("unchecked")
-    public Pager<T> findByPager(Pager<T> pager) throws Exception {
+    public Pager<T> findByPager(Pageable pageable) throws Exception {
         // TODO Auto-generated method stub
-        if (pager == null) {
-            pager = new Pager();
+        if (pageable == null) {
+            pageable = new Pageable();
         }
         String sql = getQuerySqlWithValues(entityClazz.newInstance()).get(0).toString();
         RowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClazz);
         List<T> result = null;
+        Integer totalCount= 0;
         List<Object> values = (List<Object>) getQuerySqlWithValues(entityClazz.newInstance()).get(1);
+
         if (values != null && values.size() > 0) {
-            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pager.getPageNumber() - 1) * pager.getPageSize(), pager.getPageSize()), values.toArray(), mapper);
-            pager.setTotalCount(getTotalCount(sql, values.toArray(), mapper));
+            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize()), values.toArray(), mapper);
+            totalCount = getTotalCount(sql, values.toArray(), mapper);
         } else {
-            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pager.getPageNumber() - 1) * pager.getPageSize(), pager.getPageSize()), mapper);
-            pager.setTotalCount(getTotalCount(sql, null, mapper));
+            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize()), mapper);
+            totalCount = getTotalCount(sql, null, mapper);
         }
-        pager.setList(result);
+
+        Pager<T> pager =new Pager<T>(result,totalCount,pageable);
         return pager;
     }
 

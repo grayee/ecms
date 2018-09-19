@@ -2,11 +2,11 @@
 package com.qslion.custom.service.impl;
 
 
+import com.qslion.core.constant.AuPartyRelationType;
 import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
-import com.qslion.core.constant.AuPartyRelationType;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;

@@ -1,11 +1,10 @@
 package com.qslion.framework.dao.impl;
 
+import com.qslion.framework.bean.Filter;
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.dao.IGenericHibernateDao;
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -194,59 +193,44 @@ public class GenericHibernateDaoImpl<T, PK extends Serializable> implements IGen
         getSession().evict(object);
     }
 
-    public Pager<T> findByPager(Pager<T> pager) {
-        if (pager == null) {
-            pager = new Pager<T>();
+    public Pager<T> findByPager(Pageable pageable) {
+        if (pageable == null) {
+            pageable = new Pageable();
         }
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(entityClass);
-        return findByPager(pager, detachedCriteria);
+        return findByPager(pageable, detachedCriteria);
     }
 
-    public Pager<T> findByPager(Pager<T> pager, DetachedCriteria detachedCriteria) {
-        if (pager == null) {
-            pager = new Pager<T>();
+    public Pager<T> findByPager(Pageable pageable, DetachedCriteria detachedCriteria) {
+        if (pageable == null) {
+            pageable = new Pageable();
         }
-        Integer pageNumber = pager.getPageNumber();
-        Integer pageSize = pager.getPageSize();
-        String property = pager.getProperty();
-        String keyword = pager.getKeyword();
-        String orderBy = pager.getOrderBy();
-        Pager.OrderType orderType = pager.getOrderType();
+        Integer pageNumber = pageable.getPageNumber();
+        Integer pageSize = pageable.getPageSize();
+        String property = pageable.getSearchProperty();
+        String keyword = pageable.getSearchValue();
+        String orderBy = pageable.getOrderProperty();
+        com.qslion.framework.bean.Order.Direction orderType = pageable.getOrderDirection();
 
         Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
         //分页查询条件
-        T entity = pager.getEntity();
-        if (entity != null) {
-            Class<? extends Object> entityClazz = entity.getClass();
-            Field[] entityFields = entityClazz.getDeclaredFields();
-            for (Field field : entityFields) {
-                if ("serialVersionUID".equals(field.getName())) {
-                    continue;
-                }
-                String filedName = field.getName();
-                PropertyDescriptor pd = null;
-                Object fieldValue = "";
-                try {
-                    pd = new PropertyDescriptor(filedName, entityClazz);
-                    Method getMethod = pd.getReadMethod();
-                    fieldValue = getMethod.invoke(entity);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                if (StringUtils.isNotEmpty(filedName) && fieldValue != null) {
-                    logger.info("entity field name :" + filedName + ",field value string:" + fieldValue.toString());
-                    if (fieldValue instanceof Collection<?>) {
-                        Collection<?> c = (Collection<?>) fieldValue;
+        List<Filter>  filters = pageable.getFilters();
+
+            for (Filter filter : filters) {
+
+                if (StringUtils.isNotEmpty(filter.getProperty()) && filter.getValue() != null) {
+                    logger.info("filter name :" + filter.getProperty() + ",filter value string:" + filter.getValue());
+                    if (filter.getValue() instanceof Collection<?>) {
+                        Collection<?> c = (Collection<?>) filter.getValue();
                         if (c.size() > 0) {
-                            criteria.add(Restrictions.eq(filedName, fieldValue));
+                            criteria.add(Restrictions.eq(filter.getProperty(), filter.getValue() ));
                         }
                     } else {
-                        criteria.add(Restrictions.eq(filedName, fieldValue));
+                        criteria.add(Restrictions.eq(filter.getProperty(), filter.getValue() ));
                     }
                 }
             }
-        }
+
 
         //增加属性查询条件
         if (StringUtils.isNotEmpty(property) && StringUtils.isNotEmpty(keyword)) {
@@ -269,15 +253,13 @@ public class GenericHibernateDaoImpl<T, PK extends Serializable> implements IGen
         criteria.setFirstResult((pageNumber - 1) * pageSize);
         criteria.setMaxResults(pageSize);
         if (StringUtils.isNotEmpty(orderBy) && orderType != null) {
-            if (orderType == Pager.OrderType.asc) {
+            if (orderType == com.qslion.framework.bean.Order.Direction.asc) {
                 criteria.addOrder(Order.asc(orderBy));
             } else {
                 criteria.addOrder(Order.desc(orderBy));
             }
         }
-        pager.setTotalCount(totalCount);
-
-        pager.setList(criteria.list());
+        Pager<T> pager =new Pager(criteria.list(),totalCount,pageable);
         return pager;
     }
 
