@@ -205,7 +205,7 @@ public class GenericHibernateDaoImpl<T, PK extends Serializable> implements IGen
         if (pageable == null) {
             pageable = new Pageable();
         }
-        Integer pageNumber = pageable.getPageNumber();
+        Integer pageNumber = pageable.getPageNo();
         Integer pageSize = pageable.getPageSize();
         String property = pageable.getSearchProperty();
         String keyword = pageable.getSearchValue();

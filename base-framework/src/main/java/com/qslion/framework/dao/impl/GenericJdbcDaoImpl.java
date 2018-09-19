@@ -267,10 +267,10 @@ public class GenericJdbcDaoImpl<T, PK extends Serializable> implements IGenericJ
         List<Object> values = (List<Object>) getQuerySqlWithValues(entityClazz.newInstance()).get(1);
 
         if (values != null && values.size() > 0) {
-            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize()), values.toArray(), mapper);
+            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pageable.getPageNo() - 1) * pageable.getPageSize(), pageable.getPageSize()), values.toArray(), mapper);
             totalCount = getTotalCount(sql, values.toArray(), mapper);
         } else {
-            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pageable.getPageNumber() - 1) * pageable.getPageSize(), pageable.getPageSize()), mapper);
+            result = getJdbcTemplate().query(DBUtils.getPageSql(sql, (pageable.getPageNo() - 1) * pageable.getPageSize(), pageable.getPageSize()), mapper);
             totalCount = getTotalCount(sql, null, mapper);
         }
 

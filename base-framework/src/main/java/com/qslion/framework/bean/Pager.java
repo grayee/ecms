@@ -61,7 +61,7 @@ public class Pager<T> implements Serializable {
      * @return 页码
      */
     public int getPageNumber() {
-        return pageable.getPageNumber();
+        return pageable.getPageNo();
     }
 
     /**

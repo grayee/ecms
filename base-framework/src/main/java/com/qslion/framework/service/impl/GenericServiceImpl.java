@@ -52,9 +52,9 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     }
 
     protected PageRequest getPageRequest(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize());
         if (StringUtils.isNotEmpty(pageable.getOrderProperty())) {
-            pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(),
+            pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize(),
                 new Sort(Direction.valueOf(pageable.getOrderDirection().name().toUpperCase()), pageable.getOrderProperty()));
         }
         return pageRequest;
