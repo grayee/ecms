@@ -1,7 +1,7 @@
 package com.qslion.core.entity;
 
-import com.qslion.core.constant.AuPartyRelationType;
-import com.qslion.core.constant.AuPartyType;
+import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,8 +1,8 @@
 package com.qslion.custom.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.qslion.core.constant.AuPartyRelationType;
-import com.qslion.core.constant.AuPartyType;
+import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.entity.AuConnectionRule;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;

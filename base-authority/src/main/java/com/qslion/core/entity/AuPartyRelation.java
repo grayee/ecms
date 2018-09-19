@@ -1,6 +1,6 @@
 package com.qslion.core.entity;
 
-import com.qslion.core.constant.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.framework.entity.NestTreeEntity;
 
 import javax.persistence.Column;

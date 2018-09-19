@@ -1,4 +1,4 @@
-package com.qslion.core.constant;
+package com.qslion.core.enums;
 
 /**
  * 团体关系类型

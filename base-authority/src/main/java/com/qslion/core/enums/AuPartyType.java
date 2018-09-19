@@ -1,4 +1,4 @@
-package com.qslion.core.constant;
+package com.qslion.core.enums;
 
 
 import com.google.common.collect.Lists;

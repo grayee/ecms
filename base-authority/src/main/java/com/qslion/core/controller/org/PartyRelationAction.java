@@ -5,7 +5,7 @@ package com.qslion.core.controller.org;
 
 import com.alibaba.fastjson.JSON;
 import com.qslion.core.entity.AuPartyRelation;
-import com.qslion.core.constant.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;

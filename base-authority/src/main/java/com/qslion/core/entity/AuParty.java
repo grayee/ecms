@@ -1,6 +1,6 @@
 package com.qslion.core.entity;
 
-import com.qslion.core.constant.AuPartyType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import java.util.Date;
 import javax.persistence.Column;

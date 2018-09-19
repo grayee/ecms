@@ -2,7 +2,7 @@
 package com.qslion.custom.service.impl;
 
 
-import com.qslion.core.constant.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;

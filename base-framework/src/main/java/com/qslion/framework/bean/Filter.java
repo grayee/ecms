@@ -1,6 +1,4 @@
-/*
- * Copyright (c) 2018. Tianyi AIDOC Company.Inc. All Rights Reserved.
- */
+
 package com.qslion.framework.bean;
 
 import java.io.Serializable;
