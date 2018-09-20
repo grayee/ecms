@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2018. Tianyi AIDOC Company.Inc. All Rights Reserved.
- */
-
 package com.qslion.configuration;
 
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;

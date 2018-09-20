@@ -4,11 +4,11 @@
 package com.qslion.core.service.impl;
 
 import com.google.common.collect.Maps;
-import com.qslion.core.dao.AuFuncTreeRepository;
+import com.qslion.core.dao.AuMenuRepository;
 import com.qslion.core.dao.AuResourceRepository;
-import com.qslion.core.entity.AuFuncMenu;
+import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuParty;
-import com.qslion.core.service.FuncMenuService;
+import com.qslion.core.service.AuMenuService;
 import com.qslion.core.util.TreeNode;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
@@ -20,15 +20,15 @@ import org.springframework.stereotype.Service;
 /**
  * 修改备注：
  */
-@Service("funcTreeService")
-public class FuncMenuServiceImpl extends GenericServiceImpl<AuFuncMenu, Long> implements FuncMenuService {
+@Service
+public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implements AuMenuService {
 
     @Autowired
-    private AuFuncTreeRepository funcTreeRepository;
+    private AuMenuRepository auMenuRepository;
     @Autowired
     public AuResourceRepository resourceRepository;
 
-    public List<AuFuncMenu> queryByCondition(String paramString) {
+    public List<AuMenu> queryByCondition(String paramString) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -39,9 +39,9 @@ public class FuncMenuServiceImpl extends GenericServiceImpl<AuFuncMenu, Long> im
         //visitor.getAuAuthorize().getAuResources();
         List<TreeNode> resultList = new ArrayList<TreeNode>();
         //所有菜单功能树,后期改成根据登录用户的权限查询
-        List<AuFuncMenu> funcMenus = this.funcTreeRepository.findByStatus(AuFuncMenu.MenuStatus.enable);
+        List<AuMenu> funcMenus = null;
         //转换成ztree控件需要的格式
-        for (AuFuncMenu funcTree : funcMenus) {
+        for (AuMenu funcTree : funcMenus) {
             //获取跟节点
             if (funcTree.getParentId().equals(funcTree.getId())) {
                 //TreeNode rootNode = new TreeNode(funcTree.getId(), funcTree.getName());
@@ -65,9 +65,9 @@ public class FuncMenuServiceImpl extends GenericServiceImpl<AuFuncMenu, Long> im
         return resultList;
     }
 
-    private List<TreeNode> getChildTreeNode(String parentId, List<AuFuncMenu> nodeList, String path) {
+    private List<TreeNode> getChildTreeNode(String parentId, List<AuMenu> nodeList, String path) {
         List<TreeNode> resultList = new ArrayList<TreeNode>();
-        for (AuFuncMenu funcTree : nodeList) {
+        for (AuMenu funcTree : nodeList) {
             //TreeNode leafNode = new TreeNode(funcTree.getId(), funcTree.getName());
             if (funcTree.getParentId() != null && !funcTree.getId().equals(parentId) && funcTree.getParentId().equals(parentId)) {
                 //存在子节点则添加子节点到父节点中，并设置标记
@@ -85,32 +85,32 @@ public class FuncMenuServiceImpl extends GenericServiceImpl<AuFuncMenu, Long> im
         return resultList;
     }
 
-    public List<AuFuncMenu> getChildrens(AuFuncMenu funcTree) {
+    public List<AuMenu> getChildrens(AuMenu funcTree) {
         // TODO Auto-generated method stub
-        List<AuFuncMenu> result = null;
+        List<AuMenu> result = null;
         String propertyName = "parentCode";
-        //result=this.funcTreeRepository.findByProperty(propertyName, funcTree.getTotalCode());
+        //result=this.auMenuRepository.findByProperty(propertyName, funcTree.getTotalCode());
         return result;
     }
 
-    public List<AuFuncMenu> getParentChilds(AuFuncMenu funcTree) {
+    public List<AuMenu> getParentChilds(AuMenu funcTree) {
         // TODO Auto-generated method stub
-        List<AuFuncMenu> result;
+        List<AuMenu> result;
         String propertyName = "parentCode";
-        result = null;//this.funcTreeRepository.findByProperty(propertyName, funcTree.getParentCode());
+        result = null;//this.auMenuRepository.findByProperty(propertyName, funcTree.getParentCode());
         return result;
     }
 
-    public AuFuncMenu getParent(AuFuncMenu funcTree) {
+    public AuMenu getParent(AuMenu funcTree) {
         // TODO Auto-generated method stub
         String propertyName = "totalCode";
-        AuFuncMenu parent = null;//(AuFuncMenu) this.funcTreeRepository.findByProperty(propertyName, funcTree.getParentCode()).get(0);
+        AuMenu parent = null;//(AuMenu) this.auMenuRepository.findByProperty(propertyName, funcTree.getParentCode()).get(0);
         return parent;
     }
 
     @Override
-    public boolean checkUnique(AuFuncMenu funcTree) {
+    public boolean checkUnique(AuMenu funcTree) {
         // TODO Auto-generated method stub
-        return false;//funcTreeRepository.checkUnique(funcTree);
+        return false;//auMenuRepository.checkUnique(funcTree);
     }
 }

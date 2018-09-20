@@ -1,11 +1,11 @@
 package com.qslion.core.controller.au;
 
 import com.qslion.core.entity.AuAuthorize;
-import com.qslion.core.entity.AuFuncMenu;
+import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuParty;
+import com.qslion.core.service.AuMenuService;
 import com.qslion.core.service.AuResourceService;
 import com.qslion.core.service.AuthorizeService;
-import com.qslion.core.service.FuncMenuService;
 import com.qslion.core.service.PartyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
@@ -41,7 +41,7 @@ public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
     @Autowired
     public AuResourceService resourceService;
     @Autowired
-    public FuncMenuService funcMenuService;
+    public AuMenuService auMenuService;
 
     /**
      * 列表
@@ -115,10 +115,10 @@ public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
         //团体自身拥有的权限
         Set<AuAuthorize> partyAuths =null; //auParty.getAuAuthorizes();//auAuthorizeService.getAuthorizeByPartyId(partyId);
         for (int i = 0; i < funcIdArray.length; i++) {
-            AuFuncMenu functree = null;//funcMenuService.get(funcIdArray[i]);
+            AuMenu functree = null;//auMenuService.get(funcIdArray[i]);
             for (AuAuthorize auth : partyAuths) {
                 AuAuthorize authorize = new AuAuthorize();
-                authorize.setAuResource(functree.getAuResource());
+               // authorize.setAuResource(functree.getAuResource());
                 authorize.setAuParty(auParty);
                 //authorize.setPartyType(auParty.getAuPartyType().getId());
                // auParty.getAuAuthorizes().add(authorize);

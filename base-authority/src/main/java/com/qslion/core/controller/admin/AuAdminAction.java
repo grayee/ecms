@@ -24,7 +24,7 @@ public class AuAdminAction extends BaseController<AuUser, String> {
     @Autowired
     public PartyService partyService;
     @Autowired
-    public FuncMenuService funcMenuService;
+    public AuMenuService auMenuService;
     @Autowired
     public PartyRelationService partyRelationService;
     @Autowired

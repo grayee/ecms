@@ -3,10 +3,10 @@
  */
 package com.qslion.core.util;
 
-import com.qslion.core.entity.AuFuncMenu;
+import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuUser;
-import com.qslion.core.service.FuncMenuService;
+import com.qslion.core.service.AuMenuService;
 import com.qslion.core.vo.LoginSessionVo;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 
 public class LoginHelper {
     //@Autowired
-    public static FuncMenuService funcMenuService;
+    public static AuMenuService auMenuService;
 
     //通过request对象取得登陆Session
     public static LoginSessionVo getLoginVo(HttpServletRequest req) {
@@ -348,8 +348,8 @@ public class LoginHelper {
         if (map == null)
             return false;
         for (Iterator it = map.keySet().iterator(); it.hasNext(); ) {
-            AuFuncMenu fVo = (AuFuncMenu) map.get((String) it.next());
-            if (keyword.equals(fVo.getKeyword()))
+            AuMenu fVo = (AuMenu) map.get((String) it.next());
+            //if (keyword.equals(fVo.getKeyword()))
                 return true;
         }
 
@@ -357,7 +357,7 @@ public class LoginHelper {
     }
 
     public static int validate(String login_id, String password) {
-        List lResult = funcMenuService.queryByCondition("login_id='" + login_id + "'");
+        List lResult = auMenuService.queryByCondition("login_id='" + login_id + "'");
 
         if ((lResult != null) && (lResult.size() > 0)) {
             AuUser userVo = (AuUser) lResult.get(0);
