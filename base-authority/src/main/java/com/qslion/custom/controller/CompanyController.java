@@ -9,12 +9,16 @@ import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.RestResult;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.util.ParameterUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,9 +46,23 @@ public class CompanyController extends BaseController<AuCompany, String> {
   @Autowired
   private ConnectionRuleService connectionRuleService;
 
+  /**
+   * 保存
+   *
+   * @param request 请求对象
+   * @param response 响应对象
+   * @param auCompany 公司
+   * @return RestResult
+   */
   @PostMapping
   public ResponseEntity<RestResult> save(HttpServletRequest request, HttpServletResponse response,
-      @RequestBody AuCompany auCompany) {
+      @Validated @RequestBody AuCompany auCompany, BindingResult result) {
+
+    if (result.hasErrors()) {
+      //参数校验失败
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(RestResult.fail(ResultCode.FAIL));
+    }
+
     String parentCode = ParameterUtil.getParameter(request, "parentRelId");
     boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
     if (isRoot) {

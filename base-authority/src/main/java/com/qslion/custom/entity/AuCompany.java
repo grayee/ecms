@@ -6,6 +6,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 /**
  * 实体类 - 公司
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 public class AuCompany extends BaseEntity<Long> {
 
     private String companyNo;
+    @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
     private String companyFlag;
     private String companyType;

@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * 修改备注：
  */
-
 public interface ConnectionRuleService extends IGenericService<AuConnectionRule, Long> {
     List queryAll(int paramInt1, int paramInt2, String paramString);
 
