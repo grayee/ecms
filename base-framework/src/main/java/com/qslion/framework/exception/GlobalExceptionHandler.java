@@ -1,12 +1,12 @@
 package com.qslion.framework.exception;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.qslion.framework.bean.RestResult;
+import com.qslion.framework.enums.ResultCode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
@@ -21,21 +21,21 @@ public class GlobalExceptionHandler {
   private final Logger logger = LogManager.getLogger(this.getClass());
 
   @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public Map<String, Object> handlerException(Exception ex) {
-    Map<String, Object> result = new HashMap<>(2);
-    result.put("msg", ex.getMessage());
-    result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
-    return result;
+  public ResponseEntity<RestResult> handlerException(Exception ex) {
+    logger.error(ex.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RestResult.fail(ResultCode.FAIL));
   }
 
   @ExceptionHandler(RuntimeException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public Map<String, Object> handlerRuntimeException(RuntimeException ex) {
-    Map<String, Object> result = new HashMap<>(2);
-    result.put("msg", ex.getMessage());
-    result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
-    return result;
+  public ResponseEntity<RestResult> handlerRuntimeException(RuntimeException ex) {
+    logger.error(ex.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RestResult.fail(ResultCode.FAIL));
+  }
+
+  @ExceptionHandler(HandleException.class)
+  public ResponseEntity<RestResult> handlerException(HandleException ex) {
+    logger.error(ex.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RestResult.fail(ResultCode.FAIL));
   }
 
 }

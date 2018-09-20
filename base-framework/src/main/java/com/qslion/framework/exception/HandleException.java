@@ -1,6 +1,8 @@
 
 package com.qslion.framework.exception;
 
+import com.qslion.framework.enums.ResultCode;
+
 /**
  * 自定义异常
  *
@@ -17,6 +19,11 @@ public class HandleException extends RuntimeException {
   public HandleException(String msg) {
     super(msg);
     this.msg = msg;
+  }
+
+  public HandleException(int code) {
+    super(ResultCode.getByCode(code).getDesc());
+    this.code = code;
   }
 
   public HandleException(String msg, Throwable e) {

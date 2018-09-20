@@ -7,11 +7,13 @@ import com.qslion.core.service.PartyService;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.RestResult;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.ParameterUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,19 +43,17 @@ public class CompanyController extends BaseController<AuCompany, String> {
   private ConnectionRuleService connectionRuleService;
 
   @PostMapping
-  public String save(HttpServletRequest request, HttpServletResponse response, @RequestBody AuCompany auCompany) {
+  public ResponseEntity<RestResult> save(HttpServletRequest request, HttpServletResponse response,
+      @RequestBody AuCompany auCompany) {
     String parentCode = ParameterUtil.getParameter(request, "parentRelId");
     boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
     if (isRoot) {
       companyService.insertRoot(auCompany);
-      return "redirect:/admin/relation/manage.jspx";
     } else {
       companyService.insert(auCompany, parentCode);
-      if ("0".equals(request.getParameter("cmd"))) {
-        return "redirect:/admin/relation/manage.jspx";
-      }
     }
-    return "";
+
+    return ResponseEntity.ok(RestResult.success());
   }
 
 

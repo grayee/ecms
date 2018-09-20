@@ -123,8 +123,8 @@ public class Pager<T> implements Serializable {
      *
      * @return 筛选
      */
-    public List<Filter> getFilters() {
-        return pageable.getFilters();
+    public List<QueryFilter> getFilters() {
+        return pageable.getQueryFilters();
     }
 
     /**

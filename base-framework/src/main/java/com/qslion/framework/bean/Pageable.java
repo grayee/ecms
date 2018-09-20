@@ -64,7 +64,7 @@ public class Pageable implements Serializable {
     /**
      * 筛选
      */
-    private List<Filter> filters = new ArrayList<>();
+    private List<QueryFilter> queryFilters = new ArrayList<>();
 
     /**
      * 排序
@@ -211,17 +211,17 @@ public class Pageable implements Serializable {
      *
      * @return 筛选
      */
-    public List<Filter> getFilters() {
-        return filters;
+    public List<QueryFilter> getQueryFilters() {
+        return queryFilters;
     }
 
     /**
      * 设置筛选
      *
-     * @param filters 筛选
+     * @param queryFilters 筛选
      */
-    public void setFilters(List<Filter> filters) {
-        this.filters = filters;
+    public void setQueryFilters(List<QueryFilter> queryFilters) {
+        this.queryFilters = queryFilters;
     }
 
     /**

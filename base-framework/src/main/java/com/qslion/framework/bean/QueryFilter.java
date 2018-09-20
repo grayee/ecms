@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author Gray.Z
  * @date 2018/4/3 20:25.
  */
-public class Filter implements Serializable {
+public class QueryFilter implements Serializable {
 
     private static final long serialVersionUID = -8712382358441065075L;
 
@@ -104,7 +104,7 @@ public class Filter implements Serializable {
     /**
      * 构造方法
      */
-    public Filter() {
+    public QueryFilter() {
     }
 
     /**
@@ -114,7 +114,7 @@ public class Filter implements Serializable {
      * @param operator 运算符
      * @param value 值
      */
-    public Filter(String property, Operator operator, Object value) {
+    public QueryFilter(String property, Operator operator, Object value) {
         this.property = property;
         this.operator = operator;
         this.value = value;
@@ -128,7 +128,7 @@ public class Filter implements Serializable {
      * @param value 值
      * @param ignoreCase 忽略大小写
      */
-    public Filter(String property, Operator operator, Object value, boolean ignoreCase) {
+    public QueryFilter(String property, Operator operator, Object value, boolean ignoreCase) {
         this.property = property;
         this.operator = operator;
         this.value = value;
@@ -142,8 +142,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 等于筛选
      */
-    public static Filter eq(String property, Object value) {
-        return new Filter(property, Operator.eq, value);
+    public static QueryFilter eq(String property, Object value) {
+        return new QueryFilter(property, Operator.eq, value);
     }
 
     /**
@@ -154,8 +154,8 @@ public class Filter implements Serializable {
      * @param ignoreCase 忽略大小写
      * @return 等于筛选
      */
-    public static Filter eq(String property, Object value, boolean ignoreCase) {
-        return new Filter(property, Operator.eq, value, ignoreCase);
+    public static QueryFilter eq(String property, Object value, boolean ignoreCase) {
+        return new QueryFilter(property, Operator.eq, value, ignoreCase);
     }
 
     /**
@@ -165,8 +165,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 不等于筛选
      */
-    public static Filter ne(String property, Object value) {
-        return new Filter(property, Operator.ne, value);
+    public static QueryFilter ne(String property, Object value) {
+        return new QueryFilter(property, Operator.ne, value);
     }
 
     /**
@@ -177,8 +177,8 @@ public class Filter implements Serializable {
      * @param ignoreCase 忽略大小写
      * @return 不等于筛选
      */
-    public static Filter ne(String property, Object value, boolean ignoreCase) {
-        return new Filter(property, Operator.ne, value, ignoreCase);
+    public static QueryFilter ne(String property, Object value, boolean ignoreCase) {
+        return new QueryFilter(property, Operator.ne, value, ignoreCase);
     }
 
     /**
@@ -188,8 +188,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 大于筛选
      */
-    public static Filter gt(String property, Object value) {
-        return new Filter(property, Operator.gt, value);
+    public static QueryFilter gt(String property, Object value) {
+        return new QueryFilter(property, Operator.gt, value);
     }
 
     /**
@@ -199,8 +199,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 小于筛选
      */
-    public static Filter lt(String property, Object value) {
-        return new Filter(property, Operator.lt, value);
+    public static QueryFilter lt(String property, Object value) {
+        return new QueryFilter(property, Operator.lt, value);
     }
 
     /**
@@ -210,8 +210,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 大于等于筛选
      */
-    public static Filter ge(String property, Object value) {
-        return new Filter(property, Operator.ge, value);
+    public static QueryFilter ge(String property, Object value) {
+        return new QueryFilter(property, Operator.ge, value);
     }
 
     /**
@@ -221,8 +221,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 小于等于筛选
      */
-    public static Filter le(String property, Object value) {
-        return new Filter(property, Operator.le, value);
+    public static QueryFilter le(String property, Object value) {
+        return new QueryFilter(property, Operator.le, value);
     }
 
     /**
@@ -232,8 +232,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 相似筛选
      */
-    public static Filter like(String property, Object value) {
-        return new Filter(property, Operator.like, value);
+    public static QueryFilter like(String property, Object value) {
+        return new QueryFilter(property, Operator.like, value);
     }
 
     /**
@@ -243,8 +243,8 @@ public class Filter implements Serializable {
      * @param value 值
      * @return 包含筛选
      */
-    public static Filter in(String property, Object value) {
-        return new Filter(property, Operator.in, value);
+    public static QueryFilter in(String property, Object value) {
+        return new QueryFilter(property, Operator.in, value);
     }
 
     /**
@@ -253,8 +253,8 @@ public class Filter implements Serializable {
      * @param property 属性
      * @return 为Null筛选
      */
-    public static Filter isNull(String property) {
-        return new Filter(property, Operator.isNull, null);
+    public static QueryFilter isNull(String property) {
+        return new QueryFilter(property, Operator.isNull, null);
     }
 
     /**
@@ -263,8 +263,8 @@ public class Filter implements Serializable {
      * @param property 属性
      * @return 不为Null筛选
      */
-    public static Filter isNotNull(String property) {
-        return new Filter(property, Operator.isNotNull, null);
+    public static QueryFilter isNotNull(String property) {
+        return new QueryFilter(property, Operator.isNotNull, null);
     }
 
     /**
@@ -272,7 +272,7 @@ public class Filter implements Serializable {
      *
      * @return 忽略大小写筛选
      */
-    public Filter ignoreCase() {
+    public QueryFilter ignoreCase() {
         this.ignoreCase = true;
         return this;
     }

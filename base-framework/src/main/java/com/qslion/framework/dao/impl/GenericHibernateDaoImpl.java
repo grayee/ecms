@@ -1,6 +1,6 @@
 package com.qslion.framework.dao.impl;
 
-import com.qslion.framework.bean.Filter;
+import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.dao.IGenericHibernateDao;
@@ -214,19 +214,19 @@ public class GenericHibernateDaoImpl<T, PK extends Serializable> implements IGen
 
         Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
         //分页查询条件
-        List<Filter>  filters = pageable.getFilters();
+        List<QueryFilter> queryFilters = pageable.getQueryFilters();
 
-            for (Filter filter : filters) {
+            for (QueryFilter queryFilter : queryFilters) {
 
-                if (StringUtils.isNotEmpty(filter.getProperty()) && filter.getValue() != null) {
-                    logger.info("filter name :" + filter.getProperty() + ",filter value string:" + filter.getValue());
-                    if (filter.getValue() instanceof Collection<?>) {
-                        Collection<?> c = (Collection<?>) filter.getValue();
+                if (StringUtils.isNotEmpty(queryFilter.getProperty()) && queryFilter.getValue() != null) {
+                    logger.info("queryFilter name :" + queryFilter.getProperty() + ",queryFilter value string:" + queryFilter.getValue());
+                    if (queryFilter.getValue() instanceof Collection<?>) {
+                        Collection<?> c = (Collection<?>) queryFilter.getValue();
                         if (c.size() > 0) {
-                            criteria.add(Restrictions.eq(filter.getProperty(), filter.getValue() ));
+                            criteria.add(Restrictions.eq(queryFilter.getProperty(), queryFilter.getValue() ));
                         }
                     } else {
-                        criteria.add(Restrictions.eq(filter.getProperty(), filter.getValue() ));
+                        criteria.add(Restrictions.eq(queryFilter.getProperty(), queryFilter.getValue() ));
                     }
                 }
             }

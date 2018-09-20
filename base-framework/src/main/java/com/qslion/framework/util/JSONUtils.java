@@ -183,7 +183,7 @@ public class JSONUtils {
      * @return 类型
      */
     public static JavaType constructType(TypeReference<?> typeReference) {
-        Assert.notNull(typeReference);
+        Assert.notNull(typeReference,"type reference is null");
 
         return TypeFactory.defaultInstance().constructType(typeReference);
     }

@@ -2,7 +2,7 @@
 package com.qslion.framework.service.impl;
 
 import com.google.common.collect.Lists;
-import com.qslion.framework.bean.Filter;
+import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.Order;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
@@ -63,7 +63,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     protected Specification<T> getSpecification(Pageable pageable) {
         return (Specification<T>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
-            pageable.getFilters().stream().forEach(filter -> {
+            pageable.getQueryFilters().stream().forEach(filter -> {
                 switch (filter.getOperator()) {
                     case eq:
                         predicates.add(criteriaBuilder.equal(root.get(filter.getProperty()), filter.getValue()));
@@ -126,13 +126,13 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public List<T> findList(Integer count, List<Filter> filters, List<Order> orders) {
+    public List<T> findList(Integer count, List<QueryFilter> queryFilters, List<Order> orders) {
         return null;
     }
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public List<T> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders) {
+    public List<T> findList(Integer first, Integer count, List<QueryFilter> queryFilters, List<Order> orders) {
         return null;
     }
 
@@ -155,7 +155,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public long count(Filter... filters) {
+    public long count(QueryFilter... queryFilters) {
         return genericRepository.count(new Specification<T>() {
             @Override
             public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
@@ -173,7 +173,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public boolean exists(Filter... filters) {
+    public boolean exists(QueryFilter... queryFilters) {
         return false;
     }
 

@@ -2,7 +2,7 @@
 
 package com.qslion.framework.service;
 
-import com.qslion.framework.bean.Filter;
+import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.Order;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.Pageable;
@@ -46,22 +46,22 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
      * 查找实体对象集合
      *
      * @param count 数量
-     * @param filters 筛选
+     * @param queryFilters 筛选
      * @param orders 排序
      * @return 实体对象集合
      */
-    List<T> findList(Integer count, List<Filter> filters, List<Order> orders);
+    List<T> findList(Integer count, List<QueryFilter> queryFilters, List<Order> orders);
 
     /**
      * 查找实体对象集合
      *
      * @param first 起始记录
      * @param count 数量
-     * @param filters 筛选
+     * @param queryFilters 筛选
      * @param orders 排序
      * @return 实体对象集合
      */
-    List<T> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);
+    List<T> findList(Integer first, Integer count, List<QueryFilter> queryFilters, List<Order> orders);
 
     /**
      * 查找实体对象分页
@@ -81,10 +81,10 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
     /**
      * 查询实体对象数量
      *
-     * @param filters 筛选
+     * @param queryFilters 筛选
      * @return 实体对象数量
      */
-    long count(Filter... filters);
+    long count(QueryFilter... queryFilters);
 
     /**
      * 判断实体对象是否存在
@@ -97,10 +97,10 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
     /**
      * 判断实体对象是否存在
      *
-     * @param filters 筛选
+     * @param queryFilters 筛选
      * @return 实体对象是否存在
      */
-    boolean exists(Filter... filters);
+    boolean exists(QueryFilter... queryFilters);
 
     /**
      * 保存实体对象
