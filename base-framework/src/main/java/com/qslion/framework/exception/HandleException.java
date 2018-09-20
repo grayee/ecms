@@ -11,53 +11,30 @@ import com.qslion.framework.enums.ResultCode;
  */
 public class HandleException extends RuntimeException {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  private String msg;
-  private int code;
+    private ResultCode resultCode;
 
-  public HandleException(String msg) {
-    super(msg);
-    this.msg = msg;
-  }
+    public HandleException(ResultCode resultCode) {
+        super(resultCode.getDesc());
+        this.resultCode = resultCode;
+    }
 
-  public HandleException(int code) {
-    super(ResultCode.getByCode(code).getDesc());
-    this.code = code;
-  }
+    public HandleException(ResultCode resultCode, Throwable e) {
+        super(resultCode.getDesc(), e);
+        this.resultCode = resultCode;
+    }
 
-  public HandleException(String msg, Throwable e) {
-    super(msg, e);
-    this.msg = msg;
-  }
+    public HandleException(ResultCode resultCode, String msg) {
+        super(String.format("%s:%s", resultCode.getDesc(), msg));
+        this.resultCode = resultCode;
+    }
 
-  public HandleException(String msg, int code) {
-    super(msg);
-    this.msg = msg;
-    this.code = code;
-  }
+    public ResultCode getResultCode() {
+        return resultCode;
+    }
 
-  public HandleException(String msg, int code, Throwable e) {
-    super(msg, e);
-    this.msg = msg;
-    this.code = code;
-  }
-
-  public String getMsg() {
-    return msg;
-  }
-
-  public void setMsg(String msg) {
-    this.msg = msg;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-
-
+    public void setResultCode(ResultCode resultCode) {
+        this.resultCode = resultCode;
+    }
 }

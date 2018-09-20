@@ -6,6 +6,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -31,6 +32,7 @@ public class AuCompany extends BaseEntity<Long> {
     private String fax;
     private String address;
     private String postalCode;
+    @Email(message = "邮箱格式不正确")
     private String email;
     private String web;
     private String remark;

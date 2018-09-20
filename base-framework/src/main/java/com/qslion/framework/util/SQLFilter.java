@@ -1,22 +1,24 @@
 package com.qslion.framework.util;
 
+import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.HandleException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * SQL过滤
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2017-04-01 16:16
+ * SQL 过滤器
+ *
+ * @author Gray.Z
+ * @date 2018/4/14 10:13.
  */
 public class SQLFilter {
 
     /**
      * SQL注入过滤
-     * @param str  待验证的字符串
+     *
+     * @param str 待验证的字符串
      */
-    public static String sqlInject(String str){
-        if(StringUtils.isBlank(str)){
+    public static String sqlInject(String str) {
+        if (StringUtils.isBlank(str)) {
             return null;
         }
         //去掉'|"|;|\字符
@@ -32,9 +34,9 @@ public class SQLFilter {
         String[] keywords = {"master", "truncate", "insert", "select", "delete", "update", "declare", "alert", "drop"};
 
         //判断是否包含非法字符
-        for(String keyword : keywords){
-            if(str.indexOf(keyword) != -1){
-                throw new HandleException("包含非法字符");
+        for (String keyword : keywords) {
+            if (str.indexOf(keyword) != -1) {
+                throw new HandleException(ResultCode.PARAMETER_ERROR, "包含非法字符");
             }
         }
 

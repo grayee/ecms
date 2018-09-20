@@ -9,7 +9,6 @@ import com.qslion.core.service.AuthorizeService;
 import com.qslion.core.service.PartyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ParameterUtil;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,9 +107,9 @@ public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
      */
     @RequestMapping(value = "/admin/authorize/grantAuth.jspx")
     public void grantedAuthorities(HttpServletRequest request, HttpServletResponse response) {
-        String partyId = ParameterUtil.getParameter(request, "partyId");
+        String partyId = "";
         AuParty auParty = null;//partyService.get(partyId);
-        String funcIds = ParameterUtil.getParameter(request, "funcIds");
+        String funcIds = "";
         String[] funcIdArray = funcIds.split(",");
         //团体自身拥有的权限
         Set<AuAuthorize> partyAuths =null; //auParty.getAuAuthorizes();//auAuthorizeService.getAuthorizeByPartyId(partyId);

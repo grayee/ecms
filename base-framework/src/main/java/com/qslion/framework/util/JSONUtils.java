@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.util.Assert;
 
 /**
- * server
+ * JSON 工具类
  *
  * @author Gray.Z
  * @date 2018/4/14 10:13.

@@ -11,25 +11,29 @@ import java.util.LinkedHashMap;
  */
 public class RestResult extends LinkedHashMap<String, Object> {
 
-  public static <T> RestResult success(Pager<T> pager) {
-    RestResult result = new RestResult();
-    result.put("code", ResultCode.SUCCESS.getCode());
-    result.put("msg", ResultCode.SUCCESS.getDesc());
-    result.put("page", pager);
-    return result;
-  }
+    private static RestResult getRestResult(int code, String msg) {
+        RestResult result = new RestResult();
+        result.put("code", code);
+        result.put("msg", msg);
+        return result;
+    }
 
-  public static RestResult success() {
-    RestResult result = new RestResult();
-    result.put("code", ResultCode.SUCCESS.getCode());
-    result.put("msg", ResultCode.SUCCESS.getDesc());
-    return result;
-  }
+    public static RestResult success() {
+        RestResult result = getRestResult(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getDesc());
+        return result;
+    }
 
-  public static RestResult fail(ResultCode resultCode) {
-    RestResult result = new RestResult();
-    result.put("code", resultCode.getCode());
-    result.put("msg", resultCode.getDesc());
-    return result;
-  }
+    public static <T> RestResult success(Pager<T> pager) {
+        RestResult result = success();
+        result.put("page", pager);
+        return result;
+    }
+
+    public static RestResult fail(ResultCode resultCode, String msg) {
+        return getRestResult(resultCode.getCode(), String.format("%s:%s", resultCode.getDesc(), msg));
+    }
+
+    public static RestResult get(ResultCode resultCode) {
+        return getRestResult(resultCode.getCode(), resultCode.getDesc());
+    }
 }

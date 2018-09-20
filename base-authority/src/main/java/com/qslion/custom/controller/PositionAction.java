@@ -13,7 +13,6 @@ import com.qslion.custom.entity.AuPosition;
 import com.qslion.custom.service.AuPositionService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ParameterUtil;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +48,7 @@ public class PositionAction extends BaseController<AuPosition, String> {
      */
     @RequestMapping(value = "/admin/position/save.jspx")
     public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuPosition entity) {
-        String parentCode = ParameterUtil.getParameter(request, "parentRelId");
+        String parentCode = "";
         positionService.insert(entity, parentCode);
         if ("0" .equals(request.getParameter("cmd"))) {
             return "redirect:/admin/relation/manage.jspx";

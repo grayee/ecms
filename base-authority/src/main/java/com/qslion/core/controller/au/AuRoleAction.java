@@ -10,7 +10,6 @@ import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.util.TreeNode;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ParameterUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +75,7 @@ public class AuRoleAction extends BaseController<AuRole, String> {
      */
     @RequestMapping(value = "/admin/role/save.jspx")
     public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuRole entity) {
-        String parentCode = ParameterUtil.getParameter(request, "parentRelId");
+        String parentCode = "";
         boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
         if (isRoot) {
             auRoleService.insertRoot(entity);
@@ -138,7 +137,7 @@ public class AuRoleAction extends BaseController<AuRole, String> {
      */
     @RequestMapping(value = "/admin/role/getRoleTree.jspx")
     public String getRoleTree(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String userId = ParameterUtil.getParameter(request, "userId");
+        String userId = "";
         List<TreeNode> resultList = new ArrayList<TreeNode>();
         if (StringUtils.isNotEmpty(userId)) {
             Map<String, Object> map = new HashMap<String, Object>();
@@ -159,7 +158,7 @@ public class AuRoleAction extends BaseController<AuRole, String> {
     public String getReferenceUser(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         Pager<AuUser> pager = new Pager<AuUser>();
         //Pager<AuUser> allUser = auUserService.findByPager(pager);
-        String roleId = ParameterUtil.getParameter(request, "roleId");
+        String roleId = "";
        // AuRole role = auRoleService.get(roleId);
         //Assert.notNull(role.getAuUserSet(), "role userset must be not null!");
         //Set<AuUser> refUserSet = role.getAuUserSet();
@@ -181,8 +180,8 @@ public class AuRoleAction extends BaseController<AuRole, String> {
      */
     @RequestMapping(value = "/admin/role/setReferenceUser.jspx")
     public String setReferenceUser(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String roleId = ParameterUtil.getParameter(request, "roleId");
-        String userIds = ParameterUtil.getParameter(request, "userIds");
+        String roleId = "";
+        String userIds = "";
         String rid = request.getParameter("rid");
         //AuRole role = auRoleService.get(roleId);
         String[] userIdArray = userIds.split(",");

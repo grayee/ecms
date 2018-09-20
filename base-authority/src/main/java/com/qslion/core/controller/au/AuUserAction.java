@@ -8,7 +8,6 @@ import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.util.TreeNode;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ParameterUtil;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,7 +54,7 @@ public class AuUserAction extends BaseController<AuUser, Long> {
      */
     @RequestMapping(value = "/admin/user/save.jspx")
     public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuUser entity) {
-        String parentRelId = ParameterUtil.getParameter(request, "parentRelId");
+        String parentRelId ="";
        /* AuPartyRelation relation = partyRelationService.get(parentRelId);
         AuParty auParty = relation.getAuParty();
         entity.setAuParty(auParty);
@@ -125,8 +124,8 @@ public class AuUserAction extends BaseController<AuUser, Long> {
      */
     @RequestMapping(value = "/admin/user/setReferenceRole.jspx")
     public String setReferenceRole(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String roleIds = ParameterUtil.getParameter(request, "roleIds");
-        String userId = ParameterUtil.getParameter(request, "userId");
+        String roleIds = "";
+        String userId = "";
        // AuUser user = auUserService.get(userId);
         String[] roleIdArray = roleIds.split(",");
         for (int i = 0; i < roleIdArray.length; i++) {
@@ -143,7 +142,7 @@ public class AuUserAction extends BaseController<AuUser, Long> {
      */
     @RequestMapping(value = "/admin/user/grantAuthDetail.jspx")
     public String grantAuthDetail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String userId = ParameterUtil.getParameter(request, "userId");
+        String userId = "";
        // AuUser user = auUserService.get(userId);
         List<TreeNode> resultList = null;//partyRelationService.getPartyDetailRelationTree(user.getAuParty().getId(), GlobalConstants.getRelTypeComp());
         model.addAttribute("data", JSON.toJSON(resultList));

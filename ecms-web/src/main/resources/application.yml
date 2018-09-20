@@ -36,6 +36,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       maximum-pool-size: 30
+
 server:
   servlet:
     context-path: /ecms

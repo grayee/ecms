@@ -10,7 +10,6 @@ import com.qslion.custom.entity.AuEmployee;
 import com.qslion.custom.service.AuEmployeeService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ParameterUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +42,7 @@ public class EmployeeAction extends BaseController<AuEmployee, Long> {
      */
     @RequestMapping(value = "/admin/employee/save.jspx")
     public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuEmployee entity) {
-        String parentCode = ParameterUtil.getParameter(request, "parentRelId");
+        String parentCode ="";
         employeeService.insert(entity, parentCode);
         if ("0".equals(request.getParameter("cmd"))) {
             return "redirect:/admin/relation/manage.jspx";

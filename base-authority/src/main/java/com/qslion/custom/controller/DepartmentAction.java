@@ -9,7 +9,6 @@ import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.service.AuDepartmentService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ParameterUtil;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +42,7 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
 
     @RequestMapping(value = "/admin/department/save.jspx")
     public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuDepartment entity) {
-        String parentCode = ParameterUtil.getParameter(request, "parentRelId");
+        String parentCode = "";
         departmentService.insert(entity, parentCode);
         if ("0" .equals(request.getParameter("cmd"))) {
             return "redirect:/admin/relation/manage.jspx";
