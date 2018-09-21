@@ -9,7 +9,6 @@ import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.RestResult;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.util.ValidatorUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -54,7 +53,6 @@ public class CompanyController extends BaseController<AuCompany, String> {
     @PostMapping
     public ResponseEntity<RestResult> save(HttpServletRequest request, HttpServletResponse response,
         @Valid @RequestBody AuCompany auCompany) {
-        ValidatorUtils.validateEntity(auCompany);
         String parentCode = "";
         boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
         if (isRoot) {

@@ -2,6 +2,7 @@ package com.qslion.core.enums;
 
 /**
  * 团体关系类型
+ * Accountability Type
  *
  * @author Gray.Z
  * @date 2018-09-16

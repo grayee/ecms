@@ -11,10 +11,13 @@ import java.util.LinkedHashMap;
  */
 public class RestResult extends LinkedHashMap<String, Object> {
 
+    private static final String CODE = "code";
+    private static final String MESSAGE = "message";
+
     private static RestResult getRestResult(int code, String msg) {
         RestResult result = new RestResult();
-        result.put("code", code);
-        result.put("msg", msg);
+        result.put(CODE, code);
+        result.put(MESSAGE, msg);
         return result;
     }
 

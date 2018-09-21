@@ -2,9 +2,9 @@ package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.framework.entity.NestTreeEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 /**
  * 实体类 - 团体关系
+ * Accountability
  *
  * @author Gray.Z
  * @date 2018/4/30 13:56.
@@ -49,8 +50,8 @@ public class AuPartyRelation extends NestTreeEntity {
         this.parentPartyName = parentPartyName;
     }
 
-
-    @Column(name = "relation_type_id")
+    @Enumerated
+    @Column(name = "relation_type")
     public AuPartyRelationType getAuPartyRelationType() {
         return this.auPartyRelationType;
     }

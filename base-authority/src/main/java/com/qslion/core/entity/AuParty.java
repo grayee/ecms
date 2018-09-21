@@ -5,6 +5,7 @@ import com.qslion.framework.entity.BaseEntity;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
@@ -28,6 +29,7 @@ public class AuParty extends BaseEntity<Long> {
     private String enableStatus;
     private Date enableDate;
 
+    @Enumerated
     @Column(name = "type_id", nullable = false)
     public AuPartyType getAuPartyType() {
         return this.auPartyType;

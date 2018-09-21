@@ -5,6 +5,7 @@ import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
@@ -22,8 +23,10 @@ public class AuConnectionRule extends BaseEntity<Long> {
     private AuPartyRelationType auPartyRelationType;
     private String name;
     private String remark;
+    private Short level;
 
-    @Column(name = "parent_party_type_id")
+    @Enumerated
+    @Column(name = "parent_party_type")
     public AuPartyType getParentPartyType() {
         return this.parentPartyType;
     }
@@ -32,7 +35,8 @@ public class AuConnectionRule extends BaseEntity<Long> {
         this.parentPartyType = auPartyTypeByParentPartyTypeId;
     }
 
-    @Column(name = "child_party_type_id")
+    @Enumerated
+    @Column(name = "child_party_type")
     public AuPartyType getChildPartyType() {
         return this.childPartyType;
     }
@@ -41,7 +45,8 @@ public class AuConnectionRule extends BaseEntity<Long> {
         this.childPartyType = auPartyTypeByChildPartyTypeId;
     }
 
-    @Column(name = "relation_type_id")
+    @Enumerated
+    @Column(name = "relation_type")
     public AuPartyRelationType getAuPartyRelationType() {
         return this.auPartyRelationType;
     }
@@ -68,4 +73,12 @@ public class AuConnectionRule extends BaseEntity<Long> {
         this.remark = remark;
     }
 
+    @Column(name = "level")
+    public Short getLevel() {
+        return level;
+    }
+
+    public void setLevel(Short level) {
+        this.level = level;
+    }
 }
