@@ -19,7 +19,7 @@ public class QueryFilter implements Serializable {
     /**
      * 运算符
      */
-    private enum Operator {
+    public enum Operator {
 
         /**
          * 等于
