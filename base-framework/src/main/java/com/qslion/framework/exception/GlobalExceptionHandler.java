@@ -7,9 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
@@ -30,10 +31,10 @@ public class GlobalExceptionHandler {
      * @return error message
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<RestResult> handlerException(Exception ex) {
-        logger.error("Exception:{}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(RestResult.fail(ResultCode.INTERNAL_SERVER_ERROR, ex.getMessage()));
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResult handlerException(Exception ex) {
+        logger.error("GlobalExceptionHandler Exception:{}", ex.getMessage());
+        return RestResult.fail(ResultCode.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
     /**
@@ -43,9 +44,10 @@ public class GlobalExceptionHandler {
      * @return error message
      */
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<RestResult> handlerRuntimeException(RuntimeException ex) {
-        logger.error("RuntimeException:{}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RestResult.fail(ResultCode.FAIL, ex.getMessage()));
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResult handlerRuntimeException(RuntimeException ex) {
+        logger.error("GlobalExceptionHandler RuntimeException:{}", ex.getMessage());
+        return RestResult.fail(ResultCode.FAIL, ex.getMessage());
     }
 
     /**
@@ -55,22 +57,38 @@ public class GlobalExceptionHandler {
      * @return error message
      */
     @ExceptionHandler(HandleException.class)
-    public ResponseEntity<RestResult> handlerException(HandleException ex) {
-        logger.error("HandleException:{}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RestResult.fail(ex.getResultCode(), ex.getMessage()));
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResult handlerException(HandleException ex) {
+        logger.error("GlobalExceptionHandler HandleException:{}", ex.getMessage());
+        return RestResult.fail(ex.getResultCode(), ex.getMessage());
     }
 
     /**
-     * 参数检验违反约束（数据校验）
+     * 参数检验违反约束（数据校验@Validated）
      *
      * @param ex BindException
      * @return error message
      */
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<RestResult> handleConstraintViolationException(BindException ex) {
-        logger.debug(ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(RestResult.fail(ResultCode.PARAMETER_ERROR,
-            ex.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(",")))
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RestResult handleConstraintViolationException(BindException ex) {
+        logger.error("GlobalExceptionHandler BindException:{}", ex.getMessage());
+        return RestResult.fail(ResultCode.PARAMETER_ERROR, ex.getBindingResult().getAllErrors()
+            .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(","))
         );
+    }
+
+    /**
+     * 参数检验违反约束（数据校验@Valid）
+     *
+     * @param ex BindException
+     * @return error message
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public RestResult handleException(MethodArgumentNotValidException ex) {
+        logger.error("GlobalExceptionHandler MethodArgumentNotValidException:{}", ex.getMessage());
+        return RestResult.fail(ResultCode.PARAMETER_ERROR, ex.getBindingResult().getAllErrors()
+            .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(",")));
     }
 }
