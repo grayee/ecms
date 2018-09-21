@@ -12,6 +12,9 @@ spring:
   banner:
     charset: utf-8
     location: classpath:/config/banner.txt
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
   jpa:
     show-sql: true
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy

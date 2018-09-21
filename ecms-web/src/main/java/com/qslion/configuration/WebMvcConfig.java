@@ -6,10 +6,14 @@ import com.qslion.interceptor.AuthHandlerInterceptor;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.Nonnull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -69,6 +73,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
     // 参数名
     lci.setParamName("lang");
     return lci;
+  }
+
+
+  private ResourceBundleMessageSource getMessageSource() {
+    ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
+    rbms.setDefaultEncoding("UTF-8");
+    rbms.setBasenames("i18n/errors/ErrorMessages", "i18n/prompt/PromptMessages",
+        "i18n/validation/ValidationMessages");
+    return rbms;
+  }
+
+  @Override
+  @Bean
+  @Nonnull
+  public Validator getValidator() {
+    LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+    validator.setValidationMessageSource(getMessageSource());
+    return validator;
   }
 
 
