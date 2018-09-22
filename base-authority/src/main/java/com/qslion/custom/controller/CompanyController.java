@@ -11,10 +11,10 @@ import com.qslion.framework.bean.RestResult;
 import com.qslion.framework.controller.BaseController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,7 +52,7 @@ public class CompanyController extends BaseController<AuCompany, String> {
      */
     @PostMapping
     public ResponseEntity<RestResult> save(HttpServletRequest request, HttpServletResponse response,
-        @Valid @RequestBody AuCompany auCompany) {
+        @Validated @RequestBody AuCompany auCompany) {
         String parentCode = "";
         boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
         if (isRoot) {

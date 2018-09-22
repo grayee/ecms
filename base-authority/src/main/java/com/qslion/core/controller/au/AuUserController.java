@@ -13,54 +13,58 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * @descrip: ecms 代码自动生成
- * @copyright: Copyright © 2013-2020 ecms, All Rights Reserved
- * @author: zhangrg
- * @link: <a href=http://www.ecms.com>北京青胜蓝科技股份有限公司</a>
- * @create_date: 2013-02-22 23:00:27
- * @update_date: 2013-02-22 23:00:27
+ * 用户控制类
+ *
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
  */
-
-@Controller
-public class AuUserAction extends BaseController<AuUser, Long> {
+@RestController
+@RequestMapping(value = "/au/user")
+public class AuUserController extends BaseController<AuUser, Long> {
 
     @Autowired
-    public AuUserService auUserService;
+    private AuUserService auUserService;
     @Autowired
-    public AuRoleService roleService;
+    private AuRoleService roleService;
     @Autowired
-    public PartyRelationService partyRelationService;
-
+    private PartyRelationService partyRelationService;
 
     /**
      * 列表
      */
-    @RequestMapping(value = "/admin/user/index.jspx")
-    public String list(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuUser> pager) {
+    @GetMapping(value = "/list")
+    public String list(HttpServletRequest request, HttpServletResponse response,
+        @ModelAttribute("pager") Pager<AuUser> pager) {
         //pager = auUserService.findByPager(pager);
-        model.addAttribute("pager", pager);
-        return forward("list", false);
+
+        return "";
     }
 
     /**
      * 增加
      */
-    @RequestMapping(value = "/admin/user/save.jspx")
-    public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuUser entity) {
-        String parentRelId ="";
+    @PostMapping
+    public String save(HttpServletRequest request, HttpServletResponse response,
+        @Validated @RequestBody AuUser auUser) {
+        String parentRelId = "";
        /* AuPartyRelation relation = partyRelationService.get(parentRelId);
         AuParty auParty = relation.getAuParty();
         entity.setAuParty(auParty);
         entity.setLoginId(entity.getUsername());
         auUserService.insert(entity);*/
-        return forward("index", true);
+        auUserService.save(auUser);
+        return "";
     }
 
     /**
@@ -69,23 +73,25 @@ public class AuUserAction extends BaseController<AuUser, Long> {
     @RequestMapping(value = "/admin/user/deletes.jspx")
     public String deletes(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) {
         //auUserService.delete(ids);
-        return forward("index", true);
+        return "";
     }
 
     /**
      * 更新
      */
     @RequestMapping(value = "/admin/user/update.jspx")
-    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuUser entity) {
+    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model,
+        @ModelAttribute("entity") AuUser entity) {
         auUserService.update(entity);
-        return forward("index", true);
+        return "";
     }
 
     /**
      * 编辑，新增
      */
     @RequestMapping(value = "/admin/user/input.jspx")
-    public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuUser entity) {
+    public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model,
+        @ModelAttribute("entity") AuUser entity) {
         String id = request.getParameter("ids");
         if (StringUtils.isNotEmpty(id)) {
             //entity = auUserService.get(id);
@@ -93,7 +99,7 @@ public class AuUserAction extends BaseController<AuUser, Long> {
         }
         List<TreeNode> resultList = null;//partyRelationService.getPartyRelationTree(GlobalConstants.getRelTypeComp(), false);
         model.addAttribute("data", JSON.toJSON(resultList));
-        return forward("input", false);
+        return "";
     }
 
     /**
@@ -106,17 +112,18 @@ public class AuUserAction extends BaseController<AuUser, Long> {
             //AuUser entity = auUserService.get(id);
             //model.addAttribute("entity", entity);
         }
-        return forward("view", false);
+        return "";
     }
 
     /**
      * 授权管理>>用户授权
      */
     @RequestMapping(value = "/admin/user/getAuthUser.jspx")
-    public String getAuthUser(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuUser> pager) {
-       // pager = auUserService.findByPager(pager);
+    public String getAuthUser(HttpServletRequest request, HttpServletResponse response, ModelMap model,
+        @ModelAttribute("pager") Pager<AuUser> pager) {
+        // pager = auUserService.findByPager(pager);
         model.addAttribute("pager", pager);
-        return forward("authUserList", false);
+        return "";
     }
 
     /**
@@ -126,15 +133,15 @@ public class AuUserAction extends BaseController<AuUser, Long> {
     public String setReferenceRole(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String roleIds = "";
         String userId = "";
-       // AuUser user = auUserService.get(userId);
+        // AuUser user = auUserService.get(userId);
         String[] roleIdArray = roleIds.split(",");
         for (int i = 0; i < roleIdArray.length; i++) {
-           // AuRole role = roleService.get(roleIdArray[i]);
+            // AuRole role = roleService.get(roleIdArray[i]);
             //role.getAuUserSet().add(user);
-           // user.getAuRoleSet().add(role);
+            // user.getAuRoleSet().add(role);
         }
-       // auUserService.insert(user);
-        return forward("getAuthUser", true);
+        // auUserService.insert(user);
+        return "";
     }
 
     /**
@@ -143,23 +150,13 @@ public class AuUserAction extends BaseController<AuUser, Long> {
     @RequestMapping(value = "/admin/user/grantAuthDetail.jspx")
     public String grantAuthDetail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String userId = "";
-       // AuUser user = auUserService.get(userId);
+        // AuUser user = auUserService.get(userId);
         List<TreeNode> resultList = null;//partyRelationService.getPartyDetailRelationTree(user.getAuParty().getId(), GlobalConstants.getRelTypeComp());
         model.addAttribute("data", JSON.toJSON(resultList));
-       // model.addAttribute("user", user);
-        return forward("grantAuthDetail", false);
+        // model.addAttribute("user", user);
+        return "";
     }
 
-    public String forward(String viewName, boolean isRedirect) {
-        String baseUrl = "";
-        if (isRedirect) {
-            baseUrl = "redirect:/admin/user/";
-            return baseUrl + viewName + ".jspx";
-        } else {
-            baseUrl = "authority/au/user/";
-            return baseUrl + viewName;
-        }
-    }
 
 /*    SELECT parent.*
     FROM au_partyrelation AS node,

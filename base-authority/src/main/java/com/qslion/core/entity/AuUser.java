@@ -2,6 +2,7 @@ package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Set;
@@ -14,22 +15,29 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * 实体类 - 用户
+ * 用户实体类
  *
  * @author Gray.Z
- * @date 2018/4/30 13:56.
+ * @date 2018/4/21 13:43.
  */
 @Entity
 @Table(name = "au_user")
 public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private String username;
+    @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
     private String password;
+    @Email(message = "邮箱格式不正确")
     private String email;
+    @Pattern(regexp = "^1([345789])\\d{9}$", message = "手机号码格式错误")
+    @NotBlank(message = "手机号码不能为空")
     private String mobile;
     private String nickname;
     private Integer age;
@@ -61,7 +69,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         this.userGroups = userGroups;
     }
 
-    @ManyToMany(targetEntity = AuRole.class, fetch = FetchType.EAGER )
+    @ManyToMany(targetEntity = AuRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "au_user_role", joinColumns = {
         @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     public Set<AuRole> getRoles() {

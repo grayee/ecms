@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * 实体类 - 公司
@@ -28,6 +29,8 @@ public class AuCompany extends BaseEntity<Long> {
     private String shortName;
     private String area;
     private String linkMan;
+    @Pattern(regexp = "^1([345789])\\d{9}$", message = "座机号码格式错误")
+    @NotBlank(message = "座机号码不能为空")
     private String tel;
     private String fax;
     private String address;

@@ -79,8 +79,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
   private ResourceBundleMessageSource getMessageSource() {
     ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
     rbms.setDefaultEncoding("UTF-8");
-    rbms.setBasenames("i18n/errors/ErrorMessages", "i18n/prompt/PromptMessages",
-        "i18n/validation/ValidationMessages");
+    rbms.setBasenames("i18n/validation/ValidationMessages");
     return rbms;
   }
 
