@@ -1,4 +1,4 @@
-package com.qslion.framework.common;
+package com.qslion.framework.interceptor;
 
 import com.qslion.framework.bean.NestTreeable;
 

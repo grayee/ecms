@@ -7,12 +7,11 @@ import com.qslion.core.service.PartyService;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.RestResult;
+import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
+@ResponseResult
 @RestController
 @RequestMapping(value = "/org/company")
 public class CompanyController extends BaseController<AuCompany, String> {
@@ -51,7 +51,7 @@ public class CompanyController extends BaseController<AuCompany, String> {
      * @return RestResult
      */
     @PostMapping
-    public ResponseEntity<RestResult> save(HttpServletRequest request, HttpServletResponse response,
+    public String save(HttpServletRequest request, HttpServletResponse response,
         @Validated @RequestBody AuCompany auCompany) {
         String parentCode = "";
         boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
@@ -60,8 +60,7 @@ public class CompanyController extends BaseController<AuCompany, String> {
         } else {
             companyService.insert(auCompany, parentCode);
         }
-
-        return ResponseEntity.ok(RestResult.success());
+       return "";
     }
 
 

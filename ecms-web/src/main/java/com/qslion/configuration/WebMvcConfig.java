@@ -2,6 +2,7 @@ package com.qslion.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.qslion.framework.interceptor.ResponseResultInterceptor;
 import com.qslion.interceptor.AuthHandlerInterceptor;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -32,74 +33,80 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
 
-  @Bean
-  public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-    mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
-    return mappingJackson2HttpMessageConverter;
-  }
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
+        return mappingJackson2HttpMessageConverter;
+    }
 
-  @Bean
-  public ObjectMapper objectMapper() {
-    ObjectMapper objMapper = new ObjectMapper();
-    objMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    objMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-    return objMapper;
-  }
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objMapper = new ObjectMapper();
+        objMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        return objMapper;
+    }
 
-  @Bean
-  public DispatcherServlet dispatcherServlet() {
-    DispatcherServlet servlet = new DispatcherServlet();
-    servlet.setDispatchOptionsRequest(true);
-    return servlet;
-  }
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        DispatcherServlet servlet = new DispatcherServlet();
+        servlet.setDispatchOptionsRequest(true);
+        return servlet;
+    }
 
-  @Override
-  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    converters.add(mappingJackson2HttpMessageConverter());
-  }
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(mappingJackson2HttpMessageConverter());
+    }
 
-  @Bean
-  public LocaleResolver localeResolver() {
-    SessionLocaleResolver slr = new SessionLocaleResolver();
-    // 默认语言
-    slr.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
-    return slr;
-  }
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        // 默认语言
+        slr.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
+        return slr;
+    }
 
-  @Bean
-  public LocaleChangeInterceptor localeChangeInterceptor() {
-    LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-    // 参数名
-    lci.setParamName("lang");
-    return lci;
-  }
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+        // 参数名
+        lci.setParamName("lang");
+        return lci;
+    }
 
 
-  private ResourceBundleMessageSource getMessageSource() {
-    ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
-    rbms.setDefaultEncoding("UTF-8");
-    rbms.setBasenames("i18n/validation/ValidationMessages");
-    return rbms;
-  }
+    private ResourceBundleMessageSource getMessageSource() {
+        ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
+        rbms.setDefaultEncoding("UTF-8");
+        rbms.setBasenames("i18n/validation/ValidationMessages");
+        return rbms;
+    }
 
-  @Override
-  @Bean
-  @Nonnull
-  public Validator getValidator() {
-    LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-    validator.setValidationMessageSource(getMessageSource());
-    return validator;
-  }
+    @Override
+    @Bean
+    @Nonnull
+    public Validator getValidator() {
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.setValidationMessageSource(getMessageSource());
+        return validator;
+    }
 
-  @Bean
-  public AuthHandlerInterceptor authHandlerInterceptor() {
-    return new AuthHandlerInterceptor();
-  }
+    @Bean
+    public AuthHandlerInterceptor authHandlerInterceptor() {
+        return new AuthHandlerInterceptor();
+    }
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(authHandlerInterceptor());
-    registry.addInterceptor(localeChangeInterceptor());
-  }
+    @Bean
+    public ResponseResultInterceptor responseResultInterceptor() {
+        return new ResponseResultInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authHandlerInterceptor());
+        registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(responseResultInterceptor()).addPathPatterns("/**");
+    }
 }

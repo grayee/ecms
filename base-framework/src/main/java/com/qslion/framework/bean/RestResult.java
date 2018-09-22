@@ -38,9 +38,9 @@ public class RestResult implements Serializable {
         return getResult(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getDesc());
     }
 
-    public static <T> RestResult success(Pager<T> pager) {
+    public static RestResult success(Object data) {
         RestResult result = success();
-        result.setData(pager);
+        result.setData(data);
         return result;
     }
 
