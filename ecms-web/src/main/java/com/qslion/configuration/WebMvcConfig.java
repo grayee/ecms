@@ -93,7 +93,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     return validator;
   }
 
-
   @Bean
   public AuthHandlerInterceptor authHandlerInterceptor() {
     return new AuthHandlerInterceptor();

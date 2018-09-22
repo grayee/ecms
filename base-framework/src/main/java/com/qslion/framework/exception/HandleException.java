@@ -2,6 +2,7 @@
 package com.qslion.framework.exception;
 
 import com.qslion.framework.enums.ResultCode;
+import org.springframework.core.NestedRuntimeException;
 
 /**
  * 自定义异常
@@ -9,7 +10,7 @@ import com.qslion.framework.enums.ResultCode;
  * @author Gray.Z
  * @date 2018/9/18.
  */
-public class HandleException extends RuntimeException {
+public class HandleException extends NestedRuntimeException {
 
     private static final long serialVersionUID = 1L;
 

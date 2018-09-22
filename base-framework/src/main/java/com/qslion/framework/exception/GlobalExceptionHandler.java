@@ -3,8 +3,6 @@ package com.qslion.framework.exception;
 import com.qslion.framework.bean.RestResult;
 import com.qslion.framework.enums.ResultCode;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -20,9 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @date 2018/9/18.
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends BaseAggLayerGlobalExceptionHandler {
 
-    private final Logger logger = LogManager.getLogger(this.getClass());
 
     /**
      * 服务器异常

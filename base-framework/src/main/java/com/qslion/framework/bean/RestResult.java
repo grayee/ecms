@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
  * @author Gray.Z
  * @date 2018/9/20.
  */
-public class RestResult extends LinkedHashMap<String, Object> {
+public class RestResult extends LinkedHashMap<String, Object> implements Result {
 
     private static final String CODE = "code";
     private static final String MESSAGE = "message";
