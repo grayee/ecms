@@ -1,10 +1,12 @@
 package com.qslion.framework.exception;
 
+import com.qslion.framework.bean.ErrorResult;
 import com.qslion.framework.bean.RestResult;
 import com.qslion.framework.enums.ResultCode;
-import java.util.stream.Collectors;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,20 +20,44 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @date 2018/9/18.
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler extends BaseAggLayerGlobalExceptionHandler {
+public class GlobalExceptionHandler extends BaseGlobalExceptionHandler {
 
 
     /**
-     * 服务器异常
+     * 违反约束异常
      *
-     * @param ex Exception
+     * @param ex ConstraintViolationException
      * @return error message
      */
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public RestResult handlerException(Exception ex) {
-        logger.error("GlobalExceptionHandler Exception:{}", ex.getMessage());
-        return RestResult.fail(ResultCode.INTERNAL_SERVER_ERROR, ex.getMessage());
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResult handlerConstraintViolationException(ConstraintViolationException ex) {
+        return handleConstraintViolationException(ex);
+    }
+
+
+    /**
+     * 参数封装错误异常
+     *
+     * @param ex HttpMessageNotReadableException
+     * @return error message
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResult handlerHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return handleHttpMessageNotReadableException(ex);
+    }
+
+    /**
+     * 自定义业务异常
+     *
+     * @param ex BusinessException
+     * @return error message
+     */
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResult> handlerBusinessException(BusinessException ex) {
+        return handleBusinessException(ex);
     }
 
     /**
@@ -42,22 +68,8 @@ public class GlobalExceptionHandler extends BaseAggLayerGlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public RestResult handlerRuntimeException(RuntimeException ex) {
-        logger.error("GlobalExceptionHandler RuntimeException:{}", ex.getMessage());
-        return RestResult.fail(ResultCode.FAIL, ex.getMessage());
-    }
-
-    /**
-     * 自定义异常
-     *
-     * @param ex HandleException
-     * @return error message
-     */
-    @ExceptionHandler(HandleException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public RestResult handlerException(HandleException ex) {
-        logger.error("GlobalExceptionHandler HandleException:{}", ex.getMessage());
-        return RestResult.fail(ex.getResultCode(), ex.getMessage());
+    public ErrorResult handlerRuntimeException(RuntimeException ex) {
+        return handleRuntimeException(ex);
     }
 
     /**
@@ -68,11 +80,8 @@ public class GlobalExceptionHandler extends BaseAggLayerGlobalExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestResult handleConstraintViolationException(BindException ex) {
-        logger.error("GlobalExceptionHandler BindException:{}", ex.getMessage());
-        return RestResult.fail(ResultCode.PARAMETER_ERROR, ex.getBindingResult().getAllErrors()
-            .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(","))
-        );
+    public RestResult handlerBindException(BindException ex) {
+        return handleBindException(ex);
     }
 
     /**
@@ -83,9 +92,35 @@ public class GlobalExceptionHandler extends BaseAggLayerGlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestResult handleException(MethodArgumentNotValidException ex) {
-        logger.error("GlobalExceptionHandler MethodArgumentNotValidException:{}", ex.getMessage());
-        return RestResult.fail(ResultCode.PARAMETER_ERROR, ex.getBindingResult().getAllErrors()
-            .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(",")));
+    public ErrorResult handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return handleMethodArgumentNotValidException(ex);
+    }
+
+    /**
+     * 自定义异常
+     *
+     * @param ex HandleException
+     * @return error message
+     */
+    @ExceptionHandler(HandleException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResult handlerException(HandleException ex) {
+        logger.error("GlobalExceptionHandler handle HandleException:{}", ex.getMessage());
+        return ErrorResult.failure(ResultCode.INTERNAL_SERVER_ERROR, ex, HttpStatus.INTERNAL_SERVER_ERROR,
+            ex.getMessage());
+    }
+
+    /**
+     * 服务器异常
+     *
+     * @param ex Exception
+     * @return error message
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResult handlerException(Exception ex) {
+        logger.error("GlobalExceptionHandler handle Exception:{}", ex.getMessage());
+        return ErrorResult.failure(ResultCode.INTERNAL_SERVER_ERROR, ex, HttpStatus.INTERNAL_SERVER_ERROR,
+            ex.getMessage());
     }
 }

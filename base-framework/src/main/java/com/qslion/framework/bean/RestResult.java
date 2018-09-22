@@ -1,42 +1,70 @@
 package com.qslion.framework.bean;
 
 import com.qslion.framework.enums.ResultCode;
-import java.util.LinkedHashMap;
+import java.io.Serializable;
 
 /**
- * 结果对象
+ * REST结果对象
  *
  * @author Gray.Z
  * @date 2018/9/20.
  */
-public class RestResult extends LinkedHashMap<String, Object> implements Result {
+public class RestResult implements Serializable {
 
     private static final String CODE = "code";
     private static final String MESSAGE = "message";
 
-    private static RestResult getRestResult(int code, String msg) {
+    /**
+     * 异常堆栈的精简信息
+     */
+    private String message;
+
+    /**
+     * 内部自定义的返回值编码，{@link ResultCode} 它是对错误更加详细的编码
+     */
+    private Integer code;
+
+
+    private Object data;
+
+    public static RestResult getResult(int code, String msg) {
         RestResult result = new RestResult();
-        result.put(CODE, code);
-        result.put(MESSAGE, msg);
+        result.code = code;
+        result.message = msg;
         return result;
     }
 
     public static RestResult success() {
-        RestResult result = getRestResult(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getDesc());
-        return result;
+        return getResult(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getDesc());
     }
 
     public static <T> RestResult success(Pager<T> pager) {
         RestResult result = success();
-        result.put("page", pager);
+        result.setData(pager);
         return result;
     }
 
-    public static RestResult fail(ResultCode resultCode, String msg) {
-        return getRestResult(resultCode.getCode(), String.format("%s:%s", resultCode.getDesc(), msg));
+    public String getMessage() {
+        return message;
     }
 
-    public static RestResult get(ResultCode resultCode) {
-        return getRestResult(resultCode.getCode(), resultCode.getDesc());
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }
