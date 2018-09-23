@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * ecms
+ * 接口响应体处理器
  *
  * @author Gray.Z
  * @date 2018/9/22 22:10.

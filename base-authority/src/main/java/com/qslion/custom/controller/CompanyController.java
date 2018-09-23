@@ -55,11 +55,11 @@ public class CompanyController extends BaseController<AuCompany, String> {
         @Validated @RequestBody AuCompany auCompany) {
         String parentCode = "";
         boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
-        if (isRoot) {
+    /*    if (isRoot) {
             companyService.insertRoot(auCompany);
         } else {
             companyService.insert(auCompany, parentCode);
-        }
+        }*/
        return "";
     }
 

@@ -33,6 +33,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private String username;
     @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{5,19}$", groups = AddGroup.class, message = "{custom.pwd.invalid}")
     private String password;
     @Email(message = "邮箱格式不正确")
     private String email;
