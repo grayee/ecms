@@ -3,7 +3,7 @@ package com.qslion.framework.bean;
 import com.qslion.framework.enums.ExceptionEnum;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
-import com.qslion.framework.util.RequestContextHolderUtil;
+import com.qslion.framework.util.RequestContextUtil;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ public class ErrorResult extends RestResult {
         result.setStatus(httpStatus.value());
         result.setError(httpStatus.getReasonPhrase());
         result.setException(e.getClass().getName());
-        result.setPath(RequestContextHolderUtil.getRequest().getRequestURI());
+        result.setPath(RequestContextUtil.getRequest().getRequestURI());
         result.setTimestamp(new Date());
         return result;
     }

@@ -1,17 +1,14 @@
-package com.qslion.interceptor;
+package com.qslion.framework.interceptor;
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.qslion.framework.exception.GlobalExceptionHandler;
 import com.qslion.framework.util.IpUtil;
-import com.qslion.framework.util.JSONUtils;
+import com.qslion.framework.util.RequestContextUtil;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -51,7 +46,7 @@ public class RestControllerAspect {
      * @return 切入点返回值
      * @throws Throwable 异常信息
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.RestController)")
+    @Around("@within(org.springframework.web.bind.annotation.RestController)")
     public Object apiLog(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -61,7 +56,7 @@ public class RestControllerAspect {
             return joinPoint.proceed();
         }
 
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = RequestContextUtil.getRequest();
         // AuUser loginUser = LoginHelper.getLoginUserFromRequest(request);
 
         String ip = IpUtil.getRealIp(request);
@@ -79,7 +74,7 @@ public class RestControllerAspect {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         logger.info("Ended request requester [{}] method [{}] params[{}] response is [{}] cost [{}] millis ",
-            requester, methodName, params, this.deleteSensitiveContent(result), System.currentTimeMillis() - start);
+            requester, methodName, params, result.toString(), System.currentTimeMillis() - start);
         return result;
     }
 
@@ -93,19 +88,6 @@ public class RestControllerAspect {
     }
 
     private String getParamsJson(ProceedingJoinPoint joinPoint) {
-
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        Map<String, Object> paramMap = Maps.newHashMap();
-        Enumeration<String> enu = request.getParameterNames();
-        while (enu.hasMoreElements()) {
-            String paraName = enu.nextElement();
-            paramMap.put(paraName, request.getParameter(paraName));
-        }
-        String paramString = JSONUtils.writeValueAsString(paramMap);
-
-        System.out.println("========>>>" + paramString);
-
         Object[] args = joinPoint.getArgs();
         StringBuilder sb = new StringBuilder();
         for (Object arg : args) {
@@ -155,6 +137,7 @@ public class RestControllerAspect {
                     jsonObject.put(sensitiveField, "******");
                 }
             }
+
         } catch (ClassCastException e) {
             return String.valueOf(obj);
         }
@@ -162,7 +145,7 @@ public class RestControllerAspect {
     }
 
     /**
-     * 敏感字段列表（当然这里你可以更改为可配置的）
+     * 敏感字段列表（可配置的）
      */
     private List<String> getSensitiveFieldList() {
         List<String> sensitiveFieldList = Lists.newArrayList();

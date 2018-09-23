@@ -105,7 +105,7 @@ public class GlobalExceptionHandler extends BaseGlobalExceptionHandler {
     @ExceptionHandler(HandleException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResult handlerException(HandleException ex) {
-        logger.error("GlobalExceptionHandler handle HandleException:{}", ex.getMessage());
+        logger.error("GlobalExceptionHandler handle HandleException:{}", ex);
         return ErrorResult.failure(ResultCode.INTERNAL_SERVER_ERROR, ex, HttpStatus.INTERNAL_SERVER_ERROR,
             ex.getMessage());
     }
@@ -119,7 +119,7 @@ public class GlobalExceptionHandler extends BaseGlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResult handlerException(Exception ex) {
-        logger.error("GlobalExceptionHandler handle Exception:{}", ex.getMessage());
+        logger.error("GlobalExceptionHandler handle Exception:{}", ex);
         return ErrorResult.failure(ResultCode.INTERNAL_SERVER_ERROR, ex, HttpStatus.INTERNAL_SERVER_ERROR,
             ex.getMessage());
     }

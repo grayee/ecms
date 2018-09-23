@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * server
+ * 通用service接口
  *
  * @author Gray.Z
  * @date 2018/4/13 10:54.
@@ -39,7 +39,6 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
      * @param ids ID
      * @return 实体对象集合
      */
-    @SuppressWarnings("unchecked")
     List<T> findList(ID... ids);
 
     /**
@@ -139,7 +138,6 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
      *
      * @param entities entities
      */
-    @SuppressWarnings("unchecked")
     void delete(List<T> entities);
 
     /**

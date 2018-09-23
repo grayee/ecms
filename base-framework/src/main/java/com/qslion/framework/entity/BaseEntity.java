@@ -3,6 +3,7 @@ package com.qslion.framework.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,9 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * 实体类-基类
@@ -18,6 +22,7 @@ import javax.persistence.Version;
  * @date 2018/4/3 20:25.
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class BaseEntity<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,10 +33,12 @@ public class BaseEntity<T> implements Serializable {
     /**
      * 创建日期
      */
+    @CreatedDate
     protected Date createDate;
     /**
      * 修改日期
      */
+    @LastModifiedDate
     protected Date modifyDate;
     /**
      * 版本信息
@@ -51,7 +58,7 @@ public class BaseEntity<T> implements Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 20, updatable = false)
+    @Column(name = "create_date", nullable = false, length = 20, updatable = false, columnDefinition = "datetime(3)")
     public Date getCreateDate() {
         return createDate;
     }
@@ -61,7 +68,7 @@ public class BaseEntity<T> implements Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modify_date", length = 20)
+    @Column(name = "modify_date", length = 20, columnDefinition = "datetime(3)")
     public Date getModifyDate() {
         return modifyDate;
     }

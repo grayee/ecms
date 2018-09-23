@@ -1,10 +1,12 @@
 package com.qslion.custom.entity;
 
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -37,13 +39,13 @@ public class AuCompany extends BaseEntity<Long> {
     private String postalCode;
     @Email(message = "邮箱格式不正确")
     private String email;
-    private String web;
+    private String webSite;
     private String remark;
-    private String enableStatus;
+    private EnableStatus enableStatus;
     private Date enableDate;
 
     @Basic
-    @Column(name = "company_no", nullable = true, length = 64)
+    @Column(name = "company_no", length = 64)
     public String getCompanyNo() {
         return companyNo;
     }
@@ -53,7 +55,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "company_name", nullable = true, length = 255)
+    @Column(name = "company_name")
     public String getCompanyName() {
         return companyName;
     }
@@ -63,7 +65,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "company_flag", nullable = true, length = 64)
+    @Column(name = "company_flag", length = 64)
     public String getCompanyFlag() {
         return companyFlag;
     }
@@ -73,7 +75,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "company_type", nullable = true, length = 64)
+    @Column(name = "company_type", length = 64)
     public String getCompanyType() {
         return companyType;
     }
@@ -83,7 +85,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "company_level", nullable = true, length = 3)
+    @Column(name = "company_level", length = 3)
     public String getCompanyLevel() {
         return companyLevel;
     }
@@ -93,7 +95,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "short_name", nullable = true, length = 64)
+    @Column(name = "short_name", length = 64)
     public String getShortName() {
         return shortName;
     }
@@ -103,7 +105,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "area", nullable = true, length = 64)
+    @Column(name = "area", length = 64)
     public String getArea() {
         return area;
     }
@@ -113,7 +115,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "link_man", nullable = true, length = 64)
+    @Column(name = "link_man", length = 64)
     public String getLinkMan() {
         return linkMan;
     }
@@ -123,7 +125,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "tel", nullable = true, length = 32)
+    @Column(name = "tel", length = 32)
     public String getTel() {
         return tel;
     }
@@ -133,7 +135,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "fax", nullable = true, length = 32)
+    @Column(name = "fax", length = 32)
     public String getFax() {
         return fax;
     }
@@ -143,7 +145,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "address", nullable = true, length = 255)
+    @Column(name = "address")
     public String getAddress() {
         return address;
     }
@@ -153,7 +155,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "postal_code", nullable = true, length = 32)
+    @Column(name = "postal_code", length = 32)
     public String getPostalCode() {
         return postalCode;
     }
@@ -163,7 +165,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "email", nullable = true, length = 255)
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -173,17 +175,17 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "web", nullable = true, length = 255)
-    public String getWeb() {
-        return web;
+    @Column(name = "web_site")
+    public String getWebSite() {
+        return webSite;
     }
 
-    public void setWeb(String web) {
-        this.web = web;
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
     }
 
     @Basic
-    @Column(name = "remark", nullable = true, length = 255)
+    @Column(name = "remark")
     public String getRemark() {
         return remark;
     }
@@ -193,17 +195,18 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "enable_status", nullable = false, length = 1)
-    public String getEnableStatus() {
+    @Column(name = "enable_status", length = 1)
+    @Enumerated
+    public EnableStatus getEnableStatus() {
         return enableStatus;
     }
 
-    public void setEnableStatus(String enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
     }
 
     @Basic
-    @Column(name = "enable_date", nullable = false)
+    @Column(name = "enable_date")
     public Date getEnableDate() {
         return enableDate;
     }
@@ -270,7 +273,7 @@ public class AuCompany extends BaseEntity<Long> {
         if (email != null ? !email.equals(auCompany.email) : auCompany.email != null) {
             return false;
         }
-        if (web != null ? !web.equals(auCompany.web) : auCompany.web != null) {
+        if (webSite != null ? !webSite.equals(auCompany.webSite) : auCompany.webSite != null) {
             return false;
         }
         if (remark != null ? !remark.equals(auCompany.remark) : auCompany.remark != null) {
@@ -312,7 +315,7 @@ public class AuCompany extends BaseEntity<Long> {
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (web != null ? web.hashCode() : 0);
+        result = 31 * result + (webSite != null ? webSite.hashCode() : 0);
         result = 31 * result + (remark != null ? remark.hashCode() : 0);
         result = 31 * result + (enableStatus != null ? enableStatus.hashCode() : 0);
         result = 31 * result + (enableDate != null ? enableDate.hashCode() : 0);

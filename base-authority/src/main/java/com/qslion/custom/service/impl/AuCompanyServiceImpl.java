@@ -2,7 +2,6 @@
 package com.qslion.custom.service.impl;
 
 
-import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
@@ -26,22 +25,13 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Autowired
     private PartyRelationRepository partyRelationRepository;
 
-
-
-    /**
-     * 功能: 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
-     *
-     * @param vo          用于添加的VO对象
-     * @param parentRelId 上级节点团体关系主键
-     * @return 若添加成功，则返回新添加记录的主键
-     */
-    public String insert(AuCompany vo, String parentRelId) {
+    public Long insert(AuCompany vo, Long parentCode) {
         AuParty auParty = new AuParty();
         auParty.setAuPartyType(null);
         auParty.setName(vo.getCompanyName());
         auParty.setEmail(vo.getEmail());
         auParty.setRemark(vo.getRemark());
-        auParty.setEnableStatus(vo.getEnableStatus());
+        //auParty.setEnableStatus(vo.getEnableStatus());
         auParty.setIsInherit("1");
         auParty.setIsReal("1");
         //vo.setAuParty(auParty);
@@ -51,25 +41,12 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         }
         AuCompany company = companyRepository.save(vo);
         //添加团体关系
-        if (StringUtils.isNotEmpty(parentRelId)) {
-           // OrgHelper.addAuPartyRelation(company.getAuParty().getId(), parentRelId, AuPartyRelationType.ADMINISTRATIVE.getId() + "");
+        if (parentCode != null) {
+            // OrgHelper.addAuPartyRelation(company.getAuParty().getId(), parentRelId, AuPartyRelationType.ADMINISTRATIVE.getId() + "");
         }
-        return "";
+        return company.getId();
     }
 
-    /**
-     * 功能: 添加新记录，同时添加团体、团体关系根节点
-     *
-     * @param vo 用于添加的VO对象
-     */
-    public String insertRoot(AuCompany vo) {
-        String partyId = this.insert(vo, "");
-        String relTypeId = AuPartyRelationType.ADMINISTRATIVE.getId() + "";
-        if (StringUtils.isNotEmpty(partyId)) {
-            //OrgHelper.addRoot(partyId, relTypeId);
-        }
-        return partyId;
-    }
 
     /**
      * 删除单条记录，同时删除团体关系及相关的权限记录
@@ -79,7 +56,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     public boolean delete(String partyRelationId) {
         //String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
         //companyRepository.delete(partyid);
-       // OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
+        // OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
         return true;
     }
 
@@ -114,7 +91,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         //vo.setAuParty(party);
 
         companyRepository.save(vo);
-        AuPartyRelation relation =null;// partyRelationRepository.findByPartyId(vo.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "");
+        AuPartyRelation relation = null;// partyRelationRepository.findByPartyId(vo.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "");
         relation.setName(vo.getCompanyName());
         //partyRelationRepository.update(relation);
         //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "更新了" + sum + "条记录,id=" + String.valueOf(vo.getId()));

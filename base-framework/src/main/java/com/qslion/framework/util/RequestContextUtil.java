@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @author Gray.Z
  * @date 2018/9/22.
  */
-public class RequestContextHolderUtil {
+public class RequestContextUtil {
 
     public static HttpServletRequest getRequest() {
         return getRequestAttributes().getRequest();

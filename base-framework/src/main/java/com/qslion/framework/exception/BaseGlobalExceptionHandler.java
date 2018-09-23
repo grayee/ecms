@@ -29,7 +29,7 @@ public class BaseGlobalExceptionHandler {
      * 违反约束异常
      */
     protected ErrorResult handleConstraintViolationException(ConstraintViolationException e) {
-        logger.error("GlobalExceptionHandler handle ConstraintViolationException , caused by: {}", e.getMessage());
+        logger.error("GlobalExceptionHandler handle ConstraintViolationException , caused by: {}", e);
 
         String errors = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage)
             .collect(Collectors.joining(","));
@@ -41,7 +41,7 @@ public class BaseGlobalExceptionHandler {
      * 处理验证参数封装错误时异常
      */
     protected ErrorResult handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        logger.error("GlobalExceptionHandler handle HttpMessageNotReadableException , caused by: {}", e.getMessage());
+        logger.error("GlobalExceptionHandler handle HttpMessageNotReadableException , caused by: {}", e);
         return ErrorResult.failure(ResultCode.PARAMETER_IS_INVALID, e, HttpStatus.BAD_REQUEST);
     }
 
@@ -49,7 +49,7 @@ public class BaseGlobalExceptionHandler {
      * 处理参数绑定时异常（返400错误码）
      */
     protected ErrorResult handleBindException(BindException e) {
-        logger.error("GlobalExceptionHandler handle BindException , caused by: {}", e.getMessage());
+        logger.error("GlobalExceptionHandler handle BindException , caused by: {}", e);
 
         String errors = e.getBindingResult().getAllErrors().stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(","));
@@ -61,7 +61,7 @@ public class BaseGlobalExceptionHandler {
      * 处理使用@Validated注解时，参数验证错误异常（返400错误码）
      */
     protected ErrorResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        logger.error("GlobalExceptionHandler handle MethodArgumentNotValidException , caused by: {}", e.getMessage());
+        logger.error("GlobalExceptionHandler handle MethodArgumentNotValidException , caused by: {}", e);
 
         List<FieldError> errors = e.getBindingResult().getFieldErrors().stream()
             .map(fieldError -> new FieldError(fieldError.getField(), fieldError.getDefaultMessage())).collect(Collectors.toList());
@@ -73,8 +73,7 @@ public class BaseGlobalExceptionHandler {
      * 处理通用自定义业务异常
      */
     protected ResponseEntity<ErrorResult> handleBusinessException(BusinessException e) {
-        logger.info("GlobalExceptionHandler handle BusinessException , exception:{}, caused by: {}", e.getClass(),
-            e.getMessage());
+        logger.info("GlobalExceptionHandler handle BusinessException , exception:{}, caused by: {}", e.getClass(), e);
 
         ErrorResult errorResult = ErrorResult.failure(e);
         return ResponseEntity.status(HttpStatus.valueOf(errorResult.getStatus())).body(errorResult);
@@ -84,7 +83,7 @@ public class BaseGlobalExceptionHandler {
      * 处理运行时系统异常（反500错误码）
      */
     protected ErrorResult handleRuntimeException(RuntimeException e) {
-        logger.error("GlobalExceptionHandler handle RuntimeException , caused by: {}", e.getMessage());
+        logger.error("GlobalExceptionHandler handle RuntimeException , caused by: {}", e);
         //TODO 可通过邮件、微信公众号等方式发送信息至开发人员、记录存档等操作
         logger.info("start send email to sys admin....");
         return ErrorResult.failure(ResultCode.INTERNAL_SYSTEM__ERROR, e, HttpStatus.INTERNAL_SERVER_ERROR);

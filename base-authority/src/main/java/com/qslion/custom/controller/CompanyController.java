@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -45,22 +46,12 @@ public class CompanyController extends BaseController<AuCompany, String> {
     /**
      * 保存
      *
-     * @param request 请求对象
-     * @param response 响应对象
      * @param auCompany 公司
-     * @return RestResult
+     * @return ID
      */
     @PostMapping
-    public String save(HttpServletRequest request, HttpServletResponse response,
-        @Validated @RequestBody AuCompany auCompany) {
-        String parentCode = "";
-        boolean isRoot = Boolean.valueOf(request.getParameter("isRoot"));
-    /*    if (isRoot) {
-            companyService.insertRoot(auCompany);
-        } else {
-            companyService.insert(auCompany, parentCode);
-        }*/
-       return "";
+    public Long save(@Validated @RequestBody AuCompany auCompany, @RequestParam(required = false) Long parentCode) {
+        return companyService.insert(auCompany, parentCode);
     }
 
 
