@@ -39,9 +39,8 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
         AuParty auParty = new AuParty();
         //auParty.setAuPartyType(partyTypeDao.get(GlobalConstants.getPartyTypeEmpl()));
         auParty.setName(vo.getPersonName());
-        auParty.setEmail(vo.getEmail());
         auParty.setRemark(vo.getRemark());
-        auParty.setEnableStatus(vo.getEnableStatus());
+        //auParty.setEnableStatus(vo.getEnableStatus());
         auParty.setIsInherit("1");
         auParty.setIsReal("1");
        // vo.setAuParty(auParty);
@@ -116,7 +115,6 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
     public AuEmployee update(AuEmployee vo) {
         AuParty party = partyRepository.getOne(vo.getId());
         party.setName(vo.getPersonName());//团体名称
-        party.setEmail(vo.getEmail());//团体EMAIL（对员工类型为必填）
         party.setRemark(vo.getRemark());//备注
         //vo.setAuParty(party);
        /* employeeDao.clear();

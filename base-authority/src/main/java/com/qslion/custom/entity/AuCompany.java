@@ -1,12 +1,9 @@
 package com.qslion.custom.entity;
 
-import com.qslion.framework.entity.BaseEntity;
-import com.qslion.framework.enums.EnableStatus;
-import java.util.Date;
+import com.qslion.core.entity.PartyEntity;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -20,14 +17,14 @@ import javax.validation.constraints.Pattern;
  */
 @Entity
 @Table(name = "au_company")
-public class AuCompany extends BaseEntity<Long> {
+public class AuCompany extends PartyEntity {
 
     private String companyNo;
     @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
     private String companyFlag;
     private String companyType;
-    private String companyLevel;
+    private Short companyLevel;
     private String shortName;
     private String area;
     private String linkMan;
@@ -41,8 +38,6 @@ public class AuCompany extends BaseEntity<Long> {
     private String email;
     private String webSite;
     private String remark;
-    private EnableStatus enableStatus;
-    private Date enableDate;
 
     @Basic
     @Column(name = "company_no", length = 64)
@@ -86,11 +81,11 @@ public class AuCompany extends BaseEntity<Long> {
 
     @Basic
     @Column(name = "company_level", length = 3)
-    public String getCompanyLevel() {
+    public Short getCompanyLevel() {
         return companyLevel;
     }
 
-    public void setCompanyLevel(String companyLevel) {
+    public void setCompanyLevel(Short companyLevel) {
         this.companyLevel = companyLevel;
     }
 
@@ -165,7 +160,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "email")
+    @Column(name = "email", length = 64)
     public String getEmail() {
         return email;
     }
@@ -175,7 +170,7 @@ public class AuCompany extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "web_site")
+    @Column(name = "web_site", length = 64)
     public String getWebSite() {
         return webSite;
     }
@@ -194,26 +189,6 @@ public class AuCompany extends BaseEntity<Long> {
         this.remark = remark;
     }
 
-    @Basic
-    @Column(name = "enable_status", length = 1)
-    @Enumerated
-    public EnableStatus getEnableStatus() {
-        return enableStatus;
-    }
-
-    public void setEnableStatus(EnableStatus enableStatus) {
-        this.enableStatus = enableStatus;
-    }
-
-    @Basic
-    @Column(name = "enable_date")
-    public Date getEnableDate() {
-        return enableDate;
-    }
-
-    public void setEnableDate(Date enableDate) {
-        this.enableDate = enableDate;
-    }
 
     @Override
     public boolean equals(Object o) {

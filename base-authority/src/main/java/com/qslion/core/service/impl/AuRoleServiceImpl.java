@@ -39,9 +39,8 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
         AuParty auParty = new AuParty();
         auParty.setAuPartyType(null);
         auParty.setName(vo.getName());
-        auParty.setEmail("");
         auParty.setRemark(vo.getDescription());
-        auParty.setEnableStatus("1");
+        //auParty.setEnableStatus("1");
         auParty.setIsInherit("1");
         auParty.setIsReal("1");
      /*   vo.setAuParty(auParty);

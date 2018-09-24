@@ -2,10 +2,12 @@ package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,12 +27,19 @@ public class AuUserGroup extends BaseEntity<Long> {
     private String name;
     private String code;
     private String description;
-    private String enableStatus;
+    private EnableStatus enableStatus;
 
     private Set<AuUser> users = Sets.newHashSet();
 
     private Set<AuRole> roles = Sets.newHashSet();
 
+    /**
+     * 在单向关系中没有mappedBy,主控方相当于拥有指向另一方的外键的一方。
+     * 1.一对一和多对一的@JoinColumn注解的都是在“主控方”，都是本表指向外表的外键名称。
+     * 2.一对多的@JoinColumn注解在“被控方”，即一的一方，指的是外表中指向本表的外键名称。
+     * 3.多对多中，joinColumns写的都是本表在中间表的外键名称，
+     * inverseJoinColumns写的是另一个表在中间表的外键名称。
+     */
     @ManyToMany(targetEntity = AuRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "au_usergroup_role", joinColumns = {
         @JoinColumn(name = "usergroup_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
@@ -84,12 +93,13 @@ public class AuUserGroup extends BaseEntity<Long> {
     }
 
     @Basic
+    @Enumerated
     @Column(name = "enable_status", nullable = true, length = 1)
-    public String getEnableStatus() {
+    public EnableStatus getEnableStatus() {
         return enableStatus;
     }
 
-    public void setEnableStatus(String enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
     }
 

@@ -11,9 +11,6 @@ import java.io.Serializable;
  */
 public class RestResult implements Serializable {
 
-    private static final String CODE = "code";
-    private static final String MESSAGE = "message";
-
     /**
      * 异常堆栈的精简信息
      */

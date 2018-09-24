@@ -6,6 +6,7 @@ import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
@@ -25,26 +26,26 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Autowired
     private PartyRelationRepository partyRelationRepository;
 
-    public Long insert(AuCompany vo, Long parentCode) {
+    @Override
+    public AuCompany insert(AuCompany company, Long parentCode) {
         AuParty auParty = new AuParty();
-        auParty.setAuPartyType(null);
-        auParty.setName(vo.getCompanyName());
-        auParty.setEmail(vo.getEmail());
-        auParty.setRemark(vo.getRemark());
-        //auParty.setEnableStatus(vo.getEnableStatus());
+        auParty.setAuPartyType(AuPartyType.COMPANY);
+        auParty.setName(company.getCompanyName());
+        auParty.setRemark(company.getRemark());
+        auParty.setEnableStatus(company.getEnableStatus());
         auParty.setIsInherit("1");
         auParty.setIsReal("1");
-        //vo.setAuParty(auParty);
+        //company.setAuParty(auParty);
         //如果用户不手工编号，则系统自动编号
-        if (StringUtils.isEmpty(vo.getCompanyNo())) {
+        if (StringUtils.isEmpty(company.getCompanyNo())) {
             //vo.setCompanyNo(auParty.getId());
         }
-        AuCompany company = companyRepository.save(vo);
+        AuCompany auCompany = companyRepository.save(company);
         //添加团体关系
         if (parentCode != null) {
             // OrgHelper.addAuPartyRelation(company.getAuParty().getId(), parentRelId, AuPartyRelationType.ADMINISTRATIVE.getId() + "");
         }
-        return company.getId();
+        return auCompany;
     }
 
 
@@ -86,8 +87,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     public AuCompany update(AuCompany vo) {
         AuParty party = partyRepository.getOne(vo.getId());
         party.setName(vo.getCompanyName());//团体名称
-        party.setEmail(vo.getEmail());//团体EMAIL（对员工类型为必填）
-        party.setRemark(vo.getRemark());//备注	
+        party.setRemark(vo.getRemark());//备注
         //vo.setAuParty(party);
 
         companyRepository.save(vo);

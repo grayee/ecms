@@ -2,6 +2,7 @@ package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import java.sql.Date;
 import java.util.Collection;
@@ -9,6 +10,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -45,7 +47,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     private Date birthday;
     private String loginId;
     private String loginIp;
-    private String enableStatus;
+    private EnableStatus enableStatus;
 
     private Set<AuRole> roles = Sets.newHashSet();
 
@@ -102,7 +104,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     }
 
     @Basic
-    @Column(name = "email", nullable = true, length = 255)
+    @Column(name = "email", nullable = true, length = 64)
     public String getEmail() {
         return email;
     }
@@ -172,12 +174,13 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     }
 
     @Basic
+    @Enumerated
     @Column(name = "enable_status", nullable = true, length = 1)
-    public String getEnableStatus() {
+    public EnableStatus getEnableStatus() {
         return enableStatus;
     }
 
-    public void setEnableStatus(String enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
     }
 

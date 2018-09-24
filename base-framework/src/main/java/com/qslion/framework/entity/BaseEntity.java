@@ -46,7 +46,7 @@ public class BaseEntity<T> implements Serializable {
     private Long version;
 
     @Id
-    @Column(length = 32, nullable = true)
+    @Column(length = 32, nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@GenericGenerator(name = "uuid", strategy = "uuid")
     public T getId() {

@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Gray.Z
  * @date 2018/4/13 10:56.
  */
-@Transactional(value = "transactionManager")
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> implements IGenericService<T, ID> {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());
@@ -55,7 +55,8 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         PageRequest pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize());
         if (StringUtils.isNotEmpty(pageable.getOrderProperty())) {
             pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize(),
-                new Sort(Direction.valueOf(pageable.getOrderDirection().name().toUpperCase()), pageable.getOrderProperty()));
+                new Sort(Direction.valueOf(pageable.getOrderDirection().name().toUpperCase()),
+                    pageable.getOrderProperty()));
         }
         return pageRequest;
     }
@@ -77,13 +78,16 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                         predicates.add(criteriaBuilder.lt(root.get(filter.getProperty()), (Number) filter.getValue()));
                         break;
                     case ge:
-                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
+                        predicates.add(criteriaBuilder
+                            .greaterThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
                         break;
                     case le:
-                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
+                        predicates.add(criteriaBuilder
+                            .lessThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
                         break;
                     case like:
-                        predicates.add(criteriaBuilder.like(root.get(filter.getProperty()), String.format("%%s%", filter.getValue())));
+                        predicates.add(criteriaBuilder
+                            .like(root.get(filter.getProperty()), String.format("%%s%", filter.getValue())));
                         break;
                     case in:
                         predicates.add(root.get(filter.getProperty()).in(filter.getValue()));
@@ -158,7 +162,8 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     public long count(QueryFilter... queryFilters) {
         return genericRepository.count(new Specification<T>() {
             @Override
-            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery,
+                CriteriaBuilder criteriaBuilder) {
 
                 return null;
             }

@@ -39,9 +39,8 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
         AuParty auParty = new AuParty();
         //auParty.setAuPartyType(partyTypeDao.get(GlobalConstants.getPartyTypePosi()));
         auParty.setName(vo.getPositionName());
-        auParty.setEmail("");
         auParty.setRemark(vo.getRemark());
-        auParty.setEnableStatus(vo.getEnableStatus());
+        //auParty.setEnableStatus(vo.getEnableStatus());
         auParty.setIsInherit("1");
         auParty.setIsReal("1");
         //vo.setAuParty(auParty);
@@ -100,7 +99,6 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
     public AuPosition update(AuPosition vo) {
         AuParty party = partyRepository.getOne(vo.getId());
         party.setName(vo.getPositionName());//团体名称
-        party.setEmail("");//团体EMAIL（对员工类型为必填）
         party.setRemark(vo.getRemark());//备注
         //vo.setAuParty(party);
 //        positionDao.clear();

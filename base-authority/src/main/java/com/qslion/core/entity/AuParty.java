@@ -2,6 +2,7 @@ package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,14 +24,34 @@ public class AuParty extends BaseEntity<Long> {
     private String isInherit;
     private String isReal;
     private String name;
-    private String email;
     private String ownerOrg;
     private String remark;
-    private String enableStatus;
+    private EnableStatus enableStatus;
     private Date enableDate;
 
-    @Enumerated
-    @Column(name = "type_id", nullable = false)
+   /* private AuCompany auCompany;
+    private AuPosition auPosition;
+    private AuDepartment auDepartment;
+    private AuEmployee auEmployee;
+    private AuRole auRole;
+    private AuUser auUser;
+    private Set<AuAuthorize> auAuthorizes = new HashSet<AuAuthorize>(0);
+
+    private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
+    private Set<AuUserProfile> auUserprofiles = new HashSet<AuUserProfile>(0);
+
+
+    @Override
+    @Id
+    @Column(length = 32, nullable = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "pkGenerator",strategy = "foreign",
+        parameters = @Parameter(name = "property", value = "auParty"))
+    public Long getId() {
+        return id;
+    }
+*/
+    @Column(name = "party_type_id", nullable = false)
     public AuPartyType getAuPartyType() {
         return this.auPartyType;
     }
@@ -66,7 +87,7 @@ public class AuParty extends BaseEntity<Long> {
         this.isReal = isReal;
     }
 
-    @Column(name = "name", length = 300)
+    @Column(name = "name", length = 64)
     public String getName() {
         return this.name;
     }
@@ -75,16 +96,7 @@ public class AuParty extends BaseEntity<Long> {
         this.name = name;
     }
 
-    @Column(name = "email", length = 300)
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Column(name = "owner_org", length = 300)
+    @Column(name = "owner_org")
     public String getOwnerOrg() {
         return this.ownerOrg;
     }
@@ -93,7 +105,7 @@ public class AuParty extends BaseEntity<Long> {
         this.ownerOrg = ownerOrg;
     }
 
-    @Column(name = "remark", length = 1000)
+    @Column(name = "remark")
     public String getRemark() {
         return this.remark;
     }
@@ -102,16 +114,17 @@ public class AuParty extends BaseEntity<Long> {
         this.remark = remark;
     }
 
+    @Enumerated
     @Column(name = "enable_status", nullable = false, length = 1)
-    public String getEnableStatus() {
+    public EnableStatus getEnableStatus() {
         return this.enableStatus;
     }
 
-    public void setEnableStatus(String enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
     }
 
-    @Column(name = "enable_date", length = 19)
+    @Column(name = "enable_date")
     public Date getEnableDate() {
         return this.enableDate;
     }
@@ -119,4 +132,85 @@ public class AuParty extends BaseEntity<Long> {
     public void setEnableDate(Date enableDate) {
         this.enableDate = enableDate;
     }
+/*
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
+    public Set<AuAuthorize> getAuAuthorizes() {
+        return auAuthorizes;
+    }
+
+    public void setAuAuthorizes(Set<AuAuthorize> auAuthorizes) {
+        this.auAuthorizes = auAuthorizes;
+    }*/
+
+/*    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    public AuCompany getAuCompany() {
+        return this.auCompany;
+    }
+
+    public void setAuCompany(AuCompany auCompany) {
+        this.auCompany = auCompany;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    public AuPosition getAuPosition() {
+        return this.auPosition;
+    }
+
+    public void setAuPosition(AuPosition auPosition) {
+        this.auPosition = auPosition;
+    }*/
+
+/*    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
+    public Set<AuPartyRelation> getAuPartyRelations() {
+        return this.auPartyRelations;
+    }
+
+    public void setAuPartyRelations(Set<AuPartyRelation> auPartyRelations) {
+        this.auPartyRelations = auPartyRelations;
+    }*/
+
+/*    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    public AuDepartment getAuDepartment() {
+        return this.auDepartment;
+    }
+
+    public void setAuDepartment(AuDepartment auDepartment) {
+        this.auDepartment = auDepartment;
+    }*/
+
+   /* @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
+    public Set<AuUserProfile> getAuUserProfiles() {
+        return this.auUserprofiles;
+    }
+
+    public void setAuUserProfiles(Set<AuUserProfile> auUserprofiles) {
+        this.auUserprofiles = auUserprofiles;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
+    public AuUser getAuUser() {
+        return this.auUser;
+    }
+
+    public void setAuUser(AuUser auUser) {
+        this.auUser = auUser;
+    }*/
+
+/*    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    public AuEmployee getAuEmployee() {
+        return this.auEmployee;
+    }
+
+    public void setAuEmployee(AuEmployee auEmployee) {
+        this.auEmployee = auEmployee;
+    }*/
+
+ /*   @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    public AuRole getAuRole() {
+        return auRole;
+    }
+
+    public void setAuRole(AuRole auRole) {
+        this.auRole = auRole;
+    }*/
 }

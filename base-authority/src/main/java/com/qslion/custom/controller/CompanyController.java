@@ -1,6 +1,7 @@
 package com.qslion.custom.controller;
 
 
+import com.google.common.collect.Lists;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
@@ -9,6 +10,8 @@ import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +49,13 @@ public class CompanyController extends BaseController<AuCompany, String> {
     /**
      * 保存
      *
-     * @param auCompany 公司
+     * @param company 公司
      * @return ID
      */
     @PostMapping
-    public Long save(@Validated @RequestBody AuCompany auCompany, @RequestParam(required = false) Long parentCode) {
-        return companyService.insert(auCompany, parentCode);
+    public Long save(@Validated @RequestBody AuCompany company, @RequestParam(required = false) Long parentCode) {
+        AuCompany auCompany = companyService.insert(company, parentCode);
+        return auCompany.getId();
     }
 
 
@@ -59,10 +63,14 @@ public class CompanyController extends BaseController<AuCompany, String> {
      * 从页面的表单获取团体关系id，并删除团体关系及相关的权限记录
      */
     @DeleteMapping
-    public String delete(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids)
-        throws Exception {
-        // companyService.delete(ids);
-        return "";
+    public boolean delete(Long[] ids) {
+        List<AuCompany> companyList = Lists.newArrayList(ids).stream().map(id -> {
+            AuCompany company = new AuCompany();
+            company.setId(id);
+            return company;
+        }).collect(Collectors.toList());
+        companyService.delete(companyList);
+        return true;
     }
 
     /**

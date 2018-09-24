@@ -1,8 +1,7 @@
 
 package com.qslion.custom.entity;
 
-import com.qslion.framework.entity.BaseEntity;
-import java.util.Date;
+import com.qslion.core.entity.PartyEntity;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "au_position")
-public class AuPosition extends BaseEntity<Long> {
+public class AuPosition extends PartyEntity {
 
     private String positionNo;
     private String positionName;
@@ -26,8 +25,6 @@ public class AuPosition extends BaseEntity<Long> {
     private String leaderFlag;
     private String leaderLevel;
     private String remark;
-    private String enableStatus;
-    private Date enableDate;
 
     @Basic
     @Column(name = "position_no", nullable = true, length = 64)
@@ -108,27 +105,6 @@ public class AuPosition extends BaseEntity<Long> {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-    @Basic
-    @Column(name = "enable_status", nullable = false, length = 1)
-    public String getEnableStatus() {
-        return enableStatus;
-    }
-
-    public void setEnableStatus(String enableStatus) {
-        this.enableStatus = enableStatus;
-    }
-
-    @Basic
-    @Column(name = "enable_date", nullable = false)
-    public Date getEnableDate() {
-        return enableDate;
-    }
-
-    public void setEnableDate(Date enableDate) {
-        this.enableDate = enableDate;
-    }
-
 
     @Override
     public boolean equals(Object o) {

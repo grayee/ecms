@@ -41,9 +41,8 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
     	 AuParty auParty = new AuParty();
          //auParty.setAuPartyType(partyTypeDao.get(GlobalConstants.getPartyTypeDept()));
          auParty.setName(vo.getDeptName());
-         auParty.setEmail("");
          auParty.setRemark(vo.getRemark());	
-         auParty.setEnableStatus(vo.getEnableStatus());
+         //auParty.setEnableStatus(vo.getEnableStatus());
          auParty.setIsInherit("1");
          auParty.setIsReal("1");
  	    // vo.setAuParty(auParty);

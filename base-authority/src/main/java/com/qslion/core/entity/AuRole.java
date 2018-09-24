@@ -21,7 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @date 2018/4/30 13:56.
  */
 @Entity
-@Table(name = "au_role", schema = "aidoc")
+@Table(name = "au_role")
 public class AuRole extends BaseEntity<Long> implements GrantedAuthority {
 
     private String name;
