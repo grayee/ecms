@@ -35,7 +35,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         auParty.setEnableStatus(company.getEnableStatus());
         auParty.setIsInherit("1");
         auParty.setIsReal("1");
-        //company.setAuParty(auParty);
+        company.setAuParty(auParty);
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
             //vo.setCompanyNo(auParty.getId());

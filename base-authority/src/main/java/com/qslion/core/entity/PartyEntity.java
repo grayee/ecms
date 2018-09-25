@@ -4,9 +4,13 @@ import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
 /**
  * 实体类 - 团体基础类
@@ -17,23 +21,23 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class PartyEntity extends BaseEntity<Long> {
 
-    //protected AuParty auParty;
+    protected AuParty auParty;
     protected EnableStatus enableStatus;
     protected Date enableDate;
 
 
-/*    *//**
+    /**
      * 根据两张表的主键关联
-     *//*
-    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+     */
+    @OneToOne(targetEntity = AuParty.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "party_id", referencedColumnName = "id")
     public AuParty getAuParty() {
         return this.auParty;
     }
 
     public void setAuParty(AuParty auParty) {
         this.auParty = auParty;
-    }*/
+    }
 
     @Basic
     @Column(name = "enable_status", length = 1)

@@ -1,12 +1,18 @@
 package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.custom.entity.AuCompany;
+import com.qslion.custom.entity.AuDepartment;
+import com.qslion.custom.entity.AuEmployee;
+import com.qslion.custom.entity.AuPosition;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -29,28 +35,18 @@ public class AuParty extends BaseEntity<Long> {
     private EnableStatus enableStatus;
     private Date enableDate;
 
-   /* private AuCompany auCompany;
+    private AuCompany auCompany;
     private AuPosition auPosition;
     private AuDepartment auDepartment;
     private AuEmployee auEmployee;
-    private AuRole auRole;
-    private AuUser auUser;
-    private Set<AuAuthorize> auAuthorizes = new HashSet<AuAuthorize>(0);
 
-    private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
-    private Set<AuUserProfile> auUserprofiles = new HashSet<AuUserProfile>(0);
+    /*    private AuRole auRole;
+     private AuUser auUser;
+     private Set<AuAuthorize> auAuthorizes = new HashSet<AuAuthorize>(0);
 
-
-    @Override
-    @Id
-    @Column(length = 32, nullable = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "pkGenerator",strategy = "foreign",
-        parameters = @Parameter(name = "property", value = "auParty"))
-    public Long getId() {
-        return id;
-    }
-*/
+     private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
+     private Set<AuUserProfile> auUserprofiles = new HashSet<AuUserProfile>(0);
+ */
     @Column(name = "party_type_id", nullable = false)
     public AuPartyType getAuPartyType() {
         return this.auPartyType;
@@ -115,7 +111,7 @@ public class AuParty extends BaseEntity<Long> {
     }
 
     @Enumerated
-    @Column(name = "enable_status", nullable = false, length = 1)
+    @Column(name = "enable_status", length = 1)
     public EnableStatus getEnableStatus() {
         return this.enableStatus;
     }
@@ -142,7 +138,7 @@ public class AuParty extends BaseEntity<Long> {
         this.auAuthorizes = auAuthorizes;
     }*/
 
-/*    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
     public AuCompany getAuCompany() {
         return this.auCompany;
     }
@@ -158,7 +154,7 @@ public class AuParty extends BaseEntity<Long> {
 
     public void setAuPosition(AuPosition auPosition) {
         this.auPosition = auPosition;
-    }*/
+    }
 
 /*    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
     public Set<AuPartyRelation> getAuPartyRelations() {
@@ -169,14 +165,14 @@ public class AuParty extends BaseEntity<Long> {
         this.auPartyRelations = auPartyRelations;
     }*/
 
-/*    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
     public AuDepartment getAuDepartment() {
         return this.auDepartment;
     }
 
     public void setAuDepartment(AuDepartment auDepartment) {
         this.auDepartment = auDepartment;
-    }*/
+    }
 
    /* @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
     public Set<AuUserProfile> getAuUserProfiles() {
@@ -196,14 +192,14 @@ public class AuParty extends BaseEntity<Long> {
         this.auUser = auUser;
     }*/
 
-/*    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
     public AuEmployee getAuEmployee() {
         return this.auEmployee;
     }
 
     public void setAuEmployee(AuEmployee auEmployee) {
         this.auEmployee = auEmployee;
-    }*/
+    }
 
  /*   @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
     public AuRole getAuRole() {
