@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 
 /**
@@ -26,9 +25,8 @@ public class AuPartyRelation extends NestTreeEntity {
     private AuPartyRelationType auPartyRelationType;
     private AuParty auParty;
 
-    private String parentPartyId;
-    private String code;
     private String name;
+    private String remark;
 
     private Short typeLevel;
     private String orderCode;
@@ -36,19 +34,6 @@ public class AuPartyRelation extends NestTreeEntity {
     private String typeIsLeaf;
     private String isInherit;
     private String isChief;
-    private String email;
-
-    private String parentPartyName;
-
-
-    @Transient
-    public String getParentPartyName() {
-        return parentPartyName;
-    }
-
-    public void setParentPartyName(String parentPartyName) {
-        this.parentPartyName = parentPartyName;
-    }
 
     @Enumerated
     @Column(name = "relation_type")
@@ -70,23 +55,13 @@ public class AuPartyRelation extends NestTreeEntity {
         this.auParty = auParty;
     }
 
-
-    @Column(name = "parent_party_id", length = 32)
-    public String getParentPartyId() {
-        return this.parentPartyId;
+    @Column(name = "remark")
+    public String getRemark() {
+        return this.remark;
     }
 
-    public void setParentPartyId(String parentPartyId) {
-        this.parentPartyId = parentPartyId;
-    }
-
-    @Column(name = "code", length = 300)
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Column(name = "name", length = 100)
@@ -151,15 +126,6 @@ public class AuPartyRelation extends NestTreeEntity {
 
     public void setIsChief(String isChief) {
         this.isChief = isChief;
-    }
-
-    @Column(name = "email")
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
 }

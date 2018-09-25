@@ -8,10 +8,14 @@ import com.qslion.custom.entity.AuPosition;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -36,17 +40,18 @@ public class AuParty extends BaseEntity<Long> {
     private Date enableDate;
 
     private AuCompany auCompany;
-    private AuPosition auPosition;
     private AuDepartment auDepartment;
+    private AuPosition auPosition;
     private AuEmployee auEmployee;
 
     /*    private AuRole auRole;
      private AuUser auUser;
      private Set<AuAuthorize> auAuthorizes = new HashSet<AuAuthorize>(0);
-
-     private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
      private Set<AuUserProfile> auUserprofiles = new HashSet<AuUserProfile>(0);
  */
+
+    private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
+
     @Column(name = "party_type_id", nullable = false)
     public AuPartyType getAuPartyType() {
         return this.auPartyType;
@@ -156,14 +161,14 @@ public class AuParty extends BaseEntity<Long> {
         this.auPosition = auPosition;
     }
 
-/*    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
     public Set<AuPartyRelation> getAuPartyRelations() {
         return this.auPartyRelations;
     }
 
     public void setAuPartyRelations(Set<AuPartyRelation> auPartyRelations) {
         this.auPartyRelations = auPartyRelations;
-    }*/
+    }
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
     public AuDepartment getAuDepartment() {

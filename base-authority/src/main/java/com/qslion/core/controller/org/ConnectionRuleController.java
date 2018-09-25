@@ -3,21 +3,23 @@
  */
 package com.qslion.core.controller.org;
 
+import com.google.common.collect.Lists;
 import com.qslion.core.entity.AuConnectionRule;
-import com.qslion.core.enums.AuPartyRelationType;
-import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,80 +33,39 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConnectionRuleController extends BaseController<AuConnectionRule, Long> {
 
     @Autowired
-    public ConnectionRuleService connectionRuleService;
+    private ConnectionRuleService connectionRuleService;
 
-    //列表
-    @RequestMapping(value = "/admin/connectrule/index.jspx")
-    public String list(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        @ModelAttribute("pager") Pager<AuConnectionRule> pager) {
-        // pager = this.service.findByPager(pager);
-        model.addAttribute("pager", pager);
-        return "";
+    @GetMapping(value = "/list")
+    public Pager<AuConnectionRule> list(@RequestParam Pageable pageable) {
+        return connectionRuleService.findPage(pageable);
     }
 
-    //增加
-    @RequestMapping(value = "/admin/connectrule/save.jspx")
-    public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        @ModelAttribute("entity") AuConnectionRule entity) {
-  /*      AuPartyType partyType = new AuPartyType();
-        partyType.setId(request.getParameter("childPartyTypeId"));
-        entity.setChildPartyType(partyType);
-
-        partyType.setId(request.getParameter("parentPartyTypeId"));
-        entity.setParentPartyType(partyType);
-
-        AuPartyRelationType auPartyRelationType = new AuPartyRelationType();
-        auPartyRelationType.setId(request.getParameter("auPartyRelationType"));
-        entity.setAuPartyRelationType(auPartyRelationType);
-
-        this.connectionRuleService.save(entity);*/
-        logger.info("--------------------save!!!!!------------------------");
-        return "";
+    @PostMapping
+    public Long insert(@RequestBody AuConnectionRule connectionRule) {
+        AuConnectionRule auConnectionRule = connectionRuleService.save(connectionRule);
+        return auConnectionRule.getId();
     }
 
-    //删除
-    @RequestMapping(value = "/admin/connectrule/deletes.jspx")
-    public String deletes(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) {
-        // connectionRuleService.delete(ids);
-        logger.info("--------------------deletes!!!!!------------------------");
-        return "";
+    @DeleteMapping
+    public boolean deletes(Long[] ids) {
+        List<AuConnectionRule> ruleList = Lists.newArrayList(ids).stream().map(id -> {
+            AuConnectionRule rule = new AuConnectionRule();
+            rule.setId(id);
+            return rule;
+        }).collect(Collectors.toList());
+        connectionRuleService.delete(ruleList);
+        return true;
     }
 
-    //更新
-    @RequestMapping(value = "/admin/connectrule/update.jspx")
-    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        @ModelAttribute("entity") AuConnectionRule entity) {
-        connectionRuleService.update(entity);
-        return "";
+    @PutMapping
+    public boolean update(@RequestBody AuConnectionRule rule) {
+        AuConnectionRule connectionRule = connectionRuleService.update(rule);
+        return connectionRule == null;
     }
-
-    //编辑，新增
-    @RequestMapping(value = "/admin/connectrule/input.jspx")
-    public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String id = request.getParameter("ids");
-        Map<String, Object> map = new HashMap<String, Object>();
-        //团体类型
-        map.put("partyType", AuPartyType.values());
-        //团体关系类型
-        map.put("partyRelationType", AuPartyRelationType.values());
-        model.addAttribute("dataMap", map);
-
-        if (!StringUtils.isNotEmpty(id)) {
-            //AuConnectionRule entity = this.connectionRuleService.get(id);
-            //.addAttribute("entity", entity);
-        }
-        return "";
-    }
-
-    //查看，明细
-    @RequestMapping(value = "/admin/connectrule/view.jspx")
-    public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String id = request.getParameter("ids");
-        if (!StringUtils.isNotEmpty(id)) {
-            // AuConnectionRule entity = this.connectionRuleService.get(id);
-            //model.addAttribute("entity", entity);
-        }
-        return "";
+    
+    @GetMapping(value = "/detail/{id}")
+    public AuConnectionRule detail(@PathVariable Long id) {
+        return connectionRuleService.find(id);
     }
 
 }

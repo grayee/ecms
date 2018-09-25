@@ -13,7 +13,11 @@ import java.util.Map;
 public class TreeNode {
 
     private enum NodeState {
-        open, closed
+        /**
+         * 打开状态
+         */
+        open,
+        closed
     }
 
     private String id;
@@ -71,8 +75,6 @@ public class TreeNode {
     }
 
 
-
-
     public String getText() {
         return text;
     }
@@ -96,7 +98,6 @@ public class TreeNode {
     public void setState(NodeState state) {
         this.state = state;
     }
-
 
 
     public Map<String, Object> getAttributes() {

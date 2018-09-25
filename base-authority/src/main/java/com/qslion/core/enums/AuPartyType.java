@@ -27,7 +27,7 @@ public enum AuPartyType {
     /**
      * 岗位
      */
-    POSITION(3, "party_type_position", "party_type_category_role"),
+    POSITION(3, "party_type_position", "party_type_category_organization"),
     /**
      * 员工
      */
@@ -35,7 +35,7 @@ public enum AuPartyType {
     /**
      * 角色
      */
-    ROLE(5, "party_type_role", "party_type_category_rule"),
+    ROLE(5, "party_type_role", "party_type_category_role"),
     /**
      * 代理
      */

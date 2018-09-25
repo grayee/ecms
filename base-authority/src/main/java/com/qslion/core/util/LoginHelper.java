@@ -233,8 +233,7 @@ public class LoginHelper {
             return new String[]{" GlobalConstants.getRelaType_comp()" + "00001"};
 
         String[] codes = new String[rel.size()];
-        for (int i = 0; i < rel.size(); ++i)
-            codes[i] = ((AuPartyRelation) rel.get(i)).getCode();
+
 
         return codes;
     }
