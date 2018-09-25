@@ -7,7 +7,6 @@ import com.qslion.core.entity.AuRole;
 import com.qslion.core.service.AuResourceService;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,10 +82,7 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
 
         logger.info("user request url is :" + request.getRequestURI());
 
-        Iterator<String> iterator = resourceMap.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            String resourceValue = iterator.next();
+        for (String resourceValue : resourceMap.keySet()) {
             RequestMatcher matcher = new AntPathRequestMatcher(resourceValue);
             if (matcher.matches(request)) {
                 return resourceMap.get(resourceValue);

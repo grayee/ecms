@@ -19,7 +19,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Component;
 
 /**
- * spring security 自定义过滤器：资源访问第一个要过的filte
+ * spring security 自定义过滤器：资源访问第一个要过的filter
  *
  * http://elim.iteye.com/blog/2211966
  *
@@ -56,7 +56,7 @@ public class AuFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
     private FilterInvocationSecurityMetadataSource securityMetadataSource;
 
     @Autowired
-    public void setMyAccessDecisionManager(AuAccessDecisionManager auAccessDecisionManager) {
+    public void setAccessDecisionManager(AuAccessDecisionManager auAccessDecisionManager) {
         super.setAccessDecisionManager(auAccessDecisionManager);
     }
 
@@ -75,7 +75,8 @@ public class AuFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
         FilterInvocation fi = new FilterInvocation(request, response, chain);
         invoke(fi);
     }
@@ -85,15 +86,16 @@ public class AuFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
     }
 
     /**
-     * fi包含一个被拦截的url，会调用AuInvocationSecurityMetadataSource的getAttributes(Object object)这个方法获取fi对应的所有权限
-     * 之后调用AuAccessDecisionManager的decide方法来校验用户的权限是否足够
+     * fi包含一个被拦截的url，会调用AuSecurityMetadataSource的getAttributes(Object object
+     * 这个方法获取fi对应的所有权限,之后调用AuAccessDecisionManager的decide方法来校验用户的权限是否足够
      *
      * @param fi 过滤器调用
      * @throws IOException IO异常
      * @throws ServletException Servlet 异常
      */
     public void invoke(FilterInvocation fi) throws IOException, ServletException {
-        if (fi.getRequest() != null && fi.getRequest().getAttribute(FILTER_APPLIED) != null && this.observeOncePerRequest) {
+        if (fi.getRequest() != null && fi.getRequest().getAttribute(FILTER_APPLIED) != null
+            && this.observeOncePerRequest) {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
         } else {
             if (fi.getRequest() != null) {
