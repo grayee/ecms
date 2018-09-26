@@ -40,7 +40,7 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
 
 
     /**
-     * 程序启动的时执行,加载资源和角色的对应关系-resourceMap
+     * 程序启动的时执行(AbstractSecurityInterceptor.afterPropertiesSet),加载资源和角色的对应关系-resourceMap
      *
      * @return 所有的角色
      */

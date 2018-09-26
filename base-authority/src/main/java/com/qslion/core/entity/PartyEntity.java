@@ -1,5 +1,6 @@
 package com.qslion.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
@@ -21,6 +22,7 @@ import javax.persistence.OneToOne;
 @MappedSuperclass
 public class PartyEntity extends BaseEntity<Long> {
 
+    @JsonIgnore
     protected AuParty auParty;
     protected EnableStatus enableStatus;
     protected Date enableDate;

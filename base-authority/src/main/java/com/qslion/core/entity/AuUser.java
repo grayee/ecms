@@ -4,8 +4,8 @@ import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
-import java.sql.Date;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -48,6 +48,9 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     private String loginId;
     private String loginIp;
     private EnableStatus enableStatus;
+    private Date lockedDate;
+    private Integer LoginFailureCount;
+
 
     private Set<AuRole> roles = Sets.newHashSet();
 
@@ -224,11 +227,33 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         this.enabled = enabled;
     }
 
+    @Basic
+    @Column(name = "locked_date")
+    public Date getLockedDate() {
+        return lockedDate;
+    }
+
+    public void setLockedDate(Date lockedDate) {
+        this.lockedDate = lockedDate;
+    }
+
+    @Basic
+    @Column(name = "login_failure_count")
+    public Integer getLoginFailureCount() {
+        return LoginFailureCount;
+    }
+
+    public void setLoginFailureCount(Integer loginFailureCount) {
+        LoginFailureCount = loginFailureCount;
+    }
+
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        //用户角色
         authorities.addAll(roles);
-        //AuthorityUtils.createAuthorityList()
+        //用户组角色
+        userGroups.forEach(auUserGroup -> authorities.addAll(auUserGroup.getRoles()));
         return authorities;
     }
 

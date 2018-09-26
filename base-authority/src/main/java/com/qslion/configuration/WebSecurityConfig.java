@@ -83,7 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         });
     }
 
-    UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {
+    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {
         UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter = new UsernamePasswordAuthenticationFilter();
         usernamePasswordAuthenticationFilter.setPostOnly(true);
         usernamePasswordAuthenticationFilter.setFilterProcessesUrl("/login");

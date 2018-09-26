@@ -1,5 +1,6 @@
 package com.qslion.configuration;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qslion.framework.interceptor.ResponseResultInterceptor;
@@ -44,6 +45,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public ObjectMapper objectMapper() {
         ObjectMapper objMapper = new ObjectMapper();
         objMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objMapper.setSerializationInclusion(Include.NON_NULL);
         objMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         return objMapper;
     }

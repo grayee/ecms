@@ -7,18 +7,17 @@ import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,38 +76,22 @@ public class CompanyController extends BaseController<AuCompany, String> {
      * 从页面表单获取信息注入vo，并修改单条记录，同时调用接口更新相应的团体、团体关系记录
      */
     @PutMapping
-    public String update(HttpServletRequest request, HttpServletResponse response, @RequestBody AuCompany auCompany) {
-        companyService.update(auCompany);  //更新单条记录
-        if ("0".equals(request.getParameter("cmd"))) {
-            //返回组织关系管理页面
-            return "redirect:/admin/relation/manage.jspx";
-        } else {
-            //返回公司管理列表页面
-            return "";
-        }
+    public boolean update(@RequestBody AuCompany company) {
+        AuCompany auCompany = companyService.update(company);
+        return auCompany == null;
     }
 
-    /**
-     * 查询全部记录，分页显示，支持页面上触发的后台排序
-     */
     @GetMapping(value = "/list")
-    public String queryAll(HttpServletRequest request, HttpServletResponse response,
-        @RequestBody Pager<AuCompany> pager) {
-        //pager=companyService.findByPager(pager); //定义结果集
-        return "";
+    public Pager<AuCompany> list(Pageable pageable) {
+        return companyService.findPage(pageable);
     }
 
     /**
      * 详细信息
      */
-    @GetMapping(value = "/detail")
-    public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-        // entity =companyService.get(request.getParameter("ids"));
-       /* List<TreeNode> resultList=partyRelationService.getPartyDetailRelationTree(entity.getId(),"1099100400000000001");
-    model.addAttribute("data", JSON.toJSONString(resultList));
-        model.addAttribute("rid", request.getParameter("rid"));
-        model.addAttribute("entity", entity);*/
-        return "";
+    @GetMapping(value = "/detail/{id}")
+    public AuCompany detail(@PathVariable Long id) {
+        return companyService.find(id);
     }
 
 }

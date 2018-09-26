@@ -20,7 +20,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 debug: false
 trace: false

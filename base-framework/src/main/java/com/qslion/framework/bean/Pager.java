@@ -60,7 +60,7 @@ public class Pager<T> implements Serializable {
      *
      * @return 页码
      */
-    public int getPageNumber() {
+    public int getPageNo() {
         return pageable.getPageNo();
     }
 
@@ -114,6 +114,7 @@ public class Pager<T> implements Serializable {
      *
      * @return 排序
      */
+    @JsonIgnore
     public List<Order> getOrders() {
         return pageable.getOrders();
     }
@@ -123,6 +124,7 @@ public class Pager<T> implements Serializable {
      *
      * @return 筛选
      */
+    @JsonIgnore
     public List<QueryFilter> getFilters() {
         return pageable.getQueryFilters();
     }

@@ -23,7 +23,9 @@ public class AuUserIdAuditAware implements AuditorAware<Long> {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
-        System.out.println("principal:" + authentication.getPrincipal().toString());
+        Object principal = authentication.getPrincipal();
+
+        System.out.println("principal:" + String.valueOf(principal));
         return Optional.of(999L);
     }
 }
