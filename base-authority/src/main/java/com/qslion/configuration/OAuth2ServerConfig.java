@@ -2,6 +2,7 @@
 
 package com.qslion.configuration;
 
+import com.qslion.core.service.impl.AuUserServiceImpl;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,11 @@ public class OAuth2ServerConfig {
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+        /**
+         * 创建了OAuth2核心过滤器OAuth2AuthenticationProcessingFilter,并为其提供固定OAuth2AuthenticationManager
+         *
+         * @param resources
+         */
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) {
             resources.resourceId(API_RESOURCE_ID).stateless(true);
@@ -68,6 +74,9 @@ public class OAuth2ServerConfig {
         RedisConnectionFactory redisConnectionFactory;
 
         @Autowired
+        private AuUserServiceImpl userDetailService;
+
+        @Autowired
         private DataSource dataSource;
 
         @Bean
@@ -81,9 +90,9 @@ public class OAuth2ServerConfig {
         }
 
         /**
-         * 配置客户端详情服务（ClientDetailsService）
+         * 配置客户端认证详情服务（ClientDetailsService）,定义客户端细节服务中的内存或 JDBC 实现
          *
-         * @param clients 客户端配置
+         * @param clients 客户端认证配置
          * @throws Exception 异常
          */
         @Override
@@ -92,15 +101,17 @@ public class OAuth2ServerConfig {
         }
 
         /**
-         * 配置授权（authorization）以及令牌（token）的访问端点和令牌服务(token services)
+         * 配置认证（authorization）以及令牌（token）的访问端点和令牌服务(token services)
          *
-         * @param endpoints 端点配置
+         * @param endpoints 端点配置 TokenStore，TokenGranter，OAuth2RequestFactory
          */
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+            //配置默认认证器
             endpoints.authenticationManager(authenticationManager);
             endpoints.tokenStore(tokenStore());
+            endpoints.userDetailsService(userDetailService);
             //endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory))  --redis 存储TOKEN
             endpoints.tokenServices(defaultTokenServices());
         }
@@ -125,6 +136,7 @@ public class OAuth2ServerConfig {
 
         /**
          * 配置令牌端点(Token Endpoint)的安全约束
+         * 配置AuthorizationServer安全认证的相关信息，创建ClientCredentialsTokenEndpointFilter核心过滤器
          *
          * @param oauthServer 授权服务配置
          */

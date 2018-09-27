@@ -49,7 +49,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     private String loginIp;
     private EnableStatus enableStatus;
     private Date lockedDate;
-    private Integer LoginFailureCount;
+    private Integer loginFailureCount;
 
 
     private Set<AuRole> roles = Sets.newHashSet();
@@ -86,6 +86,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         this.roles = roles;
     }
 
+    @Override
     @Basic
     @Column(name = "username", nullable = false, length = 30)
     public String getUsername() {
@@ -96,6 +97,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         this.username = username;
     }
 
+    @Override
     @Basic
     @Column(name = "password", nullable = false, length = 30)
     public String getPassword() {
@@ -240,11 +242,11 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     @Basic
     @Column(name = "login_failure_count")
     public Integer getLoginFailureCount() {
-        return LoginFailureCount;
+        return loginFailureCount;
     }
 
     public void setLoginFailureCount(Integer loginFailureCount) {
-        LoginFailureCount = loginFailureCount;
+        this.loginFailureCount = loginFailureCount;
     }
 
     @Transient

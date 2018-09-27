@@ -1,3 +1,4 @@
+--https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
 -- used in tests that use HSQL
 create table oauth_client_details (
   client_id VARCHAR(128) PRIMARY KEY,
