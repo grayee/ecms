@@ -15,6 +15,10 @@ spring:
   messages:
     basename: i18n/messages
     encoding: UTF-8
+  thymeleaf:
+    prefix: classpath:/templates/
+    mode: LEGACYHTML5
+    cache: false
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

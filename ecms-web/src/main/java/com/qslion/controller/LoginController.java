@@ -30,10 +30,14 @@ public class LoginController extends BaseController{
     // Spring security 最后登录异常Session名称
     public static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
 
+    @RequestMapping(value = "/")
+    public String root() {
+        return "redirect:/index";
+    }
 
     @RequestMapping(value = "/index")
     public String index() {
-        return "index";
+        return "home";
     }
 
     @RequestMapping(value = "/main")
@@ -41,8 +45,17 @@ public class LoginController extends BaseController{
         return "main";
     }
 
+    @RequestMapping(value = "/login")
+    public String login() {
+        return "login";
+    }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/home")
+    public String home() {
+        return "home";
+    }
+
+    @RequestMapping(value = "/user/login", method = RequestMethod.GET)
     public String loginFailure(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         /**
          * see SimpleUrlAuthenticationFailureHandler >>onAuthenticationFailure
