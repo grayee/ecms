@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            //.antMatchers("/oauth/*","/webjars/**", "/index").permitAll()
+            .antMatchers("/oauth/*", "/index").permitAll()
             .antMatchers("/*").permitAll()
             .anyRequest().authenticated()
             .and()
@@ -54,13 +54,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
             .permitAll();
 
-        http.addFilterAt(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(auFilterSecurityInterceptor, FilterSecurityInterceptor.class);
-        http.exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).and().logout()
-            .logoutUrl("/logout").logoutSuccessUrl("/login").and().exceptionHandling().accessDeniedPage("/accessDenied");
-
-        // 关闭csrf
-        http.csrf().disable();
+        http.addFilterAt(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(auFilterSecurityInterceptor, FilterSecurityInterceptor.class)
+            .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+            .and()
+            .logout()
+            .logoutUrl("/logout").logoutSuccessUrl("/login").and().exceptionHandling().accessDeniedPage("/accessDenied")
+            .and().csrf().disable();
 
         //session管理,失效后跳转
         http.sessionManagement().invalidSessionUrl("/login");
