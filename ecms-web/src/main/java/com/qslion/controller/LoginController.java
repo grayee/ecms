@@ -15,20 +15,22 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-
+/**
+ * FORM登录控制类
+ *
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
+ */
 @Controller
 public class LoginController extends BaseController{
 
     @Autowired
     private AuUserService auUserService;
-
-    // Spring security 最后登录异常Session名称
-    public static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
 
     @RequestMapping(value = "/")
     public String root() {
@@ -40,14 +42,14 @@ public class LoginController extends BaseController{
         return "home";
     }
 
-    @RequestMapping(value = "/main")
-    public String loginSuccess() {
-        return "main";
-    }
-
     @RequestMapping(value = "/login")
     public String login() {
         return "login";
+    }
+
+    @RequestMapping(value = "/hello")
+    public String hello() {
+        return "hello";
     }
 
     @RequestMapping(value = "/home")
@@ -55,16 +57,23 @@ public class LoginController extends BaseController{
         return "home";
     }
 
-    @RequestMapping(value = "/user/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/loginSuccess")
+    public String loginSuccess() {
+        return "home";
+    }
+
+    @RequestMapping(value = "/loginFailure")
     public String loginFailure(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         /**
          * see SimpleUrlAuthenticationFailureHandler >>onAuthenticationFailure
          */
-        Exception springSecurityLastException = (Exception) request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION);
+        Exception springSecurityLastException = (Exception) request.getSession().getAttribute(
+            WebAttributes.AUTHENTICATION_EXCEPTION);
 
         if (springSecurityLastException != null) {
             if (springSecurityLastException instanceof BadCredentialsException) {
-                String loginUsername = ((String) request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION) == null ? "" : (String) request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION)).toLowerCase();
+                String loginUsername = (request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) == null ? "" :
+                    (String) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).toLowerCase();
                 AuUser admin = auUserService.findUserByUsername(loginUsername);
                 if (admin != null) {
                     //登录失败锁定次数，默认5次失败后将锁定帐号5分钟
@@ -93,10 +102,10 @@ public class LoginController extends BaseController{
                 springSecurityLastException.printStackTrace();
                 model.addAttribute("login_error", Localize.getMessage("login_unknown_error"));
             }
-            request.getSession().removeAttribute(SPRING_SECURITY_LAST_EXCEPTION);
+            request.getSession().removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
         logger.info("-----------------------------系统登录账户错误信息结束---------------------------------");
-        return "login/login";
+        return "login";
     }
 
     // 获取系统配置信息

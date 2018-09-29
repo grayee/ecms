@@ -43,12 +43,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/oauth/*", "/index").permitAll()
-            .antMatchers("/*").permitAll()
+            .antMatchers("/oauth/*").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login")
+            .loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
             .permitAll()
             .and()
             .logout()
@@ -59,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
             .and()
             .logout()
-            .logoutUrl("/logout").logoutSuccessUrl("/login").and().exceptionHandling().accessDeniedPage("/accessDenied")
+            .logoutUrl("/logout").logoutSuccessUrl("/logoutSuccess").and().exceptionHandling().accessDeniedPage("/accessDenied")
             .and().csrf().disable();
 
         //session管理,失效后跳转
@@ -86,11 +85,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {
         UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter = new UsernamePasswordAuthenticationFilter();
         usernamePasswordAuthenticationFilter.setPostOnly(true);
-        usernamePasswordAuthenticationFilter.setFilterProcessesUrl("/login");
         usernamePasswordAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
         usernamePasswordAuthenticationFilter.setUsernameParameter(SPRING_SECURITY_FORM_USERNAME_KEY);
         usernamePasswordAuthenticationFilter.setPasswordParameter(SPRING_SECURITY_FORM_PASSWORD_KEY);
-        usernamePasswordAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/checkLogin", "POST"));
+        usernamePasswordAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
         usernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
         usernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
         return usernamePasswordAuthenticationFilter;
