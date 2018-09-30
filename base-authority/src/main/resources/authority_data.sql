@@ -41,3 +41,7 @@ VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '管理权限', '1', 'manage
 INSERT INTO au_permission_resource (permission_id, resource_id)VALUES (1, 1)
 -- 角色权限关系 --
 INSERT INTO au_role_permission (role_id, permission_id)VALUES (1, 1)
+
+-- OATH2 --
+INSERT INTO ecms.clientdetails (appId, resourceIds, appSecret, scope, grantTypes, redirectUrl, authorities, access_token_validity, refresh_token_validity, additionalInformation, autoApproveScopes)
+VALUES ('appid-1234567890', 'resourceid', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null)
