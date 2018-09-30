@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+  <title>access denied</title>
+</head>
+<body>
+<h1>抱歉，您没有权限访问!</h1>
+<!--匿名-->
+<div sec:authorize="isAnonymous()">
+  点击 <a th:href="@{/login}">登录</a>
+</div>
+</body>
+</html>

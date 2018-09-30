@@ -63,6 +63,11 @@ public class LoginController extends BaseController {
         return "home";
     }
 
+    @RequestMapping(value = "/accessDenied")
+    public String accessDenied() {
+        return "accessDenied";
+    }
+
     @RequestMapping(value = "/loginFailure")
     public String loginFailure(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         /**
