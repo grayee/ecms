@@ -105,7 +105,7 @@ public class AuRole extends BaseEntity<Long> implements GrantedAuthority {
     @Transient
     @Override
     public String getAuthority() {
-        return name;
+        return value;
     }
 
     @Override

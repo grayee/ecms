@@ -31,4 +31,13 @@ INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (1, 1);
 -- 普通用户组 --
 INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (2, 2);
 
-
+-- 资源 --
+INSERT INTO au_resource (id, create_date, modify_date, version, description, enable_status, name, parent_id, type, value)
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 'home', 1, '', 0, 1, '/home')
+-- 权限 --
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '管理权限', '1', 'manager', '1', 'manager')
+-- 资源权限关系 --
+INSERT INTO au_permission_resource (permission_id, resource_id)VALUES (1, 1)
+-- 角色权限关系 --
+INSERT INTO au_role_permission (role_id, permission_id)VALUES (1, 1)

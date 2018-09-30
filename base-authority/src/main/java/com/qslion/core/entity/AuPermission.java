@@ -55,7 +55,7 @@ public class AuPermission extends BaseEntity<Long> {
         this.resources = resources;
     }
 
-    @ManyToMany(targetEntity = AuRole.class, mappedBy = "permissions")
+    @ManyToMany(targetEntity = AuRole.class, mappedBy = "permissions",fetch= FetchType.EAGER)
     public Set<AuRole> getRoles() {
         return roles;
     }

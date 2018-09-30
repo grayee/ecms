@@ -80,7 +80,7 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
         // object contains user request  URL.
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
 
-        logger.info("user request url is :" + request.getMethod() +" "+ request.getRequestURI());
+        logger.info("request url is :{}", String.format("%s %s", request.getMethod(), request.getRequestURI()));
 
         for (String resourceValue : resourceMap.keySet()) {
             RequestMatcher matcher = new AntPathRequestMatcher(resourceValue);

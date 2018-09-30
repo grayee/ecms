@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -27,7 +28,7 @@ public class AuResource extends BaseEntity<Long> {
     private String enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
 
-    @ManyToMany(targetEntity = AuPermission.class, mappedBy = "resources")
+    @ManyToMany(targetEntity = AuPermission.class, mappedBy = "resources",fetch= FetchType.EAGER)
     public Set<AuPermission> getPermissions() {
         return permissions;
     }
@@ -57,7 +58,7 @@ public class AuResource extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "description", nullable = true, length = 255)
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -67,7 +68,7 @@ public class AuResource extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "type", nullable = true)
+    @Column(name = "type")
     public Short getType() {
         return type;
     }
@@ -77,7 +78,7 @@ public class AuResource extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "parent_id", nullable = true)
+    @Column(name = "parent_id")
     public Long getParentId() {
         return parentId;
     }

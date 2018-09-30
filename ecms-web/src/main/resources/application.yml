@@ -21,6 +21,7 @@ spring:
     cache: false
   jpa:
     show-sql: true
+    open-in-view: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     hibernate:
