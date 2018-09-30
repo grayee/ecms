@@ -2,6 +2,7 @@ package com.qslion.framework.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -78,6 +79,7 @@ public class BaseEntity<T> implements Serializable {
     }
 
     @Version
+    @Nonnull
     public Long getVersion() {
         return version;
     }

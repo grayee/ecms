@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -30,6 +31,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -49,16 +51,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             .loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
             .permitAll()
-            .and()
-            .logout()
-            .permitAll();
+            .and().rememberMe().key("test.com");
 
         http.addFilterAt(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(auFilterSecurityInterceptor, FilterSecurityInterceptor.class)
             .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
             .and()
             .logout()
-            .logoutUrl("/logout").logoutSuccessUrl("/logoutSuccess").and().exceptionHandling().accessDeniedPage("/accessDenied")
+            .logoutUrl("/logout").logoutSuccessUrl("/logoutSuccess")
+            .and().exceptionHandling().accessDeniedPage("/accessDenied")
             .and().csrf().disable();
 
         //session管理,失效后跳转

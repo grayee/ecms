@@ -8,12 +8,15 @@ import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuUserService;
 import com.qslion.framework.bean.SystemConfig;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import java.security.Principal;
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -48,7 +51,7 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
 
     @Override
     public AuUser loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        logger.info("---------------------系统登录通过用户名载入用户信息开始！--------------------------");
+        logger.info("系统登录通过用户名载入用户信息开始,用户名：{}...", username);
         AuUser loginUser = userRepository.findUserByUsername(username);
         if (loginUser == null) {
             throw new UsernameNotFoundException("管理员[" + username + "]不存在!");
@@ -66,25 +69,41 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
                         loginUser.setLoginFailureCount(0);
                         loginUser.setAccountNonLocked(false);
                         loginUser.setLockedDate(null);
-                        userRepository.saveAndFlush(loginUser);
+                        this.update(loginUser);
                     }
                 }
             } else {
                 loginUser.setLoginFailureCount(0);
-                loginUser.setAccountNonLocked(false);
-                loginUser.setLockedDate(DateTime.now().toDate());
-                userRepository.saveAndFlush(loginUser);
+                loginUser.setAccountNonLocked(true);
+                this.update(loginUser);
             }
         }
-        logger.info("系统登录通过用户名载入用户信息结束！用户名：" + loginUser.getUsername() + ",权限信息:" + loginUser
-            .getAuthorities().toString());
+        logger.info("系统登录通过用户名载入用户信息结束,权限信息:{}", loginUser.getAuthorities().toString());
         return loginUser;
     }
 
 
-
     @Override
     public String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails) {
+
+            return ((UserDetails) principal).getUsername();
+
+        }
+
+        if (principal instanceof Principal) {
+
+            return ((Principal) principal).getName();
+
+        }
+
+        return String.valueOf(principal);
     }
 }

@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -50,6 +49,10 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     private EnableStatus enableStatus;
     private Date lockedDate;
     private Integer loginFailureCount;
+    /**
+     * 头像图片地址
+     */
+    private String avatar;
 
 
     private Set<AuRole> roles = Sets.newHashSet();
@@ -75,7 +78,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         this.userGroups = userGroups;
     }
 
-    @ManyToMany(targetEntity = AuRole.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = AuRole.class)
     @JoinTable(name = "au_user_role", joinColumns = {
         @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     public Set<AuRole> getRoles() {
@@ -261,6 +264,15 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     public void setAuthorities(Set<AuRole> authorities) {
         this.authorities = authorities;
+    }
+
+    @Column(name = "avatar")
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override

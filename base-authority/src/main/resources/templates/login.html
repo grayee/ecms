@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <title>Spring Security Example </title>
+  <title>Spring Security Login </title>
 </head>
-<body>
-<div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
+<body style="text-align: center;">
+<div style="margin: 150px auto 0;">
+  <div th:if="${login_error}">
+    <span th:text="${login_error}"></span>
+  </div>
+  <div th:if="${param.logout}">
     You have been logged out.
+  </div>
+
+  <form th:action="@{login}" method="post" id="loginForm">
+    用户名：<input type="text" name="username" class="username" id="username" placeholder="用户名" autocomplete="off"/> <br>
+    密　码：<input type="password" name="password" class="password" id="password" placeholder="密码"
+               oncontextmenu="return false"
+               onpaste="return false"/> <br>
+    <input type="checkbox" name="remember-me"/>记住我 <br>
+
+    <input id="submit" type="submit" value="登录"/>
+  </form>
 </div>
-<form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
 </body>
 </html>

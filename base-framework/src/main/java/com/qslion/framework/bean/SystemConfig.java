@@ -41,7 +41,8 @@ public class SystemConfig {
     private String phone;// 联系电话
     private String zipCode;// 邮编
     private String email;// 联系email
-    private CurrencyType currencyType;// 货币种类
+    //货币种类
+    private CurrencyType currencyType;
     private String currencySign;// 货币符号
     private String currencyUnit;// 货币单位
     private Integer priceScale;// 商品价格精确位数
@@ -52,9 +53,9 @@ public class SystemConfig {
     private Integer storeAlertCount;// 库存报警数量
     private StoreFreezeTime storeFreezeTime;// 库存预占时间点
     private Integer uploadLimit;// 文件上传最大值,0表示无限制,单位KB
-    private Boolean isLoginFailureLock; // 是否开启登录失败锁定账号功能
+    private Boolean isLoginFailureLock = false; // 是否开启登录失败锁定账号功能
     private Integer loginFailureLockCount;// 同一账号允许连续登录失败的最大次数，超出次数后将锁定其账号
-    private Integer loginFailureLockTime;// 账号锁定时间(单位：分钟,0表示永久锁定)
+    private Integer loginFailureLockTime = 15;// 账号锁定时间(单位：分钟,0表示永久锁定)
     private Boolean isRegister;// 是否开放注册
     private String watermarkImagePath; // 水印图片路径
     private WatermarkPosition watermarkPosition; // 水印位置

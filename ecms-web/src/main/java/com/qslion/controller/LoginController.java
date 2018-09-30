@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2018/4/21 13:43.
  */
 @Controller
-public class LoginController extends BaseController{
+public class LoginController extends BaseController {
 
     @Autowired
     private AuUserService auUserService;
@@ -72,18 +73,18 @@ public class LoginController extends BaseController{
 
         if (springSecurityLastException != null) {
             if (springSecurityLastException instanceof BadCredentialsException) {
-                String loginUsername = (request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) == null ? "" :
-                    (String) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).toLowerCase();
+                String loginUsername = SecurityContextHolder.getContext().getAuthentication().getName();
                 AuUser admin = auUserService.findUserByUsername(loginUsername);
                 if (admin != null) {
                     //登录失败锁定次数，默认5次失败后将锁定帐号5分钟
                     int loginFailureLockCount = getSystemConfig().getLoginFailureLockCount();
                     //系统记录到登录失败的次数
-                    int loginFailureCount = 0;//admin.getLoginFailureCount();
+                    int loginFailureCount = admin.getLoginFailureCount();
                     //锁定开关,默认打开
                     boolean isLoginFailureLock = getSystemConfig().getIsLoginFailureLock();
                     if (isLoginFailureLock && loginFailureLockCount - loginFailureCount <= 3) {
-                        model.addAttribute("login_error", Localize.getMessage("login_failure_lock", loginFailureLockCount));
+                        model.addAttribute("login_error",
+                            Localize.getMessage("login_failure_lock", loginFailureLockCount));
                     } else {
                         model.addAttribute("login_error", Localize.getMessage("login_username_or_password_error"));
                     }
@@ -104,7 +105,7 @@ public class LoginController extends BaseController{
             }
             request.getSession().removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
-        logger.info("-----------------------------系统登录账户错误信息结束---------------------------------");
+        logger.warn("系统登录失败，账户错误信息:{}", model.get("login_error"));
         return "login";
     }
 

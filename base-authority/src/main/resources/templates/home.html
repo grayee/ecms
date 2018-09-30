@@ -1,11 +1,32 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
 <head>
-    <title>Spring Security Example</title>
+  <title>Spring Security Example</title>
 </head>
 <body>
 <h1>Welcome!</h1>
+<!--匿名-->
+<div sec:authorize="isAnonymous()">
+  未登录，点击 <a th:href="@{/login}">登录</a>
+</div>
+<!--登录-->
+<div sec:authorize="isAuthenticated()">
+  <p>已登录</p> <p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p>
+  <p>登录名：<span sec:authentication="name"></span></p>
+  <p>角色：<span sec:authentication="principal.authorities"></span></p>
+  <p>Username：<span sec:authentication="principal.username"></span></p>
+  <p>Password：<span sec:authentication="principal.password"></span></p>
+  <p>Email ：<span sec:authentication="principal.email"></span></p>
+  <p>Name：<span sec:authentication="principal.nickname"></span></p>
+  <p>Status：<span sec:authentication="principal.enableStatus"></span></p>
+  <p>拥有的角色：
+    <span sec:authorize="hasRole('ROLE_ADMIN')">管理员</span>
+    <span sec:authorize="hasRole('ROLE_USER')">用户</span>
+  </p>
+</div>
 
-<p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p>
 </body>
 </html>
