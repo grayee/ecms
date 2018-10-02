@@ -2,7 +2,6 @@
 
 package com.qslion.configuration;
 
-import com.qslion.core.service.impl.AuUserServiceImpl;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -45,8 +46,6 @@ public class OAuth2ServerConfig {
 
         /**
          * 创建了OAuth2核心过滤器OAuth2AuthenticationProcessingFilter,并为其提供固定OAuth2AuthenticationManager
-         *
-         * @param resources
          */
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) {
@@ -57,9 +56,9 @@ public class OAuth2ServerConfig {
         public void configure(HttpSecurity http) throws Exception {
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
+                .requestMatchers().anyRequest().and()
                 .authorizeRequests()
-                .antMatchers("/test/**").authenticated();//配置api访问控制，必须认证过后才可以访问
-
+                .antMatchers("/*").authenticated();
         }
     }
 
@@ -74,7 +73,7 @@ public class OAuth2ServerConfig {
         RedisConnectionFactory redisConnectionFactory;
 
         @Autowired
-        private AuUserServiceImpl userDetailService;
+        private UserDetailsService userDetailService;
 
         @Autowired
         private DataSource dataSource;
@@ -144,6 +143,23 @@ public class OAuth2ServerConfig {
         public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
             //允许表单认证
             oauthServer.allowFormAuthenticationForClients();
+            oauthServer.tokenKeyAccess("permitAll()");
+            oauthServer.tokenKeyAccess("isAuthenticated()");
+        }
+
+        @Bean
+        PasswordEncoder passwordEncoder(){
+            return new PasswordEncoder() {
+                @Override
+                public String encode(CharSequence charSequence) {
+                    return charSequence.toString();
+                }
+
+                @Override
+                public boolean matches(CharSequence charSequence, String s) {
+                    return s.equals(charSequence.toString());
+                }
+            };
         }
     }
 }

@@ -8,12 +8,15 @@ import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuUserService;
 import com.qslion.framework.bean.SystemConfig;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import com.qslion.framework.util.JSONUtils;
 import java.security.Principal;
 import java.util.Date;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,7 +54,7 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
 
     @Override
     public AuUser loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        logger.info("系统登录通过用户名载入用户信息开始,用户名：{}...", username);
+        logger.info("系统登录通过用户名载入用户信息开始,用户名：{}", username);
         AuUser loginUser = userRepository.findUserByUsername(username);
         if (loginUser == null) {
             throw new UsernameNotFoundException("管理员[" + username + "]不存在!");
@@ -78,7 +81,8 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
                 this.update(loginUser);
             }
         }
-        logger.info("系统登录通过用户名载入用户信息结束,权限信息:{}", loginUser.getAuthorities().toString());
+        logger.info("系统登录通过用户名载入用户信息结束,权限信息:{}", JSONUtils.writeValueAsString(loginUser.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
         return loginUser;
     }
 

@@ -33,15 +33,18 @@ INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (2, 2);
 
 -- 资源 --
 INSERT INTO au_resource (id, create_date, modify_date, version, description, enable_status, name, parent_id, type, value)
-VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 'home', 1, '', 0, 1, '/home')
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 'home', 1, '', 0, 1, '/home');
 -- 权限 --
 INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '管理权限', '1', 'manager', '1', 'manager')
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '管理权限', '1', 'manager', '1', 'manager');
 -- 资源权限关系 --
-INSERT INTO au_permission_resource (permission_id, resource_id)VALUES (1, 1)
+INSERT INTO au_permission_resource (permission_id, resource_id)VALUES (1, 1);
 -- 角色权限关系 --
-INSERT INTO au_role_permission (role_id, permission_id)VALUES (1, 1)
+INSERT INTO au_role_permission (role_id, permission_id)VALUES (1, 1);
 
--- OATH2 --
-INSERT INTO ecms.clientdetails (appId, resourceIds, appSecret, scope, grantTypes, redirectUrl, authorities, access_token_validity, refresh_token_validity, additionalInformation, autoApproveScopes)
+-- OAUTH2 --
+INSERT INTO ecms.oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
+VALUES ('client_id_1234567890', 'resource_ids', 'client_secret_1234567890', 'select', 'password,refresh_token', NULL, NULL, 10000, 10000, '{}', '');
+
+INSERT INTO clientdetails (appId, resourceIds, appSecret, scope, grantTypes, redirectUrl, authorities, access_token_validity, refresh_token_validity, additionalInformation, autoApproveScopes)
 VALUES ('appid-1234567890', 'resourceid', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null)

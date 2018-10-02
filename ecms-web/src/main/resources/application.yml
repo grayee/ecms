@@ -17,7 +17,7 @@ spring:
     encoding: UTF-8
   thymeleaf:
     prefix: classpath:/templates/
-    mode: HTML
+    mode: HTML5
     cache: false
   jpa:
     show-sql: true
