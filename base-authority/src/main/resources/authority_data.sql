@@ -43,7 +43,7 @@ INSERT INTO au_permission_resource (permission_id, resource_id)VALUES (1, 1);
 INSERT INTO au_role_permission (role_id, permission_id)VALUES (1, 1);
 
 -- OAUTH2 --
-INSERT INTO ecms.oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
+INSERT INTO oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
 VALUES ('client_id_1234567890', 'resource_ids', 'client_secret_1234567890', 'select', 'password,refresh_token', NULL, NULL, 10000, 10000, '{}', '');
 
 INSERT INTO clientdetails (appId, resourceIds, appSecret, scope, grantTypes, redirectUrl, authorities, access_token_validity, refresh_token_validity, additionalInformation, autoApproveScopes)
