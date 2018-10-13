@@ -4,6 +4,13 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
 
 import com.qslion.security.filter.AuFilterSecurityInterceptor;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +23,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * security config
@@ -31,6 +44,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Client
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -45,7 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().authenticated().and().csrf()
+            //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .csrfTokenRepository(csrfTokenRepository())
             .and()
             .formLogin()
             .loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
@@ -88,7 +104,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         usernamePasswordAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
         usernamePasswordAuthenticationFilter.setUsernameParameter(SPRING_SECURITY_FORM_USERNAME_KEY);
         usernamePasswordAuthenticationFilter.setPasswordParameter(SPRING_SECURITY_FORM_PASSWORD_KEY);
-        usernamePasswordAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
+        usernamePasswordAuthenticationFilter
+            .setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
         usernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
         usernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
         return usernamePasswordAuthenticationFilter;
@@ -118,6 +135,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    private Filter csrfHeaderFilter() {
+        return new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request,
+                HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
+                CsrfToken csrf = (CsrfToken) request
+                    .getAttribute(CsrfToken.class.getName());
+                if (csrf != null) {
+                    Cookie cookie = new Cookie("XSRF-TOKEN",
+                        csrf.getToken());
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                }
+                filterChain.doFilter(request, response);
+            }
+        };
+    }
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-XSRF-TOKEN");
+        return repository;
     }
 
 }

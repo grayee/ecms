@@ -45,13 +45,23 @@ public class OAuth2ServerConfig {
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
         /**
-         * 创建了OAuth2核心过滤器OAuth2AuthenticationProcessingFilter,并为其提供固定OAuth2AuthenticationManager
+         * ResourceServerSecurityConfigurer 创建了OAuth2核心过滤器OAuth2AuthenticationProcessingFilter,
+         * 并为其提供固定的AuthenticationManager即OAuth2AuthenticationManager,它并没有将OAuth2AuthenticationManager
+         * 添加到spring的容器中，不然可能会影响spring security的普通认证流程（非oauth2请求），只有被
+         * OAuth2AuthenticationProcessingFilter拦截到的oauth2相关请求才被特殊的身份认证器处理,设置了TokenExtractor默认的
+         * 实现—BearerTokenExtractor,以及相关的异常处理器
+         *
+         * @param resources 资源安全配置
          */
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) {
             resources.resourceId(API_RESOURCE_ID).stateless(true);
         }
 
+        /**
+         *
+         * @param http http安全配置 HttpSecurity
+         */
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -135,7 +145,9 @@ public class OAuth2ServerConfig {
 
         /**
          * 配置令牌端点(Token Endpoint)的安全约束
-         * 配置AuthorizationServer安全认证的相关信息，创建ClientCredentialsTokenEndpointFilter核心过滤器
+         * 配置AuthorizationServer安全认证的相关信息，创建ClientCredentialsTokenEndpointFilter核心过滤器,
+         * 经过ClientCredentialsTokenEndpointFilter之后，身份信息已经得到了AuthenticationManager的验证。
+         * 接着便到达TokenEndpoint
          *
          * @param oauthServer 授权服务配置
          */
@@ -148,7 +160,7 @@ public class OAuth2ServerConfig {
         }
 
         @Bean
-        PasswordEncoder passwordEncoder(){
+        PasswordEncoder passwordEncoder() {
             return new PasswordEncoder() {
                 @Override
                 public String encode(CharSequence charSequence) {
