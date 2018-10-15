@@ -1,5 +1,42 @@
 https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
 
 注意：
-在使用这套表结构之前要注意的是，对于MySQL来说，默认建表语句中主键是varchar(255)类型，在mysql中执行会报错，
-原因是mysql对varchar主键长度有限制。所以这里改成128即可。其次，语句中会有某些字段为LONGVARBINARY类型，它对应mysql的blob类型，也需要修改一下。
+    在使用这套表结构之前要注意的是，对于MySQL来说，默认建表语句中主键是varchar(255)类型，在mysql中执行会报错，
+    原因是mysql对varchar主键长度有限制。所以这里改成128即可。其次，语句中会有某些字段为LONGVARBINARY类型，它对应mysql的blob类型，
+    也需要修改一下。
+
+表结构说明见： http://andaily.com/spring-oauth-server/db_table_description.html
+
+OAuth 2.0 的认证流程:
+
+ +--------+                               +---------------+
+ |        |--(A)- Authorization Request ->|   Resource    |
+ |        |                               |     Owner     |
+ |        |<-(B)-- Authorization Grant ---|               |
+ |        |                               +---------------+
+ |        |
+ |        |                               +---------------+
+ |        |--(C)-- Authorization Grant -->| Authorization |
+ | Client |                               |     Server    |
+ |        |<-(D)----- Access Token -------|               |
+ |        |                               +---------------+
+ |        |
+ |        |                               +---------------+
+ |        |--(E)----- Access Token ------>|    Resource   |
+ |        |                               |     Server    |
+ |        |<-(F)--- Protected Resource ---|               |
+ +--------+                               +---------------+
+
+（A）用户打开客户端以后，客户端请求资源所有者（用户）的授权。
+（B）用户同意给予客户端授权。
+（C）客户端使用上一步获得的授权，向认证服务器申请访问令牌。
+（D）认证服务器对客户端进行认证以后，确认无误，同意发放访问令牌。
+（E）客户端使用访问令牌，向资源服务器申请获取资源。
+（F）资源服务器确认令牌无误，同意向客户端开放资源。
+
+其中，用户授权有四种模式：
+
+授权码模式（authorization code）--即先登录获取code,再获取token
+简化模式（implicit）— 简化模式(在redirect_uri 的Hash传递token; Auth客户端运行在浏览器中,如JS,Flash)
+密码模式（resource owner password credentials）--将用户名,密码传过去,直接获取token
+客户端模式（client credentials）— 客户端模式(无用户,用户向客户端注册,然后客户端以自己的名义向’服务端’获取资源)

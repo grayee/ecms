@@ -26,18 +26,32 @@ spring:
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     hibernate:
       ddl-auto: update
-
-security:
-  oauth2:
+# SECURITY OAUTH2 CLIENT (OAuth2ClientProperties)
+  security:
+   oauth2:
     client:
-      clientId: 89630a412fa314777dc2
-      clientSecret: c7a29ec26ec7805e78b496ea67cc13e5a9b8bcf0
-      accessTokenUri: https://github.com/login/oauth/access_token
-      userAuthorizationUri: https://github.com/login/oauth/authorize
-      clientAuthenticationScheme: form
-    resource:
-      userInfoUri: https://api.github.com/user
-      preferTokenInfo: false
+      registration:
+        github-client-1:
+          client-id: 89630a412fa314777dc2
+          client-secret: c7a29ec26ec7805e78b496ea67cc13e5a9b8bcf0
+          client-name: Github User
+          provider: github
+          scope: user
+          access-token-uri: https://github.com/login/oauth/access_token
+          user-authorization-uri: https://github.com/login/oauth/authorize
+          client-authentication-scheme: form
+          registered-redirect-uri: ${site.baseUrl}/github_login
+          use-current-uri: false
+          authorization-grant-type: authorization_code
+          resource:
+            user-info-uri: https://api.github.com/user
+            prefer-token-info: false
+            # SECURITY OAUTH2 SSO (OAuth2SsoProperties)           sso:
+            login-path: /github_login
+      provider:
+        my-oauth-provider:
+          authorization-uri: http://localhost:8080/oauth/authorize
+          token-uri: http://localhost:8080/oauth/token
 
 debug: false
 trace: false

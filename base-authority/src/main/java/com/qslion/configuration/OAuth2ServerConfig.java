@@ -117,7 +117,7 @@ public class OAuth2ServerConfig {
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
-            //配置默认认证器
+            //配置默认认证器,密码授权必须配置
             endpoints.authenticationManager(authenticationManager);
             endpoints.tokenStore(tokenStore());
             endpoints.userDetailsService(userDetailService);
@@ -152,7 +152,8 @@ public class OAuth2ServerConfig {
          * @param oauthServer 授权服务配置
          */
         @Override
-        public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+        public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+            super.configure(oauthServer);
             //允许表单认证
             oauthServer.allowFormAuthenticationForClients();
             oauthServer.tokenKeyAccess("permitAll()");
