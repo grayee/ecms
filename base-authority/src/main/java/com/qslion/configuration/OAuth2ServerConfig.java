@@ -111,13 +111,14 @@ public class OAuth2ServerConfig {
 
         /**
          * 配置认证（authorization）以及令牌（token）的访问端点和令牌服务(token services)
+         * 默认情况下，除了密码之外，所有的授权类型都是受支持
          *
          * @param endpoints 端点配置 TokenStore，TokenGranter，OAuth2RequestFactory
          */
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
-            //配置默认认证器,密码授权必须配置
+            //通过注入 AuthenticationManager 来开启密码授权
             endpoints.authenticationManager(authenticationManager);
             endpoints.tokenStore(tokenStore());
             endpoints.userDetailsService(userDetailService);

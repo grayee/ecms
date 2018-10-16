@@ -7,6 +7,16 @@ https://github.com/spring-projects/spring-security-oauth/blob/master/spring-secu
 
 表结构说明见： http://andaily.com/spring-oauth-server/db_table_description.html
 
+OAuth 2.0 主要有4类角色：
+
+  resource owner：资源所有者，指终端的“用户”（user）
+  resource server：资源服务器，即服务提供商存放受保护资源。访问这些资源，需要获得访问令牌（access token）。它与认证服务器，
+                   可以是同一台服务器，也可以是不同的服务器。
+                   如果，我们访问新浪博客网站，那么如果使用新浪博客的账号来登录新浪博客网站，那么新浪博客的资源和新浪博客的认证都是同一家，
+                   可以认为是同一个服务器。如果，我们是新浪博客账号去登录了知乎，那么显然知乎的资源和新浪的认证不是一个服务器。
+  client：客户端，代表向受保护资源进行资源请求的第三方应用程序。
+  authorization server： 授权服务器， 在验证资源所有者并获得授权成功后，将发放访问令牌给客户端。
+
 OAuth 2.0 的认证流程:
 
  +--------+                               +---------------+
@@ -36,7 +46,30 @@ OAuth 2.0 的认证流程:
 
 其中，用户授权有四种模式：
 
-授权码模式（authorization code）--即先登录获取code,再获取token
-简化模式（implicit）— 简化模式(在redirect_uri 的Hash传递token; Auth客户端运行在浏览器中,如JS,Flash)
-密码模式（resource owner password credentials）--将用户名,密码传过去,直接获取token
-客户端模式（client credentials）— 客户端模式(无用户,用户向客户端注册,然后客户端以自己的名义向’服务端’获取资源)
+  授权码模式（authorization code）--即先登录获取code,再获取token
+  简化模式（implicit）— 简化模式(在redirect_uri 的Hash传递token; Auth客户端运行在浏览器中,如JS,Flash)
+  密码模式（resource owner password credentials）--将用户名,密码传过去,直接获取token
+  客户端模式（client credentials）— 客户端模式(无用户,用户向客户端注册,然后客户端以自己的名义向’服务端’获取资源)
+
+介绍：https://www.oschina.net/translate/spring-security-oauth-docs-oauth2
+官方原文：http://projects.spring.io/spring-security-oauth/docs/oauth2.html
+
+OAuth 2.0 一般分为两个部分，一部分是提供方[通常指服务提供方]，另一部分则是客户端
+
+OAuth 2.0 提供方
+    OAuth 2.0 提供方通过某种机制来提供受 OAuth 2.0 保护的资源。其配置涉到确立 OAuth 2.0 客户端能做什么，是能独立访问受保护的资源，
+还是保护用户的利益。提供方通过管理和验证 OAuth 2.0 令牌达到目的，令牌就是用来访问受保护资源的。在某些情况下，提供方还必须为用户
+提供一个接口用于确认授权客户端访问受保护的资源（比如，确认页面）。
+
+OAuth 2.0 提供方实现
+   OAuth 2.0 的提供方实际涵盖两个角色，即认证服务 (Authorization Service) 和资源服务 (Resource Service)，有时候它们会在同一个
+应用程序中实现。使用 Spring Security OAuth 的时候你可以选择把把它们分别放在两个应用程序中，也可以选择建立使用同一个认证服务的
+多个资源服务。对令牌的请求由 Spring MVC 控制器终端进行处理，而标准的 Spring security 请求过滤器会处理对受保护资源的访问。
+Spring以 Security 过滤器链需要以下各端来实现 OAuth 2.0 认证服务：
+
+AuthorizationEndpoint 服务于认证请求。默认 URL： /oauth/authorize。
+
+TokenEndpoint 服务于访问令牌的请求。默认 URL： /oauth/token。
+
+下面的过滤器用于实现 OAuth 2.0 资源服务：
+OAuth2AuthenticationProcessingFilter 用来对请求给出的身份令牌加载认证。
