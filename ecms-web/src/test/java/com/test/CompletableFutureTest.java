@@ -1,5 +1,6 @@
 package com.test;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 
@@ -57,10 +58,11 @@ public class CompletableFutureTest {
         /**
          * 3.计算结果完成时的处理
          */
-        CompletableFuture<Integer> future3 = CompletableFuture.supplyAsync(RandomUtils::nextInt).whenComplete((v, e) -> {
-            System.out.println(v);
-            System.out.println(e);
-        }).exceptionally(e -> e.hashCode());
+        CompletableFuture<Integer> future3 = CompletableFuture.supplyAsync(RandomUtils::nextInt)
+            .whenComplete((v, e) -> {
+                System.out.println(v);
+                System.out.println(e);
+            }).exceptionally(e -> e.hashCode());
 
         /**
          * 4.转换
@@ -69,10 +71,11 @@ public class CompletableFutureTest {
         CompletableFuture<Integer> future4 = CompletableFuture.supplyAsync(() -> {
             return 100;
         });
-        CompletableFuture<String> f =  future4.thenApplyAsync(i -> i * 10).thenApply(i -> i.toString());
+        CompletableFuture<String> f = future4.thenApplyAsync(i -> i * 10).thenApply(i -> i.toString());
         System.out.println(f.get()); //"1000"
 
-
+        CompletableFuture
+            .allOf(Lists.newArrayList(future, future1, voidFuture, future3, future4).toArray(new CompletableFuture[5]));
 
     }
 
@@ -90,7 +93,8 @@ public class CompletableFutureTest {
             return "hello.world==>CompletableFuture.supplyAsync";
         });
         System.out.println(completableFuture.get());
-        CompletionStage<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> System.out.println("hello.world2"), Executors.newCachedThreadPool());
+        CompletionStage<Void> voidCompletableFuture = CompletableFuture
+            .runAsync(() -> System.out.println("hello.world2"), Executors.newCachedThreadPool());
 
         //completableFuture 回调函数
         completableFuture.thenRun(() -> {

@@ -68,8 +68,85 @@ OAuth 2.0 提供方实现
 Spring以 Security 过滤器链需要以下各端来实现 OAuth 2.0 认证服务：
 
 AuthorizationEndpoint 服务于认证请求。默认 URL： /oauth/authorize。
+>>/oauth/token?grant_type=password #请求授权token
+>>/oauth/token?grant_type=refresh_token #刷新token
 
 TokenEndpoint 服务于访问令牌的请求。默认 URL： /oauth/token。
 
+CheckTokenEndpoint 校验token 。默认 URL: /oauth/check_token
+
+WhitelabelApprovalEndpoint 默认 URL: /oauth/confirm_access
+
 下面的过滤器用于实现 OAuth 2.0 资源服务：
 OAuth2AuthenticationProcessingFilter 用来对请求给出的身份令牌加载认证。
+
+
+#TokenGranter#
+>>1.ResourceOwnerPasswordTokenGranter ==> password密码模式
+>>2.AuthorizationCodeTokenGranter ==> authorization_code授权码模式
+>>3.ClientCredentialsTokenGranter ==> client_credentials客户端模式
+>>4.ImplicitTokenGranter ==> implicit简化模式
+>>5.RefreshTokenGranter ==>refresh_token 刷新token专用
+
+>>CompositeTokenGranter==>组合TokenGranter : List<TokenGranter>，对应上述五种GrantType的实际授权实现
+
+
+#AuthenticationManager#
+>>ProviderManager -> AuthenticationProvider -> List<AuthenticationProvider>
+>>OAuth2AuthenticationManager
+
+#TokenExtractor#
+>>BearerTokenExtractor : 用在于分离出请求中包含的token
+>>>1 在Header中携带
+   http://localhost:8080/order/1
+   Header：
+   Authentication：Bearer f732723d-af7f-41bb-bd06-2636ab2be135
+
+   2 拼接在url中作为requestParam
+   http://localhost:8080/order/1?access_token=f732723d-af7f-41bb-bd06-2636ab2be135
+
+   3 在form表单中携带
+   http://localhost:8080/order/1
+   form param：
+   access_token=f732723d-af7f-41bb-bd06-2636ab2be135
+
+#BasicAuthenticationEntryPoint#
+>>>ResourceServerSecurityConfigurer -> ExceptionHandlingConfigurer -> ExceptionTranslationFilter
+>>>>AuthenticationEntryPoint -> DelegatingAuthenticationEntryPoint -> BasicAuthenticationEntryPoint
+>>>>AccessDeniedHandler 非匿名，非记住我时触发;否则触发BasicAuthenticationEntryPoint
+
+
+
+#Security 过滤器按顺序#
+1.SecurityContextPersistenceFilter：与SecurityContext安全上下文信息有关
+2.HeaderWriterFilter：给http响应添加一些Header
+3.CsrfFilter：防止csrf攻击，默认开启
+4.LogoutFilter：处理注销的过滤器
+5.UsernamePasswordAuthenticationFilter：表单认证过滤器
+6.RequestCacheAwareFilter：缓存request请求
+7.SecurityContextHolderAwareRequestFilter：此过滤器对ServletRequest进行了一次包装，使得request具有更加丰富的API
+8.AnonymousAuthenticationFilter：匿名身份过滤器
+9.SessionManagementFilter：session相关的过滤器，常用来防止session-fixation protection attack，以及限制同一用户开启多个会话的数量
+10.ExceptionTranslationFilter：异常处理过滤器
+11.FilterSecurityInterceptor：web应用安全的关键Filter
+
+
+Bearer Token (RFC 6750) 用于OAuth 2.0授权访问资源，任何Bearer持有者都可以无差别地用它来访问相关的资源，而无需证明持有加密key。
+一个Bearer代表授权范围、有效期，以及其他授权事项；一个Bearer在存储和传输过程中应当防止泄露，需实现Transport Layer Security (TLS)；
+一个Bearer有效期不能过长，过期后可用Refresh Token申请更新。
+
+ 资源请求
+
+Bearer实现资源请求有三种方式：Authorization Header、Form-Encoded Body Parameter、URI Query Parameter，这三种方式优先级依次递减
+
+Authorization Header：该头部定义与Basic方案类似
+GET /resource HTTP/1.1
+Host: server.example.com
+Authorization: Bearer mF_9.B5f-4.1JqM
+
+二. WWW-Authenticate头
+
+　　在客户端未发送有效Bearer的情况下，即错误发生时，资源服务器须发送WWW-Authenticate头，下为示例：
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer realm="example", error="invalid_token", error_description="The access token expired"

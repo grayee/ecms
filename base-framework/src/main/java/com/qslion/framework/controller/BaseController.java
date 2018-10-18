@@ -1,6 +1,7 @@
 
 package com.qslion.framework.controller;
 
+import com.google.common.base.Charsets;
 import com.google.common.net.HttpHeaders;
 import com.qslion.framework.util.JxlsUtils;
 import java.io.FileNotFoundException;
@@ -9,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +48,7 @@ public class BaseController<T, ID>{
       String fileName,
       String templatePath) {
     try (OutputStream os = response.getOutputStream()) {
-      setResponseParam(response, getLocalFileName(fileName, request.getHeader("User-Agent")));
+      setResponseParam(response, getLocalFileName(fileName, request.getHeader(HttpHeaders.USER_AGENT)));
       InputStream is = getClass().getClassLoader().getResourceAsStream(templatePath);
       JxlsUtils.exportExcel(is, os, dataModel);
     } catch (FileNotFoundException e) {
@@ -61,19 +61,21 @@ public class BaseController<T, ID>{
   }
 
   private void setResponseParam(HttpServletResponse response, String fileName) {
-    response.setCharacterEncoding(Charset.forName("UTF-8").name());
+    response.setCharacterEncoding(Charsets.UTF_8.toString());
+    //MediaType.APPLICATION_JSON_UTF8_VALUE
     response.setContentType("application/vnd.ms-excel");
     response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
   }
 
   private String getLocalFileName(String fileName, String userAgent) throws UnsupportedEncodingException {
     if (userAgent.toUpperCase().contains("MSIE") || userAgent.contains("Trident/7.0")) {
-      fileName = URLEncoder.encode(fileName, "UTF-8");
+      fileName = URLEncoder.encode(fileName, Charsets.UTF_8.toString());
     } else if (userAgent.toUpperCase().contains("MOZILLA") ||
         userAgent.toUpperCase().contains("CHROME")) {
-      fileName = new String(fileName.getBytes(), "ISO-8859-1");
+      fileName = new String(fileName.getBytes(), Charsets.ISO_8859_1.toString());
     } else {
-      fileName = URLEncoder.encode(fileName, "UTF-8");
+      fileName = URLEncoder.encode(fileName, Charsets.UTF_8.toString());
+
     }
     return fileName;
   }
