@@ -2,6 +2,9 @@
 
 package com.qslion.configuration;
 
+import static org.apache.commons.jexl2.parser.ParserConstants.and;
+import static org.apache.coyote.http11.Constants.a;
+
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +70,9 @@ public class OAuth2ServerConfig {
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .requestMatchers().anyRequest().and()
-                .authorizeRequests()
-                .antMatchers("/*").authenticated();
+                .authorizeRequests() .and()
+                .formLogin() .loginPage("/login").failureUrl("/logi nFailure").defaultSuccessUrl("/loginSuccess")
+                .permitAll();
         }
     }
 

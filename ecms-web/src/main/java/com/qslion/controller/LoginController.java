@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -43,7 +44,7 @@ public class LoginController extends BaseController {
         return "home";
     }
 
-    @RequestMapping(value = "/login")
+    @GetMapping(value = "/login")
     public String login() {
         return "login";
     }

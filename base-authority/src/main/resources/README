@@ -96,7 +96,7 @@ OAuth2AuthenticationProcessingFilter 用来对请求给出的身份令牌加载�
 >>OAuth2AuthenticationManager
 
 #TokenExtractor#
->>BearerTokenExtractor : 用在于分离出请求中包含的token
+>>BearerTokenExtractor : 用于分离出请求中包含的token
 >>>1 在Header中携带
    http://localhost:8080/order/1
    Header：
@@ -114,6 +114,9 @@ OAuth2AuthenticationProcessingFilter 用来对请求给出的身份令牌加载�
 >>>ResourceServerSecurityConfigurer -> ExceptionHandlingConfigurer -> ExceptionTranslationFilter
 >>>>AuthenticationEntryPoint -> DelegatingAuthenticationEntryPoint -> BasicAuthenticationEntryPoint
 >>>>AccessDeniedHandler 非匿名，非记住我时触发;否则触发BasicAuthenticationEntryPoint
+
+OAuth2AuthenticationEntryPoint -> AbstractOAuth2SecurityExceptionHandler -> WebResponseExceptionTranslator ->
+OAuth2ExceptionRenderer -> DefaultOAuth2ExceptionRenderer -> OAuth2Exception
 
 
 
