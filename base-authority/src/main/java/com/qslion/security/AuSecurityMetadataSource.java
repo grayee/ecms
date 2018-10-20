@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-    private static Logger logger = LogManager.getLogger(AuSecurityMetadataSource.class);
+    private static Logger logger = LogManager.getLogger();
     @Autowired
     private AuResourceService auResourceService;
 

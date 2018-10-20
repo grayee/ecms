@@ -4,7 +4,11 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
 
 import com.qslion.security.filter.AuFilterSecurityInterceptor;
+import io.lettuce.core.resource.ClientResources;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,8 +16,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,11 +30,20 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -36,6 +54,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.filter.CompositeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -50,12 +69,30 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private AuFilterSecurityInterceptor auFilterSecurityInterceptor;
+
+    @Autowired
+    OAuth2ClientContext oauth2ClientContext;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        //return new BCryptPasswordEncoder();
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence charSequence) {
+                return charSequence.toString();
+            }
+
+            @Override
+            public boolean matches(CharSequence charSequence, String s) {
+                return s.equals(charSequence.toString());
+            }
+        };
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -81,24 +118,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and().csrf().disable();
 
         //session管理,失效后跳转
-        http.sessionManagement().invalidSessionUrl("/login");
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login");
         //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
         http.sessionManagement().maximumSessions(1).expiredUrl("/login");
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence charSequence) {
-                return charSequence.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence charSequence, String s) {
-                return s.equals(charSequence.toString());
-            }
-        });
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {
@@ -165,17 +192,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return repository;
     }
 
-
     private Filter ssoFilter() {
-        OAuth2ClientAuthenticationProcessingFilter githubFilter = new OAuth2ClientAuthenticationProcessingFilter("/github/login");
+        CompositeFilter filter = new CompositeFilter();
+        List<Filter> filters = new ArrayList<>();
+        //filters.add(ssoFilter(facebook(), "/login/facebook"));
+        filters.add(ssoFilter(github(), "/login/github"));
+        filter.setFilters(filters);
+        return filter;
+    }
 
-       /* OAuth2RestTemplate githubTemplate = new OAuth2RestTemplate(github(), oauth2ClientContext);
-        githubFilter.setRestTemplate(githubTemplate);
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(githubResource().getUserInfoUri(), github().getClientId());
-        tokenServices.setRestTemplate(githubTemplate);
-        githubFilter.setTokenServices(tokenServices);*/
-        return githubFilter;
+    private Filter ssoFilter(AuthorizationCodeResourceDetails client, String path) {
+        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2RestTemplate template = new OAuth2RestTemplate(client, oauth2ClientContext);
+        filter.setRestTemplate(template);
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(
+            githubResource().getUserInfoUri(), client.getClientId());
+        tokenServices.setRestTemplate(template);
+        filter.setTokenServices(tokenServices);
+        return filter;
+    }
 
+    /**
+     * 注册一个额外的Filter：OAuth2ClientContextFilter，主要作用是重定向，当遇到需要权限的页面或URL，代码抛出异常，
+     * 这时这个Filter将重定向到OAuth鉴权的地址，即/login/github
+     */
+    @Bean
+    public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(
+        OAuth2ClientContextFilter filter) {
+        FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(filter);
+        registration.setOrder(-100);
+        return registration;
+    }
+
+    @Bean
+    @ConfigurationProperties("github.client")
+    public AuthorizationCodeResourceDetails github() {
+        return new AuthorizationCodeResourceDetails();
+    }
+
+    @Bean
+    @Primary
+    @ConfigurationProperties("github.resource")
+    public ResourceServerProperties githubResource() {
+        return new ResourceServerProperties();
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(new BCryptPasswordEncoder().encode("admin"));
     }
 
 }

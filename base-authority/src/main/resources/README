@@ -153,3 +153,9 @@ Authorization: Bearer mF_9.B5f-4.1JqM
 
 HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Bearer realm="example", error="invalid_token", error_description="The access token expired"
+
+
+#oauth client config 这个config主要是配置3个#
+>>OAuth2RestTemplate(获取token)
+>>ResourceServerTokenServices(校验token)
+>>OAuth2ClientAuthenticationProcessingFilter(拦截redirectUri,根据authentication code获取token，依赖前面两个对象)

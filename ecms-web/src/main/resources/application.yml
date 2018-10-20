@@ -26,7 +26,7 @@ spring:
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     hibernate:
       ddl-auto: update
-# SECURITY OAUTH2 CLIENT (OAuth2ClientProperties)
+  # SECURITY OAUTH2 CLIENT (OAuth2ClientProperties)
   security:
    oauth2:
     client:
@@ -55,6 +55,8 @@ spring:
 
 debug: false
 trace: false
+login:
+  type: json
 #server
 server:
   servlet:

@@ -14,13 +14,22 @@
   </div>
 
   <form th:action="@{login}" method="post" id="loginForm">
-    用户名：<input type="text" name="username" class="username" id="username" placeholder="用户名" autocomplete="off"/> <br>
-    密　码：<input type="password" name="password" class="password" id="password" placeholder="密码"
-               oncontextmenu="return false"
-               onpaste="return false"/> <br>
-    <input type="checkbox" name="remember-me"/>记住我 <br>
+    <div>
+      用户名：<input type="text" name="username" class="username" id="username" placeholder="用户名" autocomplete="off"/> <br>
+      密　码：<input type="password" name="password" class="password" id="password" placeholder="密码"
+                 oncontextmenu="return false"
+                 onpaste="return false"/> <br>
+      <input type="checkbox" name="remember-me"/>记住我 <br>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+      <input id="submit" type="submit" value="登录"/>
+    </div>
 
-    <input id="submit" type="submit" value="登录"/>
+    <div>
+      第三方登录: <a id="githubAuthorizationUrl"
+                href="login/github" class="github" target="_blank">github 登录</a>
+
+    </div>
+
   </form>
 </div>
 </body>

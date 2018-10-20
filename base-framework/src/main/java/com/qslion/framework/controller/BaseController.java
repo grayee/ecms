@@ -3,6 +3,7 @@ package com.qslion.framework.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
 import com.qslion.framework.util.JxlsUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class BaseController<T, ID>{
   private void setResponseParam(HttpServletResponse response, String fileName) {
     response.setCharacterEncoding(Charsets.UTF_8.toString());
     //MediaType.APPLICATION_JSON_UTF8_VALUE
-    response.setContentType("application/vnd.ms-excel");
+    response.setContentType(MediaType.MICROSOFT_EXCEL.toString());
     response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
   }
 

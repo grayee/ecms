@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,8 @@ public class AuUserController extends BaseController<AuUser, Long> {
     private AuRoleService roleService;
     @Autowired
     private PartyRelationService partyRelationService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 列表
@@ -63,6 +66,8 @@ public class AuUserController extends BaseController<AuUser, Long> {
         entity.setAuParty(auParty);
         entity.setLoginId(entity.getUsername());
         auUserService.insert(entity);*/
+        String encrypt = passwordEncoder.encode(auUser.getPassword());
+        auUser.setPassword(encrypt);
         auUserService.save(auUser);
         return "";
     }
