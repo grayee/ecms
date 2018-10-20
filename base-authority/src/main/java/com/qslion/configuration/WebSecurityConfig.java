@@ -3,11 +3,11 @@ package com.qslion.configuration;
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
 
+import com.qslion.security.AuAuthenticationFailureHandler;
+import com.qslion.security.AuAuthenticationSuccessHandler;
 import com.qslion.security.filter.AuFilterSecurityInterceptor;
-import io.lettuce.core.resource.ClientResources;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -38,12 +38,8 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -136,29 +132,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         usernamePasswordAuthenticationFilter.setPasswordParameter(SPRING_SECURITY_FORM_PASSWORD_KEY);
         usernamePasswordAuthenticationFilter
             .setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
-        usernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        usernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
+        usernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(new AuAuthenticationFailureHandler("/loginFailure"));
+        usernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(new AuAuthenticationSuccessHandler("/loginSuccess"));
         return usernamePasswordAuthenticationFilter;
-    }
-
-
-    /**
-     * 验证异常处理器
-     *
-     * @return SimpleUrlAuthenticationFailureHandler
-     */
-    private SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
-        return new SimpleUrlAuthenticationFailureHandler("/loginFailure");
-    }
-
-    /**
-     * 登录成功后跳转
-     * 如果需要根据不同的角色做不同的跳转处理,那么继承AuthenticationSuccessHandler重写方法
-     *
-     * @return SimpleUrlAuthenticationSuccessHandler
-     */
-    private SimpleUrlAuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new SimpleUrlAuthenticationSuccessHandler("/loginSuccess");
     }
 
     @Override

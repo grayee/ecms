@@ -26,6 +26,10 @@ public class AuAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
     @Value("${login.type}")
     private String loginType;
 
+    public AuAuthenticationFailureHandler(String defaultFailureUrl) {
+        super(defaultFailureUrl);
+    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
         throws IOException, ServletException {

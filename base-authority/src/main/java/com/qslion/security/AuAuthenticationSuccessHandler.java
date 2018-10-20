@@ -25,6 +25,10 @@ public class AuAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
     @Value("${login.type}")
     private String loginType;
 
+    public AuAuthenticationSuccessHandler(String defaultSuccessUrl) {
+        super.setDefaultTargetUrl(defaultSuccessUrl);
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
         throws IOException, ServletException {

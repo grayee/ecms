@@ -3,9 +3,7 @@
 package com.qslion.configuration;
 
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
@@ -15,8 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
  * @author Gray.Z
  * @date 2018/5/1 19:45.
  */
-@Configuration
-@EnableResourceServer
+//@Configuration
+//@EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String API_RESOURCE_ID = "api";
