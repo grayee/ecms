@@ -3,6 +3,7 @@ package com.qslion.configuration;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -111,7 +112,9 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         super.configure(oauthServer);
         //允许表单认证
         oauthServer.allowFormAuthenticationForClients();
+        //获取token策略
         oauthServer.tokenKeyAccess("permitAll()");
+        //验证token策略
         oauthServer.tokenKeyAccess("isAuthenticated()");
     }
 }

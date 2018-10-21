@@ -3,9 +3,13 @@
 package com.qslion.configuration;
 
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 /**
  * OAuth2 资源服务器配置
@@ -13,8 +17,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
  * @author Gray.Z
  * @date 2018/5/1 19:45.
  */
-//@Configuration
-//@EnableResourceServer
+@Configuration
+@EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String API_RESOURCE_ID = "api";
@@ -38,6 +42,19 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
      */
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http.authorizeRequests()
+            .antMatchers("/login**", "/logout", "error**").permitAll()
+            .anyRequest().authenticated().and().csrf().and()
+            .oauth2Login().loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
+            .permitAll().and()
+            .rememberMe().key("test.com").and()
+            .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).and()
+            .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
+            .and().exceptionHandling().accessDeniedPage("/accessDenied")
+            .and().csrf().disable()
+            //session管理,失效后跳转
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login").and()
+            //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
+            .sessionManagement().maximumSessions(1).expiredUrl("/login");
     }
 }

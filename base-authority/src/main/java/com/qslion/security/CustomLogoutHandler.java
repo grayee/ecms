@@ -3,8 +3,8 @@ package com.qslion.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -15,14 +15,16 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.util.Assert;
 
 /**
- * server
+ * 登出控制，清空token
  *
  * @author Gray.Z
  * @date 2018/5/1 15:29.
  */
 public class CustomLogoutHandler implements LogoutHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomLogoutHandler.class);
+    private static Logger logger = LogManager.getLogger();
+    private static final String HEADER_AUTHORIZATION = "Authorization";
+    private static final String BEARER_AUTHORIZATION = "Bearer";
 
     @Autowired
     private TokenStore tokenStore;
@@ -30,7 +32,7 @@ public class CustomLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Assert.notNull(tokenStore, "tokenStore must be set");
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(HEADER_AUTHORIZATION);
         Assert.hasText(token, "token must be set");
         if (isJwtBearerToken(token)) {
             token = token.substring(6);
@@ -38,14 +40,13 @@ public class CustomLogoutHandler implements LogoutHandler {
             OAuth2RefreshToken refreshToken;
             if (existingAccessToken != null) {
                 if (existingAccessToken.getRefreshToken() != null) {
-                    LOGGER.info("remove refreshToken!", existingAccessToken.getRefreshToken());
+                    logger.info("remove refreshToken!", existingAccessToken.getRefreshToken());
                     refreshToken = existingAccessToken.getRefreshToken();
                     tokenStore.removeRefreshToken(refreshToken);
                 }
-                LOGGER.info("remove existingAccessToken!", existingAccessToken);
+                logger.info("remove existingAccessToken!", existingAccessToken);
                 tokenStore.removeAccessToken(existingAccessToken);
             }
-            return;
         } else {
             throw new BadClientCredentialsException();
         }
@@ -54,6 +55,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
 
     private boolean isJwtBearerToken(String token) {
-        return StringUtils.countMatches(token, ".") == 2 && (token.startsWith("Bearer") || token.startsWith("bearer"));
+        return StringUtils.countMatches(token, ".") == 2 && (token.startsWith(BEARER_AUTHORIZATION) || token
+            .startsWith(BEARER_AUTHORIZATION.toLowerCase()));
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,6 +34,8 @@ public class LoginController extends BaseController {
 
     @Autowired
     private AuUserService auUserService;
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @RequestMapping(value = "/")
     public String root() {

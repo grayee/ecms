@@ -26,14 +26,24 @@ spring:
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     hibernate:
       ddl-auto: update
-  # SECURITY OAUTH2 CLIENT (OAuth2ClientProperties)
+  # SECURITY OAUTH2 CLIENT (OAuth2ClientProperties  CommonOAuth2Provider)
   security:
    oauth2:
     client:
       registration:
-        github-client-1:
-          client-id: 89630a412fa314777dc2
-          client-secret: c7a29ec26ec7805e78b496ea67cc13e5a9b8bcf0
+        facebook:
+          client-id: 233668646673605
+          client-secret: 33b17e044ee6a4fa383f46ec6e28ea1d
+          access-token-uri: https://graph.facebook.com/oauth/access_token
+          user-authorization-uri: https://www.facebook.com/dialog/oauth
+          token-name: oauth_token
+          authentication-scheme: query
+          client-authentication-scheme: form
+          resource:
+            user-info-uri: https://graph.facebook.com/me
+        github:
+          client-id: bd1c0a783ccdd1c9b9e4
+          client-secret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
           client-name: Github User
           provider: github
           scope: user
@@ -52,6 +62,8 @@ spring:
         my-oauth-provider:
           authorization-uri: http://localhost:8080/oauth/authorize
           token-uri: http://localhost:8080/oauth/token
+          user-info-uri: http://my-auth-server/userinfo
+          user-info-authentication-method: header
 
 debug: false
 trace: false

@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 /**
@@ -22,6 +24,9 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 public class AuAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private static final Logger logger = LogManager.getLogger();
+
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Value("${login.type}")
     private String loginType;

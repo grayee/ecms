@@ -14,6 +14,7 @@ import com.qslion.framework.controller.BaseController;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +45,9 @@ public class CompanyController extends BaseController<AuCompany, String> {
     private PartyRelationService partyRelationService;
     @Autowired
     private ConnectionRuleService connectionRuleService;
+
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     /**
      * 保存
