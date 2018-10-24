@@ -31,7 +31,7 @@ public interface AuDepartmentService extends IGenericService<AuDepartment, Long>
      * @param parentRelId 上级节点团体关系主键
      * @return 若添加成功，则返回新添加记录的主键
      */
-    public String insert(AuDepartment vo, String parentRelId);
+    AuDepartment insert(AuDepartment vo, Long parentRelId);
     
     
 }

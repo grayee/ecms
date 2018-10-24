@@ -1,11 +1,11 @@
 package com.qslion.custom.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.qslion.core.enums.AuPartyRelationType;
-import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.entity.AuConnectionRule;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
@@ -13,6 +13,7 @@ import com.qslion.core.util.TreeNode;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +26,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 组织机构控制类
+ *
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
+ */
+@ResponseResult
 @RestController
-@RequestMapping(value = "/org/relation")
-public class RelationController extends BaseController<AuPartyRelation, Long> {
+@RequestMapping(value = "/organization")
+public class OrganizationController extends BaseController<AuPartyRelation, Long> {
 
     @Autowired
     public PartyRelationService partyRelationService;

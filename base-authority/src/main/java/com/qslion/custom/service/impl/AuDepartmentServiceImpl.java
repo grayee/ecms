@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Long> implements AuDepartmentService {
     
 	@Autowired
-    private AuDepartmentRepository departmentDao;
+    private AuDepartmentRepository departmentRepository;
 	@Autowired
 	private AuPartyRepository partyDao;
 
@@ -37,7 +37,8 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
      * @param parentRelId 上级节点团体关系主键
      * @return 若添加成功，则返回新添加记录的主键
      */
-    public String insert(AuDepartment vo, String parentRelId) {
+    @Override
+    public AuDepartment insert(AuDepartment vo, Long parentRelId) {
     	 AuParty auParty = new AuParty();
          //auParty.setAuPartyType(partyTypeDao.get(GlobalConstants.getPartyTypeDept()));
          auParty.setName(vo.getDeptName());
@@ -52,11 +53,12 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
          }
          String partyId="";//departmentDao.save(vo);
          //添加团体关系
-         if(StringUtils.isNotEmpty(parentRelId)&&StringUtils.isNotEmpty(partyId)) {
+         if(parentRelId !=null&&StringUtils.isNotEmpty(partyId)) {
              String relTypeId ="";//GlobalConstants.getRelTypeComp();
              //OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
          }
- 		return partyId;
+        AuDepartment department = departmentRepository.save(vo);
+ 		return department;
     }
     
     /**
@@ -94,6 +96,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
      * @param vo 用于更新的VO对象
      * @return 成功更新的记录数
      */
+    @Override
     public AuDepartment update(AuDepartment vo) {
     	/*  AuParty party =partyDao.load(vo.getId());
           party.setName(vo.getDeptName());//团体名称

@@ -1,13 +1,18 @@
+/**
+ *
+ */
 package com.qslion.custom.controller;
+
 
 import com.alibaba.fastjson.JSON;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.util.TreeNode;
-import com.qslion.custom.entity.AuDepartment;
-import com.qslion.custom.service.AuDepartmentService;
+import com.qslion.custom.entity.AuPosition;
+import com.qslion.custom.service.AuPositionService;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -19,31 +24,36 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
- * 功能、用途、现存BUG:
+ * 岗位控制类
  *
- * @author 甘硕
- * @version 1.0.0
- * @since 1.0.0
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
  */
+@ResponseResult
 @RestController
-@RequestMapping(value = "/organization/department")
-public class DepartmentAction extends BaseController<AuDepartment, Long> {
+@RequestMapping(value = "/organization/position")
+public class PositionController extends BaseController<AuPosition, String> {
 
-
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6804522170136946987L;
     @Autowired
-    public AuDepartmentService departmentService;
+    public AuPositionService positionService;
     @Autowired
     public PartyRelationService partyRelationService;
     @Autowired
     public ConnectionRuleService connectionRuleService;
 
 
-    @RequestMapping(value = "/admin/department/save.jspx")
-    public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuDepartment entity) {
+    /**
+     * 从页面表单获取信息注入vo，并插入单条记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
+     */
+    @RequestMapping(value = "/admin/position/save.jspx")
+    public String insert(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuPosition entity) {
         String parentCode = "";
-        departmentService.insert(entity, parentCode);
+        positionService.insert(entity, parentCode);
         if ("0" .equals(request.getParameter("cmd"))) {
             return "redirect:/admin/relation/manage.jspx";
         }
@@ -51,7 +61,7 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
     }
 
     //编辑，新增
-    @RequestMapping(value = "/admin/department/input.jspx")
+    @RequestMapping(value = "/admin/position/input.jspx")
     public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String id = request.getParameter("ids");
         String parentRelId = request.getParameter("parentRelId");
@@ -61,12 +71,12 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
         } else {
             //更新
             if (!StringUtils.isNotEmpty(id)) {
-               /* AuDepartment entity = departmentService.get(id);*/
-           /*     String parentCode = partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "").getParentId();
+             /*   AuPosition entity = positionService.get(id);
+                String parentCode = partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "") == null ? "" : partyRelationService.getRelationByPartyId(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "").getParentId();
                 if (parentCode != null && !"" .equals(parentCode)) {
                     model.addAttribute("relation", partyRelationService.get(parentCode));
-                }*/
-               /* model.addAttribute("entity", entity);*/
+                }
+                model.addAttribute("entity", entity);*/
             }
             List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId() + "", false);
             model.addAttribute("data", JSON.toJSON(resultList));
@@ -74,16 +84,22 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
         return forward("input", false);
     }
 
-
-    @RequestMapping(value = "/admin/department/deletes.jspx")
+    /**
+     * 从页面的表单获取团体关系id，并删除团体关系及相关的权限记录
+     */
+    @RequestMapping(value = "/admin/position/deletes.jspx")
     public String delete(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) throws Exception {
-        //departmentService.delete(ids);
+        //positionService.delete(ids);
         return forward("index", true);
     }
 
-    @RequestMapping(value = "/admin/department/update.jspx")
-    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("entity") AuDepartment entity) {
-        departmentService.update(entity);  //更新单条记录
+
+    /**
+     * 从页面表单获取信息注入vo，并修改单条记录，同时调用接口更新相应的团体、团体关系记录
+     */
+    @RequestMapping(value = "/admin/position/update.jspx")
+    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        //positionService.update(entity);
         if ("0" .equals(request.getParameter("cmd"))) {
             //返回组织关系管理页面
             return "redirect:/admin/relation/manage.jspx";
@@ -93,17 +109,23 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
         }
     }
 
-    @RequestMapping(value = "/admin/department/index.jspx")
-    public String queryAll(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuDepartment> pager) throws Exception {
-       // pager = departmentService.findByPager(pager);
+    /**
+     * 查询全部记录，分页显示，支持页面上触发的后台排序
+     */
+    @RequestMapping(value = "/admin/position/index.jspx")
+    public String queryAll(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuPosition> pager) throws Exception {
+        //pager = positionService.findByPager(pager);
         return forward("list", false);
     }
 
-    @RequestMapping(value = "/admin/department/view.jspx")
+    /**
+     * 详细信息
+     */
+    @RequestMapping(value = "/admin/position/view.jspx")
     public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-       /* entity = departmentService.get(request.getParameter("ids"));
-        List<TreeNode> resultList = partyRelationService.getPartyDetailRelationTree(entity.getId(), "1099100400000000001");
-        model.addAttribute("data", JSON.toJSON(resultList));
+        //entity = positionService.get(request.getParameter("ids"));
+       // List<TreeNode> resultList = partyRelationService.getPartyDetailRelationTree(entity.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "");
+       /* model.addAttribute("data", JSON.toJSONString(resultList));
         model.addAttribute("rid", request.getParameter("rid"));
         model.addAttribute("entity", entity);*/
         return forward("view", false);
@@ -112,11 +134,12 @@ public class DepartmentAction extends BaseController<AuDepartment, Long> {
     public String forward(String viewName, boolean isRedirect) {
         String baseUrl = "";
         if (isRedirect) {
-            baseUrl = "redirect:/admin/department/";
+            baseUrl = "redirect:/admin/position/";
             return baseUrl + viewName + ".jspx";
         } else {
-            baseUrl = "authority/department/";
+            baseUrl = "authority/position/";
             return baseUrl + viewName;
         }
     }
+
 }
