@@ -65,7 +65,7 @@ public class ConnectionRuleController extends BaseController<AuConnectionRule, L
     
     @GetMapping(value = "/detail/{id}")
     public AuConnectionRule detail(@PathVariable Long id) {
-        return connectionRuleService.find(id);
+        return connectionRuleService.findById(id);
     }
 
 }

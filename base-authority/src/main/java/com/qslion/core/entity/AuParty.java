@@ -31,12 +31,13 @@ public class AuParty extends BaseEntity<Long> {
 
     private AuPartyType auPartyType;
     private String typeKeyword;
-    private String isInherit;
+    private boolean inherit;
     private boolean real;
     private String name;
     private String ownerOrg;
     private String remark;
     private EnableStatus enableStatus;
+
     private Date enableDate;
 
     private AuCompany auCompany;
@@ -71,12 +72,12 @@ public class AuParty extends BaseEntity<Long> {
     }
 
     @Column(name = "is_inherit", nullable = false, length = 1)
-    public String getIsInherit() {
-        return this.isInherit;
+    public boolean isInherit() {
+        return this.inherit;
     }
 
-    public void setIsInherit(String isInherit) {
-        this.isInherit = isInherit;
+    public void setInherit(boolean inherit) {
+        this.inherit = inherit;
     }
 
     @Column(name = "is_real", length = 1)

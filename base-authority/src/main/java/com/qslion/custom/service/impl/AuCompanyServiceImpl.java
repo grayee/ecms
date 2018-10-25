@@ -13,6 +13,7 @@ import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,8 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         auParty.setName(company.getCompanyName());
         auParty.setRemark(company.getRemark());
         auParty.setEnableStatus(company.getEnableStatus());
-        auParty.setIsInherit("1");
+        auParty.setInherit(true);
         auParty.setReal(true);
-        company.setAuParty(auParty);
-        //如果用户不手工编号，则系统自动编号
-        if (StringUtils.isEmpty(company.getCompanyNo())) {
-            company.setCompanyNo(RandomStringUtils.random(10));
-        }
 
         //添加团体关系
         AuPartyRelation auPartyRelation = new AuPartyRelation();
@@ -57,9 +53,14 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         auPartyRelation.setRemark(company.getRemark());
         auPartyRelation.setAuPartyRelationType(AuPartyRelationType.ADMINISTRATIVE);
         partyRelationRepository.save(auPartyRelation);
+
         //添加公司
-        AuCompany auCompany = companyRepository.save(company);
-        return auCompany;
+        company.setAuParty(auParty);
+        //如果用户不手工编号，则系统自动编号
+        if (StringUtils.isEmpty(company.getCompanyNo())) {
+            company.setCompanyNo(RandomStringUtils.random(10));
+        }
+        return companyRepository.save(company);
     }
 
 
@@ -75,13 +76,15 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         return true;
     }
 
+
+
     /**
      * 删除多条记录，删除自身并同时删除相应的团体、团体关系、帐户、权限等记录
      *
      * @param ids 用于删除的记录的id
      * @return 成功删除的记录数
      */
-    public boolean delete(String ids[]) {
+    public boolean delete1(List<Long> ids) {
         //companyRepository.delete(Lists.newArrayList());
         return true;
     }

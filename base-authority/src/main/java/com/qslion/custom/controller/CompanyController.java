@@ -95,7 +95,7 @@ public class CompanyController extends BaseController<AuCompany, String> {
      */
     @GetMapping(value = "/detail/{id}")
     public AuCompany detail(@PathVariable Long id) {
-        return companyService.find(id);
+        return companyService.findById(id);
     }
 
 }

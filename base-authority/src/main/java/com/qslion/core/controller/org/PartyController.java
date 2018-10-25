@@ -50,7 +50,7 @@ public class PartyController extends BaseController<AuParty, Long> {
 
     @GetMapping(value = "/detail/{id}")
     public AuParty detail(@PathVariable Long id) {
-        return partyService.find(id);
+        return partyService.findById(id);
     }
 
     @PostMapping
@@ -78,7 +78,7 @@ public class PartyController extends BaseController<AuParty, Long> {
 
     @GetMapping(value = "/{id}")
     public AuParty getById(@PathVariable Long id) {
-        return partyService.find(id);
+        return partyService.findById(id);
     }
 
 }

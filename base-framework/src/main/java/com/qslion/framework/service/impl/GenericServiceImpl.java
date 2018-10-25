@@ -112,7 +112,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public T find(ID id) {
+    public T findById(ID id) {
         return genericRepository.findById(id).orElse(null);
     }
 

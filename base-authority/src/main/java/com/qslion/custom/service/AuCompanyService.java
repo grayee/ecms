@@ -23,4 +23,5 @@ public interface AuCompanyService extends IGenericService<AuCompany, Long> {
      */
     AuCompany insert(AuCompany vo, Long parentRelId);
 
+
 }
