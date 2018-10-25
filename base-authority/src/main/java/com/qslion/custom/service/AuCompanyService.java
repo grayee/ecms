@@ -5,6 +5,7 @@ package com.qslion.custom.service;
 
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.framework.service.IGenericService;
+import java.util.List;
 
 /**
  * 公司Service
@@ -24,4 +25,10 @@ public interface AuCompanyService extends IGenericService<AuCompany, Long> {
     AuCompany insert(AuCompany vo, Long parentRelId);
 
 
+    /**
+     * 删除多条记录，删除自身并同时删除相应的团体、团体关系
+     * @param ids
+     * @return
+     */
+    boolean remove(List<Long> ids);
 }

@@ -2,6 +2,7 @@
 package com.qslion.custom.service.impl;
 
 
+import com.google.common.collect.Lists;
 import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
@@ -12,6 +13,8 @@ import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.enums.ResultCode;
+import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -76,16 +79,23 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         return true;
     }
 
+    @Override
+    public boolean remove(List<Long> ids) {
+        List<AuCompany> companyList = Lists.newArrayList();
+        List<AuPartyRelation> relationList = Lists.newArrayList();
+        ids.forEach(companyId -> {
+            AuCompany company = companyRepository.findById(companyId).get();
 
-
-    /**
-     * 删除多条记录，删除自身并同时删除相应的团体、团体关系、帐户、权限等记录
-     *
-     * @param ids 用于删除的记录的id
-     * @return 成功删除的记录数
-     */
-    public boolean delete1(List<Long> ids) {
-        //companyRepository.delete(Lists.newArrayList());
+            AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
+            if (partyRelation != null && partyRelation.isLeaf()) {
+                companyList.add(company);
+                relationList.add(partyRelation);
+            } else {
+                throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
+            }
+        });
+        companyRepository.deleteAll(companyList);
+        partyRelationRepository.deleteAll(relationList);
         return true;
     }
 

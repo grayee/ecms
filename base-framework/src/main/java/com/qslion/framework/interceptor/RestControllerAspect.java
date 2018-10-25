@@ -131,7 +131,10 @@ public class RestControllerAspect {
 
         try {
             String param = JSON.toJSONString(obj, SerializerFeature.IgnoreErrorGetter);
-            jsonObject = JSONObject.parseObject(param);
+            if (obj instanceof JSONObject) {
+                jsonObject = JSONObject.parseObject(param);
+            }
+
             List<String> sensitiveFieldList = this.getSensitiveFieldList();
             for (String sensitiveField : sensitiveFieldList) {
                 if (jsonObject.containsKey(sensitiveField)) {

@@ -1,5 +1,6 @@
 package com.qslion.core.dao;
 
+import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.framework.dao.IGenericRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,4 +23,12 @@ public interface PartyRelationRepository extends IGenericRepository<AuPartyRelat
     @Modifying
     @Query(value = "update AuPartyRelation pr set pr.leaf =:isLeaf WHERE pr.id=:id ")
     Integer updateLeaf(@Param("id") Long id, @Param("isLeaf") boolean isLeaf);
+
+    /**
+     * 根据团体获取团体关系
+     *
+     * @param auParty 团体
+     * @return 团体关系
+     */
+    AuPartyRelation findByAuParty(AuParty auParty);
 }
