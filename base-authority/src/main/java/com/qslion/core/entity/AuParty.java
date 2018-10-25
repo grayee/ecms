@@ -32,7 +32,7 @@ public class AuParty extends BaseEntity<Long> {
     private AuPartyType auPartyType;
     private String typeKeyword;
     private String isInherit;
-    private String isReal;
+    private boolean real;
     private String name;
     private String ownerOrg;
     private String remark;
@@ -79,13 +79,13 @@ public class AuParty extends BaseEntity<Long> {
         this.isInherit = isInherit;
     }
 
-    @Column(name = "is_real", nullable = false, length = 1)
-    public String getIsReal() {
-        return this.isReal;
+    @Column(name = "is_real", length = 1)
+    public boolean isReal() {
+        return this.real;
     }
 
-    public void setIsReal(String isReal) {
-        this.isReal = isReal;
+    public void setReal(boolean real) {
+        this.real = real;
     }
 
     @Column(name = "name", length = 64)

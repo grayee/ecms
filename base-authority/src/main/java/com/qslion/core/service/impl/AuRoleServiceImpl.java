@@ -42,7 +42,7 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
         auParty.setRemark(vo.getDescription());
         //auParty.setEnableStatus("1");
         auParty.setIsInherit("1");
-        auParty.setIsReal("1");
+        auParty.setReal(true);
      /*   vo.setAuParty(auParty);
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(vo.getRoleValue())) {

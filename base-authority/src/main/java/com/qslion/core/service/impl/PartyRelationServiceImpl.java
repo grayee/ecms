@@ -43,10 +43,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         //relation.setPartytypeId(party.getAuPartyType().getId() + "");
        // relation.setName(party.getName());
         // relation.setRelationTypeKeyword(party.getPartytypeKeyword());
-        relation.setIsLeaf("1");
-        relation.setTypeIsLeaf("1");
-        relation.setIsChief("1");
-        relation.setIsInherit("1");
+
         if (StringUtils.isNotEmpty(parentRelId)) {
             AuPartyRelation parentRelation = null;
          /*   String parentTypeId = parentRelation.getAuParty().getAuPartyType().getId() + "";
@@ -100,11 +97,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         //relation.setRelationTypeKeyword(party.getPartytypeKeyword());
         AuPartyRelationType relationType = AuPartyRelationType.getPartyRelationType(Integer.valueOf(relTypeId));
         relation.setAuPartyRelationType(relationType);
-        relation.setIsLeaf("1");
-        relation.setTypeIsLeaf("1");
-        relation.setIsChief("1");
-        relation.setIsInherit("1");
-        relation.setTypeLevel((short) 1);
+
         this.partyRelationRepository.save(relation);
         return true;
     }
@@ -144,10 +137,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
                 }
                 //有子节点递归遍历
-                if (partyRelation.getIsLeaf().equals("0")) {
+                //if (partyRelation.getIsLeaf().equals("0")) {
                    // List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, hasHref, map);
                    // rootNode.setChildren(childrenList);
-                }
+               // }
                // resultList.add(rootNode);
             }
         }
@@ -168,10 +161,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
             for (AuPartyRelation partyRelation : relations) {
                 if (null == partyRelation.getParentId() || "".equals(partyRelation.getParentId())) {
                    // TreeNode parentNode = new TreeNode(partyRelation.getId(), partyRelation.getName());
-                    if (partyRelation.getIsLeaf().equals("0")) {
+                    //if (partyRelation.getIsLeaf().equals("0")) {
                        // List<TreeNode> leafNodeList = this.getChildTreeNode(partyRelation.getId(), relations, false);
                        // parentNode.setChildren(leafNodeList);
-                    }
+                    //}
                    // parentNodes.add(parentNode);
                     rootNode.setChildren(parentNodes);
                 }
@@ -220,10 +213,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                   //  }
                 }
 
-                if (partyRelation.getIsLeaf().equals("0")) {
+                //if (partyRelation.getIsLeaf().equals("0")) {
                     //List<TreeNode> leafNodeList = this.getChildTreeNode(partyRelation.getId(), nodeList, hasHref);
                    // leafNode.setChildren(leafNodeList);
-                }
+                //}
                 resultList.add(leafNode);
             }
         }
@@ -253,10 +246,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                // TreeNode rootNode = new TreeNode(relation.getId(), relation.getName());
 
                 //有子节点递归遍历
-                if (relation.getIsLeaf().equals("0")) {
+               // if (relation.getIsLeaf().equals("0")) {
                     //List<TreeNode> childrenList = this.getChildTreeNode(relation.getId(), relationList, false);
                     //rootNode.setChildren(childrenList);
-                }
+                //}
                 //resultList.add(rootNode);
             } else {
 
@@ -286,10 +279,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 //TreeNode rootNode = new TreeNode(partyRelation.getId(), partyRelation.getName());
 
                 //有子节点递归遍历
-                if (partyRelation.getIsLeaf().equals("0")) {
+               // if (partyRelation.getIsLeaf().equals("0")) {
                     //List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, false);
                     //rootNode.setChildren(childrenList);
-                }
+                //}
                 //resultList.add(rootNode);
             }
         }

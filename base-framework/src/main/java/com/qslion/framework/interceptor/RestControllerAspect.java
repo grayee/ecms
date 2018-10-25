@@ -3,6 +3,7 @@ package com.qslion.framework.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import com.qslion.framework.exception.GlobalExceptionHandler;
 import com.qslion.framework.util.IpUtil;
@@ -129,7 +130,7 @@ public class RestControllerAspect {
         }
 
         try {
-            String param = JSON.toJSONString(obj);
+            String param = JSON.toJSONString(obj, SerializerFeature.IgnoreErrorGetter);
             jsonObject = JSONObject.parseObject(param);
             List<String> sensitiveFieldList = this.getSensitiveFieldList();
             for (String sensitiveField : sensitiveFieldList) {
