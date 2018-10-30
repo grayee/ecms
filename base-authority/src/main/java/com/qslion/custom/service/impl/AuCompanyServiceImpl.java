@@ -2,16 +2,22 @@
 package com.qslion.custom.service.impl;
 
 
+import com.google.common.collect.Lists;
 import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.enums.ResultCode;
+import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import java.util.List;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,24 +34,36 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
 
     @Override
     public AuCompany insert(AuCompany company, Long parentCode) {
+        //添加公司团体
         AuParty auParty = new AuParty();
         auParty.setAuPartyType(AuPartyType.COMPANY);
         auParty.setName(company.getCompanyName());
         auParty.setRemark(company.getRemark());
         auParty.setEnableStatus(company.getEnableStatus());
-        auParty.setIsInherit("1");
-        auParty.setIsReal("1");
+        auParty.setInherit(true);
+        auParty.setReal(true);
+
+        //添加团体关系
+        AuPartyRelation auPartyRelation = new AuPartyRelation();
+        auPartyRelation.setAuParty(auParty);
+        auPartyRelation.setName(company.getCompanyName());
+        if (parentCode != null) {
+            auPartyRelation.setParentId(parentCode);
+            auPartyRelation.setLeaf(true);
+            //更新父节点isLeaf 为false
+            partyRelationRepository.updateLeaf(parentCode, false);
+        }
+        auPartyRelation.setRemark(company.getRemark());
+        auPartyRelation.setAuPartyRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        partyRelationRepository.save(auPartyRelation);
+
+        //添加公司
         company.setAuParty(auParty);
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
-            //vo.setCompanyNo(auParty.getId());
+            company.setCompanyNo(RandomStringUtils.random(10));
         }
-        AuCompany auCompany = companyRepository.save(company);
-        //添加团体关系
-        if (parentCode != null) {
-            // OrgHelper.addAuPartyRelation(company.getAuParty().getId(), parentRelId, AuPartyRelationType.ADMINISTRATIVE.getId() + "");
-        }
-        return auCompany;
+        return companyRepository.save(company);
     }
 
 
@@ -61,14 +79,23 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         return true;
     }
 
-    /**
-     * 删除多条记录，删除自身并同时删除相应的团体、团体关系、帐户、权限等记录
-     *
-     * @param ids 用于删除的记录的id
-     * @return 成功删除的记录数
-     */
-    public boolean delete(String ids[]) {
-        //companyRepository.delete(Lists.newArrayList());
+    @Override
+    public boolean remove(List<Long> ids) {
+        List<AuCompany> companyList = Lists.newArrayList();
+        List<AuPartyRelation> relationList = Lists.newArrayList();
+        ids.forEach(companyId -> {
+            AuCompany company = companyRepository.findById(companyId).get();
+
+            AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
+            if (partyRelation != null && partyRelation.isLeaf()) {
+                companyList.add(company);
+                relationList.add(partyRelation);
+            } else {
+                throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
+            }
+        });
+        companyRepository.deleteAll(companyList);
+        partyRelationRepository.deleteAll(relationList);
         return true;
     }
 

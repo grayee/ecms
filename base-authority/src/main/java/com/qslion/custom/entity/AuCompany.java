@@ -189,7 +189,6 @@ public class AuCompany extends PartyEntity {
         this.remark = remark;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -198,29 +197,25 @@ public class AuCompany extends PartyEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         AuCompany auCompany = (AuCompany) o;
 
-        if (id != auCompany.id) {
-            return false;
-        }
         if (companyNo != null ? !companyNo.equals(auCompany.companyNo) : auCompany.companyNo != null) {
             return false;
         }
-        if (companyName != null ? !companyName.equals(auCompany.companyName)
-            : auCompany.companyName != null) {
+        if (companyName != null ? !companyName.equals(auCompany.companyName) : auCompany.companyName != null) {
             return false;
         }
-        if (companyFlag != null ? !companyFlag.equals(auCompany.companyFlag)
-            : auCompany.companyFlag != null) {
+        if (companyFlag != null ? !companyFlag.equals(auCompany.companyFlag) : auCompany.companyFlag != null) {
             return false;
         }
-        if (companyType != null ? !companyType.equals(auCompany.companyType)
-            : auCompany.companyType != null) {
+        if (companyType != null ? !companyType.equals(auCompany.companyType) : auCompany.companyType != null) {
             return false;
         }
-        if (companyLevel != null ? !companyLevel.equals(auCompany.companyLevel)
-            : auCompany.companyLevel != null) {
+        if (companyLevel != null ? !companyLevel.equals(auCompany.companyLevel) : auCompany.companyLevel != null) {
             return false;
         }
         if (shortName != null ? !shortName.equals(auCompany.shortName) : auCompany.shortName != null) {
@@ -241,8 +236,7 @@ public class AuCompany extends PartyEntity {
         if (address != null ? !address.equals(auCompany.address) : auCompany.address != null) {
             return false;
         }
-        if (postalCode != null ? !postalCode.equals(auCompany.postalCode)
-            : auCompany.postalCode != null) {
+        if (postalCode != null ? !postalCode.equals(auCompany.postalCode) : auCompany.postalCode != null) {
             return false;
         }
         if (email != null ? !email.equals(auCompany.email) : auCompany.email != null) {
@@ -251,32 +245,12 @@ public class AuCompany extends PartyEntity {
         if (webSite != null ? !webSite.equals(auCompany.webSite) : auCompany.webSite != null) {
             return false;
         }
-        if (remark != null ? !remark.equals(auCompany.remark) : auCompany.remark != null) {
-            return false;
-        }
-        if (enableStatus != null ? !enableStatus.equals(auCompany.enableStatus)
-            : auCompany.enableStatus != null) {
-            return false;
-        }
-        if (enableDate != null ? !enableDate.equals(auCompany.enableDate)
-            : auCompany.enableDate != null) {
-            return false;
-        }
-        if (createDate != null ? !createDate.equals(auCompany.createDate)
-            : auCompany.createDate != null) {
-            return false;
-        }
-        if (modifyDate != null ? !modifyDate.equals(auCompany.modifyDate)
-            : auCompany.modifyDate != null) {
-            return false;
-        }
-
-        return true;
+        return remark != null ? remark.equals(auCompany.remark) : auCompany.remark == null;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + (companyNo != null ? companyNo.hashCode() : 0);
         result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
         result = 31 * result + (companyFlag != null ? companyFlag.hashCode() : 0);
@@ -292,10 +266,6 @@ public class AuCompany extends PartyEntity {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (webSite != null ? webSite.hashCode() : 0);
         result = 31 * result + (remark != null ? remark.hashCode() : 0);
-        result = 31 * result + (enableStatus != null ? enableStatus.hashCode() : 0);
-        result = 31 * result + (enableDate != null ? enableDate.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
-        result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
     }
 }

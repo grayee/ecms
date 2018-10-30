@@ -19,12 +19,12 @@ import java.util.List;
 public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializable> {
 
     /**
-     * 查找实体对象
+     * 根据ID查找实体对象
      *
      * @param id ID
      * @return 实体对象，若不存在则返回null
      */
-    T find(ID id);
+    T findById(ID id);
 
     /**
      * 查找所有实体对象集合

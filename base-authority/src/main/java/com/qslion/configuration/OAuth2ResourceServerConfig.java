@@ -43,7 +43,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/login**", "/logout", "error**").permitAll()
+            .antMatchers("/**", "/logout", "error**").permitAll()
             .anyRequest().authenticated().and().csrf().and()
             .oauth2Login().loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
             .permitAll().and()

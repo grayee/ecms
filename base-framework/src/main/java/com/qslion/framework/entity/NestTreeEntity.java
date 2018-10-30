@@ -27,7 +27,7 @@ public class NestTreeEntity extends BaseEntity<Long> implements NestTreeable<Lon
     }
 
     @Override
-    @Column(name = "parent_id", length = 300)
+    @Column(name = "parent_id")
     public Long getParentId() {
         return this.parentId;
     }

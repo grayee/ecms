@@ -63,7 +63,7 @@ public class PartyRelationController extends BaseController<AuPartyRelation, Lon
 
     @GetMapping(value = "/detail/{id}")
     public AuPartyRelation input(@PathVariable Long id) {
-        return partyRelationService.find(id);
+        return partyRelationService.findById(id);
     }
 
     @PostMapping

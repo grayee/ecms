@@ -11,8 +11,6 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.validation.annotation.Validated;
@@ -45,7 +43,6 @@ public class CompanyController extends BaseController<AuCompany, String> {
     private PartyRelationService partyRelationService;
     @Autowired
     private ConnectionRuleService connectionRuleService;
-
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
 
@@ -66,14 +63,12 @@ public class CompanyController extends BaseController<AuCompany, String> {
      * 从页面的表单获取团体关系id，并删除团体关系及相关的权限记录
      */
     @DeleteMapping
-    public boolean delete(Long[] ids) {
-        List<AuCompany> companyList = Lists.newArrayList(ids).stream().map(id -> {
-            AuCompany company = new AuCompany();
-            company.setId(id);
-            return company;
-        }).collect(Collectors.toList());
-        companyService.delete(companyList);
-        return true;
+    public boolean delete(@RequestBody Long[] ids) {
+        if (ids != null && ids.length > 0) {
+            return companyService.remove(Lists.newArrayList(ids));
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -95,7 +90,7 @@ public class CompanyController extends BaseController<AuCompany, String> {
      */
     @GetMapping(value = "/detail/{id}")
     public AuCompany detail(@PathVariable Long id) {
-        return companyService.find(id);
+        return companyService.findById(id);
     }
 
 }

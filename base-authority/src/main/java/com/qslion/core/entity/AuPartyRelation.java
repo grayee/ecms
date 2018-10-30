@@ -28,12 +28,22 @@ public class AuPartyRelation extends NestTreeEntity {
     private String name;
     private String remark;
 
-    private Short typeLevel;
+    /**
+     * 层级
+     */
+    private Short level;
+    /**
+     * 排序码
+     */
     private String orderCode;
-    private String isLeaf;
-    private String typeIsLeaf;
-    private String isInherit;
-    private String isChief;
+    /**
+     * 是否叶子节点
+     */
+    private boolean leaf;
+    /**
+     * 是否继承
+     */
+    private boolean isInherit;
 
     @Enumerated
     @Column(name = "relation_type")
@@ -73,17 +83,7 @@ public class AuPartyRelation extends NestTreeEntity {
         this.name = name;
     }
 
-
-    @Column(name = "type_level", precision = 3, scale = 0)
-    public Short getTypeLevel() {
-        return this.typeLevel;
-    }
-
-    public void setTypeLevel(Short typeLevel) {
-        this.typeLevel = typeLevel;
-    }
-
-    @Column(name = "order_code", length = 300)
+    @Column(name = "order_code", length = 2)
     public String getOrderCode() {
         return this.orderCode;
     }
@@ -92,40 +92,30 @@ public class AuPartyRelation extends NestTreeEntity {
         this.orderCode = orderCode;
     }
 
+    @Column(name = "level", precision = 3, scale = 0)
+    public Short getLevel() {
+        return level;
+    }
+
+    public void setLevel(Short level) {
+        this.level = level;
+    }
+
     @Column(name = "is_leaf", nullable = false, length = 1)
-    public String getIsLeaf() {
-        return this.isLeaf;
+    public boolean isLeaf() {
+        return leaf;
     }
 
-    public void setIsLeaf(String isLeaf) {
-        this.isLeaf = isLeaf;
+    public void setLeaf(boolean leaf) {
+        leaf = leaf;
     }
 
-    @Column(name = "type_is_leaf", nullable = false, length = 1)
-    public String getTypeIsLeaf() {
-        return this.typeIsLeaf;
+    @Column(name = "is_inherit", length = 1)
+    public boolean isInherit() {
+        return isInherit;
     }
 
-    public void setTypeIsLeaf(String typeIsLeaf) {
-        this.typeIsLeaf = typeIsLeaf;
+    public void setInherit(boolean inherit) {
+        isInherit = inherit;
     }
-
-    @Column(name = "is_inherit", nullable = false, length = 1)
-    public String getIsInherit() {
-        return this.isInherit;
-    }
-
-    public void setIsInherit(String isInherit) {
-        this.isInherit = isInherit;
-    }
-
-    @Column(name = "is_chief", nullable = false, length = 1)
-    public String getIsChief() {
-        return this.isChief;
-    }
-
-    public void setIsChief(String isChief) {
-        this.isChief = isChief;
-    }
-
 }
