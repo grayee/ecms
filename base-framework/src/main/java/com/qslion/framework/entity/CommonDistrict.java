@@ -11,41 +11,14 @@ import javax.persistence.Table;
  * @date 2018/4/30 13:56.
  */
 @Entity
-@Table(name = "common_district")
+@Table(name = "pre_common_district")
 public class CommonDistrict extends BaseEntity<Long> {
 
-    // Fields
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private String name;
     private Short level;
-    private Boolean usetype;
+    private Short usetype;
     private Long upid;
-    private Short displayorder;
-
-    // Constructors
-
-    /**
-     * default constructor
-     */
-    public CommonDistrict() {
-    }
-
-    /**
-     * full constructor
-     */
-    public CommonDistrict(String name, Short level, Boolean usetype,
-        Long upid, Short displayorder) {
-        this.name = name;
-        this.level = level;
-        this.usetype = usetype;
-        this.upid = upid;
-        this.displayorder = displayorder;
-    }
-
 
     @Column(name = "name", nullable = false)
     public String getName() {
@@ -65,12 +38,12 @@ public class CommonDistrict extends BaseEntity<Long> {
         this.level = level;
     }
 
-    @Column(name = "usetype", nullable = false)
-    public Boolean getUsetype() {
+    @Column(name = "usetype")
+    public Short getUsetype() {
         return this.usetype;
     }
 
-    public void setUsetype(Boolean usetype) {
+    public void setUsetype(Short usetype) {
         this.usetype = usetype;
     }
 
@@ -82,14 +55,4 @@ public class CommonDistrict extends BaseEntity<Long> {
     public void setUpid(Long upid) {
         this.upid = upid;
     }
-
-    @Column(name = "displayorder", nullable = false)
-    public Short getDisplayorder() {
-        return this.displayorder;
-    }
-
-    public void setDisplayorder(Short displayorder) {
-        this.displayorder = displayorder;
-    }
-
 }

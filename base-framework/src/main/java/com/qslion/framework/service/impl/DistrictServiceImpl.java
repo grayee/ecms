@@ -1,7 +1,7 @@
 package com.qslion.framework.service.impl;
 
 import com.qslion.framework.bean.TreeNode;
-import com.qslion.framework.dao.CommonDistrictRepository;
+import com.qslion.framework.dao.DistrictRepository;
 import com.qslion.framework.entity.CommonDistrict;
 import com.qslion.framework.service.DistrictService;
 import java.util.ArrayList;
@@ -20,12 +20,12 @@ public class DistrictServiceImpl extends GenericServiceImpl<CommonDistrict, Long
     DistrictService {
 
     @Autowired
-    CommonDistrictRepository commonDistrictRepository;
+    DistrictRepository districtRepository;
     @Override
     public List<TreeNode> getDistrctTreeByUpid(String upid) {
         // TODO Auto-generated method stub
         List<TreeNode> resultList=new ArrayList<TreeNode>();
-        List<CommonDistrict> list=commonDistrictRepository.findAll();//findByProperty("upid", Integer.valueOf(upid));
+        List<CommonDistrict> list=districtRepository.findAll();//findByProperty("upid", Integer.valueOf(upid));
         for(CommonDistrict district:list){
             TreeNode treeNode=new TreeNode(district.getId(),district.getName());
             treeNode.setUrl("admin/district/index.jspx?id="+district.getId());

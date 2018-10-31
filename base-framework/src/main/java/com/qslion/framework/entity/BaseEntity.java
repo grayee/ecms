@@ -58,7 +58,7 @@ public class BaseEntity<T> implements Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 20, updatable = false, columnDefinition = "datetime(3)")
+    @Column(name = "create_date", length = 21, updatable = false, columnDefinition = "datetime(3)")
     public Date getCreateDate() {
         return createDate;
     }
@@ -68,7 +68,7 @@ public class BaseEntity<T> implements Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modify_date", length = 20, columnDefinition = "datetime(3)")
+    @Column(name = "modify_date", length = 21, columnDefinition = "datetime(3)")
     public Date getModifyDate() {
         return modifyDate;
     }

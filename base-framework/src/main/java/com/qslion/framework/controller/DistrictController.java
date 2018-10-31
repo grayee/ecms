@@ -4,6 +4,7 @@
 package com.qslion.framework.controller;
 
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.entity.CommonDistrict;
 import com.qslion.framework.service.DistrictService;
@@ -11,10 +12,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller 区域
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Controller
+@ResponseResult
+@RestController
+@RequestMapping(value = "/district")
 public class DistrictController extends BaseController<CommonDistrict, Long> {
 
     @Autowired
@@ -69,7 +72,7 @@ public class DistrictController extends BaseController<CommonDistrict, Long> {
     public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         Long id = Long.valueOf(request.getParameter("ids"));
 
-        CommonDistrict entity = this.districtService.find(id);
+        CommonDistrict entity = this.districtService.findById(id);
         model.addAttribute("entity", entity);
 
         return "input";
@@ -80,7 +83,7 @@ public class DistrictController extends BaseController<CommonDistrict, Long> {
     public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         Long id = Long.valueOf(request.getParameter("ids"));
 
-        CommonDistrict entity = this.districtService.find(id);
+        CommonDistrict entity = this.districtService.findById(id);
         model.addAttribute("entity", entity);
 
         return "view";

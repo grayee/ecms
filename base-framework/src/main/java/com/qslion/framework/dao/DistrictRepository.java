@@ -8,6 +8,6 @@ import com.qslion.framework.entity.CommonDistrict;
  * @author Gray.Z
  * @date 2018/10/30 22:43.
  */
-public interface CommonDistrictRepository extends IGenericRepository<CommonDistrict, Long>  {
+public interface DistrictRepository extends IGenericRepository<CommonDistrict, Long>  {
 
 }
