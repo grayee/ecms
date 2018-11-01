@@ -3,7 +3,7 @@ package com.qslion;
 
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.google.common.base.Splitter;
-import com.qslion.framework.dao.DistrictRepository;
+import com.qslion.moudles.district.dao.DistrictRepository;
 import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;

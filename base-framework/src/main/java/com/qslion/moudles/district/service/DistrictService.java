@@ -1,7 +1,8 @@
-package com.qslion.framework.service;
+package com.qslion.moudles.district.service;
 
 import com.qslion.framework.bean.TreeNode;
-import com.qslion.framework.entity.CommonDistrict;
+import com.qslion.framework.service.IGenericService;
+import com.qslion.moudles.district.entity.CommonDistrict;
 import java.util.List;
 
 /**

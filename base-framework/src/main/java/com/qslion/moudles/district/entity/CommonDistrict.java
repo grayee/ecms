@@ -1,5 +1,6 @@
-package com.qslion.framework.entity;
+package com.qslion.moudles.district.entity;
 
+import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;

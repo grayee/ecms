@@ -1,13 +1,14 @@
 /**
  *
  */
-package com.qslion.framework.controller;
+package com.qslion.moudles.district.controller;
 
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.bean.TreeNode;
-import com.qslion.framework.entity.CommonDistrict;
-import com.qslion.framework.service.DistrictService;
+import com.qslion.framework.controller.BaseController;
+import com.qslion.moudles.district.entity.CommonDistrict;
+import com.qslion.moudles.district.service.DistrictService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,9 +1,10 @@
-package com.qslion.framework.service.impl;
+package com.qslion.moudles.district.service.impl;
 
 import com.qslion.framework.bean.TreeNode;
-import com.qslion.framework.dao.DistrictRepository;
-import com.qslion.framework.entity.CommonDistrict;
-import com.qslion.framework.service.DistrictService;
+import com.qslion.framework.service.impl.GenericServiceImpl;
+import com.qslion.moudles.district.dao.DistrictRepository;
+import com.qslion.moudles.district.entity.CommonDistrict;
+import com.qslion.moudles.district.service.DistrictService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
