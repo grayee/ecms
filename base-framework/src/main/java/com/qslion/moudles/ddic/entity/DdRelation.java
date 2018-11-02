@@ -7,85 +7,86 @@ import javax.persistence.Table;
 
 /**
  * 实体类 - 数据字典基础表
+ * 该表存储了系统所涉及的各表之间的关系，并对表间关系进行描述
  *
  * @author Gray.Z
  * @date 2018/4/30 13:56.
  */
 @Entity
-@Table(name = "dd_relation", catalog = "qslion")
+@Table(name = "dd_relation")
 public class DdRelation extends BaseEntity<Long> {
 
-    private String relationname;
-    private String displayname;
-    private String pktable;
-    private String pkcolumn;
-    private String fktable;
-    private String fkcolumn;
-    private String iscreated;
+    private String relationName;
+    private String displayName;
+    private String pkTable;
+    private String pkColumn;
+    private String fkTable;
+    private String fkColumn;
+    private boolean isCreated;
     private String status;
     private String remark;
 
-    @Column(name = "RELATIONNAME", nullable = false, length = 128)
-    public String getRelationname() {
-        return this.relationname;
+    @Column(name = "RELATION_NAME", nullable = false, length = 128)
+    public String getRelationName() {
+        return this.relationName;
     }
 
-    public void setRelationname(String relationname) {
-        this.relationname = relationname;
+    public void setRelationName(String relationname) {
+        this.relationName = relationName;
     }
 
-    @Column(name = "DISPLAYNAME", length = 128)
-    public String getDisplayname() {
-        return this.displayname;
+    @Column(name = "DISPLAY_NAME", length = 128)
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    @Column(name = "PKTABLE", nullable = false, length = 128)
-    public String getPktable() {
-        return this.pktable;
+    @Column(name = "PK_TABLE", nullable = false, length = 128)
+    public String getPkTable() {
+        return pkTable;
     }
 
-    public void setPktable(String pktable) {
-        this.pktable = pktable;
+    public void setPkTable(String pkTable) {
+        this.pkTable = pkTable;
     }
 
-    @Column(name = "PKCOLUMN", nullable = false, length = 128)
-    public String getPkcolumn() {
-        return this.pkcolumn;
+    @Column(name = "PK_COLUMN", nullable = false, length = 128)
+    public String getPkColumn() {
+        return pkColumn;
     }
 
-    public void setPkcolumn(String pkcolumn) {
-        this.pkcolumn = pkcolumn;
+    public void setPkColumn(String pkColumn) {
+        this.pkColumn = pkColumn;
     }
 
-    @Column(name = "FKTABLE", nullable = false, length = 128)
-    public String getFktable() {
-        return this.fktable;
+    @Column(name = "FK_TABLE", nullable = false, length = 128)
+    public String getFkTable() {
+        return fkTable;
     }
 
-    public void setFktable(String fktable) {
-        this.fktable = fktable;
+    public void setFkTable(String fkTable) {
+        this.fkTable = fkTable;
     }
 
-    @Column(name = "FKCOLUMN", nullable = false, length = 128)
-    public String getFkcolumn() {
-        return this.fkcolumn;
+    @Column(name = "FK_COLUMN", nullable = false, length = 128)
+    public String getFkColumn() {
+        return fkColumn;
     }
 
-    public void setFkcolumn(String fkcolumn) {
-        this.fkcolumn = fkcolumn;
+    public void setFkColumn(String fkColumn) {
+        this.fkColumn = fkColumn;
     }
 
-    @Column(name = "ISCREATED", length = 1)
-    public String getIscreated() {
-        return this.iscreated;
+    @Column(name = "IS_CREATED", length = 1)
+    public boolean isCreated() {
+        return isCreated;
     }
 
-    public void setIscreated(String iscreated) {
-        this.iscreated = iscreated;
+    public void setCreated(boolean created) {
+        isCreated = created;
     }
 
     @Column(name = "STATUS", nullable = false, length = 1)

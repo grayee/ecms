@@ -15,36 +15,36 @@ import javax.persistence.Table;
 @Table(name = "dd_module_md_detail")
 public class DdModuleMdDetail extends BaseEntity<Long> {
 
-    private String moduleid;
-    private String tablename;
-    private String tabname;
+    private String moduleId;
+    private String tableName;
+    private String tabName;
     private String param;
 
-    @Column(name = "MODULEID", nullable = false, length = 64)
-    public String getModuleid() {
-        return this.moduleid;
+    @Column(name = "MODULE_ID", nullable = false, length = 64)
+    public String getModuleId() {
+        return this.moduleId;
     }
 
-    public void setModuleid(String moduleid) {
-        this.moduleid = moduleid;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
-    @Column(name = "TABLENAME", nullable = false, length = 64)
-    public String getTablename() {
-        return this.tablename;
+    @Column(name = "TABLE_NAME", nullable = false, length = 64)
+    public String getTableName() {
+        return this.tableName;
     }
 
-    public void setTablename(String tablename) {
-        this.tablename = tablename;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
-    @Column(name = "TABNAME", nullable = false, length = 64)
-    public String getTabname() {
-        return this.tabname;
+    @Column(name = "TAB_NAME", nullable = false, length = 64)
+    public String getTabName() {
+        return this.tabName;
     }
 
-    public void setTabname(String tabname) {
-        this.tabname = tabname;
+    public void setTabName(String tabName) {
+        this.tabName = tabName;
     }
 
     @Column(name = "PARAM", length = 512)

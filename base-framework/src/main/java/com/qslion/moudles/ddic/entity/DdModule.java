@@ -15,10 +15,9 @@ import javax.persistence.Table;
 @Table(name = "dd_module")
 public class DdModule extends BaseEntity<Long> {
 
-
     private String name;
-    private String templateid;
-    private String issystem;
+    private String templateId;
+    private boolean isSystem;
 
     @Column(name = "NAME", nullable = false, length = 64)
     public String getName() {
@@ -29,22 +28,22 @@ public class DdModule extends BaseEntity<Long> {
         this.name = name;
     }
 
-    @Column(name = "TEMPLATEID", nullable = false, length = 64)
-    public String getTemplateid() {
-        return this.templateid;
+    @Column(name = "TEMPLATE_ID", nullable = false, length = 64)
+    public String getTemplateId() {
+        return this.templateId;
     }
 
-    public void setTemplateid(String templateid) {
-        this.templateid = templateid;
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
     }
 
     @Column(name = "ISSYSTEM", nullable = false, length = 1)
-    public String getIssystem() {
-        return this.issystem;
+
+    public boolean isSystem() {
+        return isSystem;
     }
 
-    public void setIssystem(String issystem) {
-        this.issystem = issystem;
+    public void setSystem(boolean system) {
+        isSystem = system;
     }
-
 }

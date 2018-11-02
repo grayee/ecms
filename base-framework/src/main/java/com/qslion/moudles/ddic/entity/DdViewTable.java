@@ -11,46 +11,46 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "dd_view_table")
 public class DdViewTable extends BaseEntity<Long> {
- 
-	private String viewid;
-	private String viewcode;
-	private String tableid;
-	private String keyname;
 
-	@Column(name = "VIEWID", nullable = false, length = 32)
-	public String getViewid() {
-		return this.viewid;
-	}
+    private String viewId;
+    private String viewCode;
+    private String tableId;
+    private String keyName;
 
-	public void setViewid(String viewid) {
-		this.viewid = viewid;
-	}
 
-	@Column(name = "VIEWCODE", nullable = false, length = 64)
-	public String getViewcode() {
-		return this.viewcode;
-	}
+    @Column(name = "VIEW_ID", nullable = false, length = 32)
+    public String getViewId() {
+        return viewId;
+    }
 
-	public void setViewcode(String viewcode) {
-		this.viewcode = viewcode;
-	}
+    public void setViewId(String viewId) {
+        this.viewId = viewId;
+    }
 
-	@Column(name = "TABLEID", nullable = false, length = 32)
-	public String getTableid() {
-		return this.tableid;
-	}
+    @Column(name = "VIEW_CODE", nullable = false, length = 64)
+    public String getViewCode() {
+        return viewCode;
+    }
 
-	public void setTableid(String tableid) {
-		this.tableid = tableid;
-	}
+    public void setViewCode(String viewCode) {
+        this.viewCode = viewCode;
+    }
 
-	@Column(name = "KEYNAME", length = 64)
-	public String getKeyname() {
-		return this.keyname;
-	}
+    @Column(name = "TABLE_ID", nullable = false, length = 32)
+    public String getTableId() {
+        return tableId;
+    }
 
-	public void setKeyname(String keyname) {
-		this.keyname = keyname;
-	}
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
+    }
 
+    @Column(name = "KEY_NAME", length = 64)
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
 }

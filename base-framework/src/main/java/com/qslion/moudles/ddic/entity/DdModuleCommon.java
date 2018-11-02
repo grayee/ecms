@@ -15,27 +15,27 @@ import javax.persistence.Table;
 @Table(name = "dd_module_common")
 public class DdModuleCommon extends BaseEntity<Long> {
 
-    private String moduleid;
-    private String tablename;
+    private String moduleId;
+    private String tableName;
     private String param;
     private String url;
 
-    @Column(name = "MODULEID", unique = true, nullable = false, length = 64)
-    public String getModuleid() {
-        return this.moduleid;
+    @Column(name = "MODULE_ID", unique = true, nullable = false, length = 64)
+    public String getModuleId() {
+        return this.moduleId;
     }
 
-    public void setModuleid(String moduleid) {
-        this.moduleid = moduleid;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
-    @Column(name = "TABLENAME", nullable = false, length = 64)
-    public String getTablename() {
-        return this.tablename;
+    @Column(name = "TABLE_NAME", nullable = false, length = 64)
+    public String getTableName() {
+        return this.tableName;
     }
 
-    public void setTablename(String tablename) {
-        this.tablename = tablename;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     @Column(name = "PARAM", length = 512)

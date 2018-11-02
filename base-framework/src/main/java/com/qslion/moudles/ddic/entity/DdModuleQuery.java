@@ -15,20 +15,18 @@ import javax.persistence.Table;
 @Table(name = "dd_module_query")
 public class DdModuleQuery extends BaseEntity<Long> {
 
-
-    private String moduleid;
+    private String moduleId;
     private String conditionContent;
     private String url;
-    private String queryfieldsconf;
+    private String queryFieldsConf;
 
-
-    @Column(name = "MODULEID", unique = true, nullable = false, length = 64)
-    public String getModuleid() {
-        return this.moduleid;
+    @Column(name = "MODULE_ID", unique = true, nullable = false, length = 64)
+    public String getModuleId() {
+        return this.moduleId;
     }
 
-    public void setModuleid(String moduleid) {
-        this.moduleid = moduleid;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     @Column(name = "CONDITION_CONTENT", length = 512)
@@ -49,13 +47,13 @@ public class DdModuleQuery extends BaseEntity<Long> {
         this.url = url;
     }
 
-    @Column(name = "QUERYFIELDSCONF", length = 512)
-    public String getQueryfieldsconf() {
-        return this.queryfieldsconf;
+    @Column(name = "QUERY_FIELDS_CONF", length = 512)
+    public String getQueryFieldsConf() {
+        return this.queryFieldsConf;
     }
 
-    public void setQueryfieldsconf(String queryfieldsconf) {
-        this.queryfieldsconf = queryfieldsconf;
+    public void setQueryFieldsConf(String queryFieldsConf) {
+        this.queryFieldsConf = queryFieldsConf;
     }
 
 }

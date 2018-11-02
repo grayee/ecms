@@ -15,65 +15,65 @@ import javax.persistence.Table;
 @Table(name = "dd_module_master")
 public class DdModuleMaster extends BaseEntity<Long> {
 
-	private String moduleid;
-	private String tablename;
-	private String tabname;
-	private String param;
-	private String tranflag;
-	private String url;
+    private String moduleId;
+    private String tableName;
+    private String tabName;
+    private String param;
+    private String tranFlag;
+    private String url;
 
-	@Column(name = "MODULEID", unique = true, nullable = false, length = 64)
-	public String getModuleid() {
-		return this.moduleid;
-	}
+    @Column(name = "MODULE_ID", unique = true, nullable = false, length = 64)
+    public String getModuleId() {
+        return this.moduleId;
+    }
 
-	public void setModuleid(String moduleid) {
-		this.moduleid = moduleid;
-	}
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
+    }
 
-	@Column(name = "TABLENAME", nullable = false, length = 64)
-	public String getTablename() {
-		return this.tablename;
-	}
+    @Column(name = "TABLE_NAME", nullable = false, length = 64)
+    public String getTableName() {
+        return this.tableName;
+    }
 
-	public void setTablename(String tablename) {
-		this.tablename = tablename;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	@Column(name = "TABNAME", nullable = false, length = 64)
-	public String getTabname() {
-		return this.tabname;
-	}
+    @Column(name = "TAB_NAME", nullable = false, length = 64)
+    public String getTabName() {
+        return this.tabName;
+    }
 
-	public void setTabname(String tabname) {
-		this.tabname = tabname;
-	}
+    public void setTabName(String tabName) {
+        this.tabName = tabName;
+    }
 
-	@Column(name = "PARAM", length = 512)
-	public String getParam() {
-		return this.param;
-	}
+    @Column(name = "PARAM", length = 512)
+    public String getParam() {
+        return this.param;
+    }
 
-	public void setParam(String param) {
-		this.param = param;
-	}
+    public void setParam(String param) {
+        this.param = param;
+    }
 
-	@Column(name = "TRANFLAG", length = 1)
-	public String getTranflag() {
-		return this.tranflag;
-	}
+    @Column(name = "TRAN_FLAG", length = 1)
+    public String getTranFlag() {
+        return this.tranFlag;
+    }
 
-	public void setTranflag(String tranflag) {
-		this.tranflag = tranflag;
-	}
+    public void setTranFlag(String tranFlag) {
+        this.tranFlag = tranFlag;
+    }
 
-	@Column(name = "URL", nullable = false, length = 512)
-	public String getUrl() {
-		return this.url;
-	}
+    @Column(name = "URL", nullable = false, length = 512)
+    public String getUrl() {
+        return this.url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
 }

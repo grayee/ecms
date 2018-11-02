@@ -7,6 +7,7 @@ import javax.persistence.Table;
 
 /**
  * 实体类 - 约束
+ * 该表用来描述系统中的约束
  *
  * @author Gray.Z
  * @date 2018/4/30 13:56.

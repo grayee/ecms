@@ -15,66 +15,65 @@ import javax.persistence.Table;
 @Table(name = "dd_module_query_detail")
 public class DdModuleQueryDetail extends BaseEntity<Long> {
 
- 
-	private String moduleid;
-	private String tablename;
-	private String viewcode;
-	private String fieldid;
-	private String type;
-	private Integer seqno;
+    private String moduleId;
+    private String tableName;
+    private String viewCode;
+    private String fieldId;
+    private String type;
+    private Integer seqNo;
 
-	@Column(name = "MODULEID", nullable = false, length = 64)
-	public String getModuleid() {
-		return this.moduleid;
-	}
+    @Column(name = "MODULE_ID", nullable = false, length = 64)
+    public String getModuleId() {
+        return this.moduleId;
+    }
 
-	public void setModuleid(String moduleid) {
-		this.moduleid = moduleid;
-	}
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
+    }
 
-	@Column(name = "TABLENAME", nullable = false, length = 64)
-	public String getTablename() {
-		return this.tablename;
-	}
+    @Column(name = "TABLE_NAME", nullable = false, length = 64)
+    public String getTableName() {
+        return this.tableName;
+    }
 
-	public void setTablename(String tablename) {
-		this.tablename = tablename;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	@Column(name = "VIEWCODE", length = 64)
-	public String getViewcode() {
-		return this.viewcode;
-	}
+    @Column(name = "VIEW-CODE", length = 64)
+    public String getViewCode() {
+        return this.viewCode;
+    }
 
-	public void setViewcode(String viewcode) {
-		this.viewcode = viewcode;
-	}
+    public void setViewCode(String viewCode) {
+        this.viewCode = viewCode;
+    }
 
-	@Column(name = "FIELDID", length = 64)
-	public String getFieldid() {
-		return this.fieldid;
-	}
+    @Column(name = "FIELD_ID", length = 64)
+    public String getFieldId() {
+        return this.fieldId;
+    }
 
-	public void setFieldid(String fieldid) {
-		this.fieldid = fieldid;
-	}
+    public void setFieldId(String fieldid) {
+        this.fieldId = fieldId;
+    }
 
-	@Column(name = "TYPE", length = 64)
-	public String getType() {
-		return this.type;
-	}
+    @Column(name = "TYPE", length = 64)
+    public String getType() {
+        return this.type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	@Column(name = "SEQNO", precision = 8, scale = 0)
-	public Integer getSeqno() {
-		return this.seqno;
-	}
+    @Column(name = "SEQ_NO", precision = 8, scale = 0)
+    public Integer getSeqNo() {
+        return this.seqNo;
+    }
 
-	public void setSeqno(Integer seqno) {
-		this.seqno = seqno;
-	}
+    public void setSeqNo(Integer seqNo) {
+        this.seqNo = seqNo;
+    }
 
 }

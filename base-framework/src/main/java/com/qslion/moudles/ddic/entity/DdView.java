@@ -15,86 +15,84 @@ import javax.persistence.Table;
 @Table(name = "dd_view")
 public class DdView extends BaseEntity<Long> {
 
-	 
-	private String code;
-	private String name;
-	private Byte viewtype;
-	private String conditionContent;
-	private String businessclass;
-	private String fieldlayout;
-	private Short pagesize;
-	private String issystem;
+    private String code;
+    private String name;
+    private Byte viewType;
+    private String conditionContent;
+    private String businessClass;
+    private String fieldLayout;
+    private Short pageSize;
+    private boolean isSystem;
 
-	@Column(name = "CODE", length = 64)
-	public String getCode() {
-		return this.code;
-	}
+    @Column(name = "CODE", length = 64)
+    public String getCode() {
+        return this.code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	@Column(name = "NAME", nullable = false, length = 64)
-	public String getName() {
-		return this.name;
-	}
+    @Column(name = "NAME", nullable = false, length = 64)
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Column(name = "VIEWTYPE", nullable = false, precision = 2, scale = 0)
-	public Byte getViewtype() {
-		return this.viewtype;
-	}
+    @Column(name = "VIEW_TYPE", nullable = false, precision = 2, scale = 0)
+    public Byte getViewType() {
+        return viewType;
+    }
 
-	public void setViewtype(Byte viewtype) {
-		this.viewtype = viewtype;
-	}
+    public void setViewType(Byte viewType) {
+        this.viewType = viewType;
+    }
 
-	@Column(name = "CONDITION_CONTENT", length = 512)
-	public String getConditionContent() {
-		return this.conditionContent;
-	}
+    @Column(name = "CONDITION_CONTENT", length = 512)
+    public String getConditionContent() {
+        return this.conditionContent;
+    }
 
-	public void setConditionContent(String conditionContent) {
-		this.conditionContent = conditionContent;
-	}
+    public void setConditionContent(String conditionContent) {
+        this.conditionContent = conditionContent;
+    }
 
-	@Column(name = "BUSINESSCLASS", length = 512)
-	public String getBusinessclass() {
-		return this.businessclass;
-	}
+    @Column(name = "BUSINESS_CLASS", length = 512)
+    public String getBusinessClass() {
+        return businessClass;
+    }
 
-	public void setBusinessclass(String businessclass) {
-		this.businessclass = businessclass;
-	}
+    public void setBusinessClass(String businessClass) {
+        this.businessClass = businessClass;
+    }
 
-	@Column(name = "FIELDLAYOUT", length = 2000)
-	public String getFieldlayout() {
-		return this.fieldlayout;
-	}
+    @Column(name = "FIELD_LAYOUT", length = 2000)
+    public String getFieldLayout() {
+        return fieldLayout;
+    }
 
-	public void setFieldlayout(String fieldlayout) {
-		this.fieldlayout = fieldlayout;
-	}
+    public void setFieldLayout(String fieldLayout) {
+        this.fieldLayout = fieldLayout;
+    }
 
-	@Column(name = "PAGESIZE", precision = 3, scale = 0)
-	public Short getPagesize() {
-		return this.pagesize;
-	}
+    @Column(name = "PAGE_SIZE", precision = 3, scale = 0)
+    public Short getPageSize() {
+        return pageSize;
+    }
 
-	public void setPagesize(Short pagesize) {
-		this.pagesize = pagesize;
-	}
+    public void setPageSize(Short pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	@Column(name = "ISSYSTEM", nullable = false, length = 1)
-	public String getIssystem() {
-		return this.issystem;
-	}
+    @Column(name = "IS_SYSTEM", nullable = false, length = 1)
+    public boolean isSystem() {
+        return isSystem;
+    }
 
-	public void setIssystem(String issystem) {
-		this.issystem = issystem;
-	}
-
+    public void setSystem(boolean system) {
+        isSystem = system;
+    }
 }

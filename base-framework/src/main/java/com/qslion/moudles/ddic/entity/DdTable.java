@@ -14,97 +14,98 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "dd_table")
 public class DdTable extends BaseEntity<Long> {
- 
-	private String tablename;
-	private String displayname;
-	private String category;
-	private String subcategory;
-	private String isvirtual;
-	private String checkexpression;
-	private String iscreated;
-	private String status;
-	private String remark;
 
-	@Column(name = "TABLENAME", nullable = false, length = 128)
-	public String getTablename() {
-		return this.tablename;
-	}
-
-	public void setTablename(String tablename) {
-		this.tablename = tablename;
-	}
-
-	@Column(name = "DISPLAYNAME", nullable = false, length = 128)
-	public String getDisplayname() {
-		return this.displayname;
-	}
-
-	public void setDisplayname(String displayname) {
-		this.displayname = displayname;
-	}
-
-	@Column(name = "CATEGORY", nullable = false, length = 1)
-	public String getCategory() {
-		return this.category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	@Column(name = "SUBCATEGORY", length = 128)
-	public String getSubcategory() {
-		return this.subcategory;
-	}
-
-	public void setSubcategory(String subcategory) {
-		this.subcategory = subcategory;
-	}
-
-	@Column(name = "ISVIRTUAL", length = 1)
-	public String getIsvirtual() {
-		return this.isvirtual;
-	}
-
-	public void setIsvirtual(String isvirtual) {
-		this.isvirtual = isvirtual;
-	}
-
-	@Column(name = "CHECKEXPRESSION", length = 128)
-	public String getCheckexpression() {
-		return this.checkexpression;
-	}
-
-	public void setCheckexpression(String checkexpression) {
-		this.checkexpression = checkexpression;
-	}
-
-	@Column(name = "ISCREATED", length = 1)
-	public String getIscreated() {
-		return this.iscreated;
-	}
-
-	public void setIscreated(String iscreated) {
-		this.iscreated = iscreated;
-	}
-
-	@Column(name = "STATUS", nullable = false, length = 1)
-	public String getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    private String tableName;
+    private String displayName;
+    private String category;
+    private String subCategory;
+    private boolean isVirtual;
+    private String checkExpression;
+    private boolean isCreated;
+    private String status;
+    private String remark;
 
 
-	@Column(name = "REMARK", length = 1024)
-	public String getRemark() {
-		return this.remark;
-	}
+    @Column(name = "TABLE_NAME", nullable = false, length = 128)
+    public String getTableName() {
+        return tableName;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    @Column(name = "DISPLAY_NAME", nullable = false, length = 128)
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Column(name = "CATEGORY", nullable = false, length = 1)
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @Column(name = "SUB_CATEGORY", length = 128)
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
+    }
+
+    @Column(name = "IS_VIRTUAL", length = 1)
+    public boolean isVirtual() {
+        return isVirtual;
+    }
+
+    public void setVirtual(boolean virtual) {
+        isVirtual = virtual;
+    }
+
+    @Column(name = "CHECK_EXPRESSION", length = 128)
+    public String getCheckExpression() {
+        return checkExpression;
+    }
+
+    public void setCheckExpression(String checkExpression) {
+        this.checkExpression = checkExpression;
+    }
+
+    @Column(name = "IS_CREATED", length = 1)
+    public boolean isCreated() {
+        return isCreated;
+    }
+
+    public void setCreated(boolean created) {
+        isCreated = created;
+    }
+
+    @Column(name = "STATUS", nullable = false, length = 1)
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    @Column(name = "REMARK", length = 1024)
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
 }
