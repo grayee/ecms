@@ -1,5 +1,6 @@
 package com.qslion.framework.util;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +14,21 @@ import java.sql.Statement;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 
-public class DbUtil {
+public class DbUtil extends JdbcUtils {
 
     /**
      * JDBC数据库连接配置文件
      */
     private static final String JDBC_CONFIG_FILE_NAME = "jdbc.properties";
-    private static final ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>();
+    private static ThreadLocal<Connection> threadLocal = new ThreadLocal<>();
     private final static String MYSQL = "MySQL";
     private final static String ORACLE = "Oracle";
 
@@ -31,41 +36,62 @@ public class DbUtil {
         super();
     }
 
-    // 取得数据库连接
+    /**
+     * 取得数据库连接
+     *
+     * @return Connection
+     */
     public synchronized static Connection getConnection() {
-        Connection conn = (Connection) threadLocal.get();
+        DataSource dataSource = null;
         try {
-            Properties props = new Properties();
-            File configFile = ResourceUtils.getFile(String.format("classpath:%s", JDBC_CONFIG_FILE_NAME));
-            props.load(Files.newInputStream(configFile.toPath()));
-            if (conn == null || conn.isClosed()) {
-                String dbDriver = props.getProperty("jdbc.driver");
-                String dbUrl = props.getProperty("jdbc.url");
-                String dbUser = props.getProperty("jdbc.username");
-                String dbPassword = props.getProperty("jdbc.password");
-                Class.forName(dbDriver);
-                conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-                threadLocal.set(conn);
-            }
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            dataSource = getDataSource();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return conn;
+        if (dataSource == null) {
+            Connection conn = threadLocal.get();
+            if (conn == null) {
+                try {
+                    Properties props = getProperties();
+                    String dbDriver = props.getProperty("driverClassName");
+                    String dbUrl = props.getProperty("jdbcUrl");
+                    String dbUser = props.getProperty("dataSource.user");
+                    String dbPassword = props.getProperty("dataSource.password");
+                    Class.forName(dbDriver);
+                    conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+                    threadLocal.set(conn);
+                } catch (ClassNotFoundException | SQLException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return conn;
+        } else {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            threadLocal.set(conn);
+            return conn;
+        }
     }
 
-    public static DataSource getDataSource() {
-        HikariDataSource hds = new HikariDataSource();
-        return hds;
+    public static DataSource getDataSource() throws IOException {
+        Properties props = getProperties();
+        HikariConfig config = new HikariConfig(props);
+        return new HikariDataSource(config);
     }
 
-    // 查询后，得到数据
+    private static Properties getProperties() throws IOException {
+        Properties props = new Properties();
+        File configFile = ResourceUtils.getFile(String.format("classpath:%s", JDBC_CONFIG_FILE_NAME));
+        props.load(Files.newInputStream(configFile.toPath()));
+        return props;
+    }
+
+    /**
+     * 查询后，得到数据
+     *
+     * @param sql sql
+     * @return ResultSet
+     * @throws Exception ex
+     */
     public static ResultSet execute(String sql) throws Exception {
         // 取得连接
         Connection conn = getConnection();
@@ -74,59 +100,53 @@ public class DbUtil {
         return pstmt.executeQuery();
     }
 
-    // 关闭指定数据库连接
+    /**
+     * 关闭指定数据库连接
+     *
+     * @param conn 链接
+     */
     public static void close(Connection conn) {
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        JdbcUtils.closeConnection(conn);
     }
 
-    // 关闭指定statement
+    /**
+     * 关闭指定statement
+     *
+     * @param stmt Statement
+     */
     public static void close(Statement stmt) {
-        if (stmt != null) {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        JdbcUtils.closeStatement(stmt);
     }
 
-    // 关闭结果集
+    /**
+     * 关闭结果集
+     *
+     * @param rs ResultSet
+     */
     public static void close(ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        JdbcUtils.closeResultSet(rs);
     }
 
-    // 事物提交
+    /**
+     * 事物提交
+     *
+     * @throws Exception ex
+     */
     public static void commit() throws Exception {
         getConnection().commit();
     }
 
-    // 回滚
+    /**
+     * 回滚
+     */
     public static void rollback() {
         try {
             getConnection().rollback();
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     *
-     * @return
-     */
     private static String getDBProductName() {
         String databaseProductName = StringUtils.EMPTY;
         try {
@@ -156,12 +176,11 @@ public class DbUtil {
         return buffer.toString();
     }
 
-    public static void main(String args[]) throws Exception {
-        QueryRunner qr = new QueryRunner();
-        System.out.println(DbUtil.execute("select * from au_user"));
-    }
-
-    // 关闭全局数据库连接池
+    /**
+     * 关闭全局数据库连接池
+     *
+     * @throws Exception ex
+     */
     public void close() throws Exception {
         Connection conn = getConnection();
         try {
@@ -171,7 +190,20 @@ public class DbUtil {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new Exception("关闭数据库连接失败..");
+        }finally {
+            threadLocal.remove();
         }
-        threadLocal.set(null);
+    }
+
+    public static void main(String args[]) throws Exception {
+        QueryRunner qr = new QueryRunner(DbUtil.getDataSource());
+        System.out.println(qr.query("select * from au_user", new ResultSetHandler<T>() {
+            @Override
+            public T handle(ResultSet resultSet) throws SQLException {
+                System.out.println(resultSet.getFetchSize()+"----->>>>");
+                return null;
+            }
+        }));
+        System.out.println(DbUtil.execute("select * from au_user").getString("username")+"===========>");
     }
 }

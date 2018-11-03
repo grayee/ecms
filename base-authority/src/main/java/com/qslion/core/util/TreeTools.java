@@ -3,8 +3,7 @@
  */
 package com.qslion.core.util;
 
-import com.qslion.framework.util.DBUtils;
-
+import com.qslion.framework.util.DbUtil;
 import java.sql.ResultSet;
 
 
@@ -27,7 +26,7 @@ public class TreeTools {
         ResultSet rs = null;
         String maxcode = null;
         try {
-            rs = DBUtils.execute(strSql);
+            rs = DbUtil.execute(strSql);
             maxcode = rs.getString("maxcode");
         } catch (Exception e) {
             // TODO Auto-generated catch block
