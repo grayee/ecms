@@ -1,9 +1,9 @@
 package com.qslion.framework.util;
 
-import org.springframework.util.Assert;
-
+import com.zaxxer.hikari.HikariDataSource;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,15 +11,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import javax.sql.DataSource;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.ResourceUtils;
 
-public class DBUtils {
+public class DbUtil {
 
-    public static final String JDBC_CONFIG_FILE_NAME = "jdbc.properties";// JDBC配置文件
+    /**
+     * JDBC数据库连接配置文件
+     */
+    private static final String JDBC_CONFIG_FILE_NAME = "jdbc.properties";
     private static final ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>();
     private final static String MYSQL = "MySQL";
     private final static String ORACLE = "Oracle";
 
-    private DBUtils() {
+    private DbUtil() {
         super();
     }
 
@@ -28,9 +36,8 @@ public class DBUtils {
         Connection conn = (Connection) threadLocal.get();
         try {
             Properties props = new Properties();
-            InputStream in = DBUtils.class.getClassLoader()
-                    .getResourceAsStream("/WEB-INF/config/" + JDBC_CONFIG_FILE_NAME);
-            props.load(in);
+            File configFile = ResourceUtils.getFile(String.format("classpath:%s", JDBC_CONFIG_FILE_NAME));
+            props.load(Files.newInputStream(configFile.toPath()));
             if (conn == null || conn.isClosed()) {
                 String dbDriver = props.getProperty("jdbc.driver");
                 String dbUrl = props.getProperty("jdbc.url");
@@ -53,6 +60,11 @@ public class DBUtils {
         return conn;
     }
 
+    public static DataSource getDataSource() {
+        HikariDataSource hds = new HikariDataSource();
+        return hds;
+    }
+
     // 查询后，得到数据
     public static ResultSet execute(String sql) throws Exception {
         // 取得连接
@@ -65,8 +77,9 @@ public class DBUtils {
     // 关闭指定数据库连接
     public static void close(Connection conn) {
         try {
-            if (conn != null)
+            if (conn != null) {
                 conn.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -74,22 +87,24 @@ public class DBUtils {
 
     // 关闭指定statement
     public static void close(Statement stmt) {
-        if (stmt != null)
+        if (stmt != null) {
             try {
                 stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
     }
 
     // 关闭结果集
     public static void close(ResultSet rs) {
-        if (rs != null)
+        if (rs != null) {
             try {
                 rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
     }
 
     // 事物提交
@@ -108,12 +123,15 @@ public class DBUtils {
         }
     }
 
-    public static String getDBProductName() {
-        String databaseProductName = "";
+    /**
+     *
+     * @return
+     */
+    private static String getDBProductName() {
+        String databaseProductName = StringUtils.EMPTY;
         try {
             databaseProductName = getConnection().getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return databaseProductName;
@@ -139,7 +157,8 @@ public class DBUtils {
     }
 
     public static void main(String args[]) throws Exception {
-        System.out.println(DBUtils.execute("select * from au_functree"));
+        QueryRunner qr = new QueryRunner();
+        System.out.println(DbUtil.execute("select * from au_user"));
     }
 
     // 关闭全局数据库连接池

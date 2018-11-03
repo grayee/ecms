@@ -267,7 +267,7 @@ public class ElasticsearchTest {
     }
 
     private String getJsonFromTemplate(Map<String, String> dMap, DocType docType) {
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
         // Specify the source where the template files come from. Here I set a
         // plain directory for it, but non-file-system sources are possible too:
         //cfg.setDirectoryForTemplateLoading(new File("/where/you/store/templates"));
