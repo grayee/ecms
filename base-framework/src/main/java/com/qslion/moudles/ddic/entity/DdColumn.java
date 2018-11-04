@@ -8,6 +8,7 @@ import javax.persistence.Table;
 /**
  * 实体类 - 列表
  * 该表存储了系统所涉及的数据对象的所有字段，并对字段属性进行描述
+ * 参考 <code>ResultSetMetaDataBase.ColumnMetaData</code>
  *
  * @author Gray.Z
  * @date 2018/4/30 13:56.
