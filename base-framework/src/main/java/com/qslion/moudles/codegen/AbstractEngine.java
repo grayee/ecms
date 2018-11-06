@@ -85,11 +85,11 @@ public abstract class AbstractEngine implements CodeCreator {
     void writeToFile(String templateName, String filePath, Map<String, Object> dataMap) throws IOException {
         try {
             Path path = prepareFile(filePath);
-            Writer out = Files.newBufferedWriter(path);
+            Writer writer = Files.newBufferedWriter(path);
             Template template = prepareTemplate(templateName);
-            template.process(dataMap, out);
-            out.flush();
-            out.close();
+            template.process(dataMap, writer);
+            writer.flush();
+            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
