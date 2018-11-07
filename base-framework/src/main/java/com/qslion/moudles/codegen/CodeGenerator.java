@@ -14,32 +14,35 @@ public class CodeGenerator extends AbstractEngine {
 
     @Override
     public void generateEntity(String tableName) throws IOException {
-        String serviceFilePath = getFilePath("entityPackageName", "entityClassName");
-        writeToFile("entity.ftl", serviceFilePath, getDataMap());
+        CodeMaker codeMaker = new CodeMaker()
+            .setFtl("entity.ftl")
+            .setFilePath(getFilePath("entityPackageName", "entityClassName"))
+            .setDataMap(getDefaultDataMap());
+        writeToFile(codeMaker);
     }
 
     @Override
     public void generateDao(String tableName) throws IOException {
         String serviceFilePath = getFilePath("daoPackageName", "entityClassName", "Repository.java");
-        writeToFile("repository.ftl", serviceFilePath, getDataMap());
+        writeToFile("repository.ftl", serviceFilePath, getDefaultDataMap());
     }
 
     @Override
     public void generateService(String tableName) throws IOException {
         String serviceFilePath = getFilePath("servicePackageName", "entityClassName", "Service.java");
-        writeToFile("service.ftl", serviceFilePath, getDataMap());
+        writeToFile("service.ftl", serviceFilePath, getDefaultDataMap());
     }
 
     @Override
     public void generateServiceImpl(String tableName) throws IOException {
         String serviceImplFilePath = getFilePath("serviceImplPackageName", "entityClassName", "ServiceImpl.java");
-        writeToFile("serviceImpl.ftl", serviceImplFilePath, getDataMap());
+        writeToFile("serviceImpl.ftl", serviceImplFilePath, getDefaultDataMap());
     }
 
     @Override
     public void generateController(String tableName) throws IOException {
         String serviceImplFilePath = getFilePath("controllerPackageName", "entityClassName", "Controller.java");
-        writeToFile("controller.ftl", serviceImplFilePath, getDataMap());
+        writeToFile("controller.ftl", serviceImplFilePath, getDefaultDataMap());
     }
 
 

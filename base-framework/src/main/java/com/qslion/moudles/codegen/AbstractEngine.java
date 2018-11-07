@@ -61,7 +61,7 @@ public abstract class AbstractEngine implements CodeCreator {
     }
 
 
-    Map<String, Object> getDataMap() {
+    Map<String, Object> getDefaultDataMap() {
         Map<String, Object> dataMap = Maps.newHashMap();
         Set<Object> ps = props.keySet();
         for (Object obj : ps) {
@@ -106,6 +106,25 @@ public abstract class AbstractEngine implements CodeCreator {
             throw new BusinessException(ResultCode.FAIL);
         }
         return cfg.getTemplate(templateName);
+    }
+
+    /**
+     * 数据模型+模板=输出
+     *
+     * @param codeMaker 数据
+     * @throws IOException ex
+     */
+    void writeToFile(CodeMaker codeMaker) throws IOException {
+        try {
+            Path path = prepareFile(codeMaker.getFilePath());
+            Writer writer = Files.newBufferedWriter(path);
+            Template template = prepareTemplate(codeMaker.getFtl());
+            template.process(codeMaker.getDataMap(), writer);
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
