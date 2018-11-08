@@ -1,6 +1,7 @@
 package com.qslion.moudles.codegen;
 
 import com.baomidou.mybatisplus.toolkit.StringUtils;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -8,7 +9,9 @@ import com.google.common.collect.Maps;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
+import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
@@ -29,7 +32,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.ResourceUtils;
 
 /**
- * ecms
+ * 代码生成模板引擎
  *
  * @author Gray.Z
  * @date 2018/11/4 19:39.
@@ -41,27 +44,34 @@ public abstract class AbstractEngine implements CodeCreator {
     private static final String FILE_FTL_EXT = ".ftl";
     private static final String FILE_JAVA_EXT = ".java";
 
+    /**
+     * 模板配置
+     */
     private Configuration cfg;
-    private Properties props;
+    Properties props;
 
     AbstractEngine() {
         try {
+            props = loadProperties();
             //初始化FreeMarker配置 ,创建一个Configuration实例
             cfg = new Configuration(Configuration.VERSION_2_3_28);
+            cfg.setSharedVaribles(getDefaultDataModel());
+            DefaultObjectWrapperBuilder owb = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_28);
+            owb.setDefaultDateType(TemplateDateModel.DATETIME);
+            owb.setForceLegacyNonListCollections(false);
+            cfg.setObjectWrapper(owb.build());
             //模板加载器,Class.getResource()方法来找到模板,第二个参数是给模板的名称来加前缀的
             cfg.setClassForTemplateLoading(getClass(), File.separator + "template");
             cfg.setDefaultEncoding(StandardCharsets.UTF_8.toString());
             cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             cfg.setLogTemplateExceptions(false);
-
-            props = loadProperties();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    Map<String, Object> getDefaultDataMap() {
+    Map<String, Object> getDefaultDataModel() {
         Map<String, Object> dataMap = Maps.newHashMap();
         Set<Object> ps = props.keySet();
         for (Object obj : ps) {
@@ -74,10 +84,10 @@ public abstract class AbstractEngine implements CodeCreator {
         return dataMap;
     }
 
-    String getFilePath(String pkgNameKey, String fileNameKey, String... suffix) {
-        String packageName = props.getProperty(pkgNameKey);
-        String fileName = props.getProperty(fileNameKey) +
-            (suffix.length > 0 ? suffix[0] : StringUtils.EMPTY) + FILE_JAVA_EXT;
+    String getFilePath(String tableName, String subPkg, String... suffix) {
+        String className = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName);
+        String packageName = String.format("%s.%s", props.getProperty("packagePath"), subPkg);
+        String fileName = className + (suffix.length > 0 ? suffix[0] : StringUtils.EMPTY) + FILE_JAVA_EXT;
         String rootPath = System.getProperty("user.dir");
         List<String> paths = Lists.newArrayList();
         paths.add(rootPath);
@@ -115,16 +125,7 @@ public abstract class AbstractEngine implements CodeCreator {
      * @throws IOException ex
      */
     void writeToFile(CodeMaker codeMaker) throws IOException {
-        try {
-            Path path = prepareFile(codeMaker.getFilePath());
-            Writer writer = Files.newBufferedWriter(path);
-            Template template = prepareTemplate(codeMaker.getFtl());
-            template.process(codeMaker.getDataMap(), writer);
-            writer.flush();
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.writeToFile(codeMaker.getFtl(), codeMaker.getFilePath(), codeMaker.getDataModel());
     }
 
     /**
@@ -132,15 +133,15 @@ public abstract class AbstractEngine implements CodeCreator {
      *
      * @param templateName 模板名称
      * @param filePath 文件
-     * @param dataMap 数据
+     * @param dataModel 数据
      * @throws IOException ex
      */
-    void writeToFile(String templateName, String filePath, Map<String, Object> dataMap) throws IOException {
+    void writeToFile(String templateName, String filePath, Map<String, Object> dataModel) throws IOException {
         try {
             Path path = prepareFile(filePath);
             Writer writer = Files.newBufferedWriter(path);
             Template template = prepareTemplate(templateName);
-            template.process(dataMap, writer);
+            template.process(dataModel, writer);
             writer.flush();
             writer.close();
         } catch (Exception e) {
@@ -152,12 +153,12 @@ public abstract class AbstractEngine implements CodeCreator {
      * 写为字符
      *
      * @param templateName 模板名称
-     * @param dataMap 数据
+     * @param dataModel 数据
      * @return 字符串
      */
-    String writeAsString(String templateName, Map<String, Object> dataMap) throws IOException, TemplateException {
+    String writeAsString(String templateName, Map<String, Object> dataModel) throws IOException, TemplateException {
         Template template = prepareTemplate(templateName);
-        return FreeMarkerTemplateUtils.processTemplateIntoString(template, dataMap);
+        return FreeMarkerTemplateUtils.processTemplateIntoString(template, dataModel);
     }
 
     private Properties loadProperties() throws Exception {
@@ -168,13 +169,18 @@ public abstract class AbstractEngine implements CodeCreator {
         return props;
     }
 
-    @Override
-    public void generateAll(String tableName) throws IOException {
+    /**
+     * 代码生成模板方法
+     *
+     * @param tableName 表名称
+     * @throws IOException 异常
+     */
+    public final void generateAll(String tableName) throws IOException {
         generateEntity(tableName);
-        generateDao(tableName);
-        generateService(tableName);
-        generateServiceImpl(tableName);
-        generateController(tableName);
+//        generateDao(tableName);
+//        generateService(tableName);
+//        generateServiceImpl(tableName);
+//        generateController(tableName);
     }
 
 }

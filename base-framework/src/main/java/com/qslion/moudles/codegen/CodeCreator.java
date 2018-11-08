@@ -3,7 +3,7 @@ package com.qslion.moudles.codegen;
 import java.io.IOException;
 
 /**
- * ecms
+ * 代码生成接口
  *
  * @author Gray.Z
  * @date 2018/11/4 20:23.
@@ -49,12 +49,4 @@ public interface CodeCreator {
      * @throws IOException io
      */
     void generateController(String tableName) throws IOException;
-
-    /**
-     * 生成所有
-     *
-     * @param tableName 表名称
-     * @throws IOException io
-     */
-    void generateAll(String tableName) throws IOException;
 }
