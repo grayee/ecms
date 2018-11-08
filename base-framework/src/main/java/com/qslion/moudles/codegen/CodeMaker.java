@@ -63,6 +63,7 @@ public class CodeMaker {
         private String packagePath;
         private String className;
         protected List<String> imports = Lists.newArrayList();
+        private String tableName;
 
         public String getPackagePath() {
             return packagePath;
@@ -91,10 +92,20 @@ public class CodeMaker {
             return this;
         }
 
+        public String getTableName() {
+            return tableName;
+        }
+
+        public DataModel setTableName(String tableName) {
+            this.tableName = tableName;
+            return this;
+        }
+
         public Map<String, Object> build() {
             put("packageName", getPackagePath());
             put("imports", getImports());
             put("className", getClassName());
+            put("tableName", getTableName());
             return this;
         }
     }

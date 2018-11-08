@@ -5,7 +5,7 @@ package ${packageName};
 
 <#if imports?exists>
   <#list imports as import>
-  import ${import};
+import ${import};
   </#list>
 </#if>
 
@@ -16,7 +16,7 @@ package ${packageName};
 * @date ${.now?string("yyyy-MM-dd HH:mm:ss")}.
 */
 @Entity
-@Table(name = "au_user")
+@Table(name = "${tableName}")
 public class ${className} extends BaseEntity<Long> implements UserDetails {
 
   private String username;

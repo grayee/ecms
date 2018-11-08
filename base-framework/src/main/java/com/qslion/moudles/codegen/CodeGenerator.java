@@ -1,12 +1,15 @@
 package com.qslion.moudles.codegen;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
+import com.qslion.framework.entity.BaseEntity;
 import com.qslion.moudles.codegen.CodeMaker.DataModel;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,10 +23,19 @@ public class CodeGenerator extends AbstractEngine {
 
     @Override
     public void generateEntity(String tableName) throws IOException {
+        List<String> imports = ImmutableList.<String>builder()
+            .add(Entity.class.getName())
+            .add(Table.class.getName())
+            .add(Column.class.getName())
+            .add(BaseEntity.class.getName())
+            .build();
+
         Map<String, Object> dataModel = new DataModel()
             .setClassName(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
-            .setImports(Lists.newArrayList(Column.class.getName(), Entity.class.getName()))
-            .setPackagePath(String.format("%s.%s", props.getProperty("packagePath"), "entity")).build();
+            .setImports(imports)
+            .setTableName(tableName)
+            .setPackagePath(String.format("%s.%s", props.getProperty("packagePath"), "entity"))
+            .build();
 
         new CodeMaker()
             .setFtl("entity.ftl")
