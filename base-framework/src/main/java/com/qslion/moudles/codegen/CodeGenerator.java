@@ -3,7 +3,9 @@ package com.qslion.moudles.codegen;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.util.DbUtil;
 import com.qslion.moudles.codegen.CodeMaker.DataModel;
+import com.qslion.moudles.codegen.ddl.TableMetadata;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ public class CodeGenerator extends AbstractEngine {
 
     @Override
     public void generateEntity(String tableName) throws IOException {
+        TableMetadata tableMetadata = DbUtil.getTableMetadata(tableName);
         List<String> imports = ImmutableList.<String>builder()
             .add(Entity.class.getName())
             .add(Table.class.getName())

@@ -24,11 +24,11 @@ public class TableMetadata {
     private final Map<String, ForeignKeyMetadata> foreignKeys = Maps.newHashMap();
     private final Map<String, IndexMetadata> indexes = Maps.newHashMap();
 
-    TableMetadata(ResultSet rs, DatabaseMetaData meta, boolean extras) throws SQLException {
-        this.catalog = rs.getString("TABLE_CAT");
-        this.schema = rs.getString("TABLE_SCHEM");
+    public TableMetadata(ResultSet rs, DatabaseMetaData meta, boolean extras) throws SQLException {
+        this.catalog = rs.getString("TABLE_SCHEMA");
+        this.schema = rs.getString("TABLE_SCHEMA");
         this.name = rs.getString("TABLE_NAME");
-        this.comment = rs.getString("REMARKS");
+        this.comment = rs.getString("TABLE_COMMENT");
         this.initColumns(meta);
         if (extras) {
             this.initForeignKeys(meta);

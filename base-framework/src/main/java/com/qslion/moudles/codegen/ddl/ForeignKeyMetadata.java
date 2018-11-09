@@ -1,10 +1,9 @@
 package com.qslion.moudles.codegen.ddl;
 
+import com.google.common.collect.Maps;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
@@ -19,7 +18,7 @@ public class ForeignKeyMetadata {
 
     private final String name;
     private final String refTable;
-    private final Map references = new HashMap();
+    private final Map<String, String> references = Maps.newHashMap();
 
     ForeignKeyMetadata(ResultSet rs) throws SQLException {
         this.name = rs.getString("FK_NAME");
@@ -35,11 +34,11 @@ public class ForeignKeyMetadata {
     }
 
     void addReference(ResultSet rs) throws SQLException {
-        this.references.put(rs.getString("FKCOLUMN_NAME").toLowerCase(Locale.ROOT), rs.getString("PKCOLUMN_NAME"));
+        this.references.put(rs.getString("FKCOLUMN_NAME").toLowerCase(), rs.getString("PKCOLUMN_NAME"));
     }
 
     private boolean hasReference(Column column, Column ref) {
-        String refName = (String) this.references.get(column.getName().toLowerCase(Locale.ROOT));
+        String refName = this.references.get(column.getName().toLowerCase());
         return ref.getName().equalsIgnoreCase(refName);
     }
 

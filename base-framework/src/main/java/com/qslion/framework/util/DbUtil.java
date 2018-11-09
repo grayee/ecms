@@ -2,6 +2,7 @@ package com.qslion.framework.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.qslion.moudles.codegen.ddl.TableMetadata;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
@@ -259,6 +260,24 @@ public class DbUtil extends JdbcUtils {
         return jdbcTypeMap.get(jdbcType);
     }
 
+    public static TableMetadata getTableMetadata(String tableName) {
+        try {
+            ResultSet rs = DbUtil.execute("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME =" + tableName);
+            if (rs.next()) {
+                return new TableMetadata(rs, getConnection().getMetaData(), true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public static void main(String args[]) throws Exception {
         String sql = "select * from au_user";
         try {
@@ -281,10 +300,6 @@ public class DbUtil extends JdbcUtils {
             List<Map<String, Object>> list1 = qr.query(sql, new MapListHandler());
             System.out.println("map object" + JSONUtils.writeValueAsString(list1));
 
-            ResultSet rs = DbUtil.execute(sql);
-            while (rs.next()) {
-                System.out.println(rs.getString("username") + "=====>>>======>>");
-            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -292,6 +307,7 @@ public class DbUtil extends JdbcUtils {
         }
 
         testMeteData();
+
     }
 
     public static void testMeteData() throws SQLException {

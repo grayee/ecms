@@ -16,14 +16,16 @@ public class ColumnMetadata {
     private final String typeName;
     private final int columnSize;
     private final int decimalDigits;
-    private final String isNullable;
+    private final boolean isNullable;
     private final int typeCode;
+    private final String comment;
 
     ColumnMetadata(ResultSet rs) throws SQLException {
         this.name = rs.getString("COLUMN_NAME");
         this.columnSize = rs.getInt("COLUMN_SIZE");
         this.decimalDigits = rs.getInt("DECIMAL_DIGITS");
-        this.isNullable = rs.getString("IS_NULLABLE");
+        this.isNullable = rs.getInt("NULLABLE") > 0;
+        this.comment = rs.getString("REMARKS");
         this.typeCode = rs.getInt("DATA_TYPE");
         this.typeName = (new StringTokenizer(rs.getString("TYPE_NAME"), "() ")).nextToken();
     }
@@ -44,10 +46,15 @@ public class ColumnMetadata {
         return this.decimalDigits;
     }
 
-    public String getNullable() {
-        return this.isNullable;
+    public boolean isNullable() {
+        return isNullable;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    @Override
     public String toString() {
         return "ColumnMetadata(" + this.name + ')';
     }
