@@ -137,9 +137,8 @@ public abstract class AbstractEngine implements CodeCreator {
      * @throws IOException ex
      */
     void writeToFile(String templateName, String filePath, Map<String, Object> dataModel) throws IOException {
-        try {
-            Path path = prepareFile(filePath);
-            Writer writer = Files.newBufferedWriter(path);
+        Path path = prepareFile(filePath);
+        try (Writer writer = Files.newBufferedWriter(path)) {
             Template template = prepareTemplate(templateName);
             template.process(dataModel, writer);
             writer.flush();
