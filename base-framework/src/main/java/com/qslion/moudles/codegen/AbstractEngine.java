@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
+import com.qslion.moudles.codegen.config.ProjectConfig;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
@@ -29,7 +30,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.util.ResourceUtils;
 
 /**
  * 代码生成模板引擎
@@ -48,11 +48,10 @@ public abstract class AbstractEngine implements CodeCreator {
      * 模板配置
      */
     private Configuration cfg;
-    Properties props;
+    ProjectConfig projectConfig = new ProjectConfig();
 
     AbstractEngine() {
         try {
-            props = loadProperties();
             //初始化FreeMarker配置 ,创建一个Configuration实例
             cfg = new Configuration(Configuration.VERSION_2_3_28);
             cfg.setSharedVaribles(getDefaultDataModel());
@@ -73,6 +72,7 @@ public abstract class AbstractEngine implements CodeCreator {
 
     Map<String, Object> getDefaultDataModel() {
         Map<String, Object> dataMap = Maps.newHashMap();
+        Properties props = projectConfig.loadProperties();
         Set<Object> ps = props.keySet();
         for (Object obj : ps) {
             String key = (String) obj;
@@ -86,12 +86,12 @@ public abstract class AbstractEngine implements CodeCreator {
 
     String getFilePath(String tableName, String subPkg, String... suffix) {
         String className = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName);
-        String packageName = String.format("%s.%s", props.getProperty("packagePath"), subPkg);
+        String packageName = String.format("%s.%s", projectConfig.getPackagePath(), subPkg);
         String fileName = className + (suffix.length > 0 ? suffix[0] : StringUtils.EMPTY) + FILE_JAVA_EXT;
         String rootPath = System.getProperty("user.dir");
         List<String> paths = Lists.newArrayList();
         paths.add(rootPath);
-        paths.add(props.get("projectName") + File.separator + "src"
+        paths.add(projectConfig.getProjectName()+ File.separator + "src"
             + File.separator + "main" + File.separator + "java");
         paths.addAll(Splitter.on(".").splitToList(packageName));
         paths.add(fileName);
@@ -160,13 +160,6 @@ public abstract class AbstractEngine implements CodeCreator {
         return FreeMarkerTemplateUtils.processTemplateIntoString(template, dataModel);
     }
 
-    private Properties loadProperties() throws Exception {
-        Properties props = new Properties();
-        String fileName = "moduleConfig.properties";
-        File configFile = ResourceUtils.getFile(String.format("classpath:%s", fileName));
-        props.load(Files.newInputStream(configFile.toPath()));
-        return props;
-    }
 
     /**
      * 代码生成模板方法

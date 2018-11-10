@@ -81,10 +81,6 @@ public class DbUtil extends JdbcUtils {
         .put("REAL", Byte[].class)
         .build();
 
-    private DbUtil() {
-        super();
-    }
-
     /**
      * 取得数据库连接
      *
@@ -101,13 +97,9 @@ public class DbUtil extends JdbcUtils {
             Connection conn = threadLocal.get();
             if (conn == null) {
                 try {
-                    Properties props = loadProperties();
-                    String dbDriver = props.getProperty("driverClassName");
-                    String dbUrl = props.getProperty("jdbcUrl");
-                    String dbUser = props.getProperty("dataSource.user");
-                    String dbPassword = props.getProperty("dataSource.password");
-                    Class.forName(dbDriver);
-                    conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+                    JdbcConfig jdbcConfig = new JdbcConfig(loadProperties());
+                    Class.forName(jdbcConfig.getDriver());
+                    conn = DriverManager.getConnection(jdbcConfig.getUrl(), jdbcConfig.getUser(), jdbcConfig.getUrl());
                     threadLocal.set(conn);
                 } catch (ClassNotFoundException | SQLException | IOException e) {
                     e.printStackTrace();
@@ -122,8 +114,7 @@ public class DbUtil extends JdbcUtils {
     }
 
     public static DataSource getDataSource() throws IOException {
-        Properties props = loadProperties();
-        HikariConfig config = new HikariConfig(props);
+        HikariConfig config = new HikariConfig(loadProperties());
         return new HikariDataSource(config);
     }
 
@@ -262,7 +253,7 @@ public class DbUtil extends JdbcUtils {
 
     public static TableMetadata getTableMetadata(String tableName) {
         try {
-            ResultSet rs = DbUtil.execute("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME =" + tableName);
+            ResultSet rs = DbUtil.execute("SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ='" + tableName+"'");
             if (rs.next()) {
                 return new TableMetadata(rs, getConnection().getMetaData(), true);
             }
@@ -345,6 +336,84 @@ public class DbUtil extends JdbcUtils {
                 //是否自动为指定列进行编号
                 System.out.println("isAutoIncrement:" + meta.isAutoIncrement(i + 1));
             }
+        }
+
+    }
+
+    /**
+     * JDBC配置模型
+     *
+     * @author Gray.Z
+     * @date 2018/11/10 9:01.
+     */
+    public static class JdbcConfig {
+
+        private String driver;
+        private String url;
+        private String user;
+        private String password;
+
+        public JdbcConfig(Properties properties) {
+            driver = properties.getProperty("driverClassName");
+            url = properties.getProperty("jdbcUrl");
+            user = properties.getProperty("dataSource.user");
+            password = properties.getProperty("dataSource.password");
+        }
+
+        /**
+         * @return 取得JDBC驱动类
+         */
+        public String getDriver() {
+            return driver;
+        }
+
+        /**
+         * @param driver 设置JDBC驱动类
+         */
+        public void setDriver(String driver) {
+            this.driver = driver;
+        }
+
+        /**
+         * @return 取得JDBC连接字符串
+         */
+        public String getUrl() {
+            return url;
+        }
+
+        /**
+         * @param url 设置JDBC连接字符串
+         */
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        /**
+         * @return 取得JDBC连接的用户名，即当前数据库连接的属主
+         */
+        public String getUser() {
+            return user;
+        }
+
+        /**
+         * @param user 设置JDBC连接的用户名，即当前数据库连接的属主
+         */
+        public void setUser(String user) {
+            this.user = user;
+        }
+
+        /**
+         * @return 取得JDBC连接的密码
+         */
+        public String getPassword() {
+            return password;
+        }
+
+        /**
+         * @param password 设置JDBC连接的密码
+         */
+        public void setPassword(String password) {
+            this.password = password;
         }
 
     }

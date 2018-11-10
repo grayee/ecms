@@ -3,6 +3,7 @@ package com.qslion.moudles.ddic.entity;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
@@ -17,13 +18,17 @@ import javax.persistence.Table;
 public class DdConstraint extends BaseEntity<Long> {
 
     private String constraintName;
-    private String constraintType;
+    private ConstraintType constraintType;
     private String tableName;
     private String columnName;
-    private String conditionContent;
     private String refTableName;
-    private String status;
     private String refColumnName;
+    private String conditionContent;
+    private String status;
+
+    private enum ConstraintType {
+        PRIMARY_KEY, FOREIGN_KEY, UNIQUE_KEY
+    }
 
     @Column(name = "CONSTRAINT_NAME", length = 64)
     public String getConstraintName() {
@@ -34,12 +39,13 @@ public class DdConstraint extends BaseEntity<Long> {
         this.constraintName = constraintName;
     }
 
+    @Enumerated
     @Column(name = "CONSTRAINT_TYPE", length = 1)
-    public String getConstraintType() {
+    public ConstraintType getConstraintType() {
         return this.constraintType;
     }
 
-    public void setConstraintType(String constraintType) {
+    public void setConstraintType(ConstraintType constraintType) {
         this.constraintType = constraintType;
     }
 

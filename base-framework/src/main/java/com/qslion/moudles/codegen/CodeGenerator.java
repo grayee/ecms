@@ -37,7 +37,7 @@ public class CodeGenerator extends AbstractEngine {
             .setClassName(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
             .setImports(imports)
             .setTableName(tableName)
-            .setPackagePath(String.format("%s.%s", props.getProperty("packagePath"), "entity"))
+            .setPackagePath(String.format("%s.%s", projectConfig.getPackagePath(), "entity"))
             .build();
 
         new CodeMaker()

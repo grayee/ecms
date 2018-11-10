@@ -12,8 +12,8 @@ import javax.persistence.Table;
  * @date 2018/4/30 13:56.
  */
 @Entity
-@Table(name = "ddic_base_data_type")
-public class DdicBaseDataType extends BaseEntity<Long> {
+@Table(name = "dict_base_data_type")
+public class DictBaseDataType extends BaseEntity<Long> {
 
     private String name;
     private String description;
