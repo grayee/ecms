@@ -1,9 +1,6 @@
 package com.qslion.moudles.codegen;
 
-import com.google.common.collect.Lists;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,57 +53,5 @@ public class CodeMaker {
 
     public void make(AbstractEngine engine) throws IOException {
         engine.writeToFile(getFtl(), getFilePath(), getDataModel());
-    }
-
-    public static class DataModel extends HashMap<String, Object> {
-
-        private String packagePath;
-        private String className;
-        protected List<String> imports = Lists.newArrayList();
-        private String tableName;
-
-        public String getPackagePath() {
-            return packagePath;
-        }
-
-        public DataModel setPackagePath(String packagePath) {
-            this.packagePath = packagePath;
-            return this;
-        }
-
-        public String getClassName() {
-            return className;
-        }
-
-        public DataModel setClassName(String className) {
-            this.className = className;
-            return this;
-        }
-
-        public List<String> getImports() {
-            return imports;
-        }
-
-        public DataModel setImports(List<String> imports) {
-            this.imports = imports;
-            return this;
-        }
-
-        public String getTableName() {
-            return tableName;
-        }
-
-        public DataModel setTableName(String tableName) {
-            this.tableName = tableName;
-            return this;
-        }
-
-        public Map<String, Object> build() {
-            put("packageName", getPackagePath());
-            put("imports", getImports());
-            put("className", getClassName());
-            put("tableName", getTableName());
-            return this;
-        }
     }
 }

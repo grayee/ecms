@@ -3,6 +3,7 @@ package com.qslion.moudles.ddic.entity;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 public class DdRelation extends BaseEntity<Long> {
 
     private String relationName;
+    private RelationType relationType;
     private String displayName;
     private String pkTable;
     private String pkColumn;
@@ -26,6 +28,10 @@ public class DdRelation extends BaseEntity<Long> {
     private String status;
     private String remark;
 
+    private enum RelationType {
+        ONE_TO_ONE, ONE_TO_MANY, MANY_TO_MANY
+    }
+
     @Column(name = "RELATION_NAME", nullable = false, length = 128)
     public String getRelationName() {
         return this.relationName;
@@ -33,6 +39,17 @@ public class DdRelation extends BaseEntity<Long> {
 
     public void setRelationName(String relationname) {
         this.relationName = relationName;
+    }
+
+    @Enumerated
+    @Column(name = "RELATION_TYPE", nullable = false, length = 1)
+    public RelationType getRelationType() {
+        return relationType;
+    }
+
+    public DdRelation setRelationType(RelationType relationType) {
+        this.relationType = relationType;
+        return this;
     }
 
     @Column(name = "DISPLAY_NAME", length = 128)

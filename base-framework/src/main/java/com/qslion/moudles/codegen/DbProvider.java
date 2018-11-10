@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qslion.framework.util.DbUtil;
 import com.qslion.moudles.codegen.ddl.TableMetadata;
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -19,15 +18,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author Gray.Z
  * @date 2018/11/10 10:30.
  */
-public abstract class DbProvider {
+public class DbProvider {
 
-    private Connection connection;
     private String catalog;
     private String schema;
     private String tableNamePatterns;
     private List<ColumnHandler> columnHandlers = Lists.newArrayList();
-    private List<String> tableNames;
-    private Map<String, TableMetadata> tableMetadatas;
+    private List<String> tableNames = Lists.newArrayList();
+    private Map<String, TableMetadata> tableMetadatas = Maps.newHashMap();
 
 
     /**
@@ -35,7 +33,6 @@ public abstract class DbProvider {
      */
     public DbProvider() {
         super();
-        this.connection = DbUtil.getConnection();
     }
 
     /**
@@ -102,18 +99,16 @@ public abstract class DbProvider {
         if (tableNames != null) {
             return tableNames;
         }
-        tableNames = Lists.newArrayList();
-        ResultSet rs = null;
+        ResultSet rs;
         try {
-            String tnps = getTableNamePatterns();
-            if (StringUtils.isBlank(tnps)) {
-                rs = getConnection().getMetaData().getTables(catalog, schema, "%", new String[]{"TABLE"});
+            if (StringUtils.isBlank(tableNamePatterns)) {
+                rs = DbUtil.getConnection().getMetaData().getTables(catalog, schema, "%", new String[]{"TABLE"});
                 while (rs.next()) {
                     tableNames.add(rs.getString("TABLE_NAME"));
                 }
             } else {
-                for (String tnp : tnps.split(",")) {
-                    rs = getConnection().getMetaData().getTables(catalog, schema, tnp, null);
+                for (String tnp : tableNamePatterns.split(",")) {
+                    rs = DbUtil.getConnection().getMetaData().getTables(catalog, schema, tnp, null);
                     while (rs.next()) {
                         tableNames.add(rs.getString("TABLE_NAME"));
                     }
@@ -136,13 +131,10 @@ public abstract class DbProvider {
         if (tableMetadatas != null && tableMetadatas.size() > 0) {
             return tableMetadatas;
         }
-        tableMetadatas = Maps.newConcurrentMap();
-
-        String tnps = getTableNamePatterns();
-        if (StringUtils.isBlank(tnps)) {
-            tableMetadatas.putAll(getTableMetaData(null));
+        if (StringUtils.isBlank(tableNamePatterns)) {
+            tableMetadatas.putAll(getTableMetaData("%"));
         } else {
-            for (String tnp : tnps.split(",")) {
+            for (String tnp : tableNamePatterns.split(",")) {
                 tableMetadatas.putAll(getTableMetaData(tnp));
             }
         }
@@ -151,10 +143,10 @@ public abstract class DbProvider {
     }
 
 
-    private Map<String, TableMetadata> getTableMetaData(String tableNamePattern) {
+    public Map<String, TableMetadata> getTableMetaData(String tableNamePattern) {
         ResultSet rs = null;
         try {
-            DatabaseMetaData databaseMetaData = getConnection().getMetaData();
+            DatabaseMetaData databaseMetaData = DbUtil.getConnection().getMetaData();
             rs = databaseMetaData.getTables(catalog, schema, tableNamePattern, null);
             List<String> columnNameList = Lists.newArrayList();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -175,7 +167,9 @@ public abstract class DbProvider {
         return tableMetadatas;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public static void main(String[] args) {
+        DbProvider p = new DbProvider();
+        Map<String, TableMetadata> map = p.getTableMetaData("au_user");
+        System.out.println();
     }
 }

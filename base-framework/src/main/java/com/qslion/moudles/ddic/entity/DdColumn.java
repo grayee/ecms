@@ -22,10 +22,12 @@ public class DdColumn extends BaseEntity<Long> {
     private String columnName;
     private String displayName;
     private String columnType;
-    private Long columnLength;
-    private Integer columnPrecision;
+    private Long length;
+    private Integer precision;
+    private Integer scale;
     private String defaultValue;
     private boolean isNullable;
+    private boolean isUnique;
     private boolean isVirtual;
     private Integer valueFrom;
     private Integer valueTo;
@@ -81,23 +83,43 @@ public class DdColumn extends BaseEntity<Long> {
         this.columnType = columnType;
     }
 
-    @Column(name = "COLUMN_LENGTH", precision = 10, scale = 0)
-    public Long getColumnLength() {
-        return this.columnLength;
+    @Column(name = "LENGTH", precision = 10, scale = 0)
+    public Long getLength() {
+        return this.length;
     }
 
-    public void setColumnLength(Long columnLength) {
-        this.columnLength = columnLength;
+    public void setLength(Long length) {
+        this.length = length;
     }
 
 
-    @Column(name = "COLUMN_PRECISION", precision = 8, scale = 0)
-    public Integer getColumnPrecision() {
-        return columnPrecision;
+    @Column(name = "PRECISION", precision = 8, scale = 0)
+    public Integer getPrecision() {
+        return precision;
     }
 
-    public void setColumnPrecision(Integer columnPrecision) {
-        this.columnPrecision = columnPrecision;
+    public void setPrecision(Integer precision) {
+        this.precision = precision;
+    }
+
+    @Column(name = "SCALE", precision = 19, scale = 0)
+    public Integer getScale() {
+        return scale;
+    }
+
+    public DdColumn setScale(Integer scale) {
+        this.scale = scale;
+        return this;
+    }
+
+    @Column(name = "IS_UNIQUE", length = 1)
+    public boolean isUnique() {
+        return isUnique;
+    }
+
+    public DdColumn setUnique(boolean unique) {
+        isUnique = unique;
+        return this;
     }
 
     @Column(name = "DEFAULT_VALUE", length = 128)
@@ -109,7 +131,7 @@ public class DdColumn extends BaseEntity<Long> {
         this.defaultValue = defaultValue;
     }
 
-    @Column(name = "ISNULLABLE", length = 1)
+    @Column(name = "IS_NULLABLE", length = 1)
     public boolean isNullable() {
         return isNullable;
     }
@@ -118,7 +140,7 @@ public class DdColumn extends BaseEntity<Long> {
         isNullable = nullable;
     }
 
-    @Column(name = "ISVIRTUAL", length = 1)
+    @Column(name = "IS_VIRTUAL", length = 1)
     public boolean isVirtual() {
         return isVirtual;
     }
