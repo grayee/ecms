@@ -1,11 +1,10 @@
 package com.qslion.moudles.codegen.datamodel;
 
-import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * ecms
@@ -19,10 +18,10 @@ public abstract class DataModel extends HashMap<String, Object> {
     private String className;
     protected String extendsClassName;
     protected Class<?> extendsClass;
-    protected Set<String> implementList = new HashSet<String>();
+    protected Set<String> imports = new TreeSet<>();
+    protected Set<String> implementList = new HashSet<>();
     protected boolean serializable = false;
 
-    protected List<String> imports = Lists.newArrayList();
     private String tableName;
 
     public String getPackagePath() {
@@ -43,7 +42,31 @@ public abstract class DataModel extends HashMap<String, Object> {
         return this;
     }
 
-    public abstract List<String> getImports();
+    public abstract Set<String> getImports();
+
+    public DataModel setImports(Set<String> imports) {
+        this.imports = imports;
+        return this;
+    }
+
+    public DataModel addImports(String addImport) {
+        this.imports.add(addImport);
+        return this;
+    }
+
+    public abstract Set<String> getImplements();
+
+    public DataModel setImplements(Set<String> implementList) {
+        this.implementList = implementList;
+        return this;
+    }
+
+    public DataModel addImplements(String addImplement) {
+        this.implementList.add(addImplement);
+        return this;
+    }
+
+    public abstract String getExtends();
 
     public String getTableName() {
         return tableName;
@@ -59,6 +82,8 @@ public abstract class DataModel extends HashMap<String, Object> {
         put("imports", getImports());
         put("className", getClassName());
         put("tableName", getTableName());
+        put("implements", getImplements());
+        put("extends", getExtends());
         return this;
     }
 }
