@@ -1,5 +1,7 @@
 package com.qslion.framework.util;
 
+import static com.qslion.moudles.codegen.DbProvider.jdbcTypeMap;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariConfig;
@@ -39,46 +41,6 @@ public class DbUtil extends JdbcUtils {
     private static ThreadLocal<Connection> threadLocal = new ThreadLocal<>();
     private final static String MYSQL = "MySQL";
     private final static String ORACLE = "Oracle";
-
-    private static Map<String, Class<?>> javaTypeMap = ImmutableMap.<String, Class<?>>builder()
-        .put("Integer", Integer.class)
-        .put("Long", Long.class)
-        .put("Short", Short.class)
-        .put("Byte", Byte.class)
-        .put("Byte[]", Byte[].class)
-        .put("Double", Double.class)
-        .put("BigDecimal", BigDecimal.class)
-        .put("Float", Float.class)
-        .put("Date", Date.class)
-        .put("String", String.class)
-        .put("Boolean", Boolean.class)
-        .put("Enum", Enum.class)
-        .build();
-
-    public static Map<String, Class<?>> jdbcTypeMap = ImmutableMap.<String, Class<?>>builder()
-        .put("BIT", Boolean.class)
-        .put("TINYINT", Byte.class)
-        .put("SMALLINT", Short.class)
-        .put("INTEGER", Integer.class)
-        .put("INT", Integer.class)
-        .put("BIGINT", Long.class)
-        .put("FLOAT", Float.class)
-        .put("DOUBLE", Double.class)
-        .put("DECIMAL", BigDecimal.class)
-        .put("CHAR", String.class)
-        .put("VARCHAR", String.class)
-        .put("LONGVARCHAR", String.class)
-        .put("CLOB", String.class)
-        .put("DATE", Date.class)
-        .put("TIME", Date.class)
-        .put("TIMESTAMP", Date.class)
-        .put("DATETIME", Date.class)
-        .put("BINARY", Byte[].class)
-        .put("VARBINARY", Byte[].class)
-        .put("LONGVARBINARY", Byte[].class)
-        .put("BLOB", Byte[].class)
-        .put("REAL", Byte[].class)
-        .build();
 
     /**
      * 取得数据库连接
@@ -234,21 +196,6 @@ public class DbUtil extends JdbcUtils {
         }
     }
 
-    public static Set<String> javaType() {
-        return javaTypeMap.keySet();
-    }
-
-    public static Class<?> javaClass(String javaType) {
-        return javaTypeMap.get(javaType);
-    }
-
-    public static Set<String> jdbcType() {
-        return jdbcTypeMap.keySet();
-    }
-
-    public static Class<?> jdbcClass(String jdbcType) {
-        return jdbcTypeMap.get(jdbcType);
-    }
 
     public static void main(String args[]) throws Exception {
         String sql = "select * from au_user";

@@ -14,13 +14,13 @@ import org.hibernate.mapping.ForeignKey;
  * @author Gray.Z
  * @date 2018/11/9.
  */
-public class ForeignKeyMetadata {
+public class ForeignKeyMetaData {
 
     private final String name;
     private final String refTable;
     private final Map<String, String> references = Maps.newHashMap();
 
-    ForeignKeyMetadata(ResultSet rs) throws SQLException {
+    ForeignKeyMetaData(ResultSet rs) throws SQLException {
         this.name = rs.getString("FK_NAME");
         this.refTable = rs.getString("PKTABLE_NAME");
     }
@@ -67,6 +67,6 @@ public class ForeignKeyMetadata {
 
     @Override
     public String toString() {
-        return "ForeignKeyMetadata(" + this.name + ')';
+        return "ForeignKeyMetaData(" + this.name + ')';
     }
 }

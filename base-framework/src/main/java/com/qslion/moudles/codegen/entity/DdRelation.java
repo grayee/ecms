@@ -1,4 +1,4 @@
-package com.qslion.moudles.ddic.entity;
+package com.qslion.moudles.codegen.entity;
 
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
- * 实体类 - 数据字典基础表
+ * 实体类 - 数据库表关系
  * 该表存储了系统所涉及的各表之间的关系，并对表间关系进行描述
  *
  * @author Gray.Z

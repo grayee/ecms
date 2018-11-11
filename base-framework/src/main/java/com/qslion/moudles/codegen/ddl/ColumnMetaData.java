@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
  * @author Gray.Z
  * @date 2018/11/9.
  */
-public class ColumnMetadata {
+public class ColumnMetaData {
 
     private final String name;
     private final String typeName;
@@ -20,7 +20,7 @@ public class ColumnMetadata {
     private final int typeCode;
     private final String comment;
 
-    ColumnMetadata(ResultSet rs) throws SQLException {
+    ColumnMetaData(ResultSet rs) throws SQLException {
         this.name = rs.getString("COLUMN_NAME");
         this.columnSize = rs.getInt("COLUMN_SIZE");
         this.decimalDigits = rs.getInt("DECIMAL_DIGITS");
@@ -56,7 +56,7 @@ public class ColumnMetadata {
 
     @Override
     public String toString() {
-        return "ColumnMetadata(" + this.name + ')';
+        return "ColumnMetaData(" + this.name + ')';
     }
 
     public int getTypeCode() {

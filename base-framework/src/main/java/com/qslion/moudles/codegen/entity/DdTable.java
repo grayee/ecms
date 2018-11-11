@@ -1,12 +1,17 @@
-package com.qslion.moudles.ddic.entity;
+package com.qslion.moudles.codegen.entity;
 
+import com.google.common.collect.Lists;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.moudles.codegen.entity.DdConstraint.ConstraintType;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * 实体类 - 数据字典基础表
+ * 实体类 - 数据库表
  *
  * @author Gray.Z
  * @date 2018/4/30 13:56.
@@ -15,7 +20,10 @@ import javax.persistence.Table;
 @Table(name = "dd_table")
 public class DdTable extends BaseEntity<Long> {
 
+    private String catalog;
+    private String schema;
     private String tableName;
+    private String tableType;
     private String displayName;
     private String category;
     private String subCategory;
@@ -25,14 +33,67 @@ public class DdTable extends BaseEntity<Long> {
     private String status;
     private String remark;
 
+    private List<DdColumn> columns = Lists.newArrayList();
 
-    @Column(name = "TABLE_NAME", nullable = false, length = 128)
+    private List<DdConstraint> constraints = Lists.newArrayList();
+
+    @OneToMany
+    @JoinColumn(name = "TABLE_ID")
+    public List<DdColumn> getColumns() {
+        return columns;
+    }
+
+    public DdTable setColumns(List<DdColumn> columns) {
+        this.columns = columns;
+        return this;
+    }
+
+    @OneToMany
+    @JoinColumn(name = "TABLE_ID")
+    public List<DdConstraint> getConstraints() {
+        return constraints;
+    }
+
+    public DdTable setConstraints(List<DdConstraint> constraints) {
+        this.constraints = constraints;
+        return this;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public DdTable setCatalog(String catalog) {
+        this.catalog = catalog;
+        return this;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public DdTable setSchema(String schema) {
+        this.schema = schema;
+        return this;
+    }
+
+    @Column(name = "TABLE_NAME", nullable = false)
     public String getTableName() {
         return tableName;
     }
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    @Column(name = "TABLE_NAME", nullable = false, length = 128)
+    public String getTableType() {
+        return tableType;
+    }
+
+    public DdTable setTableType(String tableType) {
+        this.tableType = tableType;
+        return this;
     }
 
     @Column(name = "DISPLAY_NAME", nullable = false, length = 128)
@@ -107,5 +168,23 @@ public class DdTable extends BaseEntity<Long> {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    /**
+     * 判断指定列名是否为主键
+     *
+     * @param columnName 要判断的列名称
+     * @return 如果指定列为主键则返回true，否则返回false
+     */
+    public boolean isKey(String columnName, ConstraintType constraintType) {
+        boolean result = false;
+        for (DdConstraint constraint : constraints) {
+            if (constraint.getColumnName().equalsIgnoreCase(columnName) && constraint.getConstraintType() == constraintType) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
 
 }

@@ -3,7 +3,7 @@ package com.qslion.moudles.codegen;
 import com.google.common.base.CaseFormat;
 import com.qslion.framework.util.JSONUtils;
 import com.qslion.moudles.codegen.datamodel.impl.EntityDataModel;
-import com.qslion.moudles.codegen.ddl.TableMetadata;
+import com.qslion.moudles.codegen.ddl.TableMetaData;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class CodeGenerator extends AbstractEngine {
 
     @Override
     public void generateEntity(String tableName) throws IOException {
-        TableMetadata tableMetadata = new DbProvider().getTableMetaData(tableName).get(tableName);
+        TableMetaData tableMetadata = new DbProvider().getTableMetaData(tableName).get(tableName);
 
         Map<String, Object> dataModel = new EntityDataModel()
             .setClassName(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
@@ -64,7 +64,7 @@ public class CodeGenerator extends AbstractEngine {
         // new CodeGenerator().generateAll("au_user");
         DbProvider provider = new DbProvider();
         List<String> list = provider.getTableNames();
-        Map<String, TableMetadata> map = provider.getTableMetaData();
+        Map<String, TableMetaData> map = provider.getTableMetaData();
         System.out.println(JSONUtils.writeValueAsString(map));
     }
 }

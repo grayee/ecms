@@ -11,12 +11,12 @@ import java.util.List;
  * @author Gray.Z
  * @date 2018/11/9.
  */
-public class IndexMetadata {
+public class IndexMetaData {
 
     private final String name;
-    private final List<ColumnMetadata> columns = Lists.newArrayList();
+    private final List<ColumnMetaData> columns = Lists.newArrayList();
 
-    IndexMetadata(ResultSet rs) throws SQLException {
+    IndexMetaData(ResultSet rs) throws SQLException {
         this.name = rs.getString("INDEX_NAME");
     }
 
@@ -24,14 +24,14 @@ public class IndexMetadata {
         return this.name;
     }
 
-    void addColumn(ColumnMetadata column) {
+    void addColumn(ColumnMetaData column) {
         if (column != null) {
             this.columns.add(column);
         }
     }
 
-    public ColumnMetadata[] getColumns() {
-        return this.columns.toArray(new ColumnMetadata[columns.size()]);
+    public ColumnMetaData[] getColumns() {
+        return this.columns.toArray(new ColumnMetaData[columns.size()]);
     }
 
     @Override

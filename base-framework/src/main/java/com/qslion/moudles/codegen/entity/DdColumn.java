@@ -1,12 +1,14 @@
-package com.qslion.moudles.ddic.entity;
+package com.qslion.moudles.codegen.entity;
 
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * 实体类 - 列表
+ * 实体类 - 表列
  * 该表存储了系统所涉及的数据对象的所有字段，并对字段属性进行描述
  * 参考 <code>ResultSetMetaDataBase.ColumnMetaData</code>
  *
@@ -17,7 +19,7 @@ import javax.persistence.Table;
 @Table(name = "dd_column")
 public class DdColumn extends BaseEntity<Long> {
 
-    private String tableId;
+    private DdTable table;
     private String tableName;
     private String columnName;
     private String displayName;
@@ -27,7 +29,26 @@ public class DdColumn extends BaseEntity<Long> {
     private Integer scale;
     private String defaultValue;
     private boolean isNullable;
-    private boolean isUnique;
+
+    /**
+     * 标识该列是否为主键
+     */
+    private boolean isPrimaryKey = false;
+    /**
+     * 标识该列是否外键列（参照其他表的键）
+     */
+    private boolean isImportedKey = false;
+    /**
+     * 标识该列是否外键列（被其他表参照的键）
+     */
+    private boolean isExportedKey = false;
+
+    /**
+     * 标识该列是否为自增列
+     */
+    private boolean isAutoIncrement = false;
+
+    private boolean isUniqueKey;
     private boolean isVirtual;
     private Integer valueFrom;
     private Integer valueTo;
@@ -37,14 +58,15 @@ public class DdColumn extends BaseEntity<Long> {
     private String category;
     private String remark;
 
-
-    @Column(name = "TABLE_ID", length = 32)
-    public String getTableId() {
-        return this.tableId;
+    @ManyToOne
+    @JoinColumn(name = "TABLE_ID")
+    public DdTable getTable() {
+        return table;
     }
 
-    public void setTableId(String tableId) {
-        this.tableId = tableId;
+    public DdColumn setTable(DdTable table) {
+        this.table = table;
+        return this;
     }
 
     @Column(name = "TABLE_NAME", nullable = false, length = 128)
@@ -112,13 +134,13 @@ public class DdColumn extends BaseEntity<Long> {
         return this;
     }
 
-    @Column(name = "IS_UNIQUE", length = 1)
-    public boolean isUnique() {
-        return isUnique;
+    @Column(name = "IS_UNIQUE_KEY", length = 1)
+    public boolean isUniqueKey() {
+        return isUniqueKey;
     }
 
-    public DdColumn setUnique(boolean unique) {
-        isUnique = unique;
+    public DdColumn setUniqueKey(boolean isUniqueKey) {
+        isUniqueKey = isUniqueKey;
         return this;
     }
 
@@ -212,4 +234,39 @@ public class DdColumn extends BaseEntity<Long> {
         this.remark = remark;
     }
 
+    public boolean isPrimaryKey() {
+        return isPrimaryKey;
+    }
+
+    public DdColumn setPrimaryKey(boolean primaryKey) {
+        isPrimaryKey = primaryKey;
+        return this;
+    }
+
+    public boolean isImportedKey() {
+        return isImportedKey;
+    }
+
+    public DdColumn setImportedKey(boolean importedKey) {
+        isImportedKey = importedKey;
+        return this;
+    }
+
+    public boolean isExportedKey() {
+        return isExportedKey;
+    }
+
+    public DdColumn setExportedKey(boolean exportedKey) {
+        isExportedKey = exportedKey;
+        return this;
+    }
+
+    public boolean isAutoIncrement() {
+        return isAutoIncrement;
+    }
+
+    public DdColumn setAutoIncrement(boolean autoIncrement) {
+        isAutoIncrement = autoIncrement;
+        return this;
+    }
 }

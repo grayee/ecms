@@ -1,9 +1,11 @@
-package com.qslion.moudles.ddic.entity;
+package com.qslion.moudles.codegen.entity;
 
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -17,17 +19,35 @@ import javax.persistence.Table;
 @Table(name = "dd_constraint")
 public class DdConstraint extends BaseEntity<Long> {
 
+    private DdTable table;
     private String constraintName;
     private ConstraintType constraintType;
     private String tableName;
     private String columnName;
     private String refTableName;
     private String refColumnName;
+    private String refConstraintName;
     private String conditionContent;
+    private Short keySeq;
     private String status;
 
-    private enum ConstraintType {
-        PRIMARY_KEY, FOREIGN_KEY, UNIQUE_KEY
+    public DdConstraint(ConstraintType constraintType) {
+        this.constraintType = constraintType;
+    }
+
+    public enum ConstraintType {
+        PRIMARY_KEY, FOREIGN_KEY_IMPORTED, FOREIGN_KEY_EXPORTED, UNIQUE_KEY
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "TABLE_ID")
+    public DdTable getTable() {
+        return table;
+    }
+
+    public DdConstraint setTable(DdTable table) {
+        this.table = table;
+        return this;
     }
 
     @Column(name = "CONSTRAINT_NAME", length = 64)
@@ -101,5 +121,25 @@ public class DdConstraint extends BaseEntity<Long> {
 
     public void setRefColumnName(String refcolumnname) {
         this.refColumnName = refcolumnname;
+    }
+
+    @Column(name = "REF_CONSTRAINT_NAME")
+    public String getRefConstraintName() {
+        return refConstraintName;
+    }
+
+    public DdConstraint setRefConstraintName(String refConstraintName) {
+        this.refConstraintName = refConstraintName;
+        return this;
+    }
+
+    @Column(name = "KEY_SEQ")
+    public Short getKeySeq() {
+        return keySeq;
+    }
+
+    public DdConstraint setKeySeq(Short keySeq) {
+        this.keySeq = keySeq;
+        return this;
     }
 }
