@@ -1,4 +1,4 @@
-package com.qslion.moudles.codegen;
+package com.qslion.moudles.codegen.service.impl;
 
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.google.common.base.CaseFormat;
@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.moudles.codegen.config.ProjectConfig;
+import com.qslion.moudles.codegen.service.CodeCreator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;

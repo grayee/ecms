@@ -1,4 +1,4 @@
-package com.qslion.moudles.codegen;
+package com.qslion.moudles.codegen.service.impl;
 
 import java.io.IOException;
 import java.util.Map;

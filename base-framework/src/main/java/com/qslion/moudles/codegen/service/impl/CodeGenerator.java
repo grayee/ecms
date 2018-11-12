@@ -1,4 +1,4 @@
-package com.qslion.moudles.codegen;
+package com.qslion.moudles.codegen.service.impl;
 
 import com.google.common.base.CaseFormat;
 import com.qslion.framework.util.JSONUtils;

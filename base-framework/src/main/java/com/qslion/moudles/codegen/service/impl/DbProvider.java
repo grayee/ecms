@@ -1,4 +1,4 @@
-package com.qslion.moudles.codegen;
+package com.qslion.moudles.codegen.service.impl;
 
 import static com.qslion.framework.util.DbUtil.getConnection;
 
@@ -11,6 +11,7 @@ import com.qslion.moudles.codegen.entity.DdColumn;
 import com.qslion.moudles.codegen.entity.DdConstraint;
 import com.qslion.moudles.codegen.entity.DdConstraint.ConstraintType;
 import com.qslion.moudles.codegen.entity.DdTable;
+import com.qslion.moudles.codegen.service.ColumnHandler;
 import java.math.BigDecimal;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;

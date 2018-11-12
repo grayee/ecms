@@ -1,4 +1,4 @@
-package com.qslion.moudles.codegen;
+package com.qslion.moudles.codegen.service;
 
 import com.qslion.moudles.codegen.entity.DdColumn;
 
