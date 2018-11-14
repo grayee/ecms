@@ -1,6 +1,6 @@
 #阿里云源
 # deb cdrom:[Ubuntu 16.04 LTS _Xenial Xerus_ - Release amd64 (20160420.1)]/ xenial main restricted
-deb-src http://archive.ubuntu.com/ubuntu xenial main restricted #Added by software-properties
+deb-src http://cn.archive.ubuntu.com/ubuntu xenial main restricted #Added by software-properties
 deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted
 deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted multiverse universe #Added by software-properties
 deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted
@@ -18,4 +18,5 @@ deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted multiv
 deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
 deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse
 #deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu xenial stable
-deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable
+deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial stable
+# deb-src [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial stable
