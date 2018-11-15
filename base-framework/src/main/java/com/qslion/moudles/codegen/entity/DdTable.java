@@ -86,7 +86,7 @@ public class DdTable extends BaseEntity<Long> {
         this.tableName = tableName;
     }
 
-    @Column(name = "TABLE_NAME", nullable = false, length = 128)
+    @Column(name = "TABLE_TYPE", nullable = false, length = 8)
     public String getTableType() {
         return tableType;
     }

@@ -6,7 +6,7 @@
   <parent>
     <artifactId>ecms-parent</artifactId>
     <groupId>com.qslion</groupId>
-    <version>1.0</version>
+    <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>ecms-parent</artifactId>
     <groupId>com.qslion</groupId>
-    <version>1.0</version>
+    <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -13,8 +13,13 @@
 
   <name>ecms-web</name>
   <artifactId>ecms-web</artifactId>
-  <version>1.0</version>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
+
+
+  <properties>
+    <docker.image.prefix>ecms</docker.image.prefix>
+  </properties>
 
   <dependencies>
 
@@ -143,6 +148,25 @@
         <version>3.0.1</version>
         <configuration>
           <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+          <imageTags>lasted</imageTags>
+          <!--Dockerfile文件的所在目录-->
+          <dockerDirectory>/</dockerDirectory>
+          <resources>
+            <resource>
+              <targetPath>/</targetPath>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+            </resource>
+          </resources>
         </configuration>
       </plugin>
     </plugins>

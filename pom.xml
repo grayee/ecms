@@ -6,7 +6,7 @@
   <groupId>com.qslion</groupId>
   <artifactId>ecms-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.0</version>
+  <version>0.0.1-SNAPSHOT</version>
   <url>http://www.qslion.com</url>
   <description>ecms project for Spring Boot</description>
 
