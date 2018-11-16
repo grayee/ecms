@@ -42,7 +42,6 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableOAuth2Client
 public class OAuth2ClientConfig {
 
-
     @Autowired
     private OAuth2ClientContext oauth2ClientContext;
 
@@ -52,7 +51,6 @@ public class OAuth2ClientConfig {
     @Bean
     public OAuth2RestTemplate oauth2RestTemplate() {
         OAuth2RestTemplate template = new OAuth2RestTemplate(oAuth2ProtectedResourceDetails(), oauth2ClientContext);
-
         AuthorizationCodeAccessTokenProvider authCodeProvider = new AuthorizationCodeAccessTokenProvider();
         authCodeProvider.setStateMandatory(false);
         AccessTokenProviderChain provider = new AccessTokenProviderChain(

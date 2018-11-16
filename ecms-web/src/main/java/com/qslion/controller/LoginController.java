@@ -8,7 +8,6 @@ import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.Localize;
 import com.qslion.framework.util.SystemConfigUtil;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.OAuth2ClientProperties;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * FORM登录控制类
@@ -70,6 +70,13 @@ public class LoginController extends BaseController {
         return "home";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/api/test")
+    public String test() {
+       logger.info("==================test=============");
+        return "just for api test";
+    }
+
     @RequestMapping(value = "/loginSuccess")
     public String loginSuccess() {
         return "home";
@@ -81,7 +88,7 @@ public class LoginController extends BaseController {
     }
 
     @RequestMapping(value = "/loginFailure")
-    public String loginFailure(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+    public String loginFailure(HttpServletRequest request, ModelMap model) {
         /**
          * see SimpleUrlAuthenticationFailureHandler >>onAuthenticationFailure
          */

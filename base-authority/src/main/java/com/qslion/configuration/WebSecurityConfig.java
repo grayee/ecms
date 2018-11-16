@@ -74,9 +74,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .antMatchers("/**", "/logout", "error**").permitAll()
-            .anyRequest().authenticated().and().csrf()
+        http.antMatcher("/**").authorizeRequests()
+            .antMatchers("/", "/login**", "/logout", "error**").permitAll()
+            .anyRequest().authenticated()
+            .and().csrf()
             // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .csrfTokenRepository(csrfTokenRepository()).and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
             .oauth2Login().loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
