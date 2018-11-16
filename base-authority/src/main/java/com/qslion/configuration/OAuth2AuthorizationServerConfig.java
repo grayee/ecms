@@ -54,6 +54,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
     /**
      * 配置客户端认证详情服务（ClientDetailsService）,定义客户端细节服务中的内存或 JDBC 实现
+     * 用户端为          :  （UserDetailsService）
      *
      * @param clients 客户端认证配置
      * @throws Exception 异常

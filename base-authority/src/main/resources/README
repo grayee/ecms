@@ -137,8 +137,10 @@ OAuth2AuthenticationProcessingFilter: 给带有访问令牌的请求加载认证
 >>>>AuthenticationEntryPoint -> DelegatingAuthenticationEntryPoint -> BasicAuthenticationEntryPoint
 >>>>AccessDeniedHandler 非匿名，非记住我时触发;否则触发BasicAuthenticationEntryPoint
 
+通过authenticationEntryPoint.commence()调用端点异常处理器doHandle 方法
 OAuth2AuthenticationEntryPoint -> AbstractOAuth2SecurityExceptionHandler -> WebResponseExceptionTranslator ->
 OAuth2ExceptionRenderer -> DefaultOAuth2ExceptionRenderer -> OAuth2Exception
+
 
 
 
@@ -197,3 +199,34 @@ WWW-Authenticate: Bearer realm="example", error="invalid_token", error_descripti
 >>在请求的headers中新增一个header：key=Authorization，value=Basic Y2xpZW50OnNlY3JldA==
 >>（Y2xpZW50OnNlY3JldA==为64编码，格式：client:secret）
 >>在form-data中传递参数：username（用户账号）、password（用户密码）、grant_type（固定值：password）、scope（作用域）
+
+
+WebSecurityConfigurerAdapter与ResourceServerConfigurerAdapter
+
+WebSecurityConfigurerAdapter(@Order(100))的拦截要优先于ResourceServerConfigurerAdapter(-1)
+
+二者关系
+WebSecurityConfigurerAdapter用于保护oauth相关的endpoints，同时主要作用于用户的登录(form login,Basic auth)
+ResourceServerConfigurerAdapter用于保护oauth要开放的资源，同时主要作用于client端以及token的认证(Bearer auth)
+因此二者是分工协作的
+在WebSecurityConfigurerAdapter不拦截oauth要开放的资源
+    <code>
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+        http.requestMatchers().antMatchers("/oauth/**")
+                .and()
+                .authorizeRequests()
+                .antMatchers("/oauth/**").authenticated();
+    }
+    </code>
+在ResourceServerConfigurerAdapter配置需要token验证的资源
+    <code>
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.requestMatchers().antMatchers("/api/**")
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/**").authenticated();
+    }
+     </code>
