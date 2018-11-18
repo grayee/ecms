@@ -1,13 +1,9 @@
 package com.qslion.configuration;
 
-import java.io.IOException;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.servlet.Filter;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
@@ -16,20 +12,17 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.filter.CompositeFilter;
 
 /**
@@ -50,13 +43,7 @@ public class OAuth2ClientConfig {
 
     @Bean
     public OAuth2RestTemplate oauth2RestTemplate() {
-        OAuth2RestTemplate template = new OAuth2RestTemplate(oAuth2ProtectedResourceDetails(), oauth2ClientContext);
-        AuthorizationCodeAccessTokenProvider authCodeProvider = new AuthorizationCodeAccessTokenProvider();
-        authCodeProvider.setStateMandatory(false);
-        AccessTokenProviderChain provider = new AccessTokenProviderChain(
-            Collections.singletonList(authCodeProvider));
-        template.setAccessTokenProvider(provider);
-        return template;
+        return new OAuth2RestTemplate(oAuth2ProtectedResourceDetails(), oauth2ClientContext);
     }
 
     @Bean
@@ -105,8 +92,7 @@ public class OAuth2ClientConfig {
         //封装获取token方法
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         filter.setRestTemplate(template);
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(
-            client.getResource().getUserInfoUri(), client.getClient().getClientId());
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getUserInfoUrl(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
         filter.setTokenServices(tokenServices);
         return filter;
@@ -123,33 +109,42 @@ public class OAuth2ClientConfig {
         registration.setOrder(-100);
         return registration;
     }
-
     @Bean
-    @ConfigurationProperties("github")
     public ClientResources github() {
-        return new ClientResources();
+        return new ClientResources(CommonOAuth2Provider.GITHUB.name().toLowerCase());
     }
-
     @Bean
-    @ConfigurationProperties("facebook")
     public ClientResources facebook() {
-        return new ClientResources();
+        return new ClientResources(CommonOAuth2Provider.FACEBOOK.name().toLowerCase());
     }
 
     private class ClientResources {
 
-        @NestedConfigurationProperty
         private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
 
-        @NestedConfigurationProperty
-        private ResourceServerProperties resource = new ResourceServerProperties();
+        private String userInfoUrl;
+
+        public ClientResources(String registrationId) {
+            ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(registrationId);
+            client.setAccessTokenUri(clientRegistration.getProviderDetails().getTokenUri());
+            client.setClientId(clientRegistration.getClientId());
+            client.setClientSecret(clientRegistration.getClientSecret());
+            client.setGrantType(clientRegistration.getAuthorizationGrantType().getValue());
+            client.setScope(Lists.newArrayList(clientRegistration.getScopes()));
+            client.setUserAuthorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri());
+        }
 
         public AuthorizationCodeResourceDetails getClient() {
             return client;
         }
 
-        public ResourceServerProperties getResource() {
-            return resource;
+        public String getUserInfoUrl() {
+            return userInfoUrl;
+        }
+
+        public ClientResources setUserInfoUrl(String userInfoUrl) {
+            this.userInfoUrl = userInfoUrl;
+            return this;
         }
     }
 }

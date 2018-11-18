@@ -70,15 +70,22 @@ OAuth 2.0 提供方实现
 
 Spring以 Security 过滤器链需要以下各端来实现 OAuth 2.0 认证服务(Authorization Server)：
 
-AuthorizationEndpoint 服务于认证请求。默认 URL： /oauth/authorize。
->>/oauth/token?grant_type=password #请求授权token
->>/oauth/token?grant_type=refresh_token #刷新token
+#AuthorizationEndpoint 服务于认证请求, 根据用户认证获得授权码。默认 URL：
+* POST  /oauth/authorize
+* GET /oauth/authorize
 
-TokenEndpoint 服务于访问令牌的请求。默认 URL： /oauth/token。
+#TokenEndpoint 服务于访问令牌的请求。默认 URL： /oauth/token。
+* /oauth/token?grant_type=password #请求授权token
+* /oauth/token?grant_type=refresh_token #刷新token
 
-CheckTokenEndpoint 校验token 。默认 URL: /oauth/check_token
+# CheckTokenEndpoint 校验token,可以用于远程解码令牌  。默认 URL:
+* /oauth/check_token
 
-WhitelabelApprovalEndpoint 默认 URL: /oauth/confirm_access
+# WhitelabelApprovalEndpoint 显示授权服务器的确认页,默认 URL:
+* /oauth/confirm_access
+
+# WhitelabelErrorEndpoint 显示授权服务器的错误页
+* /oauth/error
 
 一般情况下，创建两个配置类，一个继承AuthorizationServerConfigurerAdapter，一个继承WebSecurityConfigurerAdapter，
 再去复写里面的方法。

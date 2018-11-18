@@ -9,7 +9,6 @@ import com.qslion.framework.util.Localize;
 import com.qslion.framework.util.SystemConfigUtil;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.OAuth2ClientProperties;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,9 +37,6 @@ public class LoginController extends BaseController {
     private AuUserService auUserService;
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
-
-    @Autowired
-    private OAuth2ClientProperties oAuth2ClientProperties;
 
     @Autowired
     OAuth2RestTemplate oAuth2RestTemplate;
