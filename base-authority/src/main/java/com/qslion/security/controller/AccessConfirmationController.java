@@ -1,4 +1,4 @@
-package com.qslion.security;
+package com.qslion.security.controller;
 
 import java.security.Principal;
 import java.util.LinkedHashMap;

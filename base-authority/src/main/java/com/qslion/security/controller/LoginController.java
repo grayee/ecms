@@ -1,4 +1,4 @@
-package com.qslion.controller;
+package com.qslion.security.controller;
 
 
 import com.qslion.core.entity.AuUser;
