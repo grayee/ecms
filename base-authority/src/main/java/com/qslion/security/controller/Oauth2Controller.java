@@ -1,5 +1,6 @@
 package com.qslion.security.controller;
 
+import com.google.common.collect.Lists;
 import com.qslion.core.entity.AuUser;
 import java.util.Base64;
 import java.util.Collections;
@@ -21,6 +22,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -52,6 +55,9 @@ public class Oauth2Controller {
     @Autowired
     OAuth2RestTemplate oAuth2RestTemplate;
 
+    @Autowired
+    ClientDetailsService clientDetailsService;
+
     @PostMapping(value = "/login")
     public ResponseEntity<OAuth2AccessToken> login(@RequestBody @Valid AuUser loginDTO, BindingResult bindingResult,
         HttpServletResponse response) throws Exception {
@@ -70,7 +76,10 @@ public class Oauth2Controller {
             map.put("username", Collections.singletonList(loginDTO.getUsername()));
             map.put("password", Collections.singletonList(loginDTO.getPassword()));
 
+            ClientDetails clientDetails = clientDetailsService.loadClientByClientId(oAuth2ClientProperties.getClientId());
+
             OAuth2ProtectedResourceDetails oAuth2ProtectedResourceDetails = new ResourceOwnerPasswordResourceDetails();
+            ((ResourceOwnerPasswordResourceDetails) oAuth2ProtectedResourceDetails).setScope(Lists.newArrayList(clientDetails.getScope()));
 
             map.put("grant_type", Collections.singletonList(oAuth2ProtectedResourceDetails.getGrantType()));
             map.put("scope", oAuth2ProtectedResourceDetails.getScope());
