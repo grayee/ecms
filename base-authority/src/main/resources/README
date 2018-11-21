@@ -1,3 +1,12 @@
+Spring Security的核心思想是用户授权和资源认证。认证访问系统的用户，而授权则是用户可以访问的资源
+
+* 认证是调用authenticationManager.authenticate()方法来获得证书authentication，一般我们采用用户名、密码方式认证，
+那么authentication的实现类就是UsernamePasswordAuthentication。
+
+* 授权是让用户可以访问哪些资源，一般在WebSecurityConfigurerApdater的继承类中编写。
+
+
+
 https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
 
 注意：
@@ -109,7 +118,6 @@ Spring以 Security 过滤器链需要以下各端来实现 OAuth 2.0 认证服�
 下面的过滤器用于实现 OAuth 2.0 资源服务(Resource Server)：
 OAuth2AuthenticationProcessingFilter: 给带有访问令牌的请求加载认证。
 
-
 #TokenGranter#
 >>1.ResourceOwnerPasswordTokenGranter ==> password密码模式
 >>2.AuthorizationCodeTokenGranter ==> authorization_code授权码模式
@@ -163,6 +171,16 @@ OAuth2ExceptionRenderer -> DefaultOAuth2ExceptionRenderer -> OAuth2Exception
 9.SessionManagementFilter：session相关的过滤器，常用来防止session-fixation protection attack，以及限制同一用户开启多个会话的数量
 10.ExceptionTranslationFilter：异常处理过滤器
 11.FilterSecurityInterceptor：web应用安全的关键Filter
+
+
+
+ClientCredentialsTokenEndpointFilter: 从parameter中抽取client_id,client_secret信息，并进行client的身份验证
+BasicAuthenticationFilter: parameter中没有客户端信息时从header Authorization Basic XXXX中抽取client信息,其中XXXX为Base64(clientId:clientSecret)。
+OAuth2AuthenticationProcessingFilter: 从request中提取access_token(BearTokenExtractor)，构建PreAuthenticatedAuthenticationToken并验证,
+ 构建后的authentication参数如下，
+ tokenType="Bearer"，
+ principal=token值。
+ 再根据OAuth2AuthenticationManager验证该authentication的合法性。
 
 
 使用token的方式也有两种：
