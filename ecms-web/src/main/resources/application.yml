@@ -2,8 +2,8 @@
 logging:
    config: classpath:config/log4j2.xml
    level:
-       root: INFO
-       org.springframework.web: ERROR
+       root: info
+       org.springframework.security: debug
        org.hibernate: ERROR
 #spring
 spring:
@@ -39,9 +39,9 @@ spring:
           client-secret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
       provider:
         ecms-oauth-provider:
-          authorization-uri: http://localhost:8080/oauth/authorize
-          token-uri: http://localhost:8080/oauth/token
-          user-info-uri: http://my-auth-server/userinfo
+          authorization-uri: http://localhost:8080/ecms/oauth/authorize
+          token-uri: http://localhost:8080/ecms/oauth/token
+          user-info-uri: http://localhost:8080/userinfo
           user-info-authentication-method: header
   quartz:
       #相关属性配置

@@ -1,25 +1,6 @@
 package com.qslion.security.filter;
 
-import java.util.Map;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.OAuth2ClientProperties;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
-import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * oauth 自定义异常处理器
@@ -33,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class AuAuthenticationEntryPoint extends OAuth2AuthenticationEntryPoint {
 
-    @Autowired
+ /*   @Autowired
     private OAuth2ClientProperties oAuth2ClientProperties;
     @Autowired
     private BaseOAuth2ProtectedResourceDetails baseOAuth2ProtectedResourceDetails;
@@ -85,5 +66,5 @@ public class AuAuthenticationEntryPoint extends OAuth2AuthenticationEntryPoint {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

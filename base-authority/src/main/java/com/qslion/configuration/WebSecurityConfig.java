@@ -76,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**").authorizeRequests()
-            .antMatchers("/", "/login**", "/logout", "error**").permitAll()
+            .antMatchers("/", "/login/**", "/logout", "error**").permitAll()
             .anyRequest().authenticated()
             .and().csrf()
             // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -92,8 +92,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and().exceptionHandling().accessDeniedPage("/accessDenied")
             .and().csrf().disable()
             //session管理,失效后跳转
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login")
-            .and()
+            //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login")
+            //.and()
             //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
             .sessionManagement().maximumSessions(1).expiredUrl("/login");
     }

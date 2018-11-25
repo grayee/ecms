@@ -16,6 +16,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties.Provider;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,10 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -55,17 +57,14 @@ public class Oauth2Controller extends BaseController {
 
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
-
-    @Autowired
-    OAuth2RestTemplate oAuth2RestTemplate;
-
     @Autowired
     ClientDetailsService clientDetailsService;
-
     @Autowired
-    ClientRegistrationRepository clientRegistrationRepository;
+    private OAuth2ClientContext oauth2ClientContext;
+    @Autowired
+    private OAuth2ClientProperties oAuth2ClientProperties;
 
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/login/test")
     public ResponseEntity<OAuth2AccessToken> login(HttpServletRequest request,
         @RequestBody @Validated LoginDTO loginDTO, HttpServletResponse response) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -96,11 +95,13 @@ public class Oauth2Controller extends BaseController {
         authReqBody.put("scope", Lists.newArrayList(clientDetails.getScope()));
         //HttpEntity
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(authReqBody, httpHeaders);
-        ClientRegistration clientRegistration = clientRegistrationRepository
-            .findByRegistrationId("ecms-oauth-provider");
+
+        Provider provider = oAuth2ClientProperties.getProvider().get("ecms-oauth-provider");
+
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
         //获取 Token
-        ResponseEntity<OAuth2AccessToken> body = oAuth2RestTemplate.exchange(
-            clientRegistration.getProviderDetails().getTokenUri(), HttpMethod.POST, httpEntity,
+        ResponseEntity<OAuth2AccessToken> body = oAuth2RestTemplate.exchange(provider.getTokenUri(), HttpMethod.POST, httpEntity,
             OAuth2AccessToken.class);
         OAuth2AccessToken oAuth2AccessToken = body.getBody();
         response.addCookie(new Cookie("access_token", oAuth2AccessToken.getTokenValue()));
