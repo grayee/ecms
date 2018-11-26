@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2Clien
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -28,6 +29,8 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -64,6 +67,8 @@ public class Oauth2Controller extends BaseController {
     @Autowired
     private OAuth2ClientProperties oAuth2ClientProperties;
 
+    private static final String ECMS_PROVIDER = "ecms-oauth-provider";
+
     @PostMapping(value = "/login/test")
     public ResponseEntity<OAuth2AccessToken> login(HttpServletRequest request,
         @RequestBody @Validated LoginDTO loginDTO, HttpServletResponse response) {
@@ -74,8 +79,8 @@ public class Oauth2Controller extends BaseController {
         //这里需要注意为 Basic 而非 Bearer
         if (header != null && header.startsWith("Basic ")) {
             //Http Basic 验证 base64 clientId:clientSecret
-            httpHeaders.set("Authorization", header);
-
+            httpHeaders.set(HttpHeaders.AUTHORIZATION, header);
+            httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
             try {
                 String[] tokens = this.extractAndDecodeHeader(header, request);
                 assert tokens.length == 2;
@@ -96,13 +101,20 @@ public class Oauth2Controller extends BaseController {
         //HttpEntity
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(authReqBody, httpHeaders);
 
-        Provider provider = oAuth2ClientProperties.getProvider().get("ecms-oauth-provider");
+        Provider provider = oAuth2ClientProperties.getProvider().get(ECMS_PROVIDER);
 
         ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        resourceDetails.setUsername(loginDTO.getUsername());
+        resourceDetails.setPassword(loginDTO.getPassword());
+        resourceDetails.setAccessTokenUri(provider.getTokenUri());
+        resourceDetails.setClientId(clientDetails.getClientId());
+        resourceDetails.setClientSecret(clientDetails.getClientSecret());
+
         OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
+        oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
         //获取 Token
-        ResponseEntity<OAuth2AccessToken> body = oAuth2RestTemplate.exchange(provider.getTokenUri(), HttpMethod.POST, httpEntity,
-            OAuth2AccessToken.class);
+        ResponseEntity<OAuth2AccessToken> body = oAuth2RestTemplate.exchange(provider.getTokenUri(),
+            HttpMethod.POST, httpEntity, OAuth2AccessToken.class);
         OAuth2AccessToken oAuth2AccessToken = body.getBody();
         response.addCookie(new Cookie("access_token", oAuth2AccessToken.getTokenValue()));
         response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getTokenValue()));
@@ -196,5 +208,10 @@ public class Oauth2Controller extends BaseController {
             isRobot = robot;
             return this;
         }
+    }
+
+    public static void main(String[] args) {
+        System.out
+            .println(Base64.getEncoder().encodeToString("client_id_1234567890:client_secret_1234567890".getBytes()));
     }
 }
