@@ -20,7 +20,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2Clien
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties.Provider;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,10 +28,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.ui.Model;
@@ -112,14 +110,11 @@ public class Oauth2Controller extends BaseController {
 
         OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
         oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
-        //获取 Token
-        ResponseEntity<OAuth2AccessToken> body = oAuth2RestTemplate.exchange(provider.getTokenUri(),
-            HttpMethod.POST, httpEntity, OAuth2AccessToken.class);
-        OAuth2AccessToken oAuth2AccessToken = body.getBody();
-        response.addCookie(new Cookie("access_token", oAuth2AccessToken.getTokenValue()));
-        response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getTokenValue()));
-        return body;
 
+        OAuth2AccessToken oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
+        response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
+        response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
+        return ResponseEntity.ok(oAuth2AccessToken);
     }
 
     @RequestMapping("/userinfo")
@@ -129,8 +124,7 @@ public class Oauth2Controller extends BaseController {
         OAuth2AuthorizedClient authorizedClient =
             this.authorizedClientService.loadAuthorizedClient(
                 authentication.getAuthorizedClientRegistrationId(), authentication.getName());
-        OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
-        System.out.println(accessToken.getTokenValue());
+        System.out.println(authorizedClient.getAccessToken().getTokenValue());
         Map userAttributes = Collections.emptyMap();
         String userInfoEndpointUri = authorizedClient.getClientRegistration()
             .getProviderDetails().getUserInfoEndpoint().getUri();
