@@ -67,18 +67,13 @@ public class Oauth2Controller extends BaseController {
 
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
-    @PostMapping(value = "/login/test")
+    @PostMapping(value = "/login/oauth")
     public ResponseEntity<OAuth2AccessToken> login(HttpServletRequest request,
         @RequestBody @Validated LoginDTO loginDTO, HttpServletResponse response) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-
         String clientId = StringUtils.EMPTY;
         String header = request.getHeader("Authorization");
         //这里需要注意为 Basic 而非 Bearer
         if (header != null && header.startsWith("Basic ")) {
-            //Http Basic 验证 base64 clientId:clientSecret
-            httpHeaders.set(HttpHeaders.AUTHORIZATION, header);
-            httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
             try {
                 String[] tokens = this.extractAndDecodeHeader(header, request);
                 assert tokens.length == 2;
@@ -89,36 +84,29 @@ public class Oauth2Controller extends BaseController {
         }
 
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-
-        //授权请求信息
-        MultiValueMap<String, String> authReqBody = new LinkedMultiValueMap<>();
-        authReqBody.put("username", Collections.singletonList(loginDTO.getUsername()));
-        authReqBody.put("password", Collections.singletonList(loginDTO.getPassword()));
-        authReqBody.put("grant_type", Lists.newArrayList(clientDetails.getAuthorizedGrantTypes()));
-        authReqBody.put("scope", Lists.newArrayList(clientDetails.getScope()));
-        //HttpEntity
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(authReqBody, httpHeaders);
-
-        Provider provider = oAuth2ClientProperties.getProvider().get(ECMS_PROVIDER);
-
-        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
-        resourceDetails.setUsername(loginDTO.getUsername());
-        resourceDetails.setPassword(loginDTO.getPassword());
-        resourceDetails.setAccessTokenUri(provider.getTokenUri());
-        resourceDetails.setClientId(clientDetails.getClientId());
-        resourceDetails.setClientSecret(clientDetails.getClientSecret());
-
-        OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
+        ResourceOwnerPasswordResourceDetails resources = getResourceOwnerPasswordResourceDetails(loginDTO, clientDetails);
+        OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resources, oauth2ClientContext);
         oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
-
         OAuth2AccessToken oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
         response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
         response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
         return ResponseEntity.ok(oAuth2AccessToken);
     }
 
+    private ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResourceDetails(LoginDTO loginDTO,
+        ClientDetails clientDetails ) {
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        resourceDetails.setUsername(loginDTO.getUsername());
+        resourceDetails.setPassword(loginDTO.getPassword());
+        Provider provider = oAuth2ClientProperties.getProvider().get(ECMS_PROVIDER);
+        resourceDetails.setAccessTokenUri(provider.getTokenUri());
+        resourceDetails.setClientId(clientDetails.getClientId());
+        resourceDetails.setClientSecret(clientDetails.getClientSecret());
+        return resourceDetails;
+    }
+
     @RequestMapping("/userinfo")
-    public String userinfo(Model model, OAuth2AuthenticationToken authentication) {
+    public Map userinfo(Model model, OAuth2AuthenticationToken authentication) {
         // authentication.getAuthorizedClientRegistrationId() returns the
         // registrationId of the Client that was authorized during the Login flow
         OAuth2AuthorizedClient authorizedClient =
@@ -135,7 +123,7 @@ public class Oauth2Controller extends BaseController {
                 .build().get().uri(userInfoEndpointUri).retrieve().bodyToMono(Map.class).block();
         }
         model.addAttribute("userAttributes", userAttributes);
-        return "userinfo";
+        return userAttributes;
     }
 
     private ExchangeFilterFunction oauth2Credentials(OAuth2AuthorizedClient authorizedClient) {
