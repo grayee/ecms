@@ -135,15 +135,13 @@ public abstract class AbstractEngine implements CodeCreator {
      * @param templateName 模板名称
      * @param filePath 文件
      * @param dataModel 数据
-     * @throws IOException ex
      */
-    void writeToFile(String templateName, String filePath, Map<String, Object> dataModel) throws IOException {
+    void writeToFile(String templateName, String filePath, Map<String, Object> dataModel){
         Path path = prepareFile(filePath);
         try (Writer writer = Files.newBufferedWriter(path)) {
             Template template = prepareTemplate(templateName);
             template.process(dataModel, writer);
             writer.flush();
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

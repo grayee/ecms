@@ -1,11 +1,8 @@
 package com.qslion.moudles.codegen.service.impl;
 
-import com.google.common.base.CaseFormat;
-import com.qslion.framework.util.JSONUtils;
 import com.qslion.moudles.codegen.datamodel.impl.EntityDataModel;
 import com.qslion.moudles.codegen.ddl.TableMetaData;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,9 +20,8 @@ public class CodeGenerator extends AbstractEngine {
         TableMetaData tableMetadata = new DbProvider().getTableMetaData(tableName).get(tableName);
 
         Map<String, Object> dataModel = new EntityDataModel()
-            .setClassName(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
             .setTableName(tableName)
-            .setPackagePath(String.format("%s.%s", projectConfig.getPackagePath(), "entity"))
+            .setBasePackage(projectConfig.getPackagePath())
             .build();
 
         new CodeMaker()
@@ -61,10 +57,10 @@ public class CodeGenerator extends AbstractEngine {
 
 
     public static void main(String[] args) throws Exception {
-        // new CodeGenerator().generateAll("au_user");
-        DbProvider provider = new DbProvider();
+         new CodeGenerator().generateEntity("au_user");
+     /*   DbProvider provider = new DbProvider();
         List<String> list = provider.getTableNames();
         Map<String, TableMetaData> map = provider.getTableMetaData();
-        System.out.println(JSONUtils.writeValueAsString(map));
+        System.out.println(JSONUtils.writeValueAsString(map));*/
     }
 }

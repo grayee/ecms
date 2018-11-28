@@ -12,6 +12,16 @@ import java.util.Set;
 public class ServiceImplDataModel extends DataModel {
 
     @Override
+    public String getPackagePath() {
+        return null;
+    }
+
+    @Override
+    public String getClassName() {
+        return null;
+    }
+
+    @Override
     public Set<String> getImports() {
         return null;
     }

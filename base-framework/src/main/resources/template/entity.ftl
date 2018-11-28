@@ -17,7 +17,7 @@ import ${import};
 */
 @Entity
 @Table(name = "${tableName}")
-public class ${className} extends BaseEntity<Long> implements UserDetails {
+public class ${className} extends ${extends}<Long> implements UserDetails {
 
   private String username;
   @NotBlank(message = "密码不能为空", groups = {AddGroup.class})

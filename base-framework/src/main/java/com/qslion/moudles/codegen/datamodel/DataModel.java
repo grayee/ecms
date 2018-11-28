@@ -1,10 +1,8 @@
 package com.qslion.moudles.codegen.datamodel;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * ecms
@@ -14,59 +12,33 @@ import java.util.TreeSet;
  */
 public abstract class DataModel extends HashMap<String, Object> {
 
-    private String packagePath;
-    private String className;
-    protected String extendsClassName;
-    protected Class<?> extendsClass;
-    protected Set<String> imports = new TreeSet<>();
-    protected Set<String> implementList = new HashSet<>();
-    protected boolean serializable = false;
+    protected String basePackage;
+    private boolean serializable = false;
+    protected String tableName;
 
-    private String tableName;
+    /**
+     * 包路径
+     *
+     * @return 包路径
+     */
+    public abstract String getPackagePath();
 
-    public String getPackagePath() {
-        return packagePath;
-    }
-
-    public DataModel setPackagePath(String packagePath) {
-        this.packagePath = packagePath;
-        return this;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public DataModel setClassName(String className) {
-        this.className = className;
-        return this;
-    }
+    public abstract String getClassName();
 
     public abstract Set<String> getImports();
 
-    public DataModel setImports(Set<String> imports) {
-        this.imports = imports;
-        return this;
-    }
-
-    public DataModel addImports(String addImport) {
-        this.imports.add(addImport);
-        return this;
-    }
-
     public abstract Set<String> getImplements();
 
-    public DataModel setImplements(Set<String> implementList) {
-        this.implementList = implementList;
-        return this;
-    }
-
-    public DataModel addImplements(String addImplement) {
-        this.implementList.add(addImplement);
-        return this;
-    }
-
     public abstract String getExtends();
+
+    public String getBasePackage() {
+        return basePackage;
+    }
+
+    public DataModel setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
+        return this;
+    }
 
     public String getTableName() {
         return tableName;
