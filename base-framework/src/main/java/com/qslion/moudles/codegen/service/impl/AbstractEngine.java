@@ -1,10 +1,5 @@
 package com.qslion.moudles.codegen.service.impl;
 
-import com.baomidou.mybatisplus.toolkit.StringUtils;
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
@@ -23,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -43,7 +37,7 @@ public abstract class AbstractEngine implements CodeCreator {
     protected final Logger logger = LogManager.getLogger(this.getClass());
 
     private static final String FILE_FTL_EXT = ".ftl";
-    private static final String FILE_JAVA_EXT = ".java";
+
 
     /**
      * 模板配置
@@ -85,20 +79,6 @@ public abstract class AbstractEngine implements CodeCreator {
         return dataMap;
     }
 
-    String getFilePath(String tableName, String subPkg, String... suffix) {
-        String className = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName);
-        String packageName = String.format("%s.%s", projectConfig.getPackagePath(), subPkg);
-        String fileName = className + (suffix.length > 0 ? suffix[0] : StringUtils.EMPTY) + FILE_JAVA_EXT;
-        String rootPath = System.getProperty("user.dir");
-        List<String> paths = Lists.newArrayList();
-        paths.add(rootPath);
-        paths.add(projectConfig.getProjectName()+ File.separator + "src"
-            + File.separator + "main" + File.separator + "java");
-        paths.addAll(Splitter.on(".").splitToList(packageName));
-        paths.add(fileName);
-        return Joiner.on(File.separator).join(paths);
-    }
-
     private Path prepareFile(String filePath) {
         Path path = Paths.get(filePath);
         try {
@@ -136,7 +116,7 @@ public abstract class AbstractEngine implements CodeCreator {
      * @param filePath 文件
      * @param dataModel 数据
      */
-    void writeToFile(String templateName, String filePath, Map<String, Object> dataModel){
+    public void writeToFile(String templateName, String filePath, Map<String, Object> dataModel){
         Path path = prepareFile(filePath);
         try (Writer writer = Files.newBufferedWriter(path)) {
             Template template = prepareTemplate(templateName);

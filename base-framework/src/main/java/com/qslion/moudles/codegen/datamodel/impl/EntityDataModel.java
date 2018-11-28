@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.moudles.codegen.datamodel.DataModel;
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +18,7 @@ import javax.persistence.Table;
  */
 public class EntityDataModel extends DataModel {
 
-    protected Set<String> implementList = new HashSet<>();
+    private static final String ENTITY_NAME = "entity";
 
     @Override
     public Set<String> getImports() {
@@ -44,21 +43,17 @@ public class EntityDataModel extends DataModel {
     }
 
     @Override
+    public String getFtl() {
+        return String.format("%s.%s", ENTITY_NAME, FILE_FTL_EXT);
+    }
+
+    @Override
     public String getPackagePath() {
-        return String.format("%s.%s", basePackage, "entity");
+        return String.format("%s.%s", basePackage, ENTITY_NAME);
     }
 
     @Override
     public String getClassName() {
         return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName);
-    }
-
-    public Set<String> getImplementList() {
-        return implementList;
-    }
-
-    public EntityDataModel setImplementList(Set<String> implementList) {
-        this.implementList = implementList;
-        return this;
     }
 }
