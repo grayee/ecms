@@ -3,6 +3,7 @@
 package com.qslion.configuration;
 
 
+import com.qslion.security.AuAccessDeniedHandler;
 import com.qslion.security.filter.AuAuthenticationEntryPoint;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,8 +21,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    private static final String API_RESOURCE_ID = "api";
-
     /**
      * ResourceServerSecurityConfigurer 创建了OAuth2核心过滤器OAuth2AuthenticationProcessingFilter,
      * 并为其提供固定的AuthenticationManager即OAuth2AuthenticationManager,它并没有将OAuth2AuthenticationManager
@@ -33,7 +32,8 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources.authenticationEntryPoint(new AuAuthenticationEntryPoint())
-            .resourceId(API_RESOURCE_ID).stateless(true);
+            .accessDeniedHandler(new AuAccessDeniedHandler())
+            .stateless(true);
     }
 
     /**
@@ -44,7 +44,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         //所有符合/api**的请求都要进行认证
-        http.antMatcher("/api/*")
+        http.antMatcher("/*")
             .authorizeRequests()// 授权通过以后
             .anyRequest()
             .authenticated();//允许认证过的用户访问

@@ -11,16 +11,16 @@ import java.io.Serializable;
  */
 public class RestResult implements Serializable {
 
-    /**
-     * 异常堆栈的精简信息
-     */
-    private String message;
 
     /**
      * 内部自定义的返回值编码，{@link ResultCode} 它是对错误更加详细的编码
      */
     private Integer code;
 
+    /**
+     * 异常堆栈的精简信息
+     */
+    private String message;
 
     private Object data;
 
@@ -41,6 +41,14 @@ public class RestResult implements Serializable {
         return result;
     }
 
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -49,13 +57,6 @@ public class RestResult implements Serializable {
         this.message = message;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
 
     public Object getData() {
         return data;
