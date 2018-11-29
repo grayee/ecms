@@ -58,18 +58,18 @@ public class AuUserController extends BaseController<AuUser, Long> {
      * 增加
      */
     @PostMapping
-    public String save(HttpServletRequest request, HttpServletResponse response,
-        @Validated @RequestBody AuUser auUser) {
+    public Long save(HttpServletRequest request, HttpServletResponse response,
+        @Validated @RequestBody AuUser user) {
         String parentRelId = "";
        /* AuPartyRelation relation = partyRelationService.get(parentRelId);
         AuParty auParty = relation.getAuParty();
         entity.setAuParty(auParty);
         entity.setLoginId(entity.getUsername());
         auUserService.insert(entity);*/
-        String encrypt = passwordEncoder.encode(auUser.getPassword());
-        auUser.setPassword(encrypt);
-        auUserService.save(auUser);
-        return "";
+        String encrypt = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encrypt);
+        AuUser auUser = auUserService.save(user);
+        return auUser.getId();
     }
 
     /**

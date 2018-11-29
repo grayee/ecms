@@ -11,6 +11,8 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.validation.annotation.Validated;
@@ -63,12 +65,11 @@ public class CompanyController extends BaseController<AuCompany, String> {
      * 从页面的表单获取团体关系id，并删除团体关系及相关的权限记录
      */
     @DeleteMapping
-    public boolean delete(@RequestBody Long[] ids) {
-        if (ids != null && ids.length > 0) {
+    public boolean delete(@RequestBody List<Long> ids) {
+        if (CollectionUtils.isNotEmpty(ids)) {
             return companyService.remove(Lists.newArrayList(ids));
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

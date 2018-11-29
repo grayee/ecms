@@ -10,8 +10,11 @@ import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.core.util.TreeNode;
+import com.qslion.framework.enums.ResultCode;
+import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +31,6 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     @Autowired
     public AuResourceRepository resourceRepository;
 
-    public List<AuMenu> queryByCondition(String paramString) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     public List<TreeNode> getFuncMenuTree(AuParty visitor, String path) {
         //System.out.println(visitor.getName()+"====>>>>>"+visitor.getAuPartyType().getId()+"===>"+ GlobalConstants.getPartyTypeEmpl());
@@ -49,17 +48,18 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
 
                 //存在子节点则添加子节点到父节点中，并设置标记
                 if (!funcTree.isLeaf()) {
-                   // List<TreeNode> leafNodeList = this.getChildTreeNode(funcTree.getId(), funcMenus, path);
-                   // rootNode.setChildren(leafNodeList);
+                    // List<TreeNode> leafNodeList = this.getChildTreeNode(funcTree.getId(), funcMenus, path);
+                    // rootNode.setChildren(leafNodeList);
                 } else if (funcTree.isLeaf()) {
                     Map<String, Object> attributeMap = Maps.newHashMap();
-                    attributeMap.put("url", String.format(path + "/pages/function/menu/input?menuId=%s", funcTree.getId()));
-                   // rootNode.setAttributes(attributeMap);
+                    attributeMap
+                        .put("url", String.format(path + "/pages/function/menu/input?menuId=%s", funcTree.getId()));
+                    // rootNode.setAttributes(attributeMap);
                 }
 
                 //rootNode.setHasChildren(false);
                 //将根节点及子节点数据添加到结果集中
-               // resultList.add(rootNode);
+                // resultList.add(rootNode);
             }
         }
         return resultList;
@@ -69,17 +69,19 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         List<TreeNode> resultList = new ArrayList<TreeNode>();
         for (AuMenu funcTree : nodeList) {
             //TreeNode leafNode = new TreeNode(funcTree.getId(), funcTree.getName());
-            if (funcTree.getParentId() != null && !funcTree.getId().equals(parentId) && funcTree.getParentId().equals(parentId)) {
+            if (funcTree.getParentId() != null && !funcTree.getId().equals(parentId) && funcTree.getParentId()
+                .equals(parentId)) {
                 //存在子节点则添加子节点到父节点中，并设置标记
                 if (!funcTree.isLeaf()) {
-                   // List<TreeNode> leafNodeList = this.getChildTreeNode(funcTree.getId(), nodeList, path);
-                   // leafNode.setChildren(leafNodeList);
+                    // List<TreeNode> leafNodeList = this.getChildTreeNode(funcTree.getId(), nodeList, path);
+                    // leafNode.setChildren(leafNodeList);
                 } else if (funcTree.isLeaf()) {
                     Map<String, Object> attributeMap = Maps.newHashMap();
-                    attributeMap.put("url", String.format(path + "/pages/function/menu/input?menuId=%s", funcTree.getId()));
-                   // leafNode.setAttributes(attributeMap);
+                    attributeMap
+                        .put("url", String.format(path + "/pages/function/menu/input?menuId=%s", funcTree.getId()));
+                    // leafNode.setAttributes(attributeMap);
                 }
-               // resultList.add(leafNode);
+                // resultList.add(leafNode);
             }
         }
         return resultList;
@@ -112,5 +114,40 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     public boolean checkUnique(AuMenu funcTree) {
         // TODO Auto-generated method stub
         return false;//auMenuRepository.checkUnique(funcTree);
+    }
+
+    @Override
+    public AuMenu insert(AuMenu menu) {
+        if (checkUnique(menu)) {
+            throw new BusinessException(ResultCode.DATA_ALREADY_EXISTED);
+        }
+        AuMenu parent = getParent(menu);
+        if (parent.isLeaf()) {
+            parent.setLeaf(false);
+            parent.setModifyDate(new Date());
+            update(parent);
+        }
+        return save(menu);
+    }
+
+    @Override
+    public boolean remove(List<Long> ids) {
+        for (Long id : ids) {
+            AuMenu auMenu = findById(id);
+            if (auMenu.isLeaf()) {
+                if (getParentChilds(auMenu).size() < 0) {
+                    //父节点没有子节点则更新isLeaf状态
+                    AuMenu parent = getParent(auMenu);
+                    parent.setLeaf(true);
+                    update(parent);
+                }
+                delete(id);
+            } else {
+                //此处删除子节点，亦可抛出异常不删除
+                List<AuMenu> childrens = getChildrens(auMenu);
+                delete(childrens);
+            }
+        }
+        return true;
     }
 }

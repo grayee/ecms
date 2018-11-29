@@ -8,7 +8,6 @@ import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
-import com.qslion.core.enums.AuPartyType;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
@@ -35,14 +34,8 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Override
     public AuCompany insert(AuCompany company, Long parentCode) {
         //添加公司团体
-        AuParty auParty = new AuParty();
-        auParty.setAuPartyType(AuPartyType.COMPANY);
-        auParty.setName(company.getCompanyName());
-        auParty.setRemark(company.getRemark());
-        auParty.setEnableStatus(company.getEnableStatus());
-        auParty.setInherit(true);
-        auParty.setReal(true);
-
+        AuParty auParty = company.buildAuParty();
+        company.setAuParty(auParty);
         //添加团体关系
         AuPartyRelation auPartyRelation = new AuPartyRelation();
         auPartyRelation.setAuParty(auParty);
@@ -57,8 +50,6 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         auPartyRelation.setAuPartyRelationType(AuPartyRelationType.ADMINISTRATIVE);
         partyRelationRepository.save(auPartyRelation);
 
-        //添加公司
-        company.setAuParty(auParty);
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
             company.setCompanyNo(RandomStringUtils.random(10));

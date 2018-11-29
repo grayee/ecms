@@ -1,6 +1,8 @@
 package com.qslion.custom.entity;
 
+import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
+import com.qslion.core.enums.AuPartyType;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -162,5 +164,17 @@ public class AuDepartment extends PartyEntity {
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public AuParty buildAuParty() {
+        auParty = new AuParty();
+        auParty.setAuPartyType(AuPartyType.DEPARTMENT);
+        auParty.setName(getDeptName());
+        auParty.setRemark(getRemark());
+        auParty.setEnableStatus(getEnableStatus());
+        auParty.setInherit(true);
+        auParty.setReal(true);
+        return auParty;
     }
 }

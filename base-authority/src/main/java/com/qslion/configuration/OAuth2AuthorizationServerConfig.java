@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
@@ -55,13 +56,10 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Autowired
     private TokenStore jwtTokenStore;
 
-
-
-  /*  @Bean
+    @Bean
     public TokenStore tokenStore() {
         return new JdbcTokenStore(dataSource);
     }
-*/
 
     @Bean
     public ClientDetailsService clientDetails() {
@@ -89,11 +87,11 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
         //通过注入 AuthenticationManager 来开启密码授权
         endpoints.authenticationManager(authenticationManager)
-            .tokenStore(jwtTokenStore)
+            .tokenStore(tokenStore())
             .userDetailsService(userDetailService);
         //endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory))  --redis 存储TOKEN
         endpoints.tokenServices(defaultTokenServices());
-
+/*
         TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> enhancerList = new ArrayList<>();
         enhancerList.add(jwtTokenEnhancer);
@@ -101,7 +99,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         enhancerChain.setTokenEnhancers(enhancerList);
 
         endpoints.tokenEnhancer(enhancerChain)
-            .accessTokenConverter(jwtAccessTokenConverter);
+            .accessTokenConverter(jwtAccessTokenConverter);*/
     }
 
     /**
@@ -111,11 +109,11 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Bean
     public DefaultTokenServices defaultTokenServices() {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(jwtTokenStore);
+        tokenServices.setTokenStore(tokenStore());
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(clientDetails());
         // token有效期自定义设置，默认12小时
-        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 12);
+        tokenServices.setAccessTokenValiditySeconds(60);
         //默认30天，这里修改
         tokenServices.setRefreshTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30));
         return tokenServices;

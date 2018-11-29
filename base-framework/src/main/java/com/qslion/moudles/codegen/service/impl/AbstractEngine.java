@@ -102,16 +102,6 @@ public abstract class AbstractEngine implements CodeCreator {
     /**
      * 数据模型+模板=输出
      *
-     * @param codeMaker 数据
-     * @throws IOException ex
-     */
-    void writeToFile(CodeMaker codeMaker) throws IOException {
-        this.writeToFile(codeMaker.getFtl(), codeMaker.getFilePath(), codeMaker.getDataModel());
-    }
-
-    /**
-     * 数据模型+模板=输出
-     *
      * @param templateName 模板名称
      * @param filePath 文件
      * @param dataModel 数据

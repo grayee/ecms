@@ -20,13 +20,12 @@ import javax.persistence.OneToOne;
  * @date 2018/4/30 13:56.
  */
 @MappedSuperclass
-public class PartyEntity extends BaseEntity<Long> {
+public abstract class PartyEntity extends BaseEntity<Long> {
 
     @JsonIgnore
     protected AuParty auParty;
     protected EnableStatus enableStatus;
     protected Date enableDate;
-
 
     /**
      * 根据两张表的主键关联
@@ -62,4 +61,5 @@ public class PartyEntity extends BaseEntity<Long> {
         this.enableDate = enableDate;
     }
 
+    public abstract AuParty buildAuParty();
 }

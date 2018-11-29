@@ -35,4 +35,9 @@ public class DaoDataModel extends DataModel {
     public String getExtends() {
         return null;
     }
+
+    @Override
+    public String getFtl() {
+        return null;
+    }
 }
