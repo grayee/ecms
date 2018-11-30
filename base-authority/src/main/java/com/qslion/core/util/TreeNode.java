@@ -7,38 +7,48 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 修改备注：
+ * easy ui tree
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 19:15.
  */
-
 public class TreeNode {
 
     private enum NodeState {
         /**
          * 打开状态
          */
-        open,
-        closed
+        OPEN,
+        CLOSED
     }
 
     private String id;
 
     /**
-     * easy ui tree
+     * 显示的节点文本
      */
-
-    //显示的节点文本
     private String text;
-    //显示的节点图标CSS类ID
+    /**
+     * /显示的节点图标CSS类ID
+     */
     private String iconCls;
-    //节点状态
-    private NodeState state = NodeState.open;
-    //被添加到节点的自定义属性
+    /**
+     * 节点状态
+     */
+    private NodeState state = NodeState.OPEN;
+    /**
+     * 被添加到节点的自定义属性
+     */
     private Map<String, Object> attributes;
 
-    //是否选中
+    /**
+     * 是否选中
+     */
     private boolean checked;
 
-    //子节点数据
+    /**
+     * 子节点数据
+     */
     private List<TreeNode> children;
 
     public TreeNode() {

@@ -86,7 +86,6 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
         return loginUser;
     }
 
-
     @Override
     public String getCurrentUsername() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -97,15 +96,11 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof UserDetails) {
-
             return ((UserDetails) principal).getUsername();
-
         }
 
         if (principal instanceof Principal) {
-
             return ((Principal) principal).getName();
-
         }
 
         return String.valueOf(principal);

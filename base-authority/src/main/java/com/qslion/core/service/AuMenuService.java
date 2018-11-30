@@ -11,25 +11,27 @@ import java.util.List;
 
 /**
  * 修改备注：
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 19:15.
  */
-
 public interface AuMenuService extends IGenericService<AuMenu, Long> {
 
 
     /**
      * 根据访问者（用户，机构，角色）获得菜单树
      */
-    List<TreeNode> getFuncMenuTree(AuParty visitor, String path);
+    List<TreeNode> getMenuTree(AuParty visitor, String path);
 
     /**
      * 取得当前菜单节点下的所有子节点
      */
-    List<AuMenu> getChildrens(AuMenu auMenu);
+    List<AuMenu> getChildren(AuMenu auMenu);
 
     /**
      * 取得当前菜单节点的父节点下的所有子节点
      */
-    List<AuMenu> getParentChilds(AuMenu auMenu);
+    List<AuMenu> getParentChildren(AuMenu auMenu);
 
     /**
      * 取得当前菜单节点的父节点

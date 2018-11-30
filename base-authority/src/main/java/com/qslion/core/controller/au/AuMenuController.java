@@ -14,10 +14,8 @@ import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,18 +69,17 @@ public class AuMenuController extends BaseController<AuMenu, Long> {
         return false;
     }
 
-    //动态构建功能菜单
     @RequestMapping(value = "/tree")
-    public List<TreeNode> getFuncMenuTree(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        String status, AuParty visitor) {
+    public List<TreeNode> getMenuTree(HttpServletRequest request, String status, AuParty visitor) {
         logger.info("-------------------------构建系统菜单---------------------------------------");
+        String loginId = auUserService.getCurrentUsername();
       /*  if (null == visitor.getAuPartyType()) {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             *//*AuUser auUser=userService.get("loginId", userDetails.getUsername());
             visitor=auUser.getAuParty();*//*
         }*/
         //根据登录用户获取菜单树
-        List<TreeNode> resultList = this.auMenuService.getFuncMenuTree(visitor, request.getContextPath());
+        List<TreeNode> resultList = this.auMenuService.getMenuTree(visitor, request.getContextPath());
         return resultList;
     }
 

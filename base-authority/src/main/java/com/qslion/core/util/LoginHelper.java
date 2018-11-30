@@ -356,7 +356,7 @@ public class LoginHelper {
     }
 
     public static int validate(String login_id, String password) {
-        List lResult = auMenuService.queryByCondition("login_id='" + login_id + "'");
+        List lResult = null;//auMenuService.queryByCondition("login_id='" + login_id + "'");
 
         if ((lResult != null) && (lResult.size() > 0)) {
             AuUser userVo = (AuUser) lResult.get(0);

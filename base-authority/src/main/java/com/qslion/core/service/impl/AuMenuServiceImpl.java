@@ -14,10 +14,11 @@ import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
@@ -32,11 +33,12 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     public AuResourceRepository resourceRepository;
 
 
-    public List<TreeNode> getFuncMenuTree(AuParty visitor, String path) {
-        //System.out.println(visitor.getName()+"====>>>>>"+visitor.getAuPartyType().getId()+"===>"+ GlobalConstants.getPartyTypeEmpl());
+    @Override
+    public List<TreeNode> getMenuTree(AuParty auParty, String path) {
+        //System.out.println(auParty.getName()+"====>>>>>"+auParty.getAuPartyType().getId()+"===>"+ GlobalConstants.getPartyTypeEmpl());
 
-        //visitor.getAuAuthorize().getAuResources();
-        List<TreeNode> resultList = new ArrayList<TreeNode>();
+        //auParty.getAuAuthorize().getAuResources();
+        List<TreeNode> resultList = new ArrayList<>();
         //所有菜单功能树,后期改成根据登录用户的权限查询
         List<AuMenu> funcMenus = null;
         //转换成ztree控件需要的格式
@@ -87,33 +89,32 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         return resultList;
     }
 
-    public List<AuMenu> getChildrens(AuMenu funcTree) {
-        // TODO Auto-generated method stub
-        List<AuMenu> result = null;
-        String propertyName = "parentCode";
-        //result=this.auMenuRepository.findByProperty(propertyName, funcTree.getTotalCode());
-        return result;
-    }
-
-    public List<AuMenu> getParentChilds(AuMenu funcTree) {
-        // TODO Auto-generated method stub
-        List<AuMenu> result;
-        String propertyName = "parentCode";
-        result = null;//this.auMenuRepository.findByProperty(propertyName, funcTree.getParentCode());
-        return result;
-    }
-
-    public AuMenu getParent(AuMenu funcTree) {
-        // TODO Auto-generated method stub
-        String propertyName = "totalCode";
-        AuMenu parent = null;//(AuMenu) this.auMenuRepository.findByProperty(propertyName, funcTree.getParentCode()).get(0);
-        return parent;
+    @Override
+    public List<AuMenu> getChildren(AuMenu menu) {
+        return auMenuRepository.findAll(
+            (Specification<AuMenu>) (root, criteriaQuery, criteriaBuilder) ->
+                criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), menu.getId()))
+                    .getRestriction());
     }
 
     @Override
-    public boolean checkUnique(AuMenu funcTree) {
+    public List<AuMenu> getParentChildren(AuMenu menu) {
+        return auMenuRepository.findAll(
+            (Specification<AuMenu>) (root, criteriaQuery, criteriaBuilder) ->
+                criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), menu.getParentId()))
+                    .getRestriction());
+    }
+
+    @Override
+    public AuMenu getParent(AuMenu menu) {
+        Long parentId = menu.getParentId();
+        return auMenuRepository.findById(parentId).orElse(menu);
+    }
+
+    @Override
+    public boolean checkUnique(AuMenu menu) {
         // TODO Auto-generated method stub
-        return false;//auMenuRepository.checkUnique(funcTree);
+        return auMenuRepository.exists(Example.of(menu));
     }
 
     @Override
@@ -124,7 +125,6 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         AuMenu parent = getParent(menu);
         if (parent.isLeaf()) {
             parent.setLeaf(false);
-            parent.setModifyDate(new Date());
             update(parent);
         }
         return save(menu);
@@ -135,7 +135,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         for (Long id : ids) {
             AuMenu auMenu = findById(id);
             if (auMenu.isLeaf()) {
-                if (getParentChilds(auMenu).size() < 0) {
+                if (getParentChildren(auMenu).size() < 0) {
                     //父节点没有子节点则更新isLeaf状态
                     AuMenu parent = getParent(auMenu);
                     parent.setLeaf(true);
@@ -144,8 +144,8 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
                 delete(id);
             } else {
                 //此处删除子节点，亦可抛出异常不删除
-                List<AuMenu> childrens = getChildrens(auMenu);
-                delete(childrens);
+                List<AuMenu> children = getChildren(auMenu);
+                delete(children);
             }
         }
         return true;
