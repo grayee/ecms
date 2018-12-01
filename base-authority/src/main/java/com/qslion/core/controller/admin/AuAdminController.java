@@ -13,7 +13,7 @@ import org.springframework.ui.ModelMap;
  * 修改备注：
  */
 @Controller
-public class AuAdminAction extends BaseController<AuUser, String> {
+public class AuAdminController extends BaseController<AuUser> {
 
     /**
      *

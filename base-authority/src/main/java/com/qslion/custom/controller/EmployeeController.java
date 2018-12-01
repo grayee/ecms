@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/org/employee")
-public class EmployeeController extends BaseController<AuEmployee, Long> {
+public class EmployeeController extends BaseController<AuEmployee> {
 
 
     @Autowired

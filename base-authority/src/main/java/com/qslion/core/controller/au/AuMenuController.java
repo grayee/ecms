@@ -5,15 +5,16 @@ package com.qslion.core.controller.au;
 
 
 import com.qslion.core.entity.AuMenu;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.core.service.AuResourceService;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.Pageable;
+import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.util.JSONUtils;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/au/menu")
-public class AuMenuController extends BaseController<AuMenu, Long> {
+public class AuMenuController extends BaseController<AuMenu> {
 
     @Autowired
     public AuMenuService auMenuService;
@@ -47,6 +48,11 @@ public class AuMenuController extends BaseController<AuMenu, Long> {
     @GetMapping(value = "/detail/{id}")
     public AuMenu detail(@PathVariable Long id) {
         return auMenuService.findById(id);
+    }
+
+    @GetMapping(value = "/list")
+    public Pager<AuMenu> list(Pageable pageable) {
+        return auMenuService.findPage(pageable);
     }
 
     @PutMapping
@@ -70,17 +76,12 @@ public class AuMenuController extends BaseController<AuMenu, Long> {
     }
 
     @RequestMapping(value = "/tree")
-    public List<TreeNode> getMenuTree(HttpServletRequest request, String status, AuParty visitor) {
-        logger.info("-------------------------构建系统菜单---------------------------------------");
-        String loginId = auUserService.getCurrentUsername();
-      /*  if (null == visitor.getAuPartyType()) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            *//*AuUser auUser=userService.get("loginId", userDetails.getUsername());
-            visitor=auUser.getAuParty();*//*
-        }*/
+    public List<TreeNode> getMenuTree() {
+        String username = auUserService.getCurrentUsername();
         //根据登录用户获取菜单树
-        List<TreeNode> resultList = this.auMenuService.getMenuTree(visitor, request.getContextPath());
-        return resultList;
+        List<TreeNode> menuTree = this.auMenuService.getMenuTree(username);
+        logger.info("用户：{} 菜单树JSON:{}", username, JSONUtils.writeValueAsString(menuTree));
+        return menuTree;
     }
 
 }

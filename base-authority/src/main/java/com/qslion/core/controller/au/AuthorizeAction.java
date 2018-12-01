@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
  * 修改人：Administrator 修改时间：2011-8-17 下午01:57:05 修改备注：
  */
 @Controller
-public class AuthorizeAction extends BaseController<AuAuthorize, Long> {
+public class AuthorizeAction extends BaseController<AuAuthorize> {
 
     /**
      *

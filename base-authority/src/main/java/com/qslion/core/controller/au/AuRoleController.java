@@ -25,16 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 /**
- * @descrip: ecms 代码自动生成
- * @copyright: Copyright © 2013-2020 ecms, All Rights Reserved
- * @author: zhangrg
- * @link: <a href=http://www.ecms.com>北京青胜蓝科技股份有限公司</a>
- * @create_date: 2013-04-29 11:38:40
- * @update_date: 2013-04-29 11:38:40
+ * 角色控制类
+ *
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
  */
 
 @Controller
-public class AuRoleAction extends BaseController<AuRole, String> {
+public class AuRoleController extends BaseController<AuRole> {
 
     @Autowired
     public AuRoleService auRoleService;

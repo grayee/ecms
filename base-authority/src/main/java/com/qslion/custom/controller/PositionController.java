@@ -33,12 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/organization/position")
-public class PositionController extends BaseController<AuPosition, String> {
+public class PositionController extends BaseController<AuPosition> {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -6804522170136946987L;
     @Autowired
     public AuPositionService positionService;
     @Autowired

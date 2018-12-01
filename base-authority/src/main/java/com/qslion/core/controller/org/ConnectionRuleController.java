@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/org/connection/rule")
-public class ConnectionRuleController extends BaseController<AuConnectionRule, Long> {
+public class ConnectionRuleController extends BaseController<AuConnectionRule> {
 
     @Autowired
     private ConnectionRuleService connectionRuleService;

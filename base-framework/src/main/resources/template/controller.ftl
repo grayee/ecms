@@ -14,31 +14,21 @@ import ${servicePackageName}.${entityClassName}Service;
 import com.qslion.framework.bean.Pager;
 
 import org.apache.log4j.Logger;
-import com.qslion.framework.web.action.SpringMVCBaseAction;
+import com.qslion.framework.controller.BaseController;
 
 /**
-* @descrip: ${descript}
-* @copyright: ${copyright}
-* @author: ${author}
-* @link: ${link}
-* @create_date: ${createDate?string("yyyy-MM-dd HH:mm:ss")}
-* @update_date: ${modifyDate?string("yyyy-MM-dd HH:mm:ss")}
+* ${description}
 *
+* @author ${author}
+* @date ${.now?string("yyyy-MM-dd HH:mm:ss")}.
 */
+@ResponseResult
+@RestController
+@RequestMapping(value = "${requestPath}")
+public class ${entityClassName}Action extends BaseController<${entityClassName}, ${idType}> {
 
-@Controller
-public class ${entityClassName}Action extends SpringMVCBaseAction<${entityClassName}, ${idType}> {
-
-
-private static Logger logger=Logger.getLogger(${entityClassName}Action.class);
-
-@Resource
+@Autowired
 public ${entityClassName}Service ${entityClassName?uncap_first}Service;
-
-@Resource
-public void setService(${entityClassName}Service ${entityClassName?uncap_first}Service){
-super.setService(${entityClassName?uncap_first}Service);
-}
 
 /**
 * 列表

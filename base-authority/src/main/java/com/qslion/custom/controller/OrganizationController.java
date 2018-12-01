@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/organization")
-public class OrganizationController extends BaseController<AuPartyRelation, Long> {
+public class OrganizationController extends BaseController<AuPartyRelation> {
 
     @Autowired
     public PartyRelationService partyRelationService;

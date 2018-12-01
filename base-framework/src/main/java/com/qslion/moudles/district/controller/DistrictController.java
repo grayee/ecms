@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/district")
-public class DistrictController extends BaseController<CommonDistrict, Long> {
+public class DistrictController extends BaseController<CommonDistrict> {
 
     @Autowired
     private DistrictService districtService;

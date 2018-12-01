@@ -6,19 +6,23 @@ import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/au/user")
-public class AuUserController extends BaseController<AuUser, Long> {
+public class AuUserController extends BaseController<AuUser> {
 
     @Autowired
     private AuUserService auUserService;
@@ -47,25 +51,15 @@ public class AuUserController extends BaseController<AuUser, Long> {
      * 列表
      */
     @GetMapping(value = "/list")
-    public String list(HttpServletRequest request, HttpServletResponse response,
-        @ModelAttribute("pager") Pager<AuUser> pager) {
-        //pager = auUserService.findByPager(pager);
-
-        return "";
+    public Pager<AuUser> list(Pageable pageable) {
+        return auUserService.findPage(pageable);
     }
 
     /**
      * 增加
      */
     @PostMapping
-    public Long save(HttpServletRequest request, HttpServletResponse response,
-        @Validated @RequestBody AuUser user) {
-        String parentRelId = "";
-       /* AuPartyRelation relation = partyRelationService.get(parentRelId);
-        AuParty auParty = relation.getAuParty();
-        entity.setAuParty(auParty);
-        entity.setLoginId(entity.getUsername());
-        auUserService.insert(entity);*/
+    public Long save(@Validated @RequestBody AuUser user) {
         String encrypt = passwordEncoder.encode(user.getPassword());
         user.setPassword(encrypt);
         AuUser auUser = auUserService.save(user);
@@ -75,55 +69,36 @@ public class AuUserController extends BaseController<AuUser, Long> {
     /**
      * 删除
      */
-    @RequestMapping(value = "/admin/user/deletes.jspx")
-    public String deletes(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) {
-        //auUserService.delete(ids);
-        return "";
+    @DeleteMapping
+    public boolean delete(@RequestBody List<Long> ids) {
+        if (CollectionUtils.isNotEmpty(ids)) {
+            ids.forEach(id -> auUserService.delete(id));
+            return true;
+        }
+        return false;
     }
 
     /**
      * 更新
      */
-    @RequestMapping(value = "/admin/user/update.jspx")
-    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        @ModelAttribute("entity") AuUser entity) {
-        auUserService.update(entity);
-        return "";
-    }
-
-    /**
-     * 编辑，新增
-     */
-    @RequestMapping(value = "/admin/user/input.jspx")
-    public String input(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        @ModelAttribute("entity") AuUser entity) {
-        String id = request.getParameter("ids");
-        if (StringUtils.isNotEmpty(id)) {
-            //entity = auUserService.get(id);
-            model.addAttribute("entity", entity);
-        }
-        List<TreeNode> resultList = null;//partyRelationService.getPartyRelationTree(GlobalConstants.getRelTypeComp(), false);
-        model.addAttribute("data", JSON.toJSON(resultList));
-        return "";
+    @PutMapping
+    public boolean update(@RequestBody AuUser user) {
+        AuUser auUser = auUserService.update(user);
+        return auUser == null;
     }
 
     /**
      * 查看，明细
      */
-    @RequestMapping(value = "/admin/user/view.jspx")
-    public String detail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String id = request.getParameter("ids");
-        if (StringUtils.isNotEmpty(id)) {
-            //AuUser entity = auUserService.get(id);
-            //model.addAttribute("entity", entity);
-        }
-        return "";
+    @GetMapping(value = "/detail/{id}")
+    public AuUser detail(@PathVariable Long id) {
+        return auUserService.findById(id);
     }
 
     /**
      * 授权管理>>用户授权
      */
-    @RequestMapping(value = "/admin/user/getAuthUser.jspx")
+    @RequestMapping(value = "/getAuthUser")
     public String getAuthUser(HttpServletRequest request, HttpServletResponse response, ModelMap model,
         @ModelAttribute("pager") Pager<AuUser> pager) {
         // pager = auUserService.findByPager(pager);
@@ -134,7 +109,7 @@ public class AuUserController extends BaseController<AuUser, Long> {
     /**
      * 授权管理>>用户授权>>用户关联角色
      */
-    @RequestMapping(value = "/admin/user/setReferenceRole.jspx")
+    @RequestMapping(value = "/setReferenceRole")
     public String setReferenceRole(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String roleIds = "";
         String userId = "";
@@ -149,10 +124,11 @@ public class AuUserController extends BaseController<AuUser, Long> {
         return "";
     }
 
+
     /**
      * 跳转用户授权
      */
-    @RequestMapping(value = "/admin/user/grantAuthDetail.jspx")
+    @RequestMapping(value = "/grantAuthDetail")
     public String grantAuthDetail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String userId = "";
         // AuUser user = auUserService.get(userId);
@@ -161,21 +137,4 @@ public class AuUserController extends BaseController<AuUser, Long> {
         // model.addAttribute("user", user);
         return "";
     }
-
-
-/*    SELECT parent.*
-    FROM au_partyrelation AS node,
-    au_partyrelation AS parent
-    WHERE node.lft BETWEEN parent.lft AND parent.rgt
-    AND node.name='test001'
-    ORDER BY parent.lft;
-
-
-    SELECT node.*
-    FROM au_partyrelation AS node,
-    au_partyrelation AS parent
-    WHERE node.lft BETWEEN parent.lft AND parent.rgt
-    AND parent.name='青胜蓝科技股份有限公司'
-    ORDER BY node.lft;
-*/
 }

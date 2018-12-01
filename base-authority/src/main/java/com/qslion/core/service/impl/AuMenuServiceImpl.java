@@ -4,10 +4,14 @@
 package com.qslion.core.service.impl;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.qslion.core.dao.AuMenuRepository;
 import com.qslion.core.dao.AuResourceRepository;
+import com.qslion.core.dao.AuUserRepository;
 import com.qslion.core.entity.AuMenu;
-import com.qslion.core.entity.AuParty;
+import com.qslion.core.entity.AuPermission;
+import com.qslion.core.entity.AuRole;
+import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.core.util.TreeNode;
 import com.qslion.framework.enums.ResultCode;
@@ -16,13 +20,17 @@ import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
- * 修改备注：
+ * 菜单Service实现
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 19:15.
  */
 @Service
 public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implements AuMenuService {
@@ -31,62 +39,52 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     private AuMenuRepository auMenuRepository;
     @Autowired
     public AuResourceRepository resourceRepository;
-
+    @Autowired
+    private AuUserRepository auUserRepository;
 
     @Override
-    public List<TreeNode> getMenuTree(AuParty auParty, String path) {
-        //System.out.println(auParty.getName()+"====>>>>>"+auParty.getAuPartyType().getId()+"===>"+ GlobalConstants.getPartyTypeEmpl());
+    public List<TreeNode> getMenuTree(String username) {
+        AuUser auUser = auUserRepository.findUserByUsername(username);
+        Set<AuRole> auRoleSet = auUser.getRoles();
+        auUser.getUserGroups().forEach(auUserGroup -> auRoleSet.addAll(auUserGroup.getRoles()));
 
-        //auParty.getAuAuthorize().getAuResources();
-        List<TreeNode> resultList = new ArrayList<>();
-        //所有菜单功能树,后期改成根据登录用户的权限查询
-        List<AuMenu> funcMenus = null;
-        //转换成ztree控件需要的格式
-        for (AuMenu funcTree : funcMenus) {
-            //获取跟节点
-            if (funcTree.getParentId().equals(funcTree.getId())) {
-                //TreeNode rootNode = new TreeNode(funcTree.getId(), funcTree.getName());
-                //rootNode.setIconCls(funcTree.getIconClass());
+        Set<AuPermission> permissionSet = Sets.newHashSet();
+        auRoleSet.forEach(auRole -> permissionSet.addAll(auRole.getPermissions()));
 
-                //存在子节点则添加子节点到父节点中，并设置标记
-                if (!funcTree.isLeaf()) {
-                    // List<TreeNode> leafNodeList = this.getChildTreeNode(funcTree.getId(), funcMenus, path);
-                    // rootNode.setChildren(leafNodeList);
-                } else if (funcTree.isLeaf()) {
-                    Map<String, Object> attributeMap = Maps.newHashMap();
-                    attributeMap
-                        .put("url", String.format(path + "/pages/function/menu/input?menuId=%s", funcTree.getId()));
-                    // rootNode.setAttributes(attributeMap);
-                }
+        //当前用户所拥有的权限菜单集合
+        Set<AuMenu> menuSet = Sets.newHashSet();
+        permissionSet.forEach(permission -> menuSet.addAll(permission.getMenus()));
 
-                //rootNode.setHasChildren(false);
-                //将根节点及子节点数据添加到结果集中
-                // resultList.add(rootNode);
-            }
-        }
-        return resultList;
+        List<TreeNode> menuTree = new ArrayList<>();
+        menuSet.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId())).forEach(menu -> {
+            TreeNode rootNode = getTreeNode(menuSet, menu);
+            menuTree.add(rootNode);
+        });
+        return menuTree;
     }
 
-    private List<TreeNode> getChildTreeNode(String parentId, List<AuMenu> nodeList, String path) {
-        List<TreeNode> resultList = new ArrayList<TreeNode>();
-        for (AuMenu funcTree : nodeList) {
-            //TreeNode leafNode = new TreeNode(funcTree.getId(), funcTree.getName());
-            if (funcTree.getParentId() != null && !funcTree.getId().equals(parentId) && funcTree.getParentId()
-                .equals(parentId)) {
-                //存在子节点则添加子节点到父节点中，并设置标记
-                if (!funcTree.isLeaf()) {
-                    // List<TreeNode> leafNodeList = this.getChildTreeNode(funcTree.getId(), nodeList, path);
-                    // leafNode.setChildren(leafNodeList);
-                } else if (funcTree.isLeaf()) {
-                    Map<String, Object> attributeMap = Maps.newHashMap();
-                    attributeMap
-                        .put("url", String.format(path + "/pages/function/menu/input?menuId=%s", funcTree.getId()));
-                    // leafNode.setAttributes(attributeMap);
-                }
-                // resultList.add(leafNode);
-            }
+    private List<TreeNode> getChildTreeNode(Long parentId, Set<AuMenu> nodeSet) {
+        List<TreeNode> treeNodes = new ArrayList<>();
+        nodeSet.stream().filter(menu -> menu.getParentId() != null && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
+            .forEach(menu -> {
+                TreeNode leafNode = getTreeNode(nodeSet, menu);
+                treeNodes.add(leafNode);
+            });
+        return treeNodes;
+    }
+
+    private TreeNode getTreeNode(Set<AuMenu> nodeList, AuMenu menu) {
+        TreeNode treeNode = new TreeNode(String.valueOf(menu.getId()), menu.getName());
+        treeNode.setIconCls(menu.getIcon());
+        if (menu.isLeaf()) {
+            Map<String, Object> attributeMap = Maps.newHashMap();
+            attributeMap.put("url", String.format("/au/menu/detail?menuId=%s", menu.getId()));
+            treeNode.setAttributes(attributeMap);
+        } else {
+            List<TreeNode> leafNodeList = this.getChildTreeNode(menu.getId(), nodeList);
+            treeNode.setChildren(leafNodeList);
         }
-        return resultList;
+        return treeNode;
     }
 
     @Override

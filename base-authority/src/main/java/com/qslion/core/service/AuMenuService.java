@@ -4,13 +4,12 @@
 package com.qslion.core.service;
 
 import com.qslion.core.entity.AuMenu;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.util.TreeNode;
 import com.qslion.framework.service.IGenericService;
 import java.util.List;
 
 /**
- * 修改备注：
+ * 菜单Service接口
  *
  * @author Gray.Z
  * @date 2018/4/30 19:15.
@@ -21,7 +20,7 @@ public interface AuMenuService extends IGenericService<AuMenu, Long> {
     /**
      * 根据访问者（用户，机构，角色）获得菜单树
      */
-    List<TreeNode> getMenuTree(AuParty visitor, String path);
+    List<TreeNode> getMenuTree(String username);
 
     /**
      * 取得当前菜单节点下的所有子节点

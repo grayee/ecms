@@ -8,7 +8,7 @@ import com.qslion.core.service.LoginLogService;
 import com.qslion.framework.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class LoginLogAction extends BaseController<AuLoginLog, String> {
+public class LoginLogController extends BaseController<AuLoginLog> {
 
     /**
      *

@@ -42,16 +42,6 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
         return userRepository.findUserByUsername(username);
     }
 
-    public int getRecordCount() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public int getRecordCount(String paramString) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     @Override
     public AuUser loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
         logger.info("系统登录通过用户名载入用户信息开始,用户名：{}", username);

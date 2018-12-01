@@ -35,7 +35,7 @@ public class TreeNode {
     /**
      * 节点状态
      */
-    private NodeState state = NodeState.OPEN;
+    private NodeState state = NodeState.CLOSED;
     /**
      * 被添加到节点的自定义属性
      */

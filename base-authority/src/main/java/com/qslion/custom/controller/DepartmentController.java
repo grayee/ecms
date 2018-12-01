@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/org/department")
-public class DepartmentController extends BaseController<AuDepartment, Long> {
+public class DepartmentController extends BaseController<AuDepartment> {
 
     @Autowired
     public AuDepartmentService departmentService;

@@ -21,16 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 /**
- * @descrip: ecms code genarator
- * @copyright: "Copyright © 2013-2020 ecms, All Rights Reserved";
- * @author: "zhangrg";
- * @link: "<a href=http://www.ecms.com>ecms public limit corperation</a>";
- * @create_date: 2014-06-23 14:31:00
- * @update_date: 2014-06-23 14:31:00
+ * 授权控制类
+ *
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
  */
-
 @Controller
-public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
+public class AuAuthorizeController extends BaseController<AuAuthorize> {
 
 
     @Autowired
@@ -112,15 +109,15 @@ public class AuAuthorizeAction extends BaseController<AuAuthorize, String> {
         String funcIds = "";
         String[] funcIdArray = funcIds.split(",");
         //团体自身拥有的权限
-        Set<AuAuthorize> partyAuths =null; //auParty.getAuAuthorizes();//auAuthorizeService.getAuthorizeByPartyId(partyId);
+        Set<AuAuthorize> partyAuths = null; //auParty.getAuAuthorizes();//auAuthorizeService.getAuthorizeByPartyId(partyId);
         for (int i = 0; i < funcIdArray.length; i++) {
             AuMenu functree = null;//auMenuService.get(funcIdArray[i]);
             for (AuAuthorize auth : partyAuths) {
                 AuAuthorize authorize = new AuAuthorize();
-               // authorize.setAuResource(functree.getAuResource());
+                // authorize.setAuResource(functree.getAuResource());
                 authorize.setAuParty(auParty);
                 //authorize.setPartyType(auParty.getAuPartyType().getId());
-               // auParty.getAuAuthorizes().add(authorize);
+                // auParty.getAuAuthorizes().add(authorize);
             }
         }
         //partyService.insert(auParty);
