@@ -58,6 +58,10 @@ public class DdColumn extends BaseEntity<Long> {
     private String category;
     private String remark;
 
+    /**
+     * 将维护权由多的一方来维护
+     * 可以这样考虑：要想一个国家的领导人记住所有人民的名字是不可能的，但可以让所有人民记住领导人的名字！
+     */
     @ManyToOne
     @JoinColumn(name = "TABLE_ID")
     public DdTable getTable() {
