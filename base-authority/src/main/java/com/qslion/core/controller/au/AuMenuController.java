@@ -5,6 +5,7 @@ package com.qslion.core.controller.au;
 
 
 import com.qslion.core.entity.AuMenu;
+import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.core.service.AuResourceService;
 import com.qslion.core.service.AuUserService;
@@ -16,7 +17,9 @@ import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.JSONUtils;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,8 +79,8 @@ public class AuMenuController extends BaseController<AuMenu> {
     }
 
     @RequestMapping(value = "/tree")
-    public List<TreeNode> getMenuTree() {
-        String username = auUserService.getCurrentUsername();
+    public List<TreeNode> getMenuTree(@AuthenticationPrincipal AuUser user) {
+        String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         //根据登录用户获取菜单树
         List<TreeNode> menuTree = this.auMenuService.getMenuTree(username);
         logger.info("用户：{} 菜单树JSON:{}", username, JSONUtils.writeValueAsString(menuTree));

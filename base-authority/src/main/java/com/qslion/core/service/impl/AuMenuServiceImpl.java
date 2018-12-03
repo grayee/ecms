@@ -53,7 +53,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
 
         //当前用户所拥有的权限菜单集合
         Set<AuMenu> menuSet = Sets.newHashSet();
-        permissionSet.forEach(permission -> menuSet.addAll(permission.getMenus()));
+        permissionSet.forEach(permission -> menuSet.add(permission.getResource().getMenu()));
 
         List<TreeNode> menuTree = new ArrayList<>();
         menuSet.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId())).forEach(menu -> {

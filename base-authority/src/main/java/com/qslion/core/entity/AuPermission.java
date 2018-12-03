@@ -2,14 +2,16 @@ package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -22,40 +24,49 @@ import javax.persistence.Table;
 @Table(name = "au_permission")
 public class AuPermission extends BaseEntity<Long> {
 
+    /**
+     * 权限名称
+     */
     private String name;
+    /**
+     * 权限标识
+     */
     private String value;
+    /**
+     * 权限描述
+     */
     private String description;
-    private Short type;
-    private String enableStatus;
+    /**
+     * 权限类型
+     */
+    private PermitType type;
+
+    enum PermitType {
+        /**
+         * 菜单、资源
+         */
+        MENU, RESOURCE
+    }
+
+    private EnableStatus enableStatus;
 
     private Set<AuRole> roles = Sets.newHashSet();
-    private Set<AuMenu> menus = Sets.newHashSet();
-    private Set<AuResource> resources = Sets.newHashSet();
+    /**
+     * 一个资源拥有多个权限
+     */
+    private AuResource resource;
 
-    @ManyToMany(targetEntity = AuPermission.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "au_permission_menu", joinColumns = {
-        @JoinColumn(name = "permission_id")}, inverseJoinColumns = {@JoinColumn(name = "menu_id")})
-    public Set<AuMenu> getMenus() {
-        return menus;
+    @ManyToOne
+    @JoinColumn(name = "RESOURCE_ID")
+    public AuResource getResource() {
+        return resource;
     }
 
-    public void setMenus(Set<AuMenu> menus) {
-        this.menus = menus;
+    public void setResource(AuResource resource) {
+        this.resource = resource;
     }
 
-    @ManyToMany(targetEntity = AuPermission.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "au_permission_resource", joinColumns = {
-        @JoinColumn(name = "permission_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "resource_id")})
-    public Set<AuResource> getResources() {
-        return resources;
-    }
-
-    public void setResources(Set<AuResource> resources) {
-        this.resources = resources;
-    }
-
-    @ManyToMany(targetEntity = AuRole.class, mappedBy = "permissions",fetch= FetchType.EAGER)
+    @ManyToMany(targetEntity = AuRole.class, mappedBy = "permissions", fetch = FetchType.EAGER)
     public Set<AuRole> getRoles() {
         return roles;
     }
@@ -96,21 +107,23 @@ public class AuPermission extends BaseEntity<Long> {
 
     @Basic
     @Column(name = "type", nullable = true)
-    public Short getType() {
+    @Enumerated
+    public PermitType getType() {
         return type;
     }
 
-    public void setType(Short type) {
+    public void setType(PermitType type) {
         this.type = type;
     }
 
     @Basic
     @Column(name = "enable_status", nullable = true, length = 1)
-    public String getEnableStatus() {
+    @Enumerated
+    public EnableStatus getEnableStatus() {
         return enableStatus;
     }
 
-    public void setEnableStatus(String enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
     }
 

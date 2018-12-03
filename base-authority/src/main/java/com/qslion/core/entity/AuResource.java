@@ -7,7 +7,9 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -27,14 +29,26 @@ public class AuResource extends BaseEntity<Long> {
     private Long parentId;
     private String enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
+    private AuMenu menu;
 
-    @ManyToMany(targetEntity = AuPermission.class, mappedBy = "resources",fetch= FetchType.EAGER)
+    @OneToMany(fetch= FetchType.EAGER)
+    @JoinColumn(name = "RESOURCE_ID")
     public Set<AuPermission> getPermissions() {
         return permissions;
     }
 
     public void setPermissions(Set<AuPermission> permissions) {
         this.permissions = permissions;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "resource")
+    public AuMenu getMenu() {
+        return menu;
+    }
+
+    public AuResource setMenu(AuMenu menu) {
+        this.menu = menu;
+        return this;
     }
 
     @Basic

@@ -1,15 +1,16 @@
 package com.qslion.core.entity;
 
-import com.google.common.collect.Sets;
 import com.qslion.core.enums.MenuType;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
-import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -34,15 +35,17 @@ public class AuMenu extends BaseEntity<Long> {
     private String remark;
     private boolean isLeaf;
 
-    private Set<AuPermission> permissions = Sets.newHashSet();
+    private AuResource resource;
 
-    @ManyToMany(targetEntity = AuPermission.class, mappedBy = "menus")
-    public Set<AuPermission> getPermissions() {
-        return permissions;
+    @OneToOne(targetEntity = AuResource.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "resource_id", referencedColumnName = "id")
+    public AuResource getResource() {
+        return resource;
     }
 
-    public void setPermissions(Set<AuPermission> permissions) {
-        this.permissions = permissions;
+    public AuMenu setResource(AuResource resource) {
+        this.resource = resource;
+        return this;
     }
 
     @Basic
