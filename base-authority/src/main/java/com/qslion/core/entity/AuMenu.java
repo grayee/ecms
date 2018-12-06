@@ -221,4 +221,13 @@ public class AuMenu extends BaseEntity<Long> {
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
     }
+
+   public  AuResource buildResource(){
+       AuResource resource = new AuResource();
+       resource.setName(getName());
+       resource.setValue(getUrl());
+       resource.setMenu(this);
+       resource.setEnableStatus(getEnableStatus());
+       return resource;
+   }
 }

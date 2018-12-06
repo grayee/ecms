@@ -15,6 +15,9 @@ public interface DistrictService extends IGenericService<CommonDistrict, Long> {
 
     /**
      * 根据层级获取区划树形
+     *
+     * @param upid 上级ID
+     * @return 区域树
      */
-    List<TreeNode> getDistrctTreeByUpid(String upid);
+    List<TreeNode> getDistrictTreeByUpid(String upid);
 }

@@ -5,14 +5,21 @@ import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuResourceService;
 import com.qslion.core.util.TreeNode;
+import com.qslion.framework.enums.ResultCode;
+import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
- * 修改备注：
+ * 资源Service实现
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 19:15.
  */
 @Service
 public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> implements AuResourceService {
@@ -22,14 +29,16 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
 
 
     @Override
-    public List<AuResource> queryByCondition(String paramString) {
-        // TODO Auto-generated method stub
-        return null;
+    public AuResource insert(AuResource auResource) {
+        if (checkUnique(auResource)) {
+            throw new BusinessException(ResultCode.DATA_ALREADY_EXISTED);
+        }
+        return save(auResource);
     }
 
     @Override
-    public List<TreeNode> getFuncMenuTree(AuUser user, String status, String path) {
-        List<TreeNode> resultList = new ArrayList<TreeNode>();
+    public List<TreeNode> getResourceTree(AuUser user, String status, String path) {
+        List<TreeNode> resultList = new ArrayList<>();
         //所有菜单功能树,后期改成根据登录用户的权限查询
         List<AuResource> funcTreeList = null;//this.resourceDao.findByEnableStatus("1");
         //转换成ztree控件需要的格式
@@ -119,36 +128,30 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
         return resultList;
     }
 
-    public List<AuResource> getChildrens(AuResource funcTree) {
-        // TODO Auto-generated method stub
-        List<AuResource> result;
-        String propertyName = "parentCode";
-        result = null;///this.resourceDao.findByProperty(propertyName, funcTree.getCode());
-        return result;
-    }
-
-    public List<AuResource> getParentChilds(AuResource funcTree) {
-        // TODO Auto-generated method stub
-        List<AuResource> result;
-        String propertyName = "parentCode";
-        result = null;//this.resourceDao.findByProperty(propertyName, funcTree.getParentCode());
-        return result;
-    }
-
-    public AuResource getParent(AuResource funcTree) {
-        // TODO Auto-generated method stub
-        String propertyName = "totalCode";
-        AuResource parent = null;//(AuResource) this.resourceDao.findByProperty(propertyName, funcTree.getParentCode()).get(0);
-        return parent;
+    @Override
+    public List<AuResource> getChildren(AuResource auResource) {
+        return auResourceRepository.findAll(
+            (Specification<AuResource>) (root, criteriaQuery, criteriaBuilder) ->
+                criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), auResource.getId()))
+                    .getRestriction());
     }
 
     @Override
-    public boolean checkUnique(AuResource funcTree) {
-        // TODO Auto-generated method stub
-        return false;//resourceDao.checkUnique(funcTree);
+    public List<AuResource> getParentChildren(AuResource auResource) {
+        return auResourceRepository.findAll(
+            (Specification<AuResource>) (root, criteriaQuery, criteriaBuilder) ->
+                criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), auResource.getParentId()))
+                    .getRestriction());
     }
 
+    @Override
+    public AuResource getParent(AuResource auResource) {
+        Long parentId = auResource.getParentId();
+        return auResourceRepository.findById(parentId).orElse(auResource);
+    }
 
-
-
+    @Override
+    public boolean checkUnique(AuResource auResource) {
+        return auResourceRepository.exists(Example.of(auResource));
+    }
 }

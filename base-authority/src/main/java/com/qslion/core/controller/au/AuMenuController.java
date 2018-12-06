@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 菜单制类
+ * 菜单控制类
  *
  * @author Gray.Z
  * @date 2018/4/21 13:43.

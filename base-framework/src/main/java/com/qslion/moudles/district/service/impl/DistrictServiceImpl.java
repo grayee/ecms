@@ -22,35 +22,36 @@ public class DistrictServiceImpl extends GenericServiceImpl<CommonDistrict, Long
 
     @Autowired
     DistrictRepository districtRepository;
+
     @Override
-    public List<TreeNode> getDistrctTreeByUpid(String upid) {
-        // TODO Auto-generated method stub
-        List<TreeNode> resultList=new ArrayList<TreeNode>();
-        List<CommonDistrict> list=districtRepository.findAll();//findByProperty("upid", Integer.valueOf(upid));
-        for(CommonDistrict district:list){
-            TreeNode treeNode=new TreeNode(district.getId(),district.getName());
-            treeNode.setUrl("admin/district/index.jspx?id="+district.getId());
+    public List<TreeNode> getDistrictTreeByUpid(String upid) {
+        List<TreeNode> resultList = new ArrayList<>();
+        List<CommonDistrict> list = districtRepository.findByUpid(Long.valueOf(upid));
+        for (CommonDistrict district : list) {
+            TreeNode treeNode = new TreeNode(district.getId(), district.getName());
+            treeNode.setUrl("admin/district/index.jspx?id=" + district.getId());
             treeNode.setTarget("rightFrame");
             treeNode.setPid(district.getUpid());
-            boolean hasChildren= false;//districtDao.hasChildren(district.getId());
-            if(hasChildren){
+            boolean hasChildren = false;//districtDao.hasChildren(district.getId());
+            if (hasChildren) {
                 treeNode.setIsParent(true);
-            }else{
+            } else {
                 treeNode.setIsParent(false);
             }
             resultList.add(treeNode);
         }
         return resultList;
     }
-    public List<TreeNode> getChildTreeNode(Long upid,List<CommonDistrict> list){
-        List<TreeNode> resultList=new ArrayList<TreeNode>();
-        for(CommonDistrict district:list){
-            if(district.getUpid().toString().equals(upid)){
-                TreeNode leafNode=null;//new TreeNode(district.getId(),district.getName());
-                leafNode.setUrl("admin/district/index.jspx?id="+district.getId());
+
+    public List<TreeNode> getChildTreeNode(Long upid, List<CommonDistrict> list) {
+        List<TreeNode> resultList = new ArrayList<TreeNode>();
+        for (CommonDistrict district : list) {
+            if (district.getUpid().toString().equals(upid)) {
+                TreeNode leafNode = null;//new TreeNode(district.getId(),district.getName());
+                leafNode.setUrl("admin/district/index.jspx?id=" + district.getId());
                 leafNode.setTarget("rightFrame");
-                List<TreeNode> childList=this.getChildTreeNode(district.getId(), list);
-                if(childList.size()>0){
+                List<TreeNode> childList = this.getChildTreeNode(district.getId(), list);
+                if (childList.size() > 0) {
                     leafNode.setChildren(childList);
                 }
                 resultList.add(leafNode);

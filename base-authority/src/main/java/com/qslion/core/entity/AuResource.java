@@ -2,10 +2,12 @@ package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -27,7 +29,7 @@ public class AuResource extends BaseEntity<Long> {
     private String description;
     private Short type;
     private Long parentId;
-    private String enableStatus;
+    private EnableStatus enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
     private AuMenu menu;
 
@@ -102,12 +104,13 @@ public class AuResource extends BaseEntity<Long> {
     }
 
     @Basic
+    @Enumerated
     @Column(name = "enable_status", nullable = true, length = 1)
-    public String getEnableStatus() {
+    public EnableStatus getEnableStatus() {
         return enableStatus;
     }
 
-    public void setEnableStatus(String enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
     }
 

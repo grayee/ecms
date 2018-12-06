@@ -111,7 +111,6 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
 
     @Override
     public boolean checkUnique(AuMenu menu) {
-        // TODO Auto-generated method stub
         return auMenuRepository.exists(Example.of(menu));
     }
 
@@ -125,6 +124,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             parent.setLeaf(false);
             update(parent);
         }
+        menu.setResource(menu.buildResource());
         return save(menu);
     }
 

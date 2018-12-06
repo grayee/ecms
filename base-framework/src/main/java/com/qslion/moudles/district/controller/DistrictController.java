@@ -33,7 +33,7 @@ public class DistrictController extends BaseController<CommonDistrict> {
     private DistrictService districtService;
 
     //列表
-    @RequestMapping(value = "/admin/district/index.jspx")
+    @RequestMapping(value = "/list")
     public String list(HttpServletRequest request, HttpServletResponse response, CommonDistrict entity,
         @ModelAttribute("pager") Pager<CommonDistrict> pager) {
         entity = new CommonDistrict();
@@ -106,7 +106,7 @@ public class DistrictController extends BaseController<CommonDistrict> {
     @RequestMapping(value = "/admin/district/tree.jspx")
     public String getDistrctTree(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String upid = "";
-        List<TreeNode> resultList = districtService.getDistrctTreeByUpid(upid);
+        List<TreeNode> resultList = districtService.getDistrictTreeByUpid(upid);
         //this.ajaxJson(JSONSerializer.toJSON(resultList).toString(), response);
         return "tree";
     }

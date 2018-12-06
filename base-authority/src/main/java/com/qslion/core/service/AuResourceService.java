@@ -13,34 +13,45 @@ import java.util.List;
  * 修改备注：
  */
 
- public interface AuResourceService extends IGenericService<AuResource, Long> {
+public interface AuResourceService extends IGenericService<AuResource, Long> {
 
-
-      List<AuResource> queryByCondition(String hql);
 
     /**
-     * 根据用户获得菜单树,status用来区分展示和修改状态
+     * 插入
+     *
+     * @param auResource 资源对象
+     * @return 资源对象
      */
-     List<TreeNode> getFuncMenuTree(AuUser user, String status, String path);
+    AuResource insert(AuResource auResource);
+
+    /**
+     * 根据用户获得资源树,status用来区分展示和修改状态
+     */
+    List<TreeNode> getResourceTree(AuUser user, String status, String path);
 
     /**
      * 取得当前菜单节点下的所有子节点
+     *
+     * @param auResource 资源对象
+     * @return 资源列表
      */
-     List<AuResource> getChildrens(AuResource auResource);
+    List<AuResource> getChildren(AuResource auResource);
 
     /**
      * 取得当前菜单节点的父节点下的所有子节点
      */
-     List<AuResource> getParentChilds(AuResource auResource);
+    List<AuResource> getParentChildren(AuResource auResource);
 
     /**
      * 取得当前菜单节点的父节点
+     * @param auResource  资源对象
+     * @return 资源对象
      */
-     AuResource getParent(AuResource auResource);
+    AuResource getParent(AuResource auResource);
 
     /**
      * 检查功能节点名字是否重复
      */
-     boolean checkUnique(AuResource auResource);
+    boolean checkUnique(AuResource auResource);
 
 }

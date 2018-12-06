@@ -3,6 +3,8 @@ package com.qslion.moudles.ddic.entity;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -15,76 +17,75 @@ import javax.persistence.Table;
 @Table(name = "dict_base_data")
 public class DictBaseData extends BaseEntity<Long> {
 
-	/**
-	 * 编码
-	 */
-	private String code;
-	/**
-	 * 类型ID
-	 */
-	private String typeId;
+    /**
+     * 编码
+     */
+    private String code;
 
-	private String name;
-	private String status;
+    private String name;
+    private String status;
 
-	private String description;
-	/**
-	 * 显示序号
-	 */
-	private Short orderNo;
+    private String description;
+    /**
+     * 显示序号
+     */
+    private Short orderNo;
 
+    private DictBaseDataType dictBaseDataType;
 
-	@Column(name = "CODE", length = 64)
-	public String getCode() {
-		return this.code;
-	}
+    @ManyToOne
+    @JoinColumn(name = "TYPE_ID")
+    public DictBaseDataType getDictBaseDataType() {
+        return dictBaseDataType;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public DictBaseData setDictBaseDataType(DictBaseDataType dictBaseDataType) {
+        this.dictBaseDataType = dictBaseDataType;
+        return this;
+    }
 
-	@Column(name = "TYPE_ID", nullable = false, length = 32)
-	public String getTypeId() {
-		return this.typeId;
-	}
+    @Column(name = "CODE", length = 64)
+    public String getCode() {
+        return this.code;
+    }
 
-	public void setTypeId(String typeId) {
-		this.typeId = typeId;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	@Column(name = "NAME", nullable = false, length = 64)
-	public String getName() {
-		return this.name;
-	}
+    @Column(name = "NAME", nullable = false, length = 64)
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Column(name = "STATUS", nullable = false, length = 10)
-	public String getStatus() {
-		return this.status;
-	}
+    @Column(name = "STATUS", nullable = false, length = 10)
+    public String getStatus() {
+        return this.status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	@Column(name = "DESCRIPTION", length = 256)
-	public String getDescription() {
-		return this.description;
-	}
+    @Column(name = "DESCRIPTION", length = 256)
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Column(name = "ORDER_NO", nullable = false)
-	public Short getOrderNo() {
-		return orderNo;
-	}
+    @Column(name = "ORDER_NO", nullable = false)
+    public Short getOrderNo() {
+        return orderNo;
+    }
 
-	public void setOrderNo(Short orderNo) {
-		this.orderNo = orderNo;
-	}
+    public void setOrderNo(Short orderNo) {
+        this.orderNo = orderNo;
+    }
 }
