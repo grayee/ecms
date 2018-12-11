@@ -19,6 +19,7 @@
 
   <properties>
     <docker.image.prefix>ecms</docker.image.prefix>
+    <springfox-version>2.9.2</springfox-version>
   </properties>
 
   <dependencies>
@@ -106,6 +107,18 @@
       <groupId>org.elasticsearch.plugin</groupId>
       <artifactId>transport-netty4-client</artifactId>
       <version>6.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>${springfox-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>${springfox-version}</version>
     </dependency>
 
   </dependencies>
