@@ -3,6 +3,7 @@ package com.qslion.custom.entity;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
+import io.swagger.annotations.ApiModel;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Pattern;
  * @author Gray.Z
  * @date 2018/4/30 13:56.
  */
+@ApiModel(description="公司对象Company")
 @Entity
 @Table(name = "au_company")
 public class AuCompany extends PartyEntity {

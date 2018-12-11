@@ -11,6 +11,9 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
+@Api(value="公司controller",description="公司控制类",tags={"公司控制接口"})
 @ResponseResult
 @RestController
 @RequestMapping(value = "/org/company")
@@ -54,8 +58,10 @@ public class CompanyController extends BaseController<AuCompany> {
      * @param company 公司
      * @return ID
      */
+    @ApiOperation("保存公司信息")
     @PostMapping
-    public Long save(@Validated @RequestBody AuCompany company, @RequestParam(required = false) Long parentCode) {
+    public Long save(@Validated @RequestBody @ApiParam(name = "company", value = "json format", required = true) AuCompany company,
+        @ApiParam(name = "parentCode", value = "上级编码") @RequestParam(required = false) Long parentCode) {
         AuCompany auCompany = companyService.insert(company, parentCode);
         return auCompany.getId();
     }

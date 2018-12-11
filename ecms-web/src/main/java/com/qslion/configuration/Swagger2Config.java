@@ -27,7 +27,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(buildApiInf())
             .select()
-            .apis(RequestHandlerSelectors.basePackage("com.qslion.*.controller"))
+            .apis(RequestHandlerSelectors.basePackage("com.qslion"))
             .paths(PathSelectors.any())
             .build();
     }
@@ -38,6 +38,8 @@ public class Swagger2Config {
             .description("springboot swagger2")
             .termsOfServiceUrl("http://www.ecms.cn")
             .contact(new Contact("gray.z", "http://www.ecms.cn", "grayz@foxmail.com"))
+            .license("copyright 2018 Qslion Company, Inc. All rights reserved.")
+            .version("1.1.0")
             .build();
 
     }
