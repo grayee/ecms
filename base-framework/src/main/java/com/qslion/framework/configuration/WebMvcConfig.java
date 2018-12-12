@@ -1,10 +1,10 @@
-package com.qslion.configuration;
+package com.qslion.framework.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.qslion.framework.interceptor.AuthHandlerInterceptor;
 import com.qslion.framework.interceptor.ResponseResultInterceptor;
-import com.qslion.interceptor.AuthHandlerInterceptor;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;

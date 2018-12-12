@@ -1,4 +1,4 @@
-package com.qslion.interceptor;
+package com.qslion.framework.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
