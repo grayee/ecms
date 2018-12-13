@@ -3,6 +3,7 @@
  */
 package com.qslion.core.service.impl;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.qslion.core.dao.AuMenuRepository;
@@ -17,10 +18,11 @@ import com.qslion.core.util.TreeNode;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
@@ -45,35 +47,25 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     @Override
     public List<TreeNode> getMenuTree(String username) {
         AuUser auUser = auUserRepository.findUserByUsername(username);
-        Set<AuRole> auRoleSet = auUser.getRoles();
-        auUser.getUserGroups().forEach(auUserGroup -> auRoleSet.addAll(auUserGroup.getRoles()));
-
-        Set<AuPermission> permissionSet = Sets.newHashSet();
-        auRoleSet.forEach(auRole -> permissionSet.addAll(auRole.getPermissions()));
-
         //当前用户所拥有的权限菜单集合
-        Set<AuMenu> menuSet = Sets.newHashSet();
-        permissionSet.forEach(permission -> menuSet.add(permission.getResource().getMenu()));
+        List<AuMenu> menuList = Lists.newArrayList();
+        if (auUser.isAdmin()) {
+            menuList.addAll(auMenuRepository.findAll());
+        } else {
+            Set<AuRole> auRoleSet = auUser.getRoles();
+            auUser.getUserGroups().forEach(auUserGroup -> auRoleSet.addAll(auUserGroup.getRoles()));
+            Set<AuPermission> permissionSet = Sets.newHashSet();
+            auRoleSet.forEach(auRole -> permissionSet.addAll(auRole.getPermissions()));
+            permissionSet.forEach(permission -> menuList.add(permission.getResource().getMenu()));
+        }
 
-        List<TreeNode> menuTree = new ArrayList<>();
-        menuSet.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId())).forEach(menu -> {
-            TreeNode rootNode = getTreeNode(menuSet, menu);
-            menuTree.add(rootNode);
-        });
-        return menuTree;
+        menuList.sort(Comparator.comparing(AuMenu::getOrderNo));
+        return menuList.stream()
+            .filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId()))
+            .map(menu -> getTreeNode(menuList, menu)).collect(Collectors.toList());
     }
 
-    private List<TreeNode> getChildTreeNode(Long parentId, Set<AuMenu> nodeSet) {
-        List<TreeNode> treeNodes = new ArrayList<>();
-        nodeSet.stream().filter(menu -> menu.getParentId() != null && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
-            .forEach(menu -> {
-                TreeNode leafNode = getTreeNode(nodeSet, menu);
-                treeNodes.add(leafNode);
-            });
-        return treeNodes;
-    }
-
-    private TreeNode getTreeNode(Set<AuMenu> nodeList, AuMenu menu) {
+    private TreeNode getTreeNode(List<AuMenu> nodeList, AuMenu menu) {
         TreeNode treeNode = new TreeNode(String.valueOf(menu.getId()), menu.getName());
         treeNode.setIconCls(menu.getIcon());
         if (menu.isLeaf()) {
@@ -81,10 +73,18 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             attributeMap.put("url", String.format("/au/menu/detail?menuId=%s", menu.getId()));
             treeNode.setAttributes(attributeMap);
         } else {
+            nodeList = nodeList.stream().filter(auMenu -> !auMenu.getId().equals(menu.getId()))
+                .collect(Collectors.toList());
             List<TreeNode> leafNodeList = this.getChildTreeNode(menu.getId(), nodeList);
             treeNode.setChildren(leafNodeList);
         }
         return treeNode;
+    }
+
+    private List<TreeNode> getChildTreeNode(Long parentId, List<AuMenu> nodeList) {
+        return nodeList.stream().filter(
+            menu -> menu.getParentId() != null && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
+            .map(menu -> getTreeNode(nodeList, menu)).collect(Collectors.toList());
     }
 
     @Override

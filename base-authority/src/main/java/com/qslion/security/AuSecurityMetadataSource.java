@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,9 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
                 }
             }
             String resourceValue = resource.getValue();
-            resourceMap.put(resourceValue, itemAttributes);
+            if (StringUtils.isNotEmpty(resourceValue)) {
+                resourceMap.put(resourceValue, itemAttributes);
+            }
         }
         return allAttributes;
     }

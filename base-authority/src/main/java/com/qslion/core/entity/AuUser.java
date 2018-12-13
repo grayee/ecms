@@ -347,4 +347,9 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
     }
+
+    @Transient
+    public boolean isAdmin(){
+        return getRoles().stream().anyMatch(auRole -> "ROLE_ADMIN".equals(auRole.getValue()));
+    }
 }
