@@ -124,16 +124,16 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
      * 配置令牌端点(Token Endpoint)的安全约束 配置AuthorizationServer安全认证的相关信息，创建ClientCredentialsTokenEndpointFilter核心过滤器,
      * 经过ClientCredentialsTokenEndpointFilter之后，身份信息已经得到了AuthenticationManager的验证。 接着便到达TokenEndpoint
      *
-     * @param oauthServer 授权服务配置
+     * @param security 授权服务配置
      */
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        super.configure(oauthServer);
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        super.configure(security);
         //允许表单认证
-        oauthServer.allowFormAuthenticationForClients();
+        security.allowFormAuthenticationForClients();
         //获取token策略
-        oauthServer.tokenKeyAccess("permitAll()");
+        security.tokenKeyAccess("permitAll()");
         //验证token策略
-        oauthServer.tokenKeyAccess("isAuthenticated()");
+        security.tokenKeyAccess("isAuthenticated()");
     }
 }

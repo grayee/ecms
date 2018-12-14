@@ -70,7 +70,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         treeNode.setIconCls(menu.getIcon());
         if (menu.isLeaf()) {
             Map<String, Object> attributeMap = Maps.newHashMap();
-            attributeMap.put("url", String.format("/au/menu/detail?menuId=%s", menu.getId()));
+            attributeMap.put("url", menu.getUrl());
             treeNode.setAttributes(attributeMap);
         } else {
             nodeList = nodeList.stream().filter(auMenu -> !auMenu.getId().equals(menu.getId()))

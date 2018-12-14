@@ -32,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "au_user")
 public class AuUser extends BaseEntity<Long> implements UserDetails {
 
+    private static final long serialVersionUID = -8685902226854146300L;
     private String username;
     @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{5,19}$", groups = AddGroup.class, message = "{custom.pwd.invalid}")
