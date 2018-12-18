@@ -44,7 +44,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         //所有符合/api**的请求都要进行认证
-        http.antMatcher("/api/*")
+        http.antMatcher("/**")
             .authorizeRequests()// 授权通过以后
             .anyRequest()
             .authenticated();//允许认证过的用户访问

@@ -1,6 +1,7 @@
 package com.qslion.security.filter;
 
 import com.qslion.security.AuAccessDecisionManager;
+import com.qslion.security.AuSecurityMetadataSource;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -53,7 +54,7 @@ public class AuFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
     private boolean observeOncePerRequest = true;
 
     @Autowired
-    private FilterInvocationSecurityMetadataSource securityMetadataSource;
+    private AuSecurityMetadataSource securityMetadataSource;
 
     @Autowired
     public void setAccessDecisionManager(AuAccessDecisionManager auAccessDecisionManager) {
@@ -119,7 +120,7 @@ public class AuFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
         return this.securityMetadataSource;
     }
 
-    public void setSecurityMetadataSource(FilterInvocationSecurityMetadataSource securityMetadataSource) {
+    public void setSecurityMetadataSource(AuSecurityMetadataSource securityMetadataSource) {
         this.securityMetadataSource = securityMetadataSource;
     }
 
