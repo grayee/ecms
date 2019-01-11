@@ -8,6 +8,7 @@ import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
@@ -31,30 +32,37 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Autowired
     private PartyRelationRepository partyRelationRepository;
 
+    @Autowired
+    private PartyRelationService partyRelationService;
+
+
     @Override
     public AuCompany insert(AuCompany company, Long parentCode) {
         //添加公司团体
         AuParty auParty = company.buildAuParty();
         company.setAuParty(auParty);
-        //添加团体关系
-        AuPartyRelation auPartyRelation = new AuPartyRelation();
-        auPartyRelation.setAuParty(auParty);
-        auPartyRelation.setName(company.getCompanyName());
-        if (parentCode != null) {
-            auPartyRelation.setParentId(parentCode);
-            auPartyRelation.setLeaf(true);
-            //更新父节点isLeaf 为false
-            partyRelationRepository.updateLeaf(parentCode, false);
-        }
-        auPartyRelation.setRemark(company.getRemark());
-        auPartyRelation.setAuPartyRelationType(AuPartyRelationType.ADMINISTRATIVE);
-        partyRelationRepository.save(auPartyRelation);
+
+        partyRelationService.addPartyRelation(parentCode, auParty, AuPartyRelationType.ADMINISTRATIVE);
 
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
             company.setCompanyNo(RandomStringUtils.random(10));
         }
         return companyRepository.save(company);
+    }
+
+    private void addPartyRelation(Long parentCode, AuParty auParty) {
+        AuPartyRelation auPartyRelation = new AuPartyRelation();
+        auPartyRelation.setParentId(parentCode);
+        auPartyRelation.setLeaf(true);
+        //更新父节点isLeaf 为false
+        partyRelationRepository.updateLeaf(parentCode, false);
+
+        auPartyRelation.setAuParty(auParty);
+        auPartyRelation.setName(auParty.getName());
+        auPartyRelation.setRemark(auParty.getRemark());
+        auPartyRelation.setAuPartyRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        partyRelationRepository.save(auPartyRelation);
     }
 
 
@@ -98,21 +106,19 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     /**
      * 更新单条记录，同时更新相应的团体、团体关系记录
      *
-     * @param vo 用于更新的VO对象
+     * @param company 用于更新的VO对象
      * @return 成功更新的记录数
      */
     @Override
-    public AuCompany update(AuCompany vo) {
-        AuParty party = partyRepository.getOne(vo.getId());
-        party.setName(vo.getCompanyName());//团体名称
-        party.setRemark(vo.getRemark());//备注
-        //vo.setAuParty(party);
-
-        companyRepository.save(vo);
-        AuPartyRelation relation = null;// partyRelationRepository.findByPartyId(vo.getId(), AuPartyRelationType.ADMINISTRATIVE.getId() + "");
-        relation.setName(vo.getCompanyName());
-        //partyRelationRepository.update(relation);
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "更新了" + sum + "条记录,id=" + String.valueOf(vo.getId()));
-        return null;
+    public AuCompany update(AuCompany company) {
+        AuParty party = partyRepository.getOne(company.getId());
+        party.setName(company.getCompanyName());
+        party.setRemark(company.getRemark());
+        AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(party);
+        partyRelation.setName(company.getCompanyName());
+        partyRelation.setRemark(company.getRemark());
+        partyRelationRepository.saveAndFlush(partyRelation);
+        company.setAuParty(party);
+        return companyRepository.saveAndFlush(company);
     }
 }

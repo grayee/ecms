@@ -39,7 +39,7 @@ public class AuPartyRelation extends NestTreeEntity {
     /**
      * 是否叶子节点
      */
-    private boolean leaf;
+    private boolean isLeaf;
     /**
      * 是否继承
      */
@@ -103,11 +103,10 @@ public class AuPartyRelation extends NestTreeEntity {
 
     @Column(name = "is_leaf", nullable = false, length = 1)
     public boolean isLeaf() {
-        return leaf;
+        return isLeaf;
     }
-
-    public void setLeaf(boolean leaf) {
-        leaf = leaf;
+    public void setLeaf(boolean isLeaf) {
+        this.isLeaf = isLeaf;
     }
 
     @Column(name = "is_inherit", length = 1)

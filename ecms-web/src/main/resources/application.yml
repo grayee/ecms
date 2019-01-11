@@ -3,7 +3,7 @@ logging:
    config: classpath:config/log4j2.xml
    level:
        root: info
-       org.springframework.security: debug
+       org.springframework.security: info
        org.hibernate: ERROR
 #spring
 spring:

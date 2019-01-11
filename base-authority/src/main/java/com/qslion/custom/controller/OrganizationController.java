@@ -55,10 +55,9 @@ public class OrganizationController extends BaseController<AuPartyRelation> {
     public String manage(HttpServletRequest request, HttpServletResponse response, ModelMap model, @ModelAttribute("pager") Pager<AuCompany> pager) {
         boolean flag = partyRelationService.hasCustomRoot(AuPartyRelationType.ADMINISTRATIVE.getId() + "");
         if (flag) {
-            return forward("manage", false);
+            return "manage";
         } else {
-
-            return forward("init", false);
+            return "init";
         }
     }
 
@@ -66,9 +65,10 @@ public class OrganizationController extends BaseController<AuPartyRelation> {
     @RequestMapping(value = "/admin/relation/initRoot.jspx")
     public String initRoot(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String partyId = request.getParameter("rootId");
+        AuParty party = partyService.findById(Long.valueOf(partyId));
         //行政关系
-        partyRelationService.initRoot(partyId, AuPartyRelationType.ADMINISTRATIVE.getId() + "");
-        return forward("manage", false);
+        partyRelationService.initRoot(party, AuPartyRelationType.ADMINISTRATIVE);
+        return "manage";
     }
 
 
@@ -114,21 +114,21 @@ public class OrganizationController extends BaseController<AuPartyRelation> {
         List<AuConnectionRule> rules = connectionRuleService.getRuleByParentPartyTypeId(party.getAuPartyType().getId() + "", AuPartyRelationType.ADMINISTRATIVE.getId() + "");
         HashMap<String, String> ruleMap = new HashMap<String, String>();
         for (AuConnectionRule rule : rules) {
-            if (rule.getChildPartyType() == AuPartyType.COMPANY) {
+            if (rule.getSubPartyType() == AuPartyType.COMPANY) {
                 ruleMap.put("comp", null);
-            } else if (rule.getChildPartyType() == AuPartyType.DEPARTMENT) {
+            } else if (rule.getSubPartyType() == AuPartyType.DEPARTMENT) {
                 ruleMap.put("dept", null);
-            } else if (rule.getChildPartyType() == AuPartyType.POSITION) {
+            } else if (rule.getSubPartyType() == AuPartyType.POSITION) {
                 ruleMap.put("posi", null);
-            } else if (rule.getChildPartyType() == AuPartyType.EMPLOYEE) {
+            } else if (rule.getSubPartyType() == AuPartyType.EMPLOYEE) {
                 ruleMap.put("empl", null);
-            } else if (rule.getChildPartyType() == AuPartyType.PROXY) {
+            } else if (rule.getSubPartyType() == AuPartyType.PROXY) {
                 ruleMap.put("proxy", null);
             }
         }
         model.addAttribute("relationId", request.getParameter("relationId"));
         model.addAttribute("ruleMap", ruleMap);
-        return forward("input", false);
+        return "input";
     }
 
     //查看，明细
@@ -156,22 +156,12 @@ public class OrganizationController extends BaseController<AuPartyRelation> {
     public String getOrgTree(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId()+"", true);
         model.addAttribute("data", JSON.toJSON(resultList));
-        return forward("tree", false);
+        return "tree";
     }
 
     @RequestMapping(value = "/admin/relation/default.jspx")
     public String getDefault() {
-        return forward("default", false);
+        return "default";
     }
-
-    public String forward(String viewName, boolean isRedirect) {
-        String baseUrl = "";
-        if (isRedirect) {
-            baseUrl = "redirect:/admin/relation/";
-            return baseUrl + viewName + ".jspx";
-        } else {
-            baseUrl = "authority/relation/";
-            return baseUrl + viewName;
-        }
-    }
+    
 }

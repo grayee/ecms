@@ -5,6 +5,8 @@ package com.qslion.core.service.impl;
 
 import com.qslion.core.dao.ConnectionRuleRepository;
 import com.qslion.core.entity.AuConnectionRule;
+import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.List;
@@ -12,21 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 项目名称：authority
- * 类名称：ConnectionRuleServiceImpl
- * 类描述：
- * 创建人：Administrator
- * 创建时间：2011-8-8 下午03:26:02
- * 修改人：Administrator
- * 修改时间：2011-8-8 下午03:26:02
- * 修改备注：
+ * 项目名称：authority 类名称：ConnectionRuleServiceImpl 类描述： 创建人：Administrator 创建时间：2011-8-8 下午03:26:02 修改人：Administrator
+ * 修改时间：2011-8-8 下午03:26:02 修改备注：
  */
 @Service("connectRuleService")
 public class ConnectionRuleServiceImpl extends GenericServiceImpl<AuConnectionRule, Long> implements
     ConnectionRuleService {
 
     @Autowired
-    public ConnectionRuleRepository connectRuleDao;
+    public ConnectionRuleRepository connectionRuleRepository;
 
 
     @Override
@@ -65,8 +61,10 @@ public class ConnectionRuleServiceImpl extends GenericServiceImpl<AuConnectionRu
     }
 
     @Override
-    public boolean checkRule(String parentTypeId, String childTypeId, String relationTypeId) {
-        return false;
+    public boolean checkRule(AuPartyType curPartyType, AuPartyType subPartyType, AuPartyRelationType relationType) {
+        return connectionRuleRepository.findAll().stream().anyMatch(rule ->
+            rule.getSubPartyType() == subPartyType && rule.getCurPartyType() == curPartyType
+                && rule.getPartyRelationType() == relationType);
     }
 
     @Override

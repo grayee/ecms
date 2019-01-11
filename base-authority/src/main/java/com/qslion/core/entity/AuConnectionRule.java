@@ -18,41 +18,41 @@ import javax.persistence.Table;
 @Table(name = "au_connection_rule")
 public class AuConnectionRule extends BaseEntity<Long> {
 
-    private AuPartyType parentPartyType;
-    private AuPartyType childPartyType;
-    private AuPartyRelationType auPartyRelationType;
+    private AuPartyType curPartyType;
+    private AuPartyType subPartyType;
+    private AuPartyRelationType partyRelationType;
     private String name;
     private String remark;
     private Short level;
 
     @Enumerated
-    @Column(name = "parent_party_type")
-    public AuPartyType getParentPartyType() {
-        return this.parentPartyType;
+    @Column(name = "cur_party_type")
+    public AuPartyType getCurPartyType() {
+        return this.curPartyType;
     }
 
-    public void setParentPartyType(AuPartyType auPartyTypeByParentPartyTypeId) {
-        this.parentPartyType = auPartyTypeByParentPartyTypeId;
+    public void setCurPartyType(AuPartyType curPartyType) {
+        this.curPartyType = curPartyType;
     }
 
     @Enumerated
-    @Column(name = "child_party_type")
-    public AuPartyType getChildPartyType() {
-        return this.childPartyType;
+    @Column(name = "sub_party_type")
+    public AuPartyType getSubPartyType() {
+        return this.subPartyType;
     }
 
-    public void setChildPartyType(AuPartyType auPartyTypeByChildPartyTypeId) {
-        this.childPartyType = auPartyTypeByChildPartyTypeId;
+    public void setSubPartyType(AuPartyType subPartyType) {
+        this.subPartyType = subPartyType;
     }
 
     @Enumerated
     @Column(name = "relation_type")
-    public AuPartyRelationType getAuPartyRelationType() {
-        return this.auPartyRelationType;
+    public AuPartyRelationType getPartyRelationType() {
+        return this.partyRelationType;
     }
 
-    public void setAuPartyRelationType(AuPartyRelationType auPartyRelationType) {
-        this.auPartyRelationType = auPartyRelationType;
+    public void setPartyRelationType(AuPartyRelationType partyRelationType) {
+        this.partyRelationType = partyRelationType;
     }
 
     @Column(name = "name", nullable = false, length = 64)

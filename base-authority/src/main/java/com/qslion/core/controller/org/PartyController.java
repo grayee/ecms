@@ -11,6 +11,7 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.controller.BaseController;
+import io.swagger.annotations.Api;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
+@Api(value="团体Controller",description="团体控制类",tags={"团体控制接口"})
 @RestController
 @RequestMapping(value = "/org/party")
 public class PartyController extends BaseController<AuParty> {

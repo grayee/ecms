@@ -16,6 +16,7 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.controller.BaseController;
+import io.swagger.annotations.Api;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
+@Api(value="团体关系Controller",description="团体关系控制类",tags={"团体关系控制接口"})
 @RestController
 @RequestMapping(value = "/org/party_relation")
 public class PartyRelationController extends BaseController<AuPartyRelation> {
@@ -133,8 +136,7 @@ public class PartyRelationController extends BaseController<AuPartyRelation> {
         return true;
     }
 
-    //更新
-    @RequestMapping(value = "/admin/party/relation/update.jspx")
+    @PutMapping
     public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model,
         @ModelAttribute("entity") AuPartyRelation entity) {
         partyRelationService.update(entity);
@@ -154,8 +156,7 @@ public class PartyRelationController extends BaseController<AuPartyRelation> {
         return JSON.toJSONString(resultList);
     }
 
-    //全局关系树
-    @RequestMapping(value = "/admin/party/relation/tree.jspx")
+    @RequestMapping(value = "/tree")
     public String getGlobalPartyRelationTree(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         List<TreeNode> resultList = this.partyRelationService.getGlobalRelationTree();
         model.addAttribute("data", JSON.toJSONString(resultList));
