@@ -1,10 +1,6 @@
 package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyType;
-import com.qslion.custom.entity.AuCompany;
-import com.qslion.custom.entity.AuDepartment;
-import com.qslion.custom.entity.AuEmployee;
-import com.qslion.custom.entity.AuPosition;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
@@ -13,9 +9,6 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -38,17 +31,6 @@ public class AuParty extends BaseEntity<Long> {
     private EnableStatus enableStatus;
 
     private Date enableDate;
-
-    private AuCompany auCompany;
-    private AuDepartment auDepartment;
-    private AuPosition auPosition;
-    private AuEmployee auEmployee;
-
-    /*    private AuRole auRole;
-     private AuUser auUser;
-     private Set<AuAuthorize> auAuthorizes = new HashSet<AuAuthorize>(0);
-     private Set<AuUserProfile> auUserprofiles = new HashSet<AuUserProfile>(0);
- */
 
     private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
 
@@ -133,85 +115,4 @@ public class AuParty extends BaseEntity<Long> {
     public void setEnableDate(Date enableDate) {
         this.enableDate = enableDate;
     }
-/*
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
-    public Set<AuAuthorize> getAuAuthorizes() {
-        return auAuthorizes;
-    }
-
-    public void setAuAuthorizes(Set<AuAuthorize> auAuthorizes) {
-        this.auAuthorizes = auAuthorizes;
-    }*/
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
-    public AuCompany getAuCompany() {
-        return this.auCompany;
-    }
-
-    public void setAuCompany(AuCompany auCompany) {
-        this.auCompany = auCompany;
-    }
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
-    public AuPosition getAuPosition() {
-        return this.auPosition;
-    }
-
-    public void setAuPosition(AuPosition auPosition) {
-        this.auPosition = auPosition;
-    }
-
-    @OneToMany( fetch = FetchType.LAZY, mappedBy = "auParty")
-    public Set<AuPartyRelation> getAuPartyRelations() {
-        return this.auPartyRelations;
-    }
-
-    public void setAuPartyRelations(Set<AuPartyRelation> auPartyRelations) {
-        this.auPartyRelations = auPartyRelations;
-    }
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
-    public AuDepartment getAuDepartment() {
-        return this.auDepartment;
-    }
-
-    public void setAuDepartment(AuDepartment auDepartment) {
-        this.auDepartment = auDepartment;
-    }
-
-   /* @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
-    public Set<AuUserProfile> getAuUserProfiles() {
-        return this.auUserprofiles;
-    }
-
-    public void setAuUserProfiles(Set<AuUserProfile> auUserprofiles) {
-        this.auUserprofiles = auUserprofiles;
-    }
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
-    public AuUser getAuUser() {
-        return this.auUser;
-    }
-
-    public void setAuUser(AuUser auUser) {
-        this.auUser = auUser;
-    }*/
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
-    public AuEmployee getAuEmployee() {
-        return this.auEmployee;
-    }
-
-    public void setAuEmployee(AuEmployee auEmployee) {
-        this.auEmployee = auEmployee;
-    }
-
- /*   @OneToOne(fetch = FetchType.LAZY, mappedBy = "auParty")
-    public AuRole getAuRole() {
-        return auRole;
-    }
-
-    public void setAuRole(AuRole auRole) {
-        this.auRole = auRole;
-    }*/
 }

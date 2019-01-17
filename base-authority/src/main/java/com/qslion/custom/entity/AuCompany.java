@@ -3,6 +3,7 @@ package com.qslion.custom.entity;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import io.swagger.annotations.ApiModel;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -33,7 +34,7 @@ public class AuCompany extends PartyEntity {
     private String area;
     private String linkMan;
     @Pattern(regexp = "^1([345789])\\d{9}$", message = "座机号码格式错误")
-    @NotBlank(message = "座机号码不能为空")
+    @NotBlank(message = "座机号码不能为空", groups = {AddGroup.class})
     private String tel;
     private String fax;
     private String address;

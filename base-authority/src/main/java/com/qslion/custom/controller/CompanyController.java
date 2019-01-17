@@ -13,7 +13,6 @@ import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +59,7 @@ public class CompanyController extends BaseController<AuCompany> {
      */
     @ApiOperation("保存公司信息")
     @PostMapping
-    public Long save(@Validated @RequestBody @ApiParam(name = "company", value = "json format", required = true) AuCompany company,
-        @ApiParam(name = "parentCode", value = "上级编码") @RequestParam(required = false) Long parentCode) {
+    public Long save(@Validated @RequestBody AuCompany company, @RequestParam(required = false) Long parentCode) {
         AuCompany auCompany = companyService.insert(company, parentCode);
         return auCompany.getId();
     }

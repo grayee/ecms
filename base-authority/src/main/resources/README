@@ -255,3 +255,13 @@ ResourceServerConfigurerAdapter用于保护oauth要开放的资源，同时主�
                 .antMatchers("/api/**").authenticated();
     }
      </code>
+
+
+登陆URL:http://localhost:8080/ecms/login/oauth
+ {
+ 	"username":"admin",
+ 	"password":"admin"
+ }
+
+Authorization　:　Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw
+Content-Type：:application/json

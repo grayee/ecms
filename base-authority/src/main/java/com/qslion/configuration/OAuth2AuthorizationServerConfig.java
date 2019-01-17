@@ -113,7 +113,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(clientDetails());
         // token有效期自定义设置，默认12小时
-        tokenServices.setAccessTokenValiditySeconds(60);
+        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 12);
         //默认30天，这里修改
         tokenServices.setRefreshTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30));
         return tokenServices;

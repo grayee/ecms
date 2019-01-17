@@ -33,9 +33,10 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
@@ -65,10 +66,9 @@ public class Oauth2Controller extends BaseController {
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
     @PostMapping(value = "/login/oauth")
-    public ResponseEntity<OAuth2AccessToken> login(HttpServletRequest request,
-        @RequestBody @Validated LoginDTO loginDTO, HttpServletResponse response) {
+    public ResponseEntity<OAuth2AccessToken> login(HttpServletRequest request,@RequestBody @Validated LoginDTO loginDTO,
+        @RequestHeader("Authorization") String header, HttpServletResponse response) {
         String clientId = StringUtils.EMPTY;
-        String header = request.getHeader("Authorization");
         //这里需要注意为 Basic 而非 Bearer
         if (header != null && header.startsWith("Basic ")) {
             try {
@@ -102,7 +102,7 @@ public class Oauth2Controller extends BaseController {
         return resourceDetails;
     }
 
-    @RequestMapping("/userinfo")
+    @GetMapping("/userinfo")
     public Map userinfo(Model model, OAuth2AuthenticationToken authentication) {
         // authentication.getAuthorizedClientRegistrationId() returns the
         // registrationId of the Client that was authorized during the Login flow

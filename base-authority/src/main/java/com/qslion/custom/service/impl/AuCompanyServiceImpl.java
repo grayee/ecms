@@ -3,7 +3,6 @@ package com.qslion.custom.service.impl;
 
 
 import com.google.common.collect.Lists;
-import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
@@ -12,10 +11,10 @@ import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
-import com.qslion.framework.bean.Pager;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import com.qslion.framework.util.CopyUtils;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +26,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
 
     @Autowired
     private AuCompanyRepository companyRepository;
-    @Autowired
-    private AuPartyRepository partyRepository;
+
     @Autowired
     private PartyRelationRepository partyRelationRepository;
 
@@ -51,33 +49,6 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         return companyRepository.save(company);
     }
 
-    private void addPartyRelation(Long parentCode, AuParty auParty) {
-        AuPartyRelation auPartyRelation = new AuPartyRelation();
-        auPartyRelation.setParentId(parentCode);
-        auPartyRelation.setLeaf(true);
-        //更新父节点isLeaf 为false
-        partyRelationRepository.updateLeaf(parentCode, false);
-
-        auPartyRelation.setAuParty(auParty);
-        auPartyRelation.setName(auParty.getName());
-        auPartyRelation.setRemark(auParty.getRemark());
-        auPartyRelation.setAuPartyRelationType(AuPartyRelationType.ADMINISTRATIVE);
-        partyRelationRepository.save(auPartyRelation);
-    }
-
-
-    /**
-     * 删除单条记录，同时删除团体关系及相关的权限记录
-     *
-     * @param partyRelationId 用于删除的记录的id
-     */
-    public boolean delete(String partyRelationId) {
-        //String partyid = OrgHelper.getPartyIDByRelationID(partyRelationId);
-        //companyRepository.delete(partyid);
-        // OrgHelper.deleteParty(partyid);//调用接口删除相应的团体、团体关系、帐户、权限等记录
-        return true;
-    }
-
     @Override
     public boolean remove(List<Long> ids) {
         List<AuCompany> companyList = Lists.newArrayList();
@@ -98,11 +69,6 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         return true;
     }
 
-    public Pager<AuCompany> findByPager(Pager<AuCompany> pager) {
-        return null;
-    }
-
-
     /**
      * 更新单条记录，同时更新相应的团体、团体关系记录
      *
@@ -111,14 +77,15 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
      */
     @Override
     public AuCompany update(AuCompany company) {
-        AuParty party = partyRepository.getOne(company.getId());
+        AuCompany auCompany = companyRepository.findById(company.getId()).get();
+        AuParty party = auCompany.getAuParty();
         party.setName(company.getCompanyName());
         party.setRemark(company.getRemark());
         AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(party);
         partyRelation.setName(company.getCompanyName());
         partyRelation.setRemark(company.getRemark());
         partyRelationRepository.saveAndFlush(partyRelation);
-        company.setAuParty(party);
-        return companyRepository.saveAndFlush(company);
+        CopyUtils.copyProperties(company, auCompany);
+        return companyRepository.saveAndFlush(auCompany);
     }
 }
