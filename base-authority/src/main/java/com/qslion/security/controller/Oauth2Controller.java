@@ -1,9 +1,9 @@
 package com.qslion.security.controller;
 
-import com.google.common.collect.Lists;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
+import io.swagger.annotations.Api;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -18,9 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties.Provider;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -34,8 +32,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +48,7 @@ import reactor.core.publisher.Mono;
  * @author Gray.Z
  * @date 2018/11/16.
  */
+@Api(value="Oauth2登陆登出controller",description="登陆登出控制类",tags={"登陆登出控制接口"})
 @ResponseResult
 @RestController
 public class Oauth2Controller extends BaseController {

@@ -3,6 +3,35 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
   <title>Spring Security Login </title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery.serializeJSON/2.9.0/jquery.serializejson.min.js"></script>
+
+  <script type="text/javascript">
+    function getLoginForm() {
+      console.log($('#loginForm').serializeJSON());
+      console.log(JSON.stringify($('#loginForm').serializeJSON()));
+      return JSON.stringify($('#loginForm').serializeJSON());
+    }
+
+    function login() {
+      var data = getLoginForm();
+      $.ajax({
+        type: "POST",
+        headers: {
+          Authorization: "Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw"
+        },
+        url: "login/oauth",
+        data: data,
+        dataType: "json",
+        contentType: "application/json",
+        success: function (result) {
+          if (result.code == 0) {
+            window.location.href = "home?access_token=" + result.data.access_token;
+          }
+        }
+      });
+    }
+  </script>
 </head>
 <body style="text-align: center;">
 <div style="margin: 150px auto 0;">
@@ -15,15 +44,16 @@
 
   <form th:action="@{login}" method="post" id="loginForm">
     <div>
-      用户名：<input type="text" name="username" class="username" id="username" placeholder="用户名" autocomplete="off" value="admin"/> <br>
+      用户名：<input type="text" name="username" class="username" id="username" placeholder="用户名" autocomplete="off"
+                 value="admin"/> <br>
       密　码：<input type="password" name="password" class="password" id="password" value="admin" placeholder="密码"
                  oncontextmenu="return false"
                  onpaste="return false"/> <br>
       <input type="checkbox" name="remember-me"/>记住我 <br>
-      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-      <input id="submit" type="submit" value="登录"/>
+      <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
+      <input id="submit" type="button" onclick="login()" value="登录"/>
     </div>
-   &nbsp;
+    &nbsp;
     <div>
       第三方登录 :
     </div>

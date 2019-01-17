@@ -10,7 +10,6 @@ import com.qslion.framework.enums.EnableStatus;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -162,7 +161,7 @@ public class AuParty extends BaseEntity<Long> {
         this.auPosition = auPosition;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "auParty")
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "auParty")
     public Set<AuPartyRelation> getAuPartyRelations() {
         return this.auPartyRelations;
     }
