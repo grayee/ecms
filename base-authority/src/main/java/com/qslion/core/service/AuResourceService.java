@@ -5,7 +5,7 @@ package com.qslion.core.service;
 
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
 import java.util.List;
 

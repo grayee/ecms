@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONException;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuResourceService;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import java.util.List;

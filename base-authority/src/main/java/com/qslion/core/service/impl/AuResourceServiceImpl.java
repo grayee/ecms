@@ -4,7 +4,7 @@ import com.qslion.core.dao.AuResourceRepository;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuResourceService;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;

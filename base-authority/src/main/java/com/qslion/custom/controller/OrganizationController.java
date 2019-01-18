@@ -9,7 +9,7 @@ import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pager;
@@ -154,7 +154,7 @@ public class OrganizationController extends BaseController<AuPartyRelation> {
 
     @RequestMapping(value = "/admin/relation/getOrgTree.jspx")
     public String getOrgTree(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE.getId()+"", true);
+        List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, null);
         model.addAttribute("data", JSON.toJSON(resultList));
         return "tree";
     }

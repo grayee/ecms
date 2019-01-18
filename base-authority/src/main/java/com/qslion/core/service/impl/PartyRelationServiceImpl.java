@@ -7,18 +7,21 @@ import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,14 +58,14 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     partyRelation.setAuParty(party);
                     partyRelation.setName(party.getName());
                     partyRelation.setRemark(party.getRemark());
-                    partyRelation.setAuPartyRelationType(relationType);
+                    partyRelation.setPartyRelationType(relationType);
                     partyRelationRepository.save(partyRelation);
                 } else {
                     logger.error("添加团系关系失败，没有找到符合要求的连接规则....");
                     return false;
                 }
             } else {
-                throw  new BusinessException(ResultCode.PARAMETER_IS_INVALID);
+                throw new BusinessException(ResultCode.PARAMETER_IS_INVALID);
             }
         } else {
             return initRoot(party, relationType);
@@ -82,14 +85,9 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         partyRelation.setAuParty(party);
         partyRelation.setName(party.getName());
         partyRelation.setRemark(party.getRemark());
-        partyRelation.setAuPartyRelationType(relationType);
+        partyRelation.setPartyRelationType(relationType);
         partyRelationRepository.save(partyRelation);
         return true;
-    }
-
-    public List<AuPartyRelation> queryPartyRelation(String relationTypeId) {
-        // TODO Auto-generated method stub
-        return null;//partyRelationRepository.findByProperty("auPartyRelationType.id", relationTypeId);
     }
 
     public List<AuPartyRelation> getPartyRelationsByTypeId(String typeId) {
@@ -97,36 +95,24 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         return null;//this.partyRelationRepository.findByProperty("auPartyRelationType.id", typeId);
     }
 
-    public List<TreeNode> getPartyRelationTree(String relationTypeId, boolean hasHref) {
-        return getPartyRelationTree(relationTypeId, hasHref, null);
+    public List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType) {
+        return getPartyRelationTree(relationType, null);
     }
 
-    public List<TreeNode> getPartyRelationTree(String relationTypeId, boolean hasHref, Map<String, Object> map) {
+    public List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Map<String, Object> map) {
         // TODO Auto-generated method stub
-        List<TreeNode> resultList = new ArrayList<TreeNode>();
-        List<AuPartyRelation> partyRelationList = queryPartyRelation(relationTypeId);
+        List<TreeNode> resultList = new ArrayList<>();
+        List<AuPartyRelation> partyRelationList = partyRelationRepository.findByPartyRelationType(relationType);
         for (AuPartyRelation partyRelation : partyRelationList) {
             //从根节点开始查找，如果PARENTCODE与ID相同则为根节点
-            if (null == partyRelation.getParentId() || "".equals(partyRelation.getParentId())) {
-                //TreeNode rootNode = new TreeNode(partyRelation.getId(), partyRelation.getName());
-
-                if (hasHref) {
-                   /* if (relationTypeId.equals(GlobalConstants.getRelTypeComp())) {
-                        //行政关系
-                        rootNode.setUrl("admin/relation/view.jspx?id=" + partyRelation.getAuParty().getId() + "&rid=" + partyRelation.getId());
-                    } else if (relationTypeId.equals(GlobalConstants.getRelTypeRole())) {
-                        //角色关系
-                        rootNode.setUrl("admin/role/view.jspx?id=" + partyRelation.getAuParty().getId() + "&rid=" + partyRelation.getId());
-                        rootNode.setNocheck(true);
-                    }*/
-
-                }
+            if (null == partyRelation.getParentId()) {
+                TreeNode rootNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
                 //有子节点递归遍历
-                //if (partyRelation.getIsLeaf().equals("0")) {
-                // List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, hasHref, map);
-                // rootNode.setChildren(childrenList);
-                // }
-                // resultList.add(rootNode);
+                if (partyRelation.isLeaf()) {
+                    List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, map);
+                    rootNode.setChildren(childrenList);
+                }
+                resultList.add(rootNode);
             }
         }
         return resultList;
@@ -159,51 +145,38 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         return resultList;
     }
 
-    private List<TreeNode> getChildTreeNode(String parentId, List<AuPartyRelation> nodeList, boolean hasHref) {
-        return getChildTreeNode(parentId, nodeList, hasHref, null);
+    private List<TreeNode> getChildTreeNode(Long parentId, List<AuPartyRelation> nodeList) {
+        return getChildTreeNode(parentId, nodeList, null);
     }
 
-    private List<TreeNode> getChildTreeNode(String parentId, List<AuPartyRelation> nodeList, boolean hasHref,
+    private List<TreeNode> getChildTreeNode(Long parentId, List<AuPartyRelation> nodeList,
         Map<String, Object> map) {
         List<TreeNode> resultList = new ArrayList<TreeNode>();
         for (AuPartyRelation partyRelation : nodeList) {
             TreeNode leafNode = null;
             if (partyRelation.getParentId() != null && partyRelation.getParentId().equals(parentId) && !partyRelation
                 .getParentId().equals(partyRelation.getId())) {
-                //leafNode = new TreeNode(partyRelation.getId(), partyRelation.getName());
-
-                if (hasHref) {
-                   /* leafNode.setUrl("admin/relation/view.jspx?id=" + partyRelation.getAuParty().getId() + "&rid=" + partyRelation.getId());
-                    //行政关系
-                    if (partyRelation.getAuPartyRelationType() == AuPartyRelationType.ADMINISTRATIVE) {
-                        leafNode.setUrl("admin/relation/view.jspx?id=" + partyRelation.getAuParty().getId() + "&rid=" + partyRelation.getId());
-                    } else if (partyRelation.getAuPartyRelationType() == AuPartyRelationType.ROLE) {
-                        //角色关系
-                        leafNode.setUrl("admin/role/view.jspx?id=" + partyRelation.getAuParty().getId() + "&rid=" + partyRelation.getId());
-                        leafNode.setNocheck(true);
-                    }
-                    leafNode.setTarget("rightFrame");*/
-                }
+                leafNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
 
                 if (map != null && map.containsKey("user")) {
                     //用户分配角色，叶子节点ID设置为团体ID，团体ID就是角色ID
-                    // leafNode.setId(partyRelation.getAuParty().getId());
+                    leafNode.setId(partyRelation.getAuParty().getId().toString());
                     AuUser user = (AuUser) map.get("user");
-                    //Set<AuRole> roleSet = user.getAuRoleSet();
-                    // Iterator<AuRole> roleIter = roleSet.iterator();
-                    // while (roleIter.hasNext()) {
-                    //    AuRole role = roleIter.next();
-                      /*  if (role.getName().equals(leafNode.getName())) {
-                            leafNode.setName(role.getName() + "(已关联)");
-                            leafNode.setNocheck(true);
-                        }*/
-                    //  }
+                    Set<AuRole> roleSet = user.getRoles();
+                    Iterator<AuRole> roleIter = roleSet.iterator();
+                    while (roleIter.hasNext()) {
+                        AuRole role = roleIter.next();
+                        if (role.getName().equals(leafNode.getText())) {
+                            leafNode.setText(role.getName() + "(已关联)");
+                            leafNode.setChecked(true);
+                        }
+                    }
                 }
 
-                //if (partyRelation.getIsLeaf().equals("0")) {
-                //List<TreeNode> leafNodeList = this.getChildTreeNode(partyRelation.getId(), nodeList, hasHref);
-                // leafNode.setChildren(leafNodeList);
-                //}
+                if (partyRelation.isLeaf()) {
+                    List<TreeNode> leafNodeList = this.getChildTreeNode(partyRelation.getId(), nodeList);
+                    leafNode.setChildren(leafNodeList);
+                }
                 resultList.add(leafNode);
             }
         }

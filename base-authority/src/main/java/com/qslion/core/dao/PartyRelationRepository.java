@@ -2,7 +2,9 @@ package com.qslion.core.dao;
 
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.framework.dao.IGenericRepository;
+import java.util.List;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +33,12 @@ public interface PartyRelationRepository extends IGenericRepository<AuPartyRelat
      * @return 团体关系
      */
     AuPartyRelation findByAuParty(AuParty auParty);
+
+    /**
+     * 根据团体关系类型获取团体关系
+     *
+     * @param partyRelationType 团体关系类型
+     * @return 团体关系List
+     */
+    List<AuPartyRelation> findByPartyRelationType(AuPartyRelationType partyRelationType);
 }

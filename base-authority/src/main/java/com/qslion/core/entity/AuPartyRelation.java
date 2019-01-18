@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "au_party_relation")
 public class AuPartyRelation extends NestTreeEntity {
 
-    private AuPartyRelationType auPartyRelationType;
+    private AuPartyRelationType partyRelationType;
     private AuParty auParty;
 
     private String name;
@@ -47,12 +47,12 @@ public class AuPartyRelation extends NestTreeEntity {
 
     @Enumerated
     @Column(name = "relation_type")
-    public AuPartyRelationType getAuPartyRelationType() {
-        return this.auPartyRelationType;
+    public AuPartyRelationType getPartyRelationType() {
+        return this.partyRelationType;
     }
 
-    public void setAuPartyRelationType(AuPartyRelationType auPartyRelationType) {
-        this.auPartyRelationType = auPartyRelationType;
+    public void setPartyRelationType(AuPartyRelationType partyRelationType) {
+        this.partyRelationType = partyRelationType;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -28,15 +28,15 @@ public class DistrictServiceImpl extends GenericServiceImpl<CommonDistrict, Long
         List<TreeNode> resultList = new ArrayList<>();
         List<CommonDistrict> list = districtRepository.findByUpid(Long.valueOf(upid));
         for (CommonDistrict district : list) {
-            TreeNode treeNode = new TreeNode(district.getId(), district.getName());
-            treeNode.setUrl("admin/district/index.jspx?id=" + district.getId());
-            treeNode.setTarget("rightFrame");
-            treeNode.setPid(district.getUpid());
+            TreeNode treeNode = new TreeNode(district.getId().toString(), district.getName());
+           // treeNode.setUrl("admin/district/index.jspx?id=" + district.getId());
+            //treeNode.setTarget("rightFrame");
+            //treeNode.setPid(district.getUpid());
             boolean hasChildren = false;//districtDao.hasChildren(district.getId());
             if (hasChildren) {
-                treeNode.setIsParent(true);
+                //treeNode.setIsParent(true);
             } else {
-                treeNode.setIsParent(false);
+               // treeNode.setIsParent(false);
             }
             resultList.add(treeNode);
         }
@@ -48,8 +48,8 @@ public class DistrictServiceImpl extends GenericServiceImpl<CommonDistrict, Long
         for (CommonDistrict district : list) {
             if (district.getUpid().toString().equals(upid)) {
                 TreeNode leafNode = null;//new TreeNode(district.getId(),district.getName());
-                leafNode.setUrl("admin/district/index.jspx?id=" + district.getId());
-                leafNode.setTarget("rightFrame");
+                //leafNode.setUrl("admin/district/index.jspx?id=" + district.getId());
+                //leafNode.setTarget("rightFrame");
                 List<TreeNode> childList = this.getChildTreeNode(district.getId(), list);
                 if (childList.size() > 0) {
                     leafNode.setChildren(childList);

@@ -4,7 +4,7 @@ import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +17,10 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     List<AuPartyRelation> getPartyRelationsByTypeId(String typeId);
 
     //局部团体关系树
-    List<TreeNode> getPartyRelationTree(String relationTypeId, boolean hasHref);
+    List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType);
 
     //局部团体关系树带参数
-    List<TreeNode> getPartyRelationTree(String relationTypeId, boolean hasHref, Map<String, Object> map);
+    List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Map<String, Object> map);
 
     //明细关系树
     List<TreeNode> getPartyDetailRelationTree(String partyId, String relationTypeId);

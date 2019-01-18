@@ -5,10 +5,11 @@ import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.PartyRelationService;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
+import io.swagger.annotations.Api;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
+@Api(value="用户Controller",description="用户Controller",tags={"用户控制器"})
 @RestController
 @RequestMapping(value = "/au/user")
 public class AuUserController extends BaseController<AuUser> {

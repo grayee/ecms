@@ -10,7 +10,7 @@ import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
-import com.qslion.core.util.TreeNode;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Api(value="团体关系Controller",description="团体关系控制类",tags={"团体关系控制接口"})
+@Api(value="团体关系Controller",description="团体关系Controller",tags={"团体关系控制器"})
 @RestController
 @RequestMapping(value = "/org/party_relation")
 public class PartyRelationController extends BaseController<AuPartyRelation> {
@@ -80,7 +80,7 @@ public class PartyRelationController extends BaseController<AuPartyRelation> {
          * *****************************/
         //设置子团体及其类型ID
       /*  String partyId = entity.getAuParty().getId();
-        String relTypeId = entity.getAuPartyRelationType().getId();
+        String relTypeId = entity.getPartyRelationType().getId();
         String parentRelId = entity.getId() == null ? "" : entity.getId();
 
         AuParty party = this.partyService.get(partyId);
@@ -152,7 +152,7 @@ public class PartyRelationController extends BaseController<AuPartyRelation> {
     public String getPartyRelationTree(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         String relationTypeId =
             request.getParameter("relationTypeId") == null ? "" : request.getParameter("relationTypeId");
-        List<TreeNode> resultList = this.partyRelationService.getPartyRelationTree(relationTypeId, false);
+        List<TreeNode> resultList = this.partyRelationService.getPartyRelationTree(null, null);
         return JSON.toJSONString(resultList);
     }
 

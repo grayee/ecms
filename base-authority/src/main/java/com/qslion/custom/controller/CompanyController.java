@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Api(value="公司controller",description="公司控制类",tags={"公司控制接口"})
+@Api(value="公司Controller",description="公司Controller",tags={"公司控制器"})
 @ResponseResult
 @RestController
 @RequestMapping(value = "/org/company")

@@ -27,8 +27,9 @@ public interface AuCompanyService extends IGenericService<AuCompany, Long> {
 
     /**
      * 删除多条记录，删除自身并同时删除相应的团体、团体关系
-     * @param ids
-     * @return
+     *
+     * @param ids ids
+     * @return boolean
      */
     boolean remove(List<Long> ids);
 }

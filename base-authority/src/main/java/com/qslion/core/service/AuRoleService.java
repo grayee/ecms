@@ -3,16 +3,32 @@ package com.qslion.core.service;
 
 import com.qslion.core.entity.AuRole;
 import com.qslion.framework.service.IGenericService;
+import java.util.List;
 
 /**
  * @descrip: qslion 代码自动生成
- *
  */
- 
+
 public interface AuRoleService extends IGenericService<AuRole, Long> {
 
-       public String insert(AuRole vo, String parentRelId);
-       public String insertRoot(AuRole vo);
-       //授权
-       public void grantedAuthorities();
+    /**
+     * 新增角色
+     *
+     * @param role 角色
+     * @param parentId 上级ID
+     * @return 角色
+     */
+    AuRole insert(AuRole role, Long parentId);
+
+
+    //授权
+    void grantedAuthorities();
+
+    /**
+     * 删除多条记录
+     *
+     * @param ids ids
+     * @return boolean
+     */
+    boolean remove(List<Long> ids);
 }

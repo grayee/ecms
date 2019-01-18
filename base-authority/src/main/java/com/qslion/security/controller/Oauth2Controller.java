@@ -49,7 +49,7 @@ import reactor.core.publisher.Mono;
  * @author Gray.Z
  * @date 2018/11/16.
  */
-@Api(value="Oauth2登陆登出controller",description="登陆登出控制类",tags={"登陆登出控制接口"})
+@Api(value="Oauth2登陆登出controller",description="Oauth2登陆登出controller",tags={"登陆登出控制器"})
 @ResponseResult
 @RestController
 public class Oauth2Controller extends BaseController {

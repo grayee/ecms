@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Api(value="团体Controller",description="团体控制类",tags={"团体控制接口"})
+@Api(value="团体Controller",description="团体Controller",tags={"团体控制器"})
 @RestController
 @RequestMapping(value = "/org/party")
 public class PartyController extends BaseController<AuParty> {

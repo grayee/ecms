@@ -1,7 +1,7 @@
 package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
-import com.qslion.framework.entity.BaseEntity;
+import com.qslion.core.enums.AuPartyType;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -22,12 +22,11 @@ import org.springframework.security.core.GrantedAuthority;
  */
 @Entity
 @Table(name = "au_role")
-public class AuRole extends BaseEntity<Long> implements GrantedAuthority {
+public class AuRole extends PartyEntity implements GrantedAuthority {
 
     private String name;
     private String value;
     private String description;
-    private String enableStatus;
 
     private Set<AuUser> users = Sets.newHashSet();
     private Set<AuPermission> permissions = Sets.newHashSet();
@@ -92,16 +91,6 @@ public class AuRole extends BaseEntity<Long> implements GrantedAuthority {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "enable_status", nullable = true, length = 1)
-    public String getEnableStatus() {
-        return enableStatus;
-    }
-
-    public void setEnableStatus(String enableStatus) {
-        this.enableStatus = enableStatus;
-    }
-
     @Transient
     @Override
     public String getAuthority() {
@@ -156,5 +145,17 @@ public class AuRole extends BaseEntity<Long> implements GrantedAuthority {
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public AuParty buildAuParty() {
+        auParty = new AuParty();
+        auParty.setAuPartyType(AuPartyType.ROLE);
+        auParty.setName(getName());
+        auParty.setRemark(getDescription());
+        auParty.setEnableStatus(getEnableStatus());
+        auParty.setInherit(true);
+        auParty.setReal(true);
+        return auParty;
     }
 }
