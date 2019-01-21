@@ -80,7 +80,7 @@ public class AuMenuController extends BaseController<AuMenu> {
         return false;
     }
 
-    @RequestMapping(value = "/tree")
+    @GetMapping(value = "/tree")
     public List<TreeNode> getMenuTree(@AuthenticationPrincipal AuUser user) {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         //根据登录用户获取菜单树

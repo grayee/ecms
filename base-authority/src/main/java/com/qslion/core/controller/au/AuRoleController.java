@@ -8,19 +8,17 @@ import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.PartyRelationService;
-import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -92,19 +90,9 @@ public class AuRoleController extends BaseController<AuRole> {
     /**
      * 角色关系树
      */
-    @RequestMapping(value = "/tree")
-    public List<TreeNode> getRoleTree() {
-        Long userId = 1L;
-        List<TreeNode> resultList = new ArrayList<>();
-        if (userId != null) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("user", auUserService.findById(userId));
-            resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ROLE, map);
-        } else {
-            resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ROLE, null);
-        }
-
-        return resultList;
+    @GetMapping(value = "/tree")
+    public List<TreeNode> getRoleTree(@AuthenticationPrincipal AuUser user) {
+        return partyRelationService.getPartyRelationTree(AuPartyRelationType.ROLE, user.getRoles());
     }
 
     /**
@@ -160,7 +148,7 @@ public class AuRoleController extends BaseController<AuRole> {
     /**
      * 授权管理>>角色授权
      */
-    @RequestMapping(value = "/auth")
+    @PostMapping(value = "/auth")
     public String getAuthUser(HttpServletRequest request, HttpServletResponse response, ModelMap model,
         @ModelAttribute("pager") Pager<AuRole> pager) {
         //pager = auRoleService.findByPager(pager);

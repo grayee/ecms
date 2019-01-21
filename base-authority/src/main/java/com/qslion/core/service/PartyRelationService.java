@@ -2,25 +2,33 @@ package com.qslion.core.service;
 
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.AuRole;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public interface PartyRelationService extends IGenericService<AuPartyRelation, Long> {
 
-    List<AuPartyRelation> queryPartyRelation(AuPartyRelation auPartyRelationVo);
 
-    //根据团体关系类型ID查找团体关系
-    List<AuPartyRelation> getPartyRelationsByTypeId(String typeId);
-
-    //局部团体关系树
+    /**
+     * 局部团体关系树
+     *
+     * @param relationType 关系类型
+     * @return 树
+     */
     List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType);
 
-    //局部团体关系树带参数
-    List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Map<String, Object> map);
+    /**
+     * 角色团体关系树
+     *
+     * @param relationType 关系类型，角色
+     * @param roleSet 已选角色集合
+     * @return 树
+     */
+    List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Set<AuRole> roleSet);
 
     //明细关系树
     List<TreeNode> getPartyDetailRelationTree(String partyId, String relationTypeId);
@@ -54,8 +62,5 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
 
     //检查简化版机构根节点
     boolean hasCustomRoot(String orgCode);
-
-    //获取树的最大左右值
-    Integer getMaxValue(String dir);
 
 }
