@@ -18,6 +18,7 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -113,6 +114,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public ResponseResultInterceptor responseResultInterceptor() {
         return new ResponseResultInterceptor();
+    }
+
+    /**
+     * 解决前后端分离跨域问题
+     *
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**/**/**")
+            .allowedOrigins("*")
+            .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
+            .maxAge(3600)
+            .allowCredentials(true);
     }
 
     @Override
