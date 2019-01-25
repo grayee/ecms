@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value="菜单Controller",description="菜单Controller",tags={"菜单控制器"})
 @ResponseResult
 @RestController
-@RequestMapping(value = "/au/menu")
+@RequestMapping(value = "/auth/menu")
 public class AuMenuController extends BaseController<AuMenu> {
 
     @Autowired
@@ -80,11 +80,14 @@ public class AuMenuController extends BaseController<AuMenu> {
         return false;
     }
 
-    @GetMapping(value = "/tree")
+    @GetMapping
     public List<TreeNode> getMenuTree(@AuthenticationPrincipal AuUser user) {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         //根据登录用户获取菜单树
         List<TreeNode> menuTree = this.auMenuService.getMenuTree(username);
+        if (menuTree.size() <= 1) {
+            menuTree = menuTree.get(0).getChildren();
+        }
         logger.info("用户：{} 菜单树JSON:{}", username, JSONUtils.writeValueAsString(menuTree));
         return menuTree;
     }

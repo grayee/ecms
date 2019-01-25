@@ -66,7 +66,7 @@ public class Oauth2Controller extends BaseController {
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
     @PostMapping(value = "/login/oauth")
-    public ResponseEntity<OAuth2AccessToken> login(HttpServletRequest request,@RequestBody @Validated LoginDTO loginDTO,
+    public OAuth2AccessToken login(HttpServletRequest request,@RequestBody @Validated LoginDTO loginDTO,
         @RequestHeader("Authorization") String header, HttpServletResponse response) {
         String clientId = StringUtils.EMPTY;
         //这里需要注意为 Basic 而非 Bearer
@@ -87,7 +87,7 @@ public class Oauth2Controller extends BaseController {
         OAuth2AccessToken oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
         response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
         response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
-        return ResponseEntity.ok(oAuth2AccessToken);
+        return oAuth2AccessToken;
     }
 
     private ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResourceDetails(LoginDTO loginDTO,

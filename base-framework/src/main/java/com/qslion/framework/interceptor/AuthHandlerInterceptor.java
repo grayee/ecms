@@ -16,22 +16,22 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AuthHandlerInterceptor implements HandlerInterceptor {
 
-  private final Logger logger = LogManager.getLogger(this.getClass());
+    private final Logger logger = LogManager.getLogger(this.getClass());
 
-  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    return true;
-  }
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
+        return true;
+    }
 
-  @Override
-  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-      @Nullable ModelAndView modelAndView) throws Exception {
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+        @Nullable ModelAndView modelAndView) throws Exception {
 
-  }
+    }
 
-  @Override
-  public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-      @Nullable Exception ex) throws Exception {
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+        @Nullable Exception ex) throws Exception {
 
-  }
+    }
 }

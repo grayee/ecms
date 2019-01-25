@@ -6,6 +6,7 @@ package com.qslion.configuration;
 import com.qslion.security.AuAccessDeniedHandler;
 import com.qslion.security.filter.AuAuthenticationEntryPoint;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -46,6 +47,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         //所有符合/api**的请求都要进行认证
         http.antMatcher("/**").csrf().disable()
             .authorizeRequests()// 授权通过以后
+            .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/", "/login/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
                 "/swagger**/*/*",
                 "/webjars/**","/csrf","/index","/v2/*").permitAll()
