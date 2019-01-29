@@ -37,6 +37,10 @@ public class TreeNode {
      */
     private NodeState state = NodeState.CLOSED;
     /**
+     * 请求路径
+     */
+    private String path;
+    /**
      * 被添加到节点的自定义属性
      */
     private Map<String, Object> attributes;
@@ -116,5 +120,13 @@ public class TreeNode {
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
