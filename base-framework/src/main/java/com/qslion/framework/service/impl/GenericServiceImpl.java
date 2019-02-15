@@ -188,16 +188,16 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return genericRepository.save(entity);
     }
 
-    @Transactional(value = "transactionManager")
     @Override
+    @Transactional(value = "transactionManager")
     public T update(T entity) {
         return genericRepository.saveAndFlush(entity);
     }
 
-    @Transactional(value = "transactionManager")
     @Override
-    public T update(T entity, String... ignoreProperties) {
-        return null;
+    @Transactional(value = "transactionManager")
+    public T saveOrUpdate(T entity) {
+        return genericRepository.saveAndFlush(entity);
     }
 
     @Transactional(value = "transactionManager")
@@ -212,8 +212,8 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         genericRepository.deleteAll(entities);
     }
 
-    @Transactional(value = "transactionManager")
     @Override
+    @Transactional(value = "transactionManager")
     public void delete(T entity) {
         genericRepository.delete(entity);
     }

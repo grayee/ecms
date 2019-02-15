@@ -118,13 +118,12 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
     T update(T entity);
 
     /**
-     * 更新实体对象
+     * 保存或者更新实体对象
      *
      * @param entity 实体对象
-     * @param ignoreProperties 忽略属性
      * @return 实体对象
      */
-    T update(T entity, String... ignoreProperties);
+    T saveOrUpdate(T entity);
 
     /**
      * 删除实体对象

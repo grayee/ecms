@@ -1,5 +1,6 @@
 package com.qslion.core.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public enum MenuType {
     return Arrays.stream(MenuType.values()).filter(menuType -> menuType.getId() == id).findFirst();
   }
 
+  @JsonValue
   public Integer getId() {
     return id;
   }

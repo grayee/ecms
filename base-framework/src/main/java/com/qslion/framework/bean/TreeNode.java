@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class TreeNode {
 
-    private enum NodeState {
+    public enum NodeState {
         /**
          * 打开状态
          */
@@ -105,8 +105,8 @@ public class TreeNode {
         this.iconCls = iconCls;
     }
 
-    public NodeState getState() {
-        return state;
+    public String getState() {
+        return state.name().toLowerCase();
     }
 
     public void setState(NodeState state) {

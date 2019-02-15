@@ -13,8 +13,11 @@ import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
+import com.qslion.core.enums.MenuType;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.framework.bean.TreeNode;
+import com.qslion.framework.bean.TreeNode.NodeState;
+import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
@@ -69,16 +73,22 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         TreeNode treeNode = new TreeNode(String.valueOf(menu.getId()), menu.getName());
         treeNode.setIconCls(menu.getIcon());
         if (menu.isLeaf()) {
-            Map<String, Object> attributeMap = Maps.newHashMap();
-            attributeMap.put("url", menu.getUrl());
-            treeNode.setAttributes(attributeMap);
             treeNode.setPath(menu.getUrl());
+            treeNode.setState(NodeState.OPEN);
         } else {
             nodeList = nodeList.stream().filter(auMenu -> !auMenu.getId().equals(menu.getId()))
                 .collect(Collectors.toList());
             List<TreeNode> leafNodeList = this.getChildTreeNode(menu.getId(), nodeList);
             treeNode.setChildren(leafNodeList);
         }
+        if (menu.getLevel() != null && menu.getLevel() <= 1) {
+            treeNode.setState(NodeState.OPEN);
+        }
+        Map<String, Object> attributeMap = Maps.newHashMap();
+        attributeMap.put("modifyDate", menu.getModifyDate());
+        attributeMap.put("menuType", menu.getType().ordinal());
+        attributeMap.put("orderNo", menu.getOrderNo());
+        treeNode.setAttributes(attributeMap);
         return treeNode;
     }
 
@@ -117,14 +127,24 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
 
     @Override
     public AuMenu insert(AuMenu menu) {
+        if (menu.getParentId() == null) {
+            //根节点
+            menu.setParentId(1L);
+        }
         if (checkUnique(menu)) {
             throw new BusinessException(ResultCode.DATA_ALREADY_EXISTED);
         }
         AuMenu parent = getParent(menu);
-        if (parent.isLeaf()) {
+        if (parent != null && parent.isLeaf()) {
             parent.setLeaf(false);
+            parent.setType(MenuType.CATALOG);
+            parent.setUrl(StringUtils.EMPTY);
             update(parent);
         }
+        menu.setLeaf(true);
+        menu.setStatus((short) NodeState.CLOSED.ordinal());
+        menu.setLevel((short) (parent.getLevel() + 1));
+        menu.setEnableStatus(EnableStatus.ENABLE);
         menu.setResource(menu.buildResource());
         return save(menu);
     }
