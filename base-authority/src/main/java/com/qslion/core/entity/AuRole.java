@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,18 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
     private String name;
     private String value;
     private String description;
+
+    private AuRoleType roleType;
+
+    @ManyToOne
+    @JoinColumn(name = "TYPE_ID")
+    public AuRoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(AuRoleType roleType) {
+        this.roleType = roleType;
+    }
 
     private Set<AuUser> users = Sets.newHashSet();
     private Set<AuPermission> permissions = Sets.newHashSet();

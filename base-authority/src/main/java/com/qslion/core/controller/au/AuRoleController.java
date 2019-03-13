@@ -51,9 +51,9 @@ public class AuRoleController extends BaseController<AuRole> {
     @Autowired
     public AuUserService auUserService;
 
-    @GetMapping(value = "/list")
-    public Pager<AuRole> list(Pageable pageable) {
-        return auRoleService.findPage(pageable);
+    @GetMapping(value = "/list/{typeId}")
+    public Pager<AuRole> list(@PathVariable Long typeId, Pageable pageable) {
+        return auRoleService.findByType(typeId, pageable);
     }
 
     @PostMapping

@@ -7,6 +7,10 @@ import com.qslion.core.entity.AuRole;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.PartyRelationService;
+import com.qslion.framework.bean.Pageable;
+import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.QueryFilter;
+import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,14 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     @Autowired
     private PartyRelationService partyRelationService;
 
+
+    @Override
+    public Pager<AuRole> findByType(Long typeId, Pageable pageable) {
+        QueryFilter queryFilter = new QueryFilter("roleType", Operator.eq, typeId);
+        List<QueryFilter> queryFilterList = pageable.getQueryFilters();
+        queryFilterList.add(queryFilter);
+        return findPage(pageable);
+    }
 
     /**
      * 功能: 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）

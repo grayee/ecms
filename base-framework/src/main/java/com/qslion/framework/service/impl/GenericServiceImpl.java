@@ -2,10 +2,10 @@
 package com.qslion.framework.service.impl;
 
 import com.google.common.collect.Lists;
-import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.Order;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.dao.IGenericRepository;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.service.IGenericService;
@@ -104,6 +104,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                 }
 
             });
+
             return criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]))
                 .getRestriction();
         };

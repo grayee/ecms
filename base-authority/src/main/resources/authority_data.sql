@@ -5,12 +5,22 @@ VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 30, '1990-01-01', 'admin@compan
 INSERT INTO au_user (id, create_date, modify_date, age, birthday, email, enable_status, login_id, login_ip, mobile, nickname, password, username,version)
 VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 30, '1990-01-01', 'test@company.com', '1', 'test', '1.1.1.1', '13800138000', 'test', 'test', 'test',0);
 
--- 内置角色---
-INSERT INTO au_role (id, create_date, modify_date, description, enable_status, name, value,version)
-VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '超级管理员', '1', '超级管理员', 'ROLE_ADMIN',0);
+-- 内置角色类型---
+INSERT INTO au_role_type (id, create_date, modify_date, description, enable_status, name,version)
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '管理类角色', '1', '管理类角色',0);
 
-INSERT INTO au_role (id, create_date, modify_date, description, enable_status, name, value,version)
-VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '普通用户', '1', '普通用户', 'ROLE_USER',0);
+INSERT INTO au_role_type (id, create_date, modify_date, description, enable_status, name,version)
+VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '普通类角色', '1', '普通类角色',0);
+
+INSERT INTO au_role_type (id, create_date, modify_date, description, enable_status, name,version)
+VALUES (3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '其他类角色', '1', '其他类角色',0);
+
+-- 内置角色---
+INSERT INTO au_role (id, create_date, modify_date, description, enable_status, name, value,type_id,version)
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '超级管理员', '1', '超级管理员', 'ROLE_ADMIN',1,0);
+
+INSERT INTO au_role (id, create_date, modify_date, description, enable_status, name, value,type_id,version)
+VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '普通用户', '1', '普通用户', 'ROLE_USER',2,0);
 
 -- 内置用户组--
 INSERT INTO au_usergroup (id, create_date, modify_date, code, description, enable_status, name,version)
