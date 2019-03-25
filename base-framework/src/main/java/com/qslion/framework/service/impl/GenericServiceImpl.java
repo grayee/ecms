@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.apache.commons.lang.StringUtils;
@@ -65,39 +66,55 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return (Specification<T>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
             pageable.getQueryFilters().stream().forEach(filter -> {
+                Path path = root.get(filter.getProperty());
                 switch (filter.getOperator()) {
-                    case eq:
-                        predicates.add(criteriaBuilder.equal(root.get(filter.getProperty()), filter.getValue()));
+                    case equal:
+                        predicates.add(criteriaBuilder.equal(path, filter.getValue()));
                         break;
-                    case ne:
+                    case notEqual:
+                        predicates.add(criteriaBuilder.notEqual(path, filter.getValue()));
                         break;
                     case gt:
-                        predicates.add(criteriaBuilder.gt(root.get(filter.getProperty()), (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.gt(path, (Number) filter.getValue()));
                         break;
                     case lt:
-                        predicates.add(criteriaBuilder.lt(root.get(filter.getProperty()), (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.lt(path, (Number) filter.getValue()));
                         break;
                     case ge:
-                        predicates.add(criteriaBuilder
-                            .greaterThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
+                        predicates.add(criteriaBuilder.le(path, (Number) filter.getValue()));
                         break;
                     case le:
-                        predicates.add(criteriaBuilder
-                            .lessThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Date) filter.getValue()));
                         break;
                     case like:
-                        predicates.add(criteriaBuilder
-                            .like(root.get(filter.getProperty()), String.format("%%s%", filter.getValue())));
+                        predicates.add(criteriaBuilder.like(path, String.format("%%s%", filter.getValue())));
+                        break;
+                    case notLike:
+                        predicates.add(criteriaBuilder.notLike(path, "%" + filter.getValue() + "%"));
                         break;
                     case in:
-                        predicates.add(root.get(filter.getProperty()).in(filter.getValue()));
+                        predicates.add(path.in(filter.getValue()));
                         break;
                     case isNull:
+                        predicates.add(criteriaBuilder.isNull(path));
                         break;
                     case isNotNull:
+                        predicates.add(criteriaBuilder.isNotNull(path));
                         break;
                     case between:
                         //criteriaBuilder.between(root.<Date>get(filter.getProperty()),"");
+                        break;
+                    case greaterThan:
+                        predicates.add(criteriaBuilder.greaterThan(path, (Comparable) filter.getValue()));
+                        break;
+                    case greaterThanOrEqualTo:
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(path, (Comparable) filter.getValue()));
+                        break;
+                    case lessThan:
+                        predicates.add(criteriaBuilder.lessThan(path, (Comparable) filter.getValue()));
+                        break;
+                    case lessThanOrEqualTo:
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Comparable) filter.getValue()));
                         break;
                     default:
                         break;

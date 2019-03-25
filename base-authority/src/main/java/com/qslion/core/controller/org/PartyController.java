@@ -41,7 +41,7 @@ public class PartyController extends BaseController<AuParty> {
 
     @GetMapping(value = "/list/{partyTypeId}")
     public Pager<AuParty> list(@PathVariable int partyTypeId, @RequestParam Pageable pageable) {
-        QueryFilter queryFilter = new QueryFilter("auPartyType", Operator.eq, partyTypeId);
+        QueryFilter queryFilter = new QueryFilter("auPartyType", Operator.equal, partyTypeId);
         if (pageable.getQueryFilters().isEmpty()) {
             pageable.setQueryFilters(Lists.newArrayList(queryFilter));
         } else {
