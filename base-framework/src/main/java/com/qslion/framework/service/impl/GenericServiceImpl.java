@@ -52,7 +52,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         this.genericRepository = genericRepository;
     }
 
-    protected PageRequest getPageRequest(Pageable pageable) {
+    private PageRequest getPageRequest(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize());
         if (StringUtils.isNotEmpty(pageable.getOrderProperty())) {
             pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize(),
@@ -62,10 +62,10 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return pageRequest;
     }
 
-    protected Specification<T> getSpecification(Pageable pageable) {
+    private Specification<T> getSpecification(Pageable pageable) {
         return (Specification<T>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
-            pageable.getQueryFilters().stream().forEach(filter -> {
+            pageable.getQueryFilters().forEach(filter -> {
                 Path path = root.get(filter.getProperty());
                 switch (filter.getOperator()) {
                     case equal:
@@ -75,46 +75,46 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                         predicates.add(criteriaBuilder.notEqual(path, filter.getValue()));
                         break;
                     case gt:
-                        predicates.add(criteriaBuilder.gt(path, (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.gt(root.get(filter.getProperty()), (Number) filter.getValue()));
                         break;
                     case lt:
-                        predicates.add(criteriaBuilder.lt(path, (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.lt(root.get(filter.getProperty()), (Number) filter.getValue()));
                         break;
                     case ge:
-                        predicates.add(criteriaBuilder.le(path, (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.le(root.get(filter.getProperty()), (Number) filter.getValue()));
                         break;
                     case le:
-                        predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Date) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
                         break;
                     case like:
-                        predicates.add(criteriaBuilder.like(path, String.format("%%s%", filter.getValue())));
+                        predicates.add(criteriaBuilder.like(root.get(filter.getProperty()), "%" + filter.getValue() + "%"));
                         break;
                     case notLike:
-                        predicates.add(criteriaBuilder.notLike(path, "%" + filter.getValue() + "%"));
+                        predicates.add(criteriaBuilder.notLike(root.get(filter.getProperty()), "%" + filter.getValue() + "%"));
                         break;
                     case in:
                         predicates.add(path.in(filter.getValue()));
                         break;
                     case isNull:
-                        predicates.add(criteriaBuilder.isNull(path));
+                        predicates.add(criteriaBuilder.isNull(root.get(filter.getProperty())));
                         break;
                     case isNotNull:
-                        predicates.add(criteriaBuilder.isNotNull(path));
+                        predicates.add(criteriaBuilder.isNotNull(root.get(filter.getProperty())));
                         break;
                     case between:
                         //criteriaBuilder.between(root.<Date>get(filter.getProperty()),"");
                         break;
                     case greaterThan:
-                        predicates.add(criteriaBuilder.greaterThan(path, (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.greaterThan(root.get(filter.getProperty()), (Comparable) filter.getValue()));
                         break;
                     case greaterThanOrEqualTo:
-                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(path, (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(filter.getProperty()), (Comparable) filter.getValue()));
                         break;
                     case lessThan:
-                        predicates.add(criteriaBuilder.lessThan(path, (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThan(root.get(filter.getProperty()), (Comparable) filter.getValue()));
                         break;
                     case lessThanOrEqualTo:
-                        predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Comparable) filter.getValue()));
                         break;
                     default:
                         break;
@@ -122,7 +122,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
             });
 
-            return criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]))
+            return criteriaQuery.where(predicates.toArray(new Predicate[0]))
                 .getRestriction();
         };
     }
@@ -165,7 +165,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         Page<T> page = genericRepository.findAll(getSpecification(pageable), pageRequest);
 
         List<T> result = Lists.newArrayList();
-        page.getContent().stream().forEach(t -> result.add(t));
+        result.addAll(page.getContent());
         return new Pager<>(result, page.getTotalElements(), pageable);
     }
 

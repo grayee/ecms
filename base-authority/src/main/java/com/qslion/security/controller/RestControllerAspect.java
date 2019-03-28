@@ -1,12 +1,15 @@
-package com.qslion.framework.interceptor;
+package com.qslion.security.controller;
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
+import com.qslion.core.entity.AuUser;
+import com.qslion.core.util.LoginHelper;
 import com.qslion.framework.exception.GlobalExceptionHandler;
 import com.qslion.framework.util.IpUtil;
+import com.qslion.framework.util.JSONUtils;
 import com.qslion.framework.util.RequestContextUtil;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -54,36 +57,36 @@ public class RestControllerAspect {
 
         boolean logFlag = this.needToLog(method);
         if (!logFlag) {
-            return joinPoint.proceed();
+            //return joinPoint.proceed();
         }
 
         HttpServletRequest request = RequestContextUtil.getRequest();
-        // AuUser loginUser = LoginHelper.getLoginUserFromRequest(request);
+        AuUser loginUser = LoginHelper.getLoginUser();
 
         String ip = IpUtil.getRealIp(request);
         String methodName = this.getMethodName(joinPoint);
         String params = this.getParamsJson(joinPoint);
-        String requester = "unknown";
+        String requester = loginUser==null?"unknown":loginUser.getLoginId();
 
         String callSource = request.getHeader(HEADER_CLIENT_NAME);
         String appVersion = request.getHeader(HEADER_APP_VERSION);
         String apiVersion = request.getHeader(HEADER_API_VERSION);
         String userAgent = request.getHeader("user-agent");
 
-        logger.info("Started request requester [{}] method [{}] params [{}] IP [{}] callSource [{}] appVersion [{}] apiVersion [{}] userAgent [{}]",
+        logger.info("Started request requester 【{}】 method 【{}】\n Params:【{}】\n IP： 【{}】\n CallSource: 【{}】\n AppVersion: 【{}】\n ApiVersion: 【{}】\n UserAgent: 【{}】",
             requester, methodName, params, ip, callSource, appVersion, apiVersion, userAgent);
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
-        logger.info("Ended request requester [{}] method [{}] params[{}] response is [{}] cost [{}] millis ",
-            requester, methodName, params, result.toString(), System.currentTimeMillis() - start);
+        logger.info("Ended request requester 【{}] method 【{}】\n Params:【{}】\n Response :【{}】\n Time cost: 【{}】 millis ",
+            requester, methodName, params, JSONUtils.writeValueAsString(result), System.currentTimeMillis() - start);
         return result;
     }
 
     private String getMethodName(ProceedingJoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().toShortString();
-        String SHORT_METHOD_NAME_SUFFIX = "(..)";
-        if (methodName.endsWith(SHORT_METHOD_NAME_SUFFIX)) {
-            methodName = methodName.substring(0, methodName.length() - SHORT_METHOD_NAME_SUFFIX.length());
+        String shortMethodNameSuffix = "(..)";
+        if (methodName.endsWith(shortMethodNameSuffix)) {
+            methodName = methodName.substring(0, methodName.length() - shortMethodNameSuffix.length());
         }
         return methodName;
     }

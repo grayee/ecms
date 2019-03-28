@@ -1,5 +1,6 @@
 package com.qslion.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.core.enums.AuPartyType;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
     private String value;
     private String description;
 
+    @JsonIgnore
     private AuRoleType roleType;
 
     @ManyToOne
@@ -42,8 +44,11 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
         this.roleType = roleType;
     }
 
+    @JsonIgnore
     private Set<AuUser> users = Sets.newHashSet();
+    @JsonIgnore
     private Set<AuPermission> permissions = Sets.newHashSet();
+    @JsonIgnore
     private Set<AuUserGroup> userGroups = Sets.newHashSet();
 
     @ManyToMany(targetEntity = AuUserGroup.class, mappedBy = "roles")

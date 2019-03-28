@@ -1,10 +1,13 @@
 package com.qslion.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.enums.EnableStatus;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,6 +24,10 @@ public class AuRoleType extends BaseEntity<Long>  {
 
     private String name;
     private String description;
+
+    private EnableStatus enableStatus;
+
+    @JsonIgnore
     private List<AuRole> roleList;
 
     @OneToMany
@@ -51,5 +58,16 @@ public class AuRoleType extends BaseEntity<Long>  {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Enumerated
+    @Basic
+    @Column(name = "enable_status", nullable = true, length = 1)
+    public EnableStatus getEnableStatus() {
+        return enableStatus;
+    }
+
+    public void setEnableStatus(EnableStatus enableStatus) {
+        this.enableStatus = enableStatus;
     }
 }
