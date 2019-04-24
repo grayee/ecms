@@ -1,7 +1,11 @@
 package com.qslion.security.controller;
 
+import com.qslion.core.entity.AuLoginLog;
+import com.qslion.core.entity.AuLoginLog.LoginType;
+import com.qslion.core.service.LoginLogService;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.util.IpUtil;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import io.swagger.annotations.Api;
 import java.io.IOException;
@@ -9,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,6 +67,8 @@ public class Oauth2Controller extends BaseController {
     private OAuth2ClientContext oauth2ClientContext;
     @Autowired
     private OAuth2ClientProperties oAuth2ClientProperties;
+    @Autowired
+    private LoginLogService loginLogService;
 
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
@@ -87,6 +94,15 @@ public class Oauth2Controller extends BaseController {
         OAuth2AccessToken oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
         response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
         response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
+        String finalClientId = clientId;
+        CompletableFuture.runAsync(()->{
+            AuLoginLog loginLog =new AuLoginLog();
+            loginLog.setLoginId(finalClientId);
+            loginLog.setUsername(loginDTO.getUsername());
+            loginLog.setLoginIp(IpUtil.getRealIp(request));
+            loginLog.setLoginType(LoginType.LOGIN);
+            loginLogService.addLoginLog(loginLog);
+        });
         return oAuth2AccessToken;
     }
 

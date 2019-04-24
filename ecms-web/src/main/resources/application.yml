@@ -9,6 +9,9 @@ logging:
 spring:
   profiles:
     active: dev
+  servlet:
+    multipart:
+      maxFileSize: -1
   banner:
     charset: utf-8
     location: classpath:/config/banner.txt

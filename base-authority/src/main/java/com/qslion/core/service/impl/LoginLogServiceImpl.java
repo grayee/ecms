@@ -6,14 +6,16 @@ package com.qslion.core.service.impl;
 import com.qslion.core.dao.AuLoginLogRepository;
 import com.qslion.core.entity.AuLoginLog;
 import com.qslion.core.service.LoginLogService;
-import com.qslion.core.vo.LoginSessionVo;
 import com.qslion.framework.service.impl.GenericServiceImpl;
-import java.util.List;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 修改备注：
+ * 登陆日志Service 实现
+ *
+ * @author Gray.Z
+ * @date 2018/9/18.
  */
 @Service("loginLogService")
 public class LoginLogServiceImpl extends GenericServiceImpl<AuLoginLog, Long> implements
@@ -21,49 +23,10 @@ public class LoginLogServiceImpl extends GenericServiceImpl<AuLoginLog, Long> im
     @Autowired
     private AuLoginLogRepository loginLogRepository;
 
-
-    public int doUpdate(String paramString) {
-        // TODO Auto-generated method stub
-        return 0;
+    @Override
+    public boolean addLoginLog(AuLoginLog loginLog) {
+        loginLog.setLoginTime(DateTime.now().toDate());
+        loginLogRepository.save(loginLog);
+        return true;
     }
-
-    public AuLoginLog find(String paramString) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public int getRecordCount(String paramString,
-                              LoginSessionVo paramLoginSessionVo) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public List queryByCondition() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List queryByCondition(String paramString) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List queryByCondition(String paramString1, String paramString2) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List queryByCondition(int paramInt1, int paramInt2,
-                                 String paramString, LoginSessionVo paramLoginSessionVo) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List queryByCondition(int paramInt1, int paramInt2,
-                                 String paramString1, String paramString2,
-                                 LoginSessionVo paramLoginSessionVo) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

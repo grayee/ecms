@@ -4,168 +4,136 @@ import com.qslion.framework.entity.BaseEntity;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 
 /**
- * AuLoginLog entity. @author MyEclipse Persistence Tools
+ * 登陆日志
+ *
+ * @author Gray.Z
+ * @date 2018/9/18.
  */
 @Entity
 @Table(name = "AU_LOGIN_LOG")
 public class AuLoginLog extends BaseEntity<Long> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	// Fields
 
-	private String loginId;
-	private String name;
-	private String loginIp;
-	private String ie;
-	private String os;
-	private String host;
-	private String logoutType;
-	private Date loginTime;
-	private Date logoutTime;
-	private String loginState;
-	private Date lockTime;
-	private String loginMac;
+    public enum LoginType {
+        /**
+         * 退出方式，LOGIN 登陆，LOGOUT 退出
+         */
+        LOGIN, LOGOUT
+    }
 
-	// Constructors
+    private enum LoginState {
+        /**
+         * 登陆状态，ONLINE在线，OFFLINE 下线
+         */
+        ONLINE, OFFLINE
+    }
 
-	/** default constructor */
-	public AuLoginLog() {
-	}
+    private String loginId;
+    private String username;
+    private String loginIp;
+    private String client;
+    private String os;
+    private String host;
+    private LoginType loginType;
+    private Date loginTime;
+    private LoginState loginState;
+    private String loginMac;
 
-	/** full constructor */
-	public AuLoginLog(String loginId, String name, String loginIp, String ie,
-			String os, String host, String logoutType, Date loginTime,
-			Date logoutTime, String loginState, Date lockTime,
-			String loginMac) {
-		this.loginId = loginId;
-		this.name = name;
-		this.loginIp = loginIp;
-		this.ie = ie;
-		this.os = os;
-		this.host = host;
-		this.logoutType = logoutType;
-		this.loginTime = loginTime;
-		this.logoutTime = logoutTime;
-		this.loginState = loginState;
-		this.lockTime = lockTime;
-		this.loginMac = loginMac;
-	}
+    @Column(name = "LOGIN_ID", length = 50)
+    public String getLoginId() {
+        return this.loginId;
+    }
 
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
 
+    @Column(name = "USER_NAME", length = 50)
+    public String getUsername() {
+        return this.username;
+    }
 
-	@Column(name = "LOGIN_ID", length = 50)
-	public String getLoginId() {
-		return this.loginId;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
-	}
+    @Column(name = "LOGIN_IP", length = 50)
+    public String getLoginIp() {
+        return this.loginIp;
+    }
 
-	@Column(name = "NAME", length = 50)
-	public String getName() {
-		return this.name;
-	}
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Column(name = "CLIENT", length = 255)
+    public String getClient() {
+        return this.client;
+    }
 
-	@Column(name = "LOGIN_IP", length = 50)
-	public String getLoginIp() {
-		return this.loginIp;
-	}
+    public void setClient(String client) {
+        this.client = client;
+    }
 
-	public void setLoginIp(String loginIp) {
-		this.loginIp = loginIp;
-	}
+    @Column(name = "OS", length = 50)
+    public String getOs() {
+        return this.os;
+    }
 
-	@Column(name = "IE", length = 50)
-	public String getIe() {
-		return this.ie;
-	}
+    public void setOs(String os) {
+        this.os = os;
+    }
 
-	public void setIe(String ie) {
-		this.ie = ie;
-	}
+    @Column(name = "HOST", length = 50)
+    public String getHost() {
+        return this.host;
+    }
 
-	@Column(name = "OS", length = 50)
-	public String getOs() {
-		return this.os;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public void setOs(String os) {
-		this.os = os;
-	}
+    @Enumerated
+    @Column(name = "LOGOUT_TYPE", length = 1)
+    public LoginType getLoginType() {
+        return this.loginType;
+    }
 
-	@Column(name = "HOST", length = 50)
-	public String getHost() {
-		return this.host;
-	}
+    public void setLoginType(LoginType loginType) {
+        this.loginType = loginType;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    @Column(name = "LOGIN_TIME", length = 19)
+    public Date getLoginTime() {
+        return this.loginTime;
+    }
 
-	@Column(name = "LOGOUT_TYPE", length = 1)
-	public String getLogoutType() {
-		return this.logoutType;
-	}
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
+    }
 
-	public void setLogoutType(String logoutType) {
-		this.logoutType = logoutType;
-	}
+    @Enumerated
+    @Column(name = "LOGIN_STATE", length = 1)
+    public LoginState getLoginState() {
+        return this.loginState;
+    }
 
-	@Column(name = "LOGIN_TIME", length = 19)
-	public Date getLoginTime() {
-		return this.loginTime;
-	}
+    public void setLoginState(LoginState loginState) {
+        this.loginState = loginState;
+    }
 
-	public void setLoginTime(Date loginTime) {
-		this.loginTime = loginTime;
-	}
+    @Column(name = "LOGIN_MAC", length = 50)
+    public String getLoginMac() {
+        return this.loginMac;
+    }
 
-	@Column(name = "LOGOUT_TIME", length = 19)
-	public Date getLogoutTime() {
-		return this.logoutTime;
-	}
-
-	public void setLogoutTime(Date logoutTime) {
-		this.logoutTime = logoutTime;
-	}
-
-	@Column(name = "LOGIN_STATE", length = 50)
-	public String getLoginState() {
-		return this.loginState;
-	}
-
-	public void setLoginState(String loginState) {
-		this.loginState = loginState;
-	}
-
-	@Column(name = "LOCK_TIME", length = 19)
-	public Date getLockTime() {
-		return this.lockTime;
-	}
-
-	public void setLockTime(Date lockTime) {
-		this.lockTime = lockTime;
-	}
-
-	@Column(name = "LOGIN_MAC", length = 50)
-	public String getLoginMac() {
-		return this.loginMac;
-	}
-
-	public void setLoginMac(String loginMac) {
-		this.loginMac = loginMac;
-	}
+    public void setLoginMac(String loginMac) {
+        this.loginMac = loginMac;
+    }
 
 }

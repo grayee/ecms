@@ -23,6 +23,9 @@ public class LoginHelper {
             return null;
         }
         Object principal = authentication.getPrincipal();
-        return (AuUser) principal;
+        if (principal instanceof AuUser) {
+            return (AuUser) principal;
+        }
+        return null;
     }
 }
