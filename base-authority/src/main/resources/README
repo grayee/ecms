@@ -265,3 +265,11 @@ ResourceServerConfigurerAdapter用于保护oauth要开放的资源，同时主�
 
 Authorization　:　Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw
 Content-Type：:application/json
+
+
+token 的过期时间问题：
+如果 oauth_client_details 表中设置了access_token_validity 和 refresh_token_validity，则按照设置生效，否则
+按照DefaultTokenServices 配置生效
+
+
+

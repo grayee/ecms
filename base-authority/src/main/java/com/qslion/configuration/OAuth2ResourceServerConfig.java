@@ -50,7 +50,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/", "/login/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
                 "/swagger**/*/*",
-                "/webjars/**","/csrf","/index","/v2/*").permitAll()
+                "/webjars/**","/csrf","/index","/v2/*","/hello*").permitAll()
             .anyRequest()
             .authenticated();//允许认证过的用户访问
     }
