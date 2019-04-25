@@ -6,8 +6,9 @@
 </head>
 <body>
 <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout}" method="post">
-  <input type="submit" value="Sign Out"/>
+<form th:action="@{/logout/oauth(access_token=${param.access_token})}" method="post">
+  <input type="submit" value="Sign Out "/>
+  <p th:text="${param.access_token}"></p>
   <input type="button" onclick="window.go(-1)" value="Go back"/>
 </form>
 </body>

@@ -24,8 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties.Provider;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -36,6 +37,9 @@ import org.springframework.security.oauth2.client.token.grant.password.ResourceO
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,6 +73,8 @@ public class Oauth2Controller extends BaseController {
     private OAuth2ClientProperties oAuth2ClientProperties;
     @Autowired
     private LoginLogService loginLogService;
+    @Autowired
+    private TokenStore tokenStore;
 
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
@@ -118,6 +124,15 @@ public class Oauth2Controller extends BaseController {
         return resourceDetails;
     }
 
+    @PostMapping(value = "/logout/oauth")
+    public void logout(HttpServletRequest request,HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        OAuth2AccessToken accessToken = tokenStore.getAccessToken((OAuth2Authentication) auth);
+        tokenStore.removeAccessToken(accessToken);
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+    }
     @GetMapping("/userinfo")
     public Map userinfo(Model model, OAuth2AuthenticationToken authentication) {
         // authentication.getAuthorizedClientRegistrationId() returns the

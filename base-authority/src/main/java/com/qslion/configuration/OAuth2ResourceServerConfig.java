@@ -48,7 +48,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         http.antMatcher("/**").csrf().disable()
             .authorizeRequests()// 授权通过以后
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/", "/login/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
+            .antMatchers("/", "/login/*","/logout/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
                 "/swagger**/*/*",
                 "/webjars/**","/csrf","/index","/v2/*","/hello*").permitAll()
             .anyRequest()
