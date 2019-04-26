@@ -25,8 +25,8 @@ public class BusinessException extends HandleException {
         super(resultCode, e);
     }
 
-    public BusinessException(ResultCode resultCode, String msg) {
-        super(resultCode, msg);
+    public BusinessException(ResultCode resultCode, String args) {
+        super(resultCode, args);
     }
 
     public String getCode() {

@@ -37,10 +37,12 @@ public enum ResultCode {
      * 用户错误：20001-29999
      */
     USER_NOT_LOGGED_IN(20001, "用户未登录"),
-    USER_LOGIN_ERROR(20002, "账号不存在或密码错误"),
-    USER_ACCOUNT_FORBIDDEN(20003, "账号已被禁用"),
-    USER_NOT_EXIST(20004, "用户不存在"),
+    USER_LOGIN_ERROR(20002, "login_username_or_password_error"),
+    USER_ACCOUNT_FORBIDDEN(20003, "login_account_disabled"),
+    USER_NOT_EXIST(20004, "user_not_exist"),
     USER_HAS_EXISTED(20005, "用户已存在"),
+    USER_ACCOUNT_LOCKED(20006, "login_account_locked"),
+    USER_ACCOUNT_FAILURE_LOCK(20007, "login_failure_lock"),
 
     /**
      * 业务错误：30001-39999
@@ -96,6 +98,10 @@ public enum ResultCode {
 
     public String getDesc() {
         return Localize.getMessage(msg);
+    }
+
+    public String getDesc(Object... args) {
+        return Localize.getMessage(msg, args);
     }
 
     public static ResultCode getByCode(int code) {

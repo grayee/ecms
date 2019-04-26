@@ -10,17 +10,29 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 修改备注：
+ * ecms 系统配置
+ *
+ * @author Gray.Z
+ * @date 2018/11/16.
  */
-
 public class SystemConfig {
 
-    public static final String HOT_SEARCH_SEPARATOR = ",";// 热门搜索分隔符
-
-    ;
-    public static final String EXTENSION_SEPARATOR = ",";// 文件扩展名分隔符
-    public static final String LOGO_UPLOAD_NAME = "logo";// Logo图片文件名称(不包含扩张名)
-    public static final String DEFAULT_BIG_PRODUCT_IMAGE_FILE_NAME = "default_big_product_image";// 默认商品图片（大）文件名称(不包含扩展名)
+    /**
+     * 热门搜索分隔符
+     */
+    public static final String HOT_SEARCH_SEPARATOR = ",";
+    /**
+     * 文件扩展名分隔符
+     */
+    public static final String EXTENSION_SEPARATOR = ",";
+    /**
+     * Logo图片文件名称(不包含扩张名)
+     */
+    public static final String LOGO_UPLOAD_NAME = "logo";
+    /**
+     * 默认商品图片（大）文件名称(不包含扩展名)
+     */
+    public static final String DEFAULT_BIG_PRODUCT_IMAGE_FILE_NAME = "default_big_product_image";
     public static final String DEFAULT_SMALL_PRODUCT_IMAGE_FILE_NAME = "default_small_product_image";// 默认商品图片（小）文件名称(不包含扩展名)
     public static final String DEFAULT_THUMBNAIL_PRODUCT_IMAGE_FILE_NAME = "default_thumbnail_product_image";// 商品缩略图文件名称(不包含扩展名)
     public static final String WATERMARK_IMAGE_FILE_NAME = "watermark";// 水印图片文件名称(不包含扩展名)
@@ -53,33 +65,62 @@ public class SystemConfig {
     private Integer storeAlertCount;// 库存报警数量
     private StoreFreezeTime storeFreezeTime;// 库存预占时间点
     private Integer uploadLimit;// 文件上传最大值,0表示无限制,单位KB
-    private Boolean isLoginFailureLock = false; // 是否开启登录失败锁定账号功能
-    private Integer loginFailureLockCount;// 同一账号允许连续登录失败的最大次数，超出次数后将锁定其账号
-    private Integer loginFailureLockTime = 15;// 账号锁定时间(单位：分钟,0表示永久锁定)
+    /**
+     * 是否开启登录失败锁定账号功能
+     */
+    private Boolean isLoginFailureLock = false;
+    /**
+     * 同一账号允许连续登录失败的最大次数，超出次数后将锁定其账号
+     */
+    private Integer loginFailureLockCount = 5;
+    /**
+     *  账号锁定时间(单位：分钟,0表示永久锁定)
+     */
+    private Integer loginFailureLockTime = 15;
     private Boolean isRegister;// 是否开放注册
     private String watermarkImagePath; // 水印图片路径
     private WatermarkPosition watermarkPosition; // 水印位置
     private Integer watermarkAlpha;// 水印透明度
     private Integer bigProductImageWidth;// 商品图片（大）宽度
     private Integer bigProductImageHeight;// 商品图片（大）高度
-    private Integer smallProductImageWidth;// 商品图片（小）宽度
-    private Integer smallProductImageHeight;// 商品图片（小）高度
-    private Integer thumbnailProductImageWidth;// 商品缩略图宽度
-    private Integer thumbnailProductImageHeight;// 商品缩略图高度
-    private String defaultBigProductImagePath;// 默认商品图片（大）
-    private String defaultSmallProductImagePath;// 默认商品图片（小）
-    private String defaultThumbnailProductImagePath;// 默认缩略图
-    private String allowedUploadImageExtension;// 允许上传的图片文件扩展名（为空表示不允许上传图片文件）
-    private String allowedUploadMediaExtension;// 允许上传的媒体文件扩展名（为空表示不允许上传媒体文件）
-    private String allowedUploadFileExtension;// 允许上传的文件扩展名（为空表示不允许上传文件）
-    private String smtpFromMail;// 发件人邮箱
-    private String smtpHost;// SMTP服务器地址
-    private Integer smtpPort;// SMTP服务器端口
-    private String smtpUsername;// SMTP用户名
-    private String smtpPassword;// SMTP密码
-    private PointType pointType;// 积分获取方式
-    private Double pointScale;// 积分换算比率
-    private String captchaImagePath;//验证码图片路径
+    // 商品图片（小）宽度
+    private Integer smallProductImageWidth;
+    /**
+     * 商品图片（小）高度
+     */
+    private Integer smallProductImageHeight;
+    // 商品缩略图宽度
+    private Integer thumbnailProductImageWidth;
+    // 商品缩略图高度
+    private Integer thumbnailProductImageHeight;
+    // 默认商品图片（大）
+    private String defaultBigProductImagePath;
+    // 默认商品图片（小）
+    private String defaultSmallProductImagePath;
+    // 默认缩略图
+    private String defaultThumbnailProductImagePath;
+    // 允许上传的图片文件扩展名（为空表示不允许上传图片文件）
+    private String allowedUploadImageExtension;
+    // 允许上传的媒体文件扩展名（为空表示不允许上传媒体文件）
+    private String allowedUploadMediaExtension;
+    // 允许上传的文件扩展名（为空表示不允许上传文件）
+    private String allowedUploadFileExtension;
+    // 发件人邮箱
+    private String smtpFromMail;
+    // SMTP服务器地址
+    private String smtpHost;
+    // SMTP服务器端口
+    private Integer smtpPort;
+    // SMTP用户名
+    private String smtpUsername;
+    // SMTP密码
+    private String smtpPassword;
+    // 积分获取方式
+    private PointType pointType;
+    // 积分换算比率
+    private Double pointScale;
+    //验证码图片路径
+    private String captchaImagePath;
 
     public String getSystemName() {
         return systemName;
@@ -499,7 +540,8 @@ public class SystemConfig {
 
     // 获取热门搜索关键词集合
     public List<String> getHotSearchList() {
-        return StringUtils.isNotEmpty(hotSearch) ? Arrays.asList(hotSearch.split(HOT_SEARCH_SEPARATOR)) : new ArrayList<String>();
+        return StringUtils.isNotEmpty(hotSearch) ? Arrays.asList(hotSearch.split(HOT_SEARCH_SEPARATOR))
+            : new ArrayList<String>();
     }
 
     // 货币种类（人民币、美元、欧元、英磅、加拿大元、澳元、卢布、港币、新台币、韩元、新加坡元、新西兰元、日元、马元、瑞士法郎、瑞典克朗、丹麦克朗、兹罗提、挪威克朗、福林、捷克克朗、葡币）

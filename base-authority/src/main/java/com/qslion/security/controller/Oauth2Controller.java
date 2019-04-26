@@ -2,11 +2,18 @@ package com.qslion.security.controller;
 
 import com.qslion.core.entity.AuLoginLog;
 import com.qslion.core.entity.AuLoginLog.LoginType;
+import com.qslion.core.entity.AuUser;
+import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.LoginLogService;
 import com.qslion.framework.bean.ResponseResult;
+import com.qslion.framework.bean.SystemConfig;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.enums.ResultCode;
+import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.util.IpUtil;
+import com.qslion.framework.util.SystemConfigUtil;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
+import com.qslion.moudles.ddic.service.DictionaryService;
 import io.swagger.annotations.Api;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties.Provider;
@@ -32,11 +41,14 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
+import org.springframework.security.oauth2.client.resource.UserRedirectRequiredException;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -72,9 +84,14 @@ public class Oauth2Controller extends BaseController {
     @Autowired
     private OAuth2ClientProperties oAuth2ClientProperties;
     @Autowired
+    private AuUserService auUserService;
+    @Autowired
     private LoginLogService loginLogService;
     @Autowired
     private TokenStore tokenStore;
+
+    @Autowired
+    private DictionaryService dictionaryService;
 
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
@@ -93,13 +110,61 @@ public class Oauth2Controller extends BaseController {
             }
         }
 
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        ResourceOwnerPasswordResourceDetails resources = getResourceOwnerPasswordResourceDetails(loginDTO, clientDetails);
-        OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resources, oauth2ClientContext);
-        oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
-        OAuth2AccessToken oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
-        response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
-        response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
+        OAuth2AccessToken oAuth2AccessToken = null;
+
+        AuUser admin = auUserService.findUserByUsername(loginDTO.getUsername());
+        if (admin != null) {
+            //登录失败锁定次数，默认5次失败后将锁定帐号5分钟
+            int loginFailureLockCount = getSystemConfig().getLoginFailureLockCount();
+            //系统记录到登录失败的次数
+            int loginFailureCount = admin.getLoginFailureCount();
+            //锁定开关,默认打开
+            boolean isLoginFailureLock = getSystemConfig().getIsLoginFailureLock();
+            int lastFailureCount =loginFailureLockCount - loginFailureCount;
+            if (isLoginFailureLock && lastFailureCount <= 3) {
+                if (lastFailureCount == 0) {
+                    admin.setAccountNonLocked(false);
+                    admin.setLockedDate(DateTime.now().toDate());
+                    auUserService.update(admin);
+                    throw new BusinessException(ResultCode.USER_ACCOUNT_LOCKED);
+                }
+                admin.setLoginFailureCount(admin.getLoginFailureCount() + 1);
+                auUserService.update(admin);
+                throw new BusinessException(ResultCode.USER_ACCOUNT_FAILURE_LOCK,
+                    String.valueOf(loginFailureLockCount));
+            } else if (!admin.isEnabled()) {
+                throw new BusinessException(ResultCode.USER_ACCOUNT_FORBIDDEN);
+            } else if (!admin.isAccountNonExpired()) {
+                int lockDuration = Minutes.minutesBetween(DateTime.now(), new DateTime(admin.getLockedDate()))
+                    .getMinutes();
+                if (lockDuration > getSystemConfig().getLoginFailureLockTime()) {
+                    admin.setAccountNonLocked(true);
+                    auUserService.update(admin);
+                } else {
+                    throw new BusinessException(ResultCode.USER_ACCOUNT_FORBIDDEN);
+                }
+            }
+
+            try {
+                ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+                ResourceOwnerPasswordResourceDetails resources = getResourceOwnerPasswordResourceDetails(loginDTO,
+                    clientDetails);
+                OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resources, oauth2ClientContext);
+                oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
+                oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
+                response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
+                response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
+            } catch (ClientRegistrationException e) {
+                throw new BusinessException(ResultCode.PERMISSION_NO_ACCESS);
+            } catch (UserRedirectRequiredException e) {
+                throw new BusinessException(ResultCode.PARAMETER_IS_INVALID);
+            } catch (OAuth2AccessDeniedException e) {
+                throw new BusinessException(ResultCode.USER_LOGIN_ERROR);
+            }
+        }else{
+            throw new BusinessException(ResultCode.USER_NOT_EXIST);
+        }
+
         String finalClientId = clientId;
         CompletableFuture.runAsync(()->{
             AuLoginLog loginLog =new AuLoginLog();
@@ -218,6 +283,10 @@ public class Oauth2Controller extends BaseController {
             isRobot = robot;
             return this;
         }
+    }
+
+    public SystemConfig getSystemConfig() {
+        return SystemConfigUtil.getSystemConfig();
     }
 
     public static void main(String[] args) {

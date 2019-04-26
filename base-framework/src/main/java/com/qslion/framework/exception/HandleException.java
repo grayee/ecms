@@ -26,8 +26,8 @@ public class HandleException extends NestedRuntimeException {
         this.resultCode = resultCode;
     }
 
-    public HandleException(ResultCode resultCode, String msg) {
-        super(String.format("%s:%s", resultCode.getDesc(), msg));
+    public HandleException(ResultCode resultCode, String args) {
+        super(resultCode.getDesc(args));
         this.resultCode = resultCode;
     }
 
