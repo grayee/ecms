@@ -3,8 +3,8 @@ package com.qslion.moudles.ddic.controller;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.moudles.ddic.entity.DictBaseData;
-import com.qslion.moudles.ddic.entity.DictBaseDataType;
+import com.qslion.moudles.ddic.entity.DictDataValue;
+import com.qslion.moudles.ddic.entity.DictDataType;
 import com.qslion.moudles.ddic.service.DictionaryService;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,38 +27,38 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/dict")
-public class DictionaryController extends BaseController<DictBaseDataType> {
+public class DictionaryController extends BaseController<DictDataType> {
 
     @Autowired
     private DictionaryService dictionaryService;
 
     @GetMapping(value = "/detail/{typeId}")
-    public List<DictBaseData> detail(@PathVariable Long typeId) {
+    public List<DictDataValue> detail(@PathVariable Long typeId) {
         return dictionaryService.findByTypeId(typeId);
     }
 
     @GetMapping(value = "/list")
-    public Pager<DictBaseDataType> list(Pageable pageable) {
+    public Pager<DictDataType> list(Pageable pageable) {
         return dictionaryService.findPage(pageable);
     }
 
     @PutMapping
-    public boolean update(@RequestBody DictBaseDataType dictBaseDataType) {
-        DictBaseDataType baseDataType = dictionaryService.update(dictBaseDataType);
+    public boolean update(@RequestBody DictDataType dictDataType) {
+        DictDataType baseDataType = dictionaryService.update(dictDataType);
         return baseDataType == null;
     }
 
     @PostMapping
-    public Long save(@Validated @RequestBody DictBaseDataType dictBaseDataType) {
-        DictBaseDataType baseDataType = dictionaryService.save(dictBaseDataType);
+    public Long save(@Validated @RequestBody DictDataType dictDataType) {
+        DictDataType baseDataType = dictionaryService.save(dictDataType);
         return baseDataType.getId();
     }
 
     @PostMapping(value = "/{id}")
-    public Long save(@PathVariable Long id, @Validated @RequestBody DictBaseData dictBaseData) {
-        DictBaseDataType baseDataType = dictionaryService.findById(id);
-        dictBaseData.setDictBaseDataType(baseDataType);
-        DictBaseData baseData = dictionaryService.insert(dictBaseData);
+    public Long save(@PathVariable Long id, @Validated @RequestBody DictDataValue dictDataValue) {
+        DictDataType baseDataType = dictionaryService.findById(id);
+        dictDataValue.setDictDataType(baseDataType);
+        DictDataValue baseData = dictionaryService.insert(dictDataValue);
         return baseData.getId();
     }
 

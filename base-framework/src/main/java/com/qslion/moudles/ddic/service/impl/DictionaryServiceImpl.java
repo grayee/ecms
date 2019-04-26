@@ -1,14 +1,13 @@
 package com.qslion.moudles.ddic.service.impl;
 
 import com.qslion.framework.service.impl.GenericServiceImpl;
-import com.qslion.moudles.ddic.dao.DictBaseDataRepository;
-import com.qslion.moudles.ddic.dao.DictBaseDataTypeRepository;
-import com.qslion.moudles.ddic.entity.DictBaseData;
-import com.qslion.moudles.ddic.entity.DictBaseDataType;
+import com.qslion.moudles.ddic.dao.DictDataTypeRepository;
+import com.qslion.moudles.ddic.dao.DictDataValueRepository;
+import com.qslion.moudles.ddic.entity.DictDataType;
+import com.qslion.moudles.ddic.entity.DictDataValue;
 import com.qslion.moudles.ddic.service.DictionaryService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,21 +17,34 @@ import org.springframework.stereotype.Service;
  * @date 2018/12/6.
  */
 @Service
-public class DictionaryServiceImpl extends GenericServiceImpl<DictBaseDataType, Long> implements DictionaryService {
+public class DictionaryServiceImpl extends GenericServiceImpl<DictDataType, Long> implements DictionaryService {
 
     @Autowired
-    private DictBaseDataRepository dictBaseDataRepository;
+    private DictDataValueRepository dictDataValueRepository;
     @Autowired
-    private DictBaseDataTypeRepository dictBaseDataTypeRepository;
+    private DictDataTypeRepository dictDataTypeRepository;
 
 
     @Override
-    public DictBaseData insert(DictBaseData dictBaseData) {
-        return dictBaseDataRepository.save(dictBaseData);
+    public DictDataValue insert(DictDataValue dictDataValue) {
+        return dictDataValueRepository.save(dictDataValue);
     }
 
     @Override
-    public List<DictBaseData> findByTypeId(Long typeId) {
-        return dictBaseDataRepository.findAll(Example.of(new DictBaseData()));
+    public List<DictDataValue> findByTypeId(Long typeId) {
+        DictDataType dictDataType = dictDataTypeRepository.findById(typeId).orElse(null);
+        if (dictDataType != null) {
+            return dictDataType.getDictDataValueList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<DictDataValue> findByCode(String code) {
+        DictDataType dictDataType = dictDataTypeRepository.findByCode(code);
+        if (dictDataType != null) {
+            return dictDataType.getDictDataValueList();
+        }
+        return null;
     }
 }

@@ -1,8 +1,8 @@
 package com.qslion.moudles.ddic.service;
 
 import com.qslion.framework.service.IGenericService;
-import com.qslion.moudles.ddic.entity.DictBaseData;
-import com.qslion.moudles.ddic.entity.DictBaseDataType;
+import com.qslion.moudles.ddic.entity.DictDataValue;
+import com.qslion.moudles.ddic.entity.DictDataType;
 import java.util.List;
 
 /**
@@ -11,15 +11,15 @@ import java.util.List;
  * @author Gray.Z
  * @date 2018/12/6.
  */
-public interface DictionaryService extends IGenericService<DictBaseDataType, Long> {
+public interface DictionaryService extends IGenericService<DictDataType, Long> {
 
     /**
      * 保存字典值
      *
-     * @param dictBaseData 字典数据
+     * @param dictDataValue 字典数据
      * @return 字典值
      */
-    DictBaseData insert(DictBaseData dictBaseData);
+    DictDataValue insert(DictDataValue dictDataValue);
 
     /**
      * 获取字典列表
@@ -27,5 +27,13 @@ public interface DictionaryService extends IGenericService<DictBaseDataType, Lon
      * @param typeId 字典类型ID
      * @return 字典列表
      */
-    List<DictBaseData> findByTypeId(Long typeId);
+    List<DictDataValue> findByTypeId(Long typeId);
+
+    /**
+     * 获取字典列表
+     *
+     * @param code 字典编码
+     * @return 字典列表
+     */
+    List<DictDataValue> findByCode(String code);
 }

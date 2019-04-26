@@ -14,8 +14,8 @@ import javax.persistence.Table;
  * @date 2018/4/30 13:56.
  */
 @Entity
-@Table(name = "dict_base_data")
-public class DictBaseData extends BaseEntity<Long> {
+@Table(name = "dict_data_value")
+public class DictDataValue extends BaseEntity<Long> {
 
     /**
      * 编码
@@ -23,6 +23,9 @@ public class DictBaseData extends BaseEntity<Long> {
     private String code;
 
     private String name;
+
+    private String value;
+
     private String status;
 
     private String description;
@@ -31,16 +34,16 @@ public class DictBaseData extends BaseEntity<Long> {
      */
     private Short orderNo;
 
-    private DictBaseDataType dictBaseDataType;
+    private DictDataType dictDataType;
 
     @ManyToOne
     @JoinColumn(name = "TYPE_ID")
-    public DictBaseDataType getDictBaseDataType() {
-        return dictBaseDataType;
+    public DictDataType getDictDataType() {
+        return dictDataType;
     }
 
-    public DictBaseData setDictBaseDataType(DictBaseDataType dictBaseDataType) {
-        this.dictBaseDataType = dictBaseDataType;
+    public DictDataValue setDictDataType(DictDataType dictDataType) {
+        this.dictDataType = dictDataType;
         return this;
     }
 
@@ -60,6 +63,15 @@ public class DictBaseData extends BaseEntity<Long> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "VALUE", nullable = false, length = 64)
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Column(name = "STATUS", nullable = false, length = 10)

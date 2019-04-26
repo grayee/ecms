@@ -1,7 +1,7 @@
 package com.qslion.moudles.ddic.dao;
 
 import com.qslion.framework.dao.IGenericRepository;
-import com.qslion.moudles.ddic.entity.DictBaseData;
+import com.qslion.moudles.ddic.entity.DictDataValue;
 
 /**
  * ecms
@@ -9,6 +9,6 @@ import com.qslion.moudles.ddic.entity.DictBaseData;
  * @author Gray.Z
  * @date 2018/11/1.
  */
-public interface DictBaseDataRepository extends IGenericRepository<DictBaseData, Long> {
+public interface DictDataValueRepository extends IGenericRepository<DictDataValue, Long> {
 
 }
