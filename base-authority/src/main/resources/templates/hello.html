@@ -3,12 +3,38 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
   <title>Hello World!</title>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery.serializeJSON/2.9.0/jquery.serializejson.min.js"></script>
+  <script type="text/javascript">
+
+    function getLogoutForm() {
+      console.log($('#logoutForm').serializeJSON());
+      return JSON.stringify($('logoutForm').serializeJSON());
+    }
+
+    function logout() {
+      var data = getLogoutForm();
+      $.ajax({
+        type: "POST",
+        url: $('#logoutForm').attr("action"),
+        data: data,
+        dataType: "json",
+        contentType: "application/json",
+        success: function (result) {
+          if (result.code == 0) {
+            window.location.href = "login"
+          } else {
+            $("#login_error>span").html(result.message);
+          }
+        }
+      });
+    }
+  </script>
 </head>
 <body>
 <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout/oauth(access_token=${param.access_token})}" method="post">
-  <input type="submit" value="Sign Out "/>
-  <p th:text="${param.access_token}"></p>
+<form th:action="@{/logout/oauth(access_token=${param.access_token})}" method="post" id="logoutForm">
+  <input type="button" value="Sign Out " onclick="logout()"/>
   <input type="button" onclick="window.go(-1)" value="Go back"/>
 </form>
 </body>

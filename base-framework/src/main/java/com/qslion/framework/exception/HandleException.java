@@ -14,20 +14,21 @@ public class HandleException extends NestedRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    private static final String DETAIL_MESSAGE_FORMAT = "%s:%s";
     private ResultCode resultCode;
 
     public HandleException(ResultCode resultCode) {
-        super(resultCode.getDesc());
+        super(String.format(DETAIL_MESSAGE_FORMAT, resultCode.getCode(), resultCode.getDesc()));
         this.resultCode = resultCode;
     }
 
     public HandleException(ResultCode resultCode, Throwable e) {
-        super(resultCode.getDesc(), e);
+        super(String.format(DETAIL_MESSAGE_FORMAT, resultCode.getCode(), resultCode.getDesc()), e);
         this.resultCode = resultCode;
     }
 
     public HandleException(ResultCode resultCode, String args) {
-        super(resultCode.getDesc(args));
+        super(String.format(DETAIL_MESSAGE_FORMAT, resultCode.getCode(), resultCode.getDesc(args)));
         this.resultCode = resultCode;
     }
 

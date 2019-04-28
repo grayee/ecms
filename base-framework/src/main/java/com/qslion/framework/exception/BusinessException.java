@@ -19,14 +19,20 @@ public class BusinessException extends HandleException {
 
     public BusinessException(ResultCode resultCode) {
         super(resultCode);
+        code = String.valueOf(resultCode.getCode());
+        message = resultCode.getDesc();
     }
 
     public BusinessException(ResultCode resultCode, Throwable e) {
         super(resultCode, e);
+        code = String.valueOf(resultCode.getCode());
+        message = resultCode.getDesc();
     }
 
     public BusinessException(ResultCode resultCode, String args) {
         super(resultCode, args);
+        code = String.valueOf(resultCode.getCode());
+        message = resultCode.getDesc();
     }
 
     public String getCode() {

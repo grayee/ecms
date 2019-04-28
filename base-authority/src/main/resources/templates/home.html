@@ -14,7 +14,8 @@
 </div>
 <!--登录-->
 <div sec:authorize="isAuthenticated()">
-  <p th:text="${param.access_token}">已登录</p> <p>Click <a th:href="@{/hello(access_token=${param.access_token})}">here</a> to see a greeting.</p>
+  <p th:text="'已登录,token :'+ ${param.access_token}"></p>
+  <p>Click <a th:href="@{/hello(access_token=${param.access_token})}">here</a> to see a greeting.</p>
   <p>Click <a th:href="@{/swagger-ui.html}">here</a> to swagger api.</p>
   <p>登录名：<span sec:authentication="name"></span></p>
   <p>角色：<span sec:authentication="principal.authorities"></span></p>

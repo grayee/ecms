@@ -27,6 +27,8 @@
         success: function (result) {
           if (result.code == 0) {
             window.location.href = "home?access_token=" + result.data.access_token;
+          } else {
+            $("#login_error>span").html(result.message);
           }
         }
       });
@@ -41,7 +43,9 @@
   <div th:if="${param.logout}">
     You have been logged out.
   </div>
-
+  <div id="login_error">
+    <span style="color: brown;"> </span>
+  </div>
   <form th:action="@{login}" method="post" id="loginForm">
     <div>
       用户名：<input type="text" name="username" class="username" id="username" placeholder="用户名" autocomplete="off"

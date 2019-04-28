@@ -190,14 +190,16 @@ public class Oauth2Controller extends BaseController {
     }
 
     @PostMapping(value = "/logout/oauth")
-    public void logout(HttpServletRequest request,HttpServletResponse response) {
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AccessToken accessToken = tokenStore.getAccessToken((OAuth2Authentication) auth);
         tokenStore.removeAccessToken(accessToken);
-        if (auth != null){
+        if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
+        return true;
     }
+
     @GetMapping("/userinfo")
     public Map userinfo(Model model, OAuth2AuthenticationToken authentication) {
         // authentication.getAuthorizedClientRegistrationId() returns the
