@@ -2,6 +2,7 @@ package com.qslion.security.controller;
 
 import com.qslion.core.entity.AuLoginLog;
 import com.qslion.core.entity.AuLoginLog.LoginType;
+import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.LoginLogService;
@@ -13,14 +14,13 @@ import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.util.IpUtil;
 import com.qslion.framework.util.SystemConfigUtil;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
-import com.qslion.moudles.ddic.service.DictionaryService;
 import io.swagger.annotations.Api;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,12 +35,11 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2Clien
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
 import org.springframework.security.oauth2.client.resource.UserRedirectRequiredException;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
@@ -52,17 +51,12 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.ClientRequest;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 /**
  * ecms
@@ -70,7 +64,7 @@ import reactor.core.publisher.Mono;
  * @author Gray.Z
  * @date 2018/11/16.
  */
-@Api(value="Oauth2登陆登出controller",description="Oauth2登陆登出controller",tags={"登陆登出控制器"})
+@Api(value = "Oauth2登陆登出controller", description = "Oauth2登陆登出controller", tags = {"登陆登出控制器"})
 @ResponseResult
 @RestController
 public class Oauth2Controller extends BaseController {
@@ -90,19 +84,16 @@ public class Oauth2Controller extends BaseController {
     @Autowired
     private TokenStore tokenStore;
 
-    @Autowired
-    private DictionaryService dictionaryService;
-
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
     @PostMapping(value = "/login/oauth")
-    public OAuth2AccessToken login(HttpServletRequest request,@RequestBody @Validated LoginDTO loginDTO,
-        @RequestHeader("Authorization") String header, HttpServletResponse response) {
+    public OAuth2AccessToken login(HttpServletRequest request, @RequestBody @Validated LoginDTO loginDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String header, HttpServletResponse response) {
         String clientId = StringUtils.EMPTY;
         //这里需要注意为 Basic 而非 Bearer
         if (header != null && header.startsWith("Basic ")) {
             try {
-                String[] tokens = this.extractAndDecodeHeader(header, request);
+                String[] tokens = this.extractAndDecodeHeader(header);
                 assert tokens.length == 2;
                 clientId = tokens[0];
             } catch (IOException e) {
@@ -120,7 +111,7 @@ public class Oauth2Controller extends BaseController {
             int loginFailureCount = admin.getLoginFailureCount();
             //锁定开关,默认打开
             boolean isLoginFailureLock = getSystemConfig().getIsLoginFailureLock();
-            int lastFailureCount =loginFailureLockCount - loginFailureCount;
+            int lastFailureCount = loginFailureLockCount - loginFailureCount;
             if (isLoginFailureLock && lastFailureCount <= 3) {
                 if (lastFailureCount == 0) {
                     admin.setAccountNonLocked(false);
@@ -161,13 +152,13 @@ public class Oauth2Controller extends BaseController {
             } catch (OAuth2AccessDeniedException e) {
                 throw new BusinessException(ResultCode.USER_LOGIN_ERROR);
             }
-        }else{
+        } else {
             throw new BusinessException(ResultCode.USER_NOT_EXIST);
         }
 
         String finalClientId = clientId;
-        CompletableFuture.runAsync(()->{
-            AuLoginLog loginLog =new AuLoginLog();
+        CompletableFuture.runAsync(() -> {
+            AuLoginLog loginLog = new AuLoginLog();
             loginLog.setLoginId(finalClientId);
             loginLog.setUsername(loginDTO.getUsername());
             loginLog.setLoginIp(IpUtil.getRealIp(request));
@@ -178,7 +169,7 @@ public class Oauth2Controller extends BaseController {
     }
 
     private ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResourceDetails(LoginDTO loginDTO,
-        ClientDetails clientDetails ) {
+        ClientDetails clientDetails) {
         ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
         resourceDetails.setUsername(loginDTO.getUsername());
         resourceDetails.setPassword(loginDTO.getPassword());
@@ -201,37 +192,18 @@ public class Oauth2Controller extends BaseController {
     }
 
     @GetMapping("/userinfo")
-    public Map userinfo(Model model, OAuth2AuthenticationToken authentication) {
-        // authentication.getAuthorizedClientRegistrationId() returns the
-        // registrationId of the Client that was authorized during the Login flow
-        OAuth2AuthorizedClient authorizedClient =
-            this.authorizedClientService.loadAuthorizedClient(
-                authentication.getAuthorizedClientRegistrationId(), authentication.getName());
-        System.out.println(authorizedClient.getAccessToken().getTokenValue());
-        Map userAttributes = Collections.emptyMap();
-        String userInfoEndpointUri = authorizedClient.getClientRegistration()
-            .getProviderDetails().getUserInfoEndpoint().getUri();
-        if (!StringUtils.isEmpty(userInfoEndpointUri)) {
-            // userInfoEndpointUri is optional for OIDC Clients
-            userAttributes = WebClient.builder()
-                .filter(oauth2Credentials(authorizedClient))
-                .build().get().uri(userInfoEndpointUri).retrieve().bodyToMono(Map.class).block();
-        }
-        model.addAttribute("userAttributes", userAttributes);
-        return userAttributes;
+    public UserInfo userinfo(@AuthenticationPrincipal AuUser user) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(String.valueOf(user.getId()));
+        userInfo.setName(user.getUsername());
+        userInfo.setRoles(user.getRoles().stream().map(AuRole::getValue).collect(Collectors.toList()));
+        userInfo.setAvatar(user.getAvatar());
+        userInfo.setInfo(user.getBirthday() + "" + user.getEmail());
+        return userInfo;
     }
 
-    private ExchangeFilterFunction oauth2Credentials(OAuth2AuthorizedClient authorizedClient) {
-        return ExchangeFilterFunction.ofRequestProcessor(
-            clientRequest -> {
-                ClientRequest authorizedRequest = ClientRequest.from(clientRequest)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " +
-                        authorizedClient.getAccessToken().getTokenValue()).build();
-                return Mono.just(authorizedRequest);
-            });
-    }
 
-    private String[] extractAndDecodeHeader(String header, HttpServletRequest request) throws IOException {
+    private String[] extractAndDecodeHeader(String header) throws IOException {
         byte[] base64Token = header.substring(6).getBytes(StandardCharsets.UTF_8.name());
 
         byte[] decoded;
@@ -284,6 +256,55 @@ public class Oauth2Controller extends BaseController {
         public LoginDTO setRobot(boolean robot) {
             isRobot = robot;
             return this;
+        }
+    }
+
+    private static class UserInfo {
+
+        private String id;
+        private String name;
+        private String avatar;
+        private List<String> roles;
+        private String info;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
+
+        public List<String> getRoles() {
+            return roles;
+        }
+
+        public void setRoles(List<String> roles) {
+            this.roles = roles;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
         }
     }
 
