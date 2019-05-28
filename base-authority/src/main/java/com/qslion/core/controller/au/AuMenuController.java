@@ -5,6 +5,7 @@ package com.qslion.core.controller.au;
 
 
 import com.qslion.core.entity.AuMenu;
+import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.core.service.AuResourceService;
@@ -62,6 +63,17 @@ public class AuMenuController extends BaseController<AuMenu> {
 
     @PutMapping
     public boolean update(@RequestBody AuMenu menu) {
+        if (menu.getResource() == null) {
+            AuResource resource = resourceService.findByMenu(menu);
+            if (resource == null) {
+                resource = menu.buildResource();
+            } else {
+                resource.setName(menu.getName());
+                resource.setValue(menu.getUrl());
+            }
+            menu.setResource(resource);
+        }
+
         AuMenu auMenu = auMenuService.update(menu);
         return auMenu == null;
     }

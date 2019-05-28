@@ -1,6 +1,7 @@
 package com.qslion.core.service.impl;
 
 import com.qslion.core.dao.AuResourceRepository;
+import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuResourceService;
@@ -153,5 +154,10 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     @Override
     public boolean checkUnique(AuResource auResource) {
         return auResourceRepository.exists(Example.of(auResource));
+    }
+
+    @Override
+    public AuResource findByMenu(AuMenu menu) {
+        return auResourceRepository.findByMenu(menu);
     }
 }

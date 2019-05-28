@@ -81,9 +81,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             List<TreeNode> leafNodeList = this.getChildTreeNode(menu.getId(), nodeList);
             treeNode.setChildren(leafNodeList);
         }
-        if (menu.getLevel() != null && menu.getLevel() <= 1) {
-            treeNode.setState(NodeState.OPEN);
-        }
+
         Map<String, Object> attributeMap = Maps.newHashMap();
         attributeMap.put("modifyDate", menu.getModifyDate());
         attributeMap.put("menuType", menu.getType().ordinal());

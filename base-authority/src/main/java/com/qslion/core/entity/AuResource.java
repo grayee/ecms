@@ -28,11 +28,18 @@ public class AuResource extends BaseEntity<Long> {
     private String name;
     private String value;
     private String description;
-    private Short type;
+    private ResourceType type;
     private Long parentId;
     private EnableStatus enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
     private AuMenu menu;
+
+    enum ResourceType {
+        /**
+         * 菜单、按钮
+         */
+        MENU, BUTTON
+    }
 
     @JsonIgnore
     @OneToMany(fetch= FetchType.EAGER)
@@ -50,9 +57,8 @@ public class AuResource extends BaseEntity<Long> {
         return menu;
     }
 
-    public AuResource setMenu(AuMenu menu) {
+    public void setMenu(AuMenu menu) {
         this.menu = menu;
-        return this;
     }
 
     @Basic
@@ -86,12 +92,13 @@ public class AuResource extends BaseEntity<Long> {
     }
 
     @Basic
+    @Enumerated
     @Column(name = "type")
-    public Short getType() {
+    public ResourceType getType() {
         return type;
     }
 
-    public void setType(Short type) {
+    public void setType(ResourceType type) {
         this.type = type;
     }
 

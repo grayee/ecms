@@ -127,4 +127,52 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
         auParty.setReal(true);
         return auParty;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        AuRole auRole = (AuRole) o;
+
+        if (name != null ? !name.equals(auRole.name) : auRole.name != null) {
+            return false;
+        }
+        if (value != null ? !value.equals(auRole.value) : auRole.value != null) {
+            return false;
+        }
+        if (description != null ? !description.equals(auRole.description) : auRole.description != null) {
+            return false;
+        }
+        if (roleType != null ? !roleType.equals(auRole.roleType) : auRole.roleType != null) {
+            return false;
+        }
+        if (users != null ? !users.equals(auRole.users) : auRole.users != null) {
+            return false;
+        }
+        if (permissions != null ? !permissions.equals(auRole.permissions) : auRole.permissions != null) {
+            return false;
+        }
+        return userGroups != null ? userGroups.equals(auRole.userGroups) : auRole.userGroups == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (roleType != null ? roleType.hashCode() : 0);
+        result = 31 * result + (users != null ? users.hashCode() : 0);
+        result = 31 * result + (permissions != null ? permissions.hashCode() : 0);
+        result = 31 * result + (userGroups != null ? userGroups.hashCode() : 0);
+        return result;
+    }
 }

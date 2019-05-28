@@ -31,6 +31,7 @@ public class AuMenu extends BaseEntity<Long> {
     private Long parentId;
     private String icon;
     private Short orderNo;
+    private String component;
     private Short status;
     private EnableStatus enableStatus;
     private String remark;
@@ -118,6 +119,16 @@ public class AuMenu extends BaseEntity<Long> {
 
     public void setOrderNo(Short orderNo) {
         this.orderNo = orderNo;
+    }
+
+    @Basic
+    @Column(name = "component", nullable = true)
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
     }
 
     @Basic
@@ -224,12 +235,14 @@ public class AuMenu extends BaseEntity<Long> {
         return result;
     }
 
-   public  AuResource buildResource(){
-       AuResource resource = new AuResource();
-       resource.setName(getName());
-       resource.setValue(getUrl());
-       resource.setMenu(this);
-       resource.setEnableStatus(getEnableStatus());
-       return resource;
-   }
+    public AuResource buildResource() {
+        AuResource resource = new AuResource();
+        resource.setName(getName());
+        resource.setValue(getUrl());
+        resource.setMenu(this);
+        resource.setDescription(this.getRemark());
+        resource.setParentId(this.getParentId());
+        resource.setEnableStatus(getEnableStatus());
+        return resource;
+    }
 }

@@ -3,6 +3,7 @@
  */
 package com.qslion.core.service;
 
+import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.framework.bean.TreeNode;
@@ -54,4 +55,5 @@ public interface AuResourceService extends IGenericService<AuResource, Long> {
      */
     boolean checkUnique(AuResource auResource);
 
+    AuResource findByMenu(AuMenu menu);
 }
