@@ -1,6 +1,7 @@
 package com.qslion.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.qslion.core.enums.AuPartyType;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
         this.permissions = permissions;
     }
 
-    @ManyToMany(targetEntity = AuUser.class, mappedBy = "roles")
+    @ManyToMany(targetEntity = AuUser.class, mappedBy = "roles",fetch = FetchType.EAGER)
     public Set<AuUser> getUsers() {
         return users;
     }
@@ -139,40 +140,18 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
         if (!super.equals(o)) {
             return false;
         }
-
         AuRole auRole = (AuRole) o;
-
-        if (name != null ? !name.equals(auRole.name) : auRole.name != null) {
-            return false;
-        }
-        if (value != null ? !value.equals(auRole.value) : auRole.value != null) {
-            return false;
-        }
-        if (description != null ? !description.equals(auRole.description) : auRole.description != null) {
-            return false;
-        }
-        if (roleType != null ? !roleType.equals(auRole.roleType) : auRole.roleType != null) {
-            return false;
-        }
-        if (users != null ? !users.equals(auRole.users) : auRole.users != null) {
-            return false;
-        }
-        if (permissions != null ? !permissions.equals(auRole.permissions) : auRole.permissions != null) {
-            return false;
-        }
-        return userGroups != null ? userGroups.equals(auRole.userGroups) : auRole.userGroups == null;
+        return Objects.equal(name, auRole.name) &&
+            Objects.equal(value, auRole.value) &&
+            Objects.equal(description, auRole.description) &&
+            Objects.equal(roleType, auRole.roleType) &&
+            Objects.equal(users, auRole.users) &&
+            Objects.equal(permissions, auRole.permissions) &&
+            Objects.equal(userGroups, auRole.userGroups);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (roleType != null ? roleType.hashCode() : 0);
-        result = 31 * result + (users != null ? users.hashCode() : 0);
-        result = 31 * result + (permissions != null ? permissions.hashCode() : 0);
-        result = 31 * result + (userGroups != null ? userGroups.hashCode() : 0);
-        return result;
+        return Objects.hashCode(super.hashCode(), name, value, description, roleType, users, permissions, userGroups);
     }
 }

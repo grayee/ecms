@@ -158,12 +158,12 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
                     parent.setLeaf(true);
                     update(parent);
                 }
-                delete(id);
             } else {
                 //此处删除子节点，亦可抛出异常不删除
                 List<AuMenu> children = getChildren(auMenu);
                 delete(children);
             }
+            delete(id);
         }
         return true;
     }
