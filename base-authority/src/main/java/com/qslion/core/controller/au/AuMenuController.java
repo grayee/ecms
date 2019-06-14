@@ -64,18 +64,22 @@ public class AuMenuController extends BaseController<AuMenu> {
     @PutMapping
     public boolean update(@RequestBody AuMenu menu) {
         if (menu.getResource() == null) {
-            AuResource resource = resourceService.findByMenu(menu);
+            AuMenu oldAuMenu = auMenuService.findById(menu.getId());
+            AuResource resource = resourceService.findByMenu(oldAuMenu);
             if (resource == null) {
                 resource = menu.buildResource();
             } else {
                 resource.setName(menu.getName());
                 resource.setValue(menu.getUrl());
             }
+            menu.setLeaf(oldAuMenu.isLeaf());
+            menu.setLevel(oldAuMenu.getLevel());
+            menu.setEnableStatus(oldAuMenu.getEnableStatus());
+            menu.setStatus(oldAuMenu.getStatus());
             menu.setResource(resource);
         }
-
         AuMenu auMenu = auMenuService.update(menu);
-        return auMenu == null;
+        return auMenu != null;
     }
 
     @PostMapping

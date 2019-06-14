@@ -86,6 +86,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         attributeMap.put("modifyDate", menu.getModifyDate());
         attributeMap.put("menuType", menu.getType().ordinal());
         attributeMap.put("orderNo", menu.getOrderNo());
+        attributeMap.put("component", menu.getComponent());
         treeNode.setAttributes(attributeMap);
         return treeNode;
     }
