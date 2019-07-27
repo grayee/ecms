@@ -68,11 +68,11 @@ public class SingletonTest {
     }
 
     /**
-     * 静态内部类实现单例
+     * 静态内部类实现单例-登记式
      */
-    public static class StaticInnerSingleton {
+    public static class RegisterSingleton  {
         // 私有构造
-        private StaticInnerSingleton() {
+        private RegisterSingleton() {
         }
 
         /**
@@ -83,11 +83,11 @@ public class SingletonTest {
          * 只有通过显式调用 getInstance 方法时，才会显式装载 SingletonHolder 类，从而实例化 instance
          */
         private static class SingletonHolder {
-            private static final StaticInnerSingleton INSTANCE = new StaticInnerSingleton();
+            private static final RegisterSingleton INSTANCE = new RegisterSingleton();
         }
 
-        public static StaticInnerSingleton getInstance() {
-            System.out.println("StaticInnerSingleton getInstance");
+        public static RegisterSingleton getInstance() {
+            System.out.println("RegisterSingleton getInstance");
             return SingletonHolder.INSTANCE;
         }
     }
@@ -147,7 +147,7 @@ public class SingletonTest {
         LazySingleton.getInstance();
         LazySyncSingleton.getInstance();
         LazyDclSingleton.getInstance();
-        StaticInnerSingleton.getInstance();
+        RegisterSingleton.getInstance();
         StaticBlockSingleton.getInstance();
         EnumSingleton.INSTANCE.showMessage();
     }
