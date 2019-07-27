@@ -60,7 +60,7 @@ public class DataSourceConfig {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(routingDataSource(masterDataSource, slaveDataSource));
         //这里一定要是你自己App实体类的位置
-        emf.setPackagesToScan(new String[]{"com.qslion.**.entity"});
+        emf.setPackagesToScan("com.qslion.**.entity");
         emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         return emf;
     }

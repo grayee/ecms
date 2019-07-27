@@ -22,7 +22,7 @@ public class DataSourceContextHolder {
      */
     private static ThreadLocal<DataSourceType> contextHolder = new ThreadLocal<>();
 
-    public static void setDataSouceType(DataSourceType dataSourceType) {
+    public static void setDataSourceType(DataSourceType dataSourceType) {
         if (dataSourceType == null) {
             throw new NullPointerException();
         }
@@ -37,7 +37,7 @@ public class DataSourceContextHolder {
     /**
      * 操作结束后清除该数据，避免内存泄漏，同时也为了后续在该线程进行写操作时任然为读模式
      */
-    public static void clearDbType() {
+    public static void clearDateSoureType() {
         contextHolder.remove();
     }
 }
