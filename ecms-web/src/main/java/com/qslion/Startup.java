@@ -19,9 +19,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.request.RequestContextListener;
 @EnableJpaAuditing
+@EnableTransactionManagement(order = 10)
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Startup {
 

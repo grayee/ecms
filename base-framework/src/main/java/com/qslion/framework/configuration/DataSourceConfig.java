@@ -55,7 +55,7 @@ public class DataSourceConfig {
         return new DynamicDataSource(masterDataSource, targetDataSources);
     }
 
-    @Bean(name = "entityManagerFactory")
+/*    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean emf(DataSource masterDataSource, DataSource slaveDataSource) {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(routingDataSource(masterDataSource, slaveDataSource));
@@ -72,6 +72,6 @@ public class DataSourceConfig {
         EntityManagerFactory e = emf(masterDataSource, slaveDataSource).getNativeEntityManagerFactory();
         tm.setEntityManagerFactory(e);
         return tm;
-    }
+    }*/
 
 }
