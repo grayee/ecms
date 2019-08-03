@@ -9,9 +9,9 @@ logging:
 #server
 server:
   servlet:
-    context-path: /ecms
+    context-path: /ecms/auth
   address: localhost
-  port: 8080
+  port: 8081
 
 #spring
 spring:
@@ -37,31 +37,24 @@ spring:
     hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     hibernate:
       ddl-auto: update
-  quartz:
-      #相关属性配置
-      properties:
-        org:
-          quartz:
-            scheduler:
-              instanceName: clusteredScheduler
-              instanceId: AUTO
-            jobStore:
-              class: org.quartz.impl.jdbcjobstore.JobStoreTX
-              driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-              tablePrefix: QRTZ_
-              isClustered: true
-              clusterCheckinInterval: 10000
-              useProperties: false
-            threadPool:
-              class: org.quartz.simpl.SimpleThreadPool
-              threadCount: 10
-              threadPriority: 5
-              threadsInheritContextClassLoaderOfInitializingThread: true
-      #数据库方式
-      job-store-type: jdbc
-      #初始化表结构,该配置目前版本没有生效
-      jdbc:
-        initialize-schema: never
+  # SECURITY OAUTH2 CLIENT (OAuth2ClientProperties  CommonOAuth2Provider)
+  security:
+   oauth2:
+    client:
+      registration:
+        facebook:
+          client-id: 233668646673605
+          client-secret: 33b17e044ee6a4fa383f46ec6e28ea1d
+        github:
+          client-id: bd1c0a783ccdd1c9b9e4
+          client-secret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
+      provider:
+        ecms-oauth-provider:
+          authorization-uri: http://${server.address}:${server.port}/${server.servlet.context-path}/oauth/authorize
+          token-uri: http://${server.address}:${server.port}/${server.servlet.context-path}/oauth/token
+          user-info-uri: http://${server.address}:${server.port}/${server.servlet.context-path}/userinfo
+          user-info-authentication-method: header
+
 debug: false
 trace: false
 login:

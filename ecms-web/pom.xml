@@ -69,11 +69,11 @@
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
     </dependency>
-
+<!--
     <dependency>
       <groupId>com.qslion</groupId>
       <artifactId>base-authority</artifactId>
-    </dependency>
+    </dependency>-->
 
     <dependency>
       <groupId>com.qslion</groupId>
