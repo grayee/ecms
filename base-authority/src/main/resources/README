@@ -272,4 +272,6 @@ token 的过期时间问题：
 按照DefaultTokenServices 配置生效
 
 
+Authentication request failed: error="access_denied", error_description="Invalid token does not contain resource id (oauth2-resource)"
 
+https://blog.csdn.net/lixiang987654321/article/details/88133463

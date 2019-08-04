@@ -22,6 +22,10 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    private static final String[] PERMIT_ALL_URLS = new String[]{"/", "/login/*","/logout/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
+            "/swagger**/*/*",
+            "/webjars/**","/csrf","/index","/v2/*","/hello*"};
+
     /**
      * ResourceServerSecurityConfigurer 创建了OAuth2核心过滤器OAuth2AuthenticationProcessingFilter,
      * 并为其提供固定的AuthenticationManager即OAuth2AuthenticationManager,它并没有将OAuth2AuthenticationManager
@@ -48,9 +52,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         http.antMatcher("/**").csrf().disable()
             .authorizeRequests()// 授权通过以后
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/", "/login/*","/logout/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
-                "/swagger**/*/*",
-                "/webjars/**","/csrf","/index","/v2/*","/hello*").permitAll()
+            .antMatchers(PERMIT_ALL_URLS).permitAll()
             .anyRequest()
             .authenticated();//允许认证过的用户访问
     }

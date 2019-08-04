@@ -47,6 +47,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] PERMIT_ALL_URLS = new String[]{"/", "/login/*", "/logout/*", "/login*", "/logout**", "error**", "/swagger**",
+        "/swagger**/*",
+        "/webjars/**", "/csrf**", "/index", "/v2/*", "/hello*"};
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -75,8 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**").authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/", "/login/*","/logout/*","/login*", "/logout**", "error**", "/swagger**","/swagger**/*",
-                "/webjars/**","/csrf**","/index","/v2/*","/hello*").permitAll()
+            .antMatchers(PERMIT_ALL_URLS).permitAll()
             .anyRequest().authenticated()
             //.and().csrf()
             // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -146,7 +148,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         repository.setHeaderName("X-XSRF-TOKEN");
         return repository;
     }
-
 
 
     public static void main(String[] args) {
