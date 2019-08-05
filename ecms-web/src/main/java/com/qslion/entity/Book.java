@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Version;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 /*import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -32,13 +33,13 @@ public class Book {
     }
 
 
-
     public Book() {
     }
 
-    public Book(String id, String name, Long version) {
+    public Book(String id, String name, Long price, Long version) {
         this.id = id;
         this.name = name;
+        this.price = price;
         this.version = version;
     }
 

@@ -1,0 +1,28 @@
+#server
+server:
+  port: 8079
+spring:
+   profiles:
+      active: dev
+---
+spring:
+  profiles: dev
+  cloud:
+    gateway:
+      routes:
+      - id: path_route
+        uri: http://localhost:8080/ecms/book
+        filters:
+        - AddRequestHeader=X-Request-Foo, Bar
+        predicates:
+        - Path=/test/{segment}
+      - id: rewritepath_route
+        uri: https://blog.csdn.net
+        predicates:
+        - Path=/foo/**
+        filters:
+        - RewritePath=/foo/(?<segment>.*), /$\{segment}
+        - RequestTime=false
+
+
+

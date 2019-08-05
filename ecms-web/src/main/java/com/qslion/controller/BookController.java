@@ -3,9 +3,12 @@ package com.qslion.controller;
 import com.qslion.entity.Book;
 import com.qslion.service.BookService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -18,14 +21,17 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by zhangruigang on 2016/9/23.
  */
-@Controller
+@RestController
 @RequestMapping("/book")
 public class BookController {
     private BookService bookService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public void get(HttpServletRequest request, HttpServletResponse response, Book book) {
-        bookService.get(book);
+    public Book get(String bookName) {
+        if (StringUtils.isEmpty(bookName)) {
+            bookName = "hello world";
+        }
+        return bookService.get(bookName);
     }
 
     @RequestMapping(method = RequestMethod.POST)
