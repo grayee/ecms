@@ -1,7 +1,6 @@
 package com.qslion.security;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuUserIdAuditAware implements AuditorAware<Long> {
 
-    @Nonnull
     @Override
     public Optional<Long> getCurrentAuditor() {
         SecurityContext securityContext = SecurityContextHolder.getContext();

@@ -1,5 +1,6 @@
-package com.qslion.gateway;
+package com.qslion.gateway.configuration;
 
+import com.qslion.gateway.filter.RequestTimeFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2018/4/21 13:43.
  */
 @Configuration
-public class GatewayRoutes {
+public class GatewayRoutesConfig {
     @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder builder) {
         return builder.routes()

@@ -23,6 +23,15 @@ spring:
         filters:
         - RewritePath=/foo/(?<segment>.*), /$\{segment}
         - RequestTime=false
+        - name: RequestRateLimiter
+          args:
+            key-resolver: '#{@hostAddrKeyResolver}'
+            redis-rate-limiter.replenishRate: 1 #\u4EE4\u724C\u6876\u6BCF\u79D2\u586B\u5145\u5E73\u5747\u901F\u7387
+            redis-rate-limiter.burstCapacity: 3 #\u4EE4\u724C\u6876\u603B\u5BB9\u91CF
+  redis:
+    host: 172.16.14.211
+    port: 6318
+    database: 1
 
 
 

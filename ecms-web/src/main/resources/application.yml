@@ -15,8 +15,14 @@ server:
 
 #spring
 spring:
+  application:
+    name: ecms-web
   profiles:
     active: dev
+  cloud:
+      nacos:
+        discovery:
+          server-addr: 127.0.0.1:8848
   servlet:
     multipart:
       maxFileSize: -1
