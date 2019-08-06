@@ -16,7 +16,7 @@
         <java.version>1.8</java.version>
         <junitversion>4.12</junitversion>
         <spring-cloud-version>Finchley.RELEASE</spring-cloud-version>
-        <spring.cloud.alibaba.version>2.0.0.RELEASE</spring.cloud.alibaba.version>
+        <spring.cloud.alibaba.version>0.9.0.RELEASE</spring.cloud.alibaba.version>
     </properties>
 
     <!-- Inherit defaults from Spring Boot -->
@@ -46,7 +46,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
+                <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring.cloud.alibaba.version}</version>
                 <type>pom</type>
