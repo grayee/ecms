@@ -30,6 +30,7 @@
         <module>base-authority</module>
         <module>base-config</module>
         <module>base-framework</module>
+        <module>ecms-gateway</module>
         <module>ecms-web</module>
     </modules>
 
@@ -61,6 +62,12 @@
             <dependency>
                 <groupId>com.qslion</groupId>
                 <artifactId>ecms-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qslion</groupId>
+                <artifactId>ecms-gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
