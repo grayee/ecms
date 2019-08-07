@@ -5,7 +5,7 @@ spring:
     nacos:
       config:
         server-addr: 127.0.0.1:8848
-        file-extension: yml
+        file-extension: yml #在此处客户端和nacos server端对文件格式的声明要一致
         prefix: ecms-config
   profiles:
     active: dev
