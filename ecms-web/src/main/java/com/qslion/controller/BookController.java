@@ -6,10 +6,7 @@ import com.qslion.service.BookService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -40,9 +37,9 @@ public class BookController {
         return bookService.get(bookName);
     }
 
-    @RequestMapping(value = "/author",method = RequestMethod.GET)
-    public String getAuthor() {
-        return restTemplate.getForObject("http://ecms-auth/au/user/detail/1?access_token=6ea2e741-cdd9-4244-98f8-66609cc978a1", Map.class).toString();
+    @RequestMapping(value = "/author/{token}", method = RequestMethod.GET)
+    public Object getAuthor(@PathVariable String token) {
+        return restTemplate.getForObject("http://ecms-auth/ecms/auth/au/user/detail/1?access_token=" + token, Object.class);
     }
 
     @RequestMapping(method = RequestMethod.POST)

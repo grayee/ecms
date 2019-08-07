@@ -82,17 +82,6 @@
     </dependency>
 
 
-<!--
-    <dependency>
-      <groupId>com.qslion</groupId>
-      <artifactId>base-authority</artifactId>
-    </dependency>-->
-
-    <dependency>
-      <groupId>com.qslion</groupId>
-      <artifactId>base-config</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>com.qslion</groupId>
       <artifactId>base-framework</artifactId>

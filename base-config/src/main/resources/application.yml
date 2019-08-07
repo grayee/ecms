@@ -1,0 +1,20 @@
+#本地配置文件，若同时存在本地文件以及nacos远程配置文件，则本地文件优于远程配置文件
+#LOGGING
+logging:
+   config: classpath:config/log4j2.xml
+   level:
+       root: info
+       org.springframework.security: info
+       org.hibernate: ERROR
+
+spring:
+  banner:
+    charset: utf-8
+    location: classpath:/config/banner.txt
+
+
+
+
+
+
+
