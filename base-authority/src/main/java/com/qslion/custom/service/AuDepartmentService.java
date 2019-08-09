@@ -15,6 +15,8 @@ package com.qslion.custom.service;
 import com.qslion.custom.entity.AuDepartment;
 import com.qslion.framework.service.IGenericService;
 
+import java.util.List;
+
 /**
  * 功能、用途、现存BUG:
  * @version 1.0.0
@@ -28,10 +30,17 @@ public interface AuDepartmentService extends IGenericService<AuDepartment, Long>
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
      * 
      * @param vo 用于添加的VO对象
-     * @param parentRelId 上级节点团体关系主键
      * @return 若添加成功，则返回新添加记录的主键
      */
-    AuDepartment insert(AuDepartment vo, Long parentRelId);
-    
+    AuDepartment insert(AuDepartment vo);
+
+
+    /**
+     * 删除多条记录，删除自身并同时删除相应的团体、团体关系
+     *
+     * @param ids ids
+     * @return boolean
+     */
+    boolean remove(List<Long> ids);
     
 }

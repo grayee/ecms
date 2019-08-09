@@ -31,15 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/org/employee")
 public class EmployeeController extends BaseController<AuEmployee> {
 
-
     @Autowired
     public AuEmployeeService employeeService;
     @Autowired
     public PartyRelationService partyRelationService;
     @Autowired
     public ConnectionRuleService connectionRuleService;
-
-
 
     /**
      * 从页面表单获取信息注入vo，并插入单条记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）

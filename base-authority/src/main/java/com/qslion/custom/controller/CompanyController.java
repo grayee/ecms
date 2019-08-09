@@ -1,10 +1,6 @@
 package com.qslion.custom.controller;
 
 
-import com.google.common.collect.Lists;
-import com.qslion.core.service.ConnectionRuleService;
-import com.qslion.core.service.PartyRelationService;
-import com.qslion.core.service.PartyService;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.bean.Pageable;
@@ -16,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -42,14 +36,6 @@ public class CompanyController extends BaseController<AuCompany> {
 
     @Autowired
     private AuCompanyService companyService;
-    @Autowired
-    private PartyService partyService;
-    @Autowired
-    private PartyRelationService partyRelationService;
-    @Autowired
-    private ConnectionRuleService connectionRuleService;
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
 
     /**
      * 保存
@@ -71,7 +57,7 @@ public class CompanyController extends BaseController<AuCompany> {
     @DeleteMapping
     public boolean delete(@RequestBody List<Long> ids) {
         if (CollectionUtils.isNotEmpty(ids)) {
-            return companyService.remove(Lists.newArrayList(ids));
+            return companyService.remove(ids);
         }
         return false;
     }

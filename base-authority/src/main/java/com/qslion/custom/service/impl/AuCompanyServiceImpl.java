@@ -17,6 +17,7 @@ import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.CopyUtils;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     public AuCompany insert(AuCompany company) {
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
-            company.setCompanyNo(RandomStringUtils.random(10));
+            company.setCompanyNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
         }
         //添加公司团体
         partyRelationService.addPartyRelation(company, AuPartyRelationType.ADMINISTRATIVE);
@@ -57,7 +58,6 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         List<AuPartyRelation> relationList = Lists.newArrayList();
         ids.forEach(companyId -> {
             AuCompany company = companyRepository.findById(companyId).get();
-
             AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
             if (partyRelation != null && partyRelation.isLeaf()) {
                 companyList.add(company);

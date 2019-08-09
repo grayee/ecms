@@ -3,9 +3,7 @@
  */
 package com.qslion.core.controller.org;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.enums.AuPartyRelationType;
@@ -18,19 +16,14 @@ import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,18 +63,20 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     }
 
     @DeleteMapping
-    public boolean deletes(HttpServletRequest request, HttpServletResponse response, ModelMap model, String[] ids) {
-        String relationTypeId = request.getParameter("relationTypeId");
-        // partyRelationService.delete(ids);
-        logger.info("--------------------deletes!!!!!------------------------");
+    public boolean deletes(Long[] ids) {
+        try {
+            List<AuPartyRelation> list = partyRelationService.findList(ids);
+            partyRelationService.delete(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return false;
+        }
         return true;
     }
 
     @PutMapping
-    public String update(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-                         @ModelAttribute("entity") AuPartyRelation entity) {
-        partyRelationService.update(entity);
-        return "";
+    public Boolean update(@ModelAttribute("entity") AuPartyRelation entity) {
+        return partyRelationService.update(entity) == null;
     }
 
     @GetMapping(value = "/type")
