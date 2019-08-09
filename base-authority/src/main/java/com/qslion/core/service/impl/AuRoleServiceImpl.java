@@ -12,7 +12,9 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,15 +46,13 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     /**
      * 功能: 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
      *
-     * @param role 用于添加的VO对象
+     * @param role     用于添加的VO对象
      * @param parentId 上级节点团体关系主键
      * @return 若添加成功，则返回新添加记录的主键
      */
     @Override
     public AuRole insert(AuRole role, Long parentId) {
-        AuParty auParty = role.buildAuParty();
-        role.setAuParty(auParty);
-        partyRelationService.addPartyRelation(parentId, auParty, AuPartyRelationType.ADMINISTRATIVE);
+        partyRelationService.addPartyRelation(role, AuPartyRelationType.ADMINISTRATIVE);
         return auRoleRepository.save(role);
     }
 

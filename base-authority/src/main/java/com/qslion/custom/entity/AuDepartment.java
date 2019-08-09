@@ -175,6 +175,7 @@ public class AuDepartment extends PartyEntity {
         auParty.setEnableStatus(getEnableStatus());
         auParty.setInherit(true);
         auParty.setReal(true);
+        setAuParty(auParty);
         return auParty;
     }
 }

@@ -1,4 +1,4 @@
-package com.test;
+package com.test.design.pattern;
 
 import org.junit.Test;
 

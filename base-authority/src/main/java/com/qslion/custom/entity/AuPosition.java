@@ -194,6 +194,7 @@ public class AuPosition extends PartyEntity {
         auParty.setEnableStatus(getEnableStatus());
         auParty.setInherit(true);
         auParty.setReal(true);
+        setAuParty(auParty);
         return auParty;
     }
 }

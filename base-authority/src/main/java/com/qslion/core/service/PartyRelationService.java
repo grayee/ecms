@@ -3,10 +3,12 @@ package com.qslion.core.service;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuRole;
+import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
+
 import java.util.List;
 import java.util.Set;
 
@@ -22,10 +24,10 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType);
 
     /**
-     * 角色团体关系树
+     * 团体关系树
      *
      * @param relationType 关系类型，角色
-     * @param roleSet 已选角色集合
+     * @param roleSet      已选角色集合
      * @return 树
      */
     List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Set<AuRole> roleSet);
@@ -34,7 +36,7 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     List<TreeNode> getPartyDetailRelationTree(String partyId, String relationTypeId);
 
     //全局团体关系树
-    List<TreeNode> getGlobalRelationTree();
+    List<TreeNode> getGlobalRelationTree(Set<AuRole> roleSet);
 
     //根据团体类型获得关系树
     List<TreeNode> getRelationTreeByPartyTypes(List<AuPartyType> partyTypes);
@@ -42,16 +44,15 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     /**
      * 添加团体关系
      *
-     * @param parentId 父团体关系ID
-     * @param party 团体
+     * @param party        团体
      * @param relationType 关系类型
      */
-    boolean addPartyRelation(Long parentId, AuParty party, AuPartyRelationType relationType);
+    boolean addPartyRelation(PartyEntity party, AuPartyRelationType relationType);
 
     /**
      * 初始化根节点
      *
-     * @param party 团体
+     * @param party        团体
      * @param relationType 团体关系类型
      * @return boolean
      */

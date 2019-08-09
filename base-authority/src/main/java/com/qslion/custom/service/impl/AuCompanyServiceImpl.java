@@ -41,17 +41,13 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
 
 
     @Override
-    public AuCompany insert(AuCompany company, Long parentCode) {
-        //添加公司团体
-        AuParty auParty = company.buildAuParty();
-        company.setAuParty(auParty);
-
-        partyRelationService.addPartyRelation(parentCode, auParty, AuPartyRelationType.ADMINISTRATIVE);
-
+    public AuCompany insert(AuCompany company) {
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
             company.setCompanyNo(RandomStringUtils.random(10));
         }
+        //添加公司团体
+        partyRelationService.addPartyRelation(company, AuPartyRelationType.ADMINISTRATIVE);
         return companyRepository.save(company);
     }
 

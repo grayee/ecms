@@ -13,11 +13,11 @@ import org.springframework.web.context.request.RequestContextListener;
 @EnableJpaAuditing
 @EnableTransactionManagement(order = 10)
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-public class AuthStartup {
+public class AuthApp {
 
     public static void main(String[] args) throws Exception {
         System.setProperty("nacos.logging.default.config.enabled","false");
-        SpringApplication.run(AuthStartup.class, args);
+        SpringApplication.run(AuthApp.class, args);
     }
 
     @Bean

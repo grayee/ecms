@@ -59,8 +59,8 @@ public class CompanyController extends BaseController<AuCompany> {
      */
     @ApiOperation("保存公司信息")
     @PostMapping
-    public Long save(@Validated @RequestBody AuCompany company, @RequestParam(required = false) Long parentCode) {
-        AuCompany auCompany = companyService.insert(company, parentCode);
+    public Long save(@Validated @RequestBody AuCompany company) {
+        AuCompany auCompany = companyService.insert(company);
         return auCompany.getId();
     }
 

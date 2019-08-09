@@ -34,6 +34,7 @@ public class AuParty extends BaseEntity<Long> {
 
     private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
 
+    @Enumerated
     @Column(name = "party_type_id", nullable = false)
     public AuPartyType getAuPartyType() {
         return this.auPartyType;

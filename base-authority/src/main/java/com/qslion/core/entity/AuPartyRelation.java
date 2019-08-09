@@ -35,7 +35,7 @@ public class AuPartyRelation extends NestTreeEntity {
     /**
      * 排序码
      */
-    private String orderCode;
+    private Long orderCode;
     /**
      * 是否叶子节点
      */
@@ -84,11 +84,11 @@ public class AuPartyRelation extends NestTreeEntity {
     }
 
     @Column(name = "order_code", length = 2)
-    public String getOrderCode() {
+    public Long getOrderCode() {
         return this.orderCode;
     }
 
-    public void setOrderCode(String orderCode) {
+    public void setOrderCode(Long orderCode) {
         this.orderCode = orderCode;
     }
 

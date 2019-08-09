@@ -19,10 +19,9 @@ public interface AuCompanyService extends IGenericService<AuCompany, Long> {
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
      *
      * @param vo 用于添加的VO对象
-     * @param parentRelId 上级节点团体关系主键
      * @return 若添加成功，则返回新添加记录
      */
-    AuCompany insert(AuCompany vo, Long parentRelId);
+    AuCompany insert(AuCompany vo);
 
 
     /**

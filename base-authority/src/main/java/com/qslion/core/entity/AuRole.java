@@ -126,6 +126,7 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
         auParty.setEnableStatus(getEnableStatus());
         auParty.setInherit(true);
         auParty.setReal(true);
+        setAuParty(auParty);
         return auParty;
     }
 
