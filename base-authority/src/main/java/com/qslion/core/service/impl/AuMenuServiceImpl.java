@@ -21,16 +21,15 @@ import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 菜单Service实现
@@ -64,53 +63,71 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         }
 
         menuList.sort(Comparator.comparing(AuMenu::getOrderNo));
-        return menuList.stream()
-            .filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId()))
-            .map(menu -> getTreeNode(menuList, menu)).collect(Collectors.toList());
+        return menuList.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId()))
+                .map(menu -> getTreeNode(menuList, menu)).collect(Collectors.toList());
     }
 
     private TreeNode getTreeNode(List<AuMenu> nodeList, AuMenu menu) {
         TreeNode treeNode = new TreeNode(String.valueOf(menu.getId()), menu.getName());
         treeNode.setIconCls(menu.getIcon());
-        if (menu.isLeaf()) {
+        if (menu.isLeaf() || StringUtils.isNotEmpty(menu.getUrl())) {
             treeNode.setPath(menu.getUrl());
             treeNode.setState(NodeState.OPEN);
         } else {
             nodeList = nodeList.stream().filter(auMenu -> !auMenu.getId().equals(menu.getId()))
-                .collect(Collectors.toList());
+                    .collect(Collectors.toList());
             List<TreeNode> leafNodeList = this.getChildTreeNode(menu.getId(), nodeList);
             treeNode.setChildren(leafNodeList);
         }
 
+        Map<String, Object> attributeMap = getAttrMap(menu);
+
+        List<TreeNode> pageBtnList = nodeList.stream().filter(auMenu -> auMenu.getType() == MenuType.PAGE_BUTTON
+                && Objects.equals(auMenu.getParentId(), menu.getId())).map(auMenu -> {
+            TreeNode btnNode = new TreeNode(String.valueOf(auMenu.getId()), auMenu.getName());
+            btnNode.setPath(auMenu.getUrl());
+            btnNode.setState(NodeState.OPEN);
+            btnNode.setAttributes(getAttrMap(auMenu));
+            return btnNode;
+        }).collect(Collectors.toList());
+
+        if (CollectionUtils.isNotEmpty(pageBtnList)) {
+            attributeMap.put("pageBtn", pageBtnList);
+        }
+
+        treeNode.setAttributes(attributeMap);
+        return treeNode;
+    }
+
+    private Map<String, Object> getAttrMap(AuMenu menu) {
         Map<String, Object> attributeMap = Maps.newHashMap();
         attributeMap.put("modifyDate", menu.getModifyDate());
         attributeMap.put("menuType", menu.getType().ordinal());
         attributeMap.put("orderNo", menu.getOrderNo());
         attributeMap.put("component", menu.getComponent());
-        treeNode.setAttributes(attributeMap);
-        return treeNode;
+        return attributeMap;
     }
 
     private List<TreeNode> getChildTreeNode(Long parentId, List<AuMenu> nodeList) {
         return nodeList.stream().filter(
-            menu -> menu.getParentId() != null && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
-            .map(menu -> getTreeNode(nodeList, menu)).collect(Collectors.toList());
+                menu -> menu.getParentId() != null && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
+                .map(menu -> getTreeNode(nodeList, menu)).collect(Collectors.toList());
     }
 
     @Override
     public List<AuMenu> getChildren(AuMenu menu) {
         return auMenuRepository.findAll(
-            (Specification<AuMenu>) (root, criteriaQuery, criteriaBuilder) ->
-                criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), menu.getId()))
-                    .getRestriction());
+                (Specification<AuMenu>) (root, criteriaQuery, criteriaBuilder) ->
+                        criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), menu.getId()))
+                                .getRestriction());
     }
 
     @Override
     public List<AuMenu> getParentChildren(AuMenu menu) {
         return auMenuRepository.findAll(
-            (Specification<AuMenu>) (root, criteriaQuery, criteriaBuilder) ->
-                criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), menu.getParentId()))
-                    .getRestriction());
+                (Specification<AuMenu>) (root, criteriaQuery, criteriaBuilder) ->
+                        criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), menu.getParentId()))
+                                .getRestriction());
     }
 
     @Override
@@ -135,14 +152,21 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         }
         AuMenu parent = getParent(menu);
         if (parent != null && parent.isLeaf()) {
-            parent.setLeaf(false);
-            parent.setType(MenuType.CATALOG);
-            parent.setUrl(StringUtils.EMPTY);
-            update(parent);
+            if (parent.getType() == MenuType.PAGE_BUTTON) {
+                throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
+            } else if (menu.getType() == MenuType.PAGE_BUTTON && parent.getType() != MenuType.FUNCTION_MENU) {
+                throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
+            } else {
+                parent.setLeaf(false);
+                parent.setType(MenuType.CATALOG);
+                parent.setUrl(StringUtils.EMPTY);
+                update(parent);
+                menu.setLevel((short) (parent.getLevel() + 1));
+            }
         }
+
         menu.setLeaf(true);
         menu.setStatus((short) NodeState.CLOSED.ordinal());
-        menu.setLevel((short) (parent.getLevel() + 1));
         menu.setEnableStatus(EnableStatus.ENABLE);
         menu.setResource(menu.buildResource());
         return save(menu);
