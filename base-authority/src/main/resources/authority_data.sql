@@ -41,12 +41,21 @@ INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (1, 1);
 -- 普通用户组 --
 INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (2, 2);
 
--- 资源 --
-INSERT INTO au_resource (id, create_date, modify_date, version, description, enable_status, name, parent_id, type, value)
-VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 'home', 1, '', 0, 1, '/home');
 -- 权限 --
 INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '管理权限', '1', 'manager', '1', 'manager');
+VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '管理权限', '1', 'manager', '1', 'common:manager');
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
+VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '查看权限', '1', 'view', '1', 'common:view');
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
+VALUES (3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '增加权限', '1', 'add', '1', 'common:add');
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
+VALUES (4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '修改权限', '1', 'update', '1', 'common:update');
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
+VALUES (5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '删除权限', '1', 'delete', '1', 'common:delete');
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
+VALUES (6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '运行权限', '1', 'run', '1', 'common:run');
+
+
 -- 资源权限关系 --
 INSERT INTO au_permission_resource (permission_id, resource_id)VALUES (1, 1);
 -- 角色权限关系 --
@@ -60,62 +69,62 @@ INSERT INTO clientdetails (appId, resourceIds, appSecret, scope, grantTypes, red
 VALUES ('appid-1234567890', 'resourceid', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null)
 
 -- au_menu --
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (1, '导航菜单',1,NULL,'菜单备注信息',1,NULL,1,false,1,'fa-navigation',1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (1, '导航菜单',1,NULL,'菜单备注信息',1,NULL,1,false,1,'fa-navigation',1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (2, '组织管理',1,NULL,'组织管理备注信息',2,1,1,false,1,'fa-org',2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (2, '组织管理',1,NULL,'组织管理备注信息',2,1,1,false,1,'fa-org',2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (3, '组织机构管理',1,'/org','组织机构管理备注信息',1,2,1,true,1,'fa-org',3,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (3, '组织机构管理',1,'/org','组织机构管理备注信息',1,2,1,true,1,'fa-org',3,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (4, '公司档案管理',1,'/org/company','公司档案备注信息',2,2,1,true,1,'fa-org',4,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (4, '公司档案管理',1,'/org/company','公司档案备注信息',2,2,1,true,1,'fa-org',4,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (5, '部门档案管理',1,'/org/department','部门档案备注信息',3,2,1,true,1,'fa-org',5,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (5, '部门档案管理',1,'/org/department','部门档案备注信息',3,2,1,true,1,'fa-org',5,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (6, '岗位信息管理',1,'/org/position','岗位信息备注信息',4,2,1,true,1,'fa-org',6,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (6, '岗位信息管理',1,'/org/position','岗位信息备注信息',4,2,1,true,1,'fa-org',6,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (7, '人员档案管理',1,'/org/employee','人员档案备注信息',5,2,1,true,1,'fa-org',7,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (7, '人员档案管理',1,'/org/employee','人员档案备注信息',5,2,1,true,1,'fa-org',7,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (8, '权限管理',1,NULL,'权限管理备注信息',3,1,1,false,1,'fa-o',8,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (8, '权限管理',1,NULL,'权限管理备注信息',3,1,1,false,1,'fa-o',8,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (9, '用户管理',1,'/auth/user','用户管理备注信息',3,8,1,true,1,'fa-o',9,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (9, '用户管理',1,'/auth/user','用户管理备注信息',3,8,1,true,1,'fa-o',9,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (10, '角色管理',1,'/auth/role','角色管理备注信息',3,8,1,true,1,'fa-o',10,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (10, '角色管理',1,'/auth/role','角色管理备注信息',3,8,1,true,1,'fa-o',10,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (11, '菜单管理',1,'/auth/menu','菜单管理备注信息',3,8,1,true,1,'fa-o',11,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (11, '菜单管理',1,'/auth/menu','菜单管理备注信息',3,8,1,true,1,'fa-o',11,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'Menu',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (12, '授权管理',1,NULL,'授权管理备注信息',3,8,1,false,1,'fa-o',12,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (12, '授权管理',1,NULL,'授权管理备注信息',3,8,1,false,1,'fa-o',12,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (13, '用户授权',1,'/auth/grant/user','用户授权备注信息',3,12,1,true,1,'fa-o',13,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (13, '用户授权',1,'/auth/grant/user','用户授权备注信息',3,12,1,true,1,'fa-o',13,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (14, '角色授权',1,'/auth/grant/role','角色授权备注信息',3,12,1,true,1,'fa-o',14,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (14, '角色授权',1,'/auth/grant/role','角色授权备注信息',3,12,1,true,1,'fa-o',14,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (15, '机构授权',1,'/auth/grant/org','机构授权备注信息',3,12,1,true,1,'fa-o',15,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (15, '机构授权',1,'/auth/grant/org','机构授权备注信息',3,12,1,true,1,'fa-o',15,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (16, '资源管理',1,'/auth/resource','资源管理备注信息',3,8,1,true,1,'fa-o',16,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (16, '资源管理',1,'/auth/resource','资源管理备注信息',3,8,1,true,1,'fa-o',16,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (17, '系统管理',1,NULL,'系统管理备注信息',4,1,1,false,1,'fa-o',17,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (17, '系统管理',1,NULL,'系统管理备注信息',4,1,1,false,1,'fa-o',17,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (18, '字典管理',1,'/sys/dict','字典管理备注信息',4,17,1,true,1,'fa-o',18,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (18, '字典管理',1,'/sys/dict','字典管理备注信息',4,17,1,true,1,'fa-o',18,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
-INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, version, enable_status)
-VALUES (19, '登陆日志管理',1,'/sys/login_log','登陆日志管理备注信息',4,17,1,true,1,'fa-o',19,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1,1);
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (19, '登陆日志管理',1,'/sys/login_log','登陆日志管理备注信息',4,17,1,true,1,'fa-o',19,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,'',1,1);
 
 -- au_resource --
 

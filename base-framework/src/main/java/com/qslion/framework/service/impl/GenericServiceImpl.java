@@ -9,14 +9,7 @@ import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.dao.IGenericRepository;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.service.IGenericService;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.criteria.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * server
@@ -53,19 +52,29 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     }
 
     private PageRequest getPageRequest(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize());
-        if (StringUtils.isNotEmpty(pageable.getOrderProperty())) {
-            pageRequest = PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize(),
-                new Sort(Direction.valueOf(pageable.getOrderDirection().name().toUpperCase()),
-                    pageable.getOrderProperty()));
+        Sort sort = Sort.by(new Sort.Order[0]);
+        if (CollectionUtils.isNotEmpty(pageable.getOrders())) {
+            List<Sort.Order> orders = pageable.getOrders().stream().map(order ->
+                    new Sort.Order(Sort.Direction.fromString(order.getDirection().name()), order.getProperty()))
+                    .collect(Collectors.toList());
+            if (StringUtils.isNotEmpty(pageable.getOrderProperty())) {
+                orders.add(new Sort.Order(Sort.Direction.valueOf(pageable.getOrderDirection().name().toUpperCase()),
+                        pageable.getOrderProperty()));
+            }
+            sort = Sort.by(orders);
+        } else {
+            if (StringUtils.isNotEmpty(pageable.getOrderProperty())) {
+                sort = new Sort(Direction.valueOf(pageable.getOrderDirection().name().toUpperCase()),
+                        pageable.getOrderProperty());
+            }
         }
-        return pageRequest;
+        return PageRequest.of(pageable.getPageNo() - 1, pageable.getPageSize(), sort);
     }
 
-    private Specification<T> getSpecification(Pageable pageable) {
+    private Specification<T> getSpecification(List<QueryFilter> queryFilters) {
         return (Specification<T>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
-            pageable.getQueryFilters().forEach(filter -> {
+            queryFilters.forEach(filter -> {
                 Path path = root.get(filter.getProperty());
                 switch (filter.getOperator()) {
                     case equal:
@@ -123,7 +132,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
             });
 
             return criteriaQuery.where(predicates.toArray(new Predicate[0]))
-                .getRestriction();
+                    .getRestriction();
         };
     }
 
@@ -148,21 +157,20 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
-    public List<T> findList(Integer count, List<QueryFilter> queryFilters, List<Order> orders) {
-        return null;
+    public List<T> findList(List<QueryFilter> queryFilters, List<Order> orders) {
+        Pageable pageable = new Pageable(1, 100000);
+        pageable.setQueryFilters(queryFilters);
+        pageable.setOrders(orders);
+        return findPage(pageable).getContent();
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
-    @Override
-    public List<T> findList(Integer first, Integer count, List<QueryFilter> queryFilters, List<Order> orders) {
-        return null;
-    }
 
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public Pager<T> findPage(Pageable pageable) {
         PageRequest pageRequest = getPageRequest(pageable);
-        Page<T> page = genericRepository.findAll(getSpecification(pageable), pageRequest);
+        List<QueryFilter> queryFilters = pageable.getQueryFilters();
+        Page<T> page = genericRepository.findAll(getSpecification(queryFilters), pageRequest);
 
         List<T> result = Lists.newArrayList();
         result.addAll(page.getContent());
@@ -178,14 +186,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public long count(QueryFilter... queryFilters) {
-        return genericRepository.count(new Specification<T>() {
-            @Override
-            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery,
-                CriteriaBuilder criteriaBuilder) {
-
-                return null;
-            }
-        });
+        return genericRepository.count(getSpecification(Lists.newArrayList(queryFilters)));
     }
 
     @Transactional(value = "transactionManager", readOnly = true)
@@ -197,7 +198,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public boolean exists(QueryFilter... queryFilters) {
-        return false;
+        return findList(Lists.newArrayList(queryFilters), null).size() > 0;
     }
 
     @Transactional(value = "transactionManager")

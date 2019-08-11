@@ -44,23 +44,12 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
     /**
      * 查找实体对象集合
      *
-     * @param count 数量
      * @param queryFilters 筛选
      * @param orders 排序
      * @return 实体对象集合
      */
-    List<T> findList(Integer count, List<QueryFilter> queryFilters, List<Order> orders);
+    List<T> findList(List<QueryFilter> queryFilters, List<Order> orders);
 
-    /**
-     * 查找实体对象集合
-     *
-     * @param first 起始记录
-     * @param count 数量
-     * @param queryFilters 筛选
-     * @param orders 排序
-     * @return 实体对象集合
-     */
-    List<T> findList(Integer first, Integer count, List<QueryFilter> queryFilters, List<Order> orders);
 
     /**
      * 查找实体对象分页
