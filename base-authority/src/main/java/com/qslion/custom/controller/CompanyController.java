@@ -7,6 +7,7 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.util.ValidatorUtils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -45,7 +46,7 @@ public class CompanyController extends BaseController<AuCompany> {
      */
     @ApiOperation("保存公司信息")
     @PostMapping
-    public Long save(@Validated @RequestBody AuCompany company) {
+    public Long save(@Validated({AddGroup.class}) @RequestBody AuCompany company) {
         AuCompany auCompany = companyService.insert(company);
         return auCompany.getId();
     }
@@ -56,10 +57,7 @@ public class CompanyController extends BaseController<AuCompany> {
      */
     @DeleteMapping
     public boolean delete(@RequestBody List<Long> ids) {
-        if (CollectionUtils.isNotEmpty(ids)) {
-            return companyService.remove(ids);
-        }
-        return false;
+        return CollectionUtils.isNotEmpty(ids) && companyService.remove(ids);
     }
 
     /**

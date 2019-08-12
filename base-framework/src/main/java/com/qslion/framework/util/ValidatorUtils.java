@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.GroupSequence;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.groups.Default;
 
 /**
  * 手工校验工具类
@@ -43,16 +44,16 @@ public class ValidatorUtils {
     }
 
     /**
-     * 新增数据 Group
+     * 新增数据 Group, 继承Default.class，否则只会校验groups = {AddGroup.class}规则
      */
-    public interface AddGroup {
+    public interface AddGroup extends Default {
     }
 
 
     /**
      * 新增数据 Group
      */
-    public interface UpdateGroup {
+    public interface UpdateGroup extends Default{
 
     }
 

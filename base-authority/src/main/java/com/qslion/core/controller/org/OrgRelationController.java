@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 团体关系控制类
@@ -85,7 +86,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     }
 
     @RequestMapping(value = "/tree/{relationType}")
-    public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyRelationType relationType, @AuthenticationPrincipal AuUser user) {
+    public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyRelationType relationType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<TreeNode> resultList;
         if (relationType == null) {
             resultList = this.partyRelationService.getGlobalRelationTree(user.getRoles());

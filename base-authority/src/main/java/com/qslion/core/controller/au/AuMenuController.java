@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class AuMenuController extends BaseController<AuMenu> {
     }
 
     @GetMapping
-    public List<TreeNode> getMenuTree(@AuthenticationPrincipal AuUser user) {
+    public List<TreeNode> getMenuTree(@ApiIgnore @AuthenticationPrincipal AuUser user) {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         //根据登录用户获取菜单树
         List<TreeNode> menuTree = this.auMenuService.getMenuTree(username);

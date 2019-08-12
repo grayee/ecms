@@ -15,7 +15,9 @@ import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.CopyUtils;
+
 import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,17 +59,25 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         List<AuCompany> companyList = Lists.newArrayList();
         List<AuPartyRelation> relationList = Lists.newArrayList();
         ids.forEach(companyId -> {
-            AuCompany company = companyRepository.findById(companyId).get();
-            AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
-            if (partyRelation != null && partyRelation.isLeaf()) {
+            AuCompany company = companyRepository.findById(companyId).orElse(null);
+            if (company != null) {
                 companyList.add(company);
-                relationList.add(partyRelation);
-            } else {
-                throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
+                AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
+                if (partyRelation != null) {
+                    if (partyRelation.isLeaf()) {
+                        relationList.add(partyRelation);
+                    } else {
+                        throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
+                    }
+                }
             }
         });
-        companyRepository.deleteAll(companyList);
-        partyRelationRepository.deleteAll(relationList);
+        if (companyList.size() > 0) {
+            companyRepository.deleteAll(companyList);
+        }
+        if (relationList.size() > 0) {
+            partyRelationRepository.deleteAll(relationList);
+        }
         return true;
     }
 
