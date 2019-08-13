@@ -17,15 +17,14 @@ import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.stereotype.Service;
 
 /**
  * 团体关系Service实现

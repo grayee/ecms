@@ -1,15 +1,13 @@
 package com.qslion.core.entity;
 
+import com.google.common.collect.Sets;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
+
+import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
 
 /**
  * 实体类 - 团体
@@ -32,7 +30,18 @@ public class AuParty extends BaseEntity<Long> {
 
     private Date enableDate;
 
-    private Set<AuPartyRelation> auPartyRelations = new HashSet<AuPartyRelation>(0);
+    private Set<AuPartyRelation> auPartyRelations = Sets.newHashSet();
+    
+    @OneToMany(fetch= FetchType.EAGER)
+    @JoinColumn(name = "PARTY_ID")
+    public Set<AuPartyRelation> getAuPartyRelations() {
+        return auPartyRelations;
+    }
+
+    public AuParty setAuPartyRelations(Set<AuPartyRelation> auPartyRelations) {
+        this.auPartyRelations = auPartyRelations;
+        return this;
+    }
 
     @Enumerated
     @Column(name = "party_type_id", nullable = false)
