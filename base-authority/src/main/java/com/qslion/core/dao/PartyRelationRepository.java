@@ -41,4 +41,6 @@ public interface PartyRelationRepository extends IGenericRepository<AuPartyRelat
      * @return 团体关系List
      */
     List<AuPartyRelation> findByPartyRelationType(AuPartyRelationType partyRelationType);
+
+
 }

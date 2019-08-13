@@ -19,14 +19,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -47,7 +40,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     @Autowired
     public PartyService partyService;
 
-    @RequestMapping(value = "/list/{relationTypeId}")
+    @PostMapping(value = "/list/{relationTypeId}")
     public Pager<AuPartyRelation> list(@PathVariable int relationTypeId, @RequestParam Pageable pageable) {
         QueryFilter queryFilter = new QueryFilter("auPartyRelationType", Operator.equal, relationTypeId);
         if (pageable.getQueryFilters().isEmpty()) {
@@ -85,7 +78,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         return Lists.newArrayList(AuPartyRelationType.values());
     }
 
-    @RequestMapping(value = "/tree/{relationType}")
+    @GetMapping(value = {"/tree/{relationType}","/tree"})
     public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyRelationType relationType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<TreeNode> resultList;
         if (relationType == null) {

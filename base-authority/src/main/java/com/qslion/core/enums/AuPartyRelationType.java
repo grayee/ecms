@@ -1,5 +1,7 @@
 package com.qslion.core.enums;
 
+import com.qslion.framework.enums.IEnum;
+
 /**
  * 团体关系类型
  * Accountability Type
@@ -7,7 +9,7 @@ package com.qslion.core.enums;
  * @author Gray.Z
  * @date 2018-09-16
  */
-public enum AuPartyRelationType {
+public enum AuPartyRelationType implements IEnum<Integer> {
 
     /**
      * 行政关系
@@ -36,7 +38,8 @@ public enum AuPartyRelationType {
         this.value = value;
     }
 
-    public int getId() {
+    @Override
+    public Integer getId() {
         return id;
     }
 

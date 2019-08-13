@@ -23,7 +23,6 @@ public class AuConnectionRule extends BaseEntity<Long> {
     private AuPartyRelationType partyRelationType;
     private String name;
     private String remark;
-    private Short level;
 
     @Enumerated
     @Column(name = "cur_party_type")
@@ -71,14 +70,5 @@ public class AuConnectionRule extends BaseEntity<Long> {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    @Column(name = "level")
-    public Short getLevel() {
-        return level;
-    }
-
-    public void setLevel(Short level) {
-        this.level = level;
     }
 }

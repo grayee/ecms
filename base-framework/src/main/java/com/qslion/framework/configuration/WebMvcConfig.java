@@ -3,15 +3,19 @@ package com.qslion.framework.configuration;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.qslion.framework.enums.EnumConvertFactory;
 import com.qslion.framework.interceptor.AuthHandlerInterceptor;
 import com.qslion.framework.interceptor.ResponseResultInterceptor;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nonnull;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.Validator;
@@ -140,5 +144,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authHandlerInterceptor());
         registry.addInterceptor(localeChangeInterceptor());
         registry.addInterceptor(responseResultInterceptor()).addPathPatterns("/**");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverterFactory(new EnumConvertFactory());
     }
 }

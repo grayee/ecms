@@ -31,7 +31,7 @@ public class AuPartyRelation extends NestTreeEntity {
     /**
      * 层级
      */
-    private Short level;
+    private Integer level;
     /**
      * 排序码
      */
@@ -93,11 +93,11 @@ public class AuPartyRelation extends NestTreeEntity {
     }
 
     @Column(name = "level", precision = 3, scale = 0)
-    public Short getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(Short level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
