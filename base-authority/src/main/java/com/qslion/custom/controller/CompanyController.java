@@ -70,7 +70,7 @@ public class CompanyController extends BaseController<AuCompany> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<AuCompany> list(Pageable pageable) {
+    public Pager<AuCompany> list(@RequestBody Pageable pageable) {
         return companyService.findPage(pageable);
     }
 

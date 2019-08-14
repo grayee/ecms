@@ -17,8 +17,8 @@ public class CommonDistrict extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
     private String name;
-    private Short level;
-    private Short usetype;
+    private Integer level;
+    private Integer usetype;
     private Long upid;
 
     @Column(name = "name", nullable = false)
@@ -31,20 +31,20 @@ public class CommonDistrict extends BaseEntity<Long> {
     }
 
     @Column(name = "level", nullable = false)
-    public Short getLevel() {
+    public Integer getLevel() {
         return this.level;
     }
 
-    public void setLevel(Short level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
     @Column(name = "usetype")
-    public Short getUsetype() {
+    public Integer getUsetype() {
         return this.usetype;
     }
 
-    public void setUsetype(Short usetype) {
+    public void setUsetype(Integer usetype) {
         this.usetype = usetype;
     }
 

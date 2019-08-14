@@ -93,7 +93,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                         predicates.add(criteriaBuilder.le(root.get(filter.getProperty()), (Number) filter.getValue()));
                         break;
                     case le:
-                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Date) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Comparable) filter.getValue()));
                         break;
                     case like:
                         predicates.add(criteriaBuilder.like(root.get(filter.getProperty()), "%" + filter.getValue() + "%"));
@@ -111,7 +111,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                         predicates.add(criteriaBuilder.isNotNull(root.get(filter.getProperty())));
                         break;
                     case between:
-                        //criteriaBuilder.between(root.<Date>get(filter.getProperty()),"");
+                        criteriaBuilder.between(root.get(filter.getProperty()), (Comparable) filter.getValue(), (Comparable) filter.getValue());
                         break;
                     case greaterThan:
                         predicates.add(criteriaBuilder.greaterThan(root.get(filter.getProperty()), (Comparable) filter.getValue()));

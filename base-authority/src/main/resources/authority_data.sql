@@ -189,19 +189,19 @@ INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_
 VALUES (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-公司-公司', '行政关系-公司-公司', 0, 0);
 
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
-VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-公司-部门', '行政关系-公司-部门', 0, 1);
+VALUES (2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-公司-部门', '行政关系-公司-部门', 0, 1);
 
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
-VALUES (3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-公司-岗位', '行政关系-公司-岗位', 0, 2);
+VALUES (3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-公司-岗位', '行政关系-公司-岗位', 0, 2);
 
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
-VALUES (4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-部门-部门', '行政关系-部门-部门', 1, 1);
+VALUES (4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-部门-部门', '行政关系-部门-部门', 1, 1);
 
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
-VALUES (5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-部门-岗位', '行政关系-部门-岗位', 1, 2);
+VALUES (5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-部门-岗位', '行政关系-部门-岗位', 1, 2);
 
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
-VALUES (6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-部门-岗位', '行政关系-部门-员工', 1, 3);
+VALUES (6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-部门-岗位', '行政关系-部门-员工', 1, 3);
 
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
-VALUES (7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 1, '行政关系规则-岗位-员工', '行政关系-岗位-员工', 2, 3);
+VALUES (7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-岗位-员工', '行政关系-岗位-员工', 2, 3);

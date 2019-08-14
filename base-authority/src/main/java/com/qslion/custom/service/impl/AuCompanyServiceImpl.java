@@ -11,6 +11,7 @@ import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
+import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
@@ -21,6 +22,7 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,10 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {
             company.setCompanyNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
+        }
+        if (company.getEnableStatus() == null) {
+            company.setEnableStatus(EnableStatus.ENABLE);
+            company.setEnableDate(DateTime.now().toDate());
         }
         //添加公司团体
         partyRelationService.addPartyRelation(company, AuPartyRelationType.ADMINISTRATIVE);

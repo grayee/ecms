@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qslion.framework.enums.EnumConvertFactory;
 import com.qslion.framework.interceptor.AuthHandlerInterceptor;
 import com.qslion.framework.interceptor.ResponseResultInterceptor;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nonnull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -51,9 +51,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/");
+                .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/");
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     @Bean
@@ -122,21 +122,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 解决前后端分离跨域问题
-     *
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
-            .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
-            .allowedHeaders("*")
-            .exposedHeaders("access-control-allow-headers",
-                "access-control-allow-methods",
-                "access-control-allow-origin",
-                "access-control-max-age",
-                "X-Frame-Options")
-            .maxAge(3600)
-            .allowCredentials(true);
+                .allowedOrigins("*")
+                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
+                .allowedHeaders("*")
+                .exposedHeaders("access-control-allow-headers",
+                        "access-control-allow-methods",
+                        "access-control-allow-origin",
+                        "access-control-max-age",
+                        "X-Frame-Options")
+                .maxAge(3600)
+                .allowCredentials(true);
     }
 
     @Override
@@ -149,5 +148,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverterFactory(new EnumConvertFactory());
+        registry.addConverter(new DateConverterConfig());
     }
 }

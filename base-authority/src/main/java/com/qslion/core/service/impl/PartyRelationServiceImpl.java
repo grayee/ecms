@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation, Long> implements
         PartyRelationService {
 
+    private static final Integer nodeStateOpenLevel = 2;
     @Autowired
     private AuPartyRepository partyRepository;
     @Autowired
@@ -59,7 +60,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     partyRelation.setName(party.getName());
                     partyRelation.setRemark(party.getRemark());
                     partyRelation.setPartyRelationType(relationType);
-                    partyRelation.setLevel(parentRelation.getLevel()+1);
+                    partyRelation.setLevel(parentRelation.getLevel() + 1);
 
                     AuPartyRelation levelRelation = new AuPartyRelation();
                     levelRelation.setLevel(partyRelation.getLevel());
@@ -71,7 +72,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     partyRelationRepository.updateLeaf(parentId, false);
                 } else {
                     logger.error("添加团系关系失败，没有找到符合要求的连接规则....");
-                    return false;
+                    throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
                 }
             } else {
                 throw new BusinessException(ResultCode.PARAMETER_IS_INVALID);
@@ -122,7 +123,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         for (AuPartyRelation partyRelation : partyRelationList) {
             //从根节点开始查找，如果PARENTCODE与ID相同则为根节点
             if (null == partyRelation.getParentId()) {
-                TreeNode rootNode = new TreeNode(partyRelation.getId().toString(),partyRelation.getName());
+                TreeNode rootNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
                 //有子节点递归遍历
                 if (!partyRelation.isLeaf()) {
                     partyRelationList = partyRelationList.stream().filter(relation ->
@@ -130,6 +131,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, roleSet);
                     rootNode.setChildren(childrenList);
                 }
+                rootNode.setState(TreeNode.NodeState.OPEN);
                 resultList.add(rootNode);
             }
         }
@@ -166,8 +168,11 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 if (!partyRelation.isLeaf()) {
                     nodeList = nodeList.stream().filter(relation ->
                             !partyRelation.getId().equals(relation.getId())).collect(Collectors.toList());
-                    List<TreeNode> leafNodes = this.getChildTreeNode(partyRelation.getId(), nodeList,roleSet);
+                    List<TreeNode> leafNodes = this.getChildTreeNode(partyRelation.getId(), nodeList, roleSet);
                     leafNode.setChildren(leafNodes);
+                }
+                if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.isLeaf()) {
+                    leafNode.setState(TreeNode.NodeState.OPEN);
                 }
                 resultList.add(leafNode);
             }
