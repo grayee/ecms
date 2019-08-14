@@ -6,12 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qslion.framework.enums.EnumConvertFactory;
 import com.qslion.framework.interceptor.AuthHandlerInterceptor;
 import com.qslion.framework.interceptor.ResponseResultInterceptor;
-
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
-import javax.annotation.Nonnull;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -22,13 +16,14 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
+import javax.annotation.Nonnull;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * MVC配置类
@@ -149,5 +144,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverterFactory(new EnumConvertFactory());
         registry.addConverter(new DateConverterConfig());
+        //registry.addFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
     }
 }
