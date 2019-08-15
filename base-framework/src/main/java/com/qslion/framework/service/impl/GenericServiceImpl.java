@@ -9,6 +9,7 @@ import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.dao.IGenericRepository;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.service.IGenericService;
+import com.qslion.framework.util.DateConverter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -76,63 +77,67 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
             List<Predicate> predicates = Lists.newArrayList();
             queryFilters.forEach(filter -> {
                 Path path = root.get(filter.getProperty());
+                Object valueObj = filter.getValue();
+                if (valueObj instanceof String) {
+                    Date dateValue = DateConverter.getDate(valueObj.toString());
+                    if (dateValue != null) {
+                        valueObj = dateValue;
+                    }
+                }
                 switch (filter.getOperator()) {
                     case equal:
-                        predicates.add(criteriaBuilder.equal(path, filter.getValue()));
+                        predicates.add(criteriaBuilder.equal(path, valueObj));
                         break;
                     case notEqual:
-                        predicates.add(criteriaBuilder.notEqual(path, filter.getValue()));
+                        predicates.add(criteriaBuilder.notEqual(path, valueObj));
                         break;
                     case gt:
-                        predicates.add(criteriaBuilder.gt(root.get(filter.getProperty()), (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.gt(path, (Number) valueObj));
                         break;
                     case lt:
-                        predicates.add(criteriaBuilder.lt(root.get(filter.getProperty()), (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.lt(path, (Number) valueObj));
                         break;
                     case ge:
-                        predicates.add(criteriaBuilder.le(root.get(filter.getProperty()), (Number) filter.getValue()));
+                        predicates.add(criteriaBuilder.le(path, (Number) valueObj));
                         break;
                     case le:
-                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Comparable) valueObj));
                         break;
                     case like:
-                        predicates.add(criteriaBuilder.like(root.get(filter.getProperty()), "%" + filter.getValue() + "%"));
+                        predicates.add(criteriaBuilder.like(path, "%" + valueObj + "%"));
                         break;
                     case notLike:
-                        predicates.add(criteriaBuilder.notLike(root.get(filter.getProperty()), "%" + filter.getValue() + "%"));
+                        predicates.add(criteriaBuilder.notLike(path, "%" + valueObj + "%"));
                         break;
                     case in:
-                        predicates.add(path.in(filter.getValue()));
+                        predicates.add(path.in(valueObj));
                         break;
                     case isNull:
-                        predicates.add(criteriaBuilder.isNull(root.get(filter.getProperty())));
+                        predicates.add(criteriaBuilder.isNull(path));
                         break;
                     case isNotNull:
-                        predicates.add(criteriaBuilder.isNotNull(root.get(filter.getProperty())));
+                        predicates.add(criteriaBuilder.isNotNull(path));
                         break;
                     case between:
-                        criteriaBuilder.between(root.get(filter.getProperty()), (Comparable) filter.getValue(), (Comparable) filter.getValue());
+                        criteriaBuilder.between(path, (Comparable) valueObj, (Comparable) valueObj);
                         break;
                     case greaterThan:
-                        predicates.add(criteriaBuilder.greaterThan(root.get(filter.getProperty()), (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.greaterThan(path, (Comparable) valueObj));
                         break;
                     case greaterThanOrEqualTo:
-                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(filter.getProperty()), (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(path, (Comparable) valueObj));
                         break;
                     case lessThan:
-                        predicates.add(criteriaBuilder.lessThan(root.get(filter.getProperty()), (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThan(path, (Comparable) valueObj));
                         break;
                     case lessThanOrEqualTo:
-                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(filter.getProperty()), (Comparable) filter.getValue()));
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Comparable) valueObj));
                         break;
                     default:
                         break;
                 }
-
             });
-
-            return criteriaQuery.where(predicates.toArray(new Predicate[0]))
-                    .getRestriction();
+            return criteriaQuery.where(predicates.toArray(new Predicate[0])) .getRestriction();
         };
     }
 

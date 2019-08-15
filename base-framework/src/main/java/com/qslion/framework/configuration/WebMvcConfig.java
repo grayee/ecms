@@ -143,7 +143,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverterFactory(new EnumConvertFactory());
-        registry.addConverter(new DateConverterConfig());
         //registry.addFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
     }
 }

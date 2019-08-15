@@ -1,4 +1,4 @@
-package com.qslion.framework.configuration;
+package com.qslion.framework.util;
 
 import org.springframework.core.convert.converter.Converter;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author Gray.Z
  * @date 2018/9/18.
  */
-public class DateConverterConfig implements Converter<String, Date> {
+public class DateConverter implements Converter<String, Date> {
 
     private static final List<String> formarts = new ArrayList<>(4);
 
@@ -23,6 +23,11 @@ public class DateConverterConfig implements Converter<String, Date> {
         formarts.add("yyyy-MM-dd");
         formarts.add("yyyy-MM-dd hh:mm");
         formarts.add("yyyy-MM-dd hh:mm:ss");
+    }
+
+    public static Date getDate(String dateStr) {
+        DateConverter dateConverter = new DateConverter();
+        return dateConverter.convert(dateStr);
     }
 
     @Override
@@ -40,7 +45,7 @@ public class DateConverterConfig implements Converter<String, Date> {
         } else if (source.matches("^\\d{4}-\\d{1,2}-\\d{1,2} {1}\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {
             return parseDate(source, formarts.get(3));
         } else {
-            throw new IllegalArgumentException("Invalid boolean value '" + source + "'");
+            return null;
         }
     }
 
@@ -51,13 +56,13 @@ public class DateConverterConfig implements Converter<String, Date> {
      * @param format  String 格式
      * @return Date 日期
      */
-    public Date parseDate(String dateStr, String format) {
-        Date date = null;
+    private Date parseDate(String dateStr, String format) {
+        Date date;
         try {
             DateFormat dateFormat = new SimpleDateFormat(format);
             date = dateFormat.parse(dateStr);
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
         return date;
     }
