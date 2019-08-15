@@ -74,7 +74,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
         ids.forEach(departmentId -> {
             AuDepartment department = departmentRepository.findById(departmentId).get();
             AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(department.getAuParty());
-            if (partyRelation != null && partyRelation.isLeaf()) {
+            if (partyRelation != null && partyRelation.getLeaf()) {
                 deptList.add(department);
                 relationList.add(partyRelation);
             } else {

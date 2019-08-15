@@ -62,28 +62,20 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
 
     @Override
     public boolean remove(List<Long> ids) {
-        List<AuCompany> companyList = Lists.newArrayList();
-        List<AuPartyRelation> relationList = Lists.newArrayList();
         ids.forEach(companyId -> {
             AuCompany company = companyRepository.findById(companyId).orElse(null);
             if (company != null) {
-                companyList.add(company);
+                companyRepository.delete(company);
                 AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
                 if (partyRelation != null) {
-                    if (partyRelation.isLeaf()) {
-                        relationList.add(partyRelation);
+                    if (partyRelation.getLeaf()) {
+                        partyRelationService.delete(partyRelation);
                     } else {
                         throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
                     }
                 }
             }
         });
-        if (companyList.size() > 0) {
-            companyRepository.deleteAll(companyList);
-        }
-        if (relationList.size() > 0) {
-            partyRelationRepository.deleteAll(relationList);
-        }
         return true;
     }
 

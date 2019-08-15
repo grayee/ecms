@@ -68,8 +68,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     long topLevelCnt = partyRelationRepository.count(Example.of(levelRelation));
                     partyRelation.setOrderCode(topLevelCnt + 1);
                     partyRelationRepository.save(partyRelation);
-                    //更新父节点isLeaf 为false
-                    partyRelationRepository.updateLeaf(parentId, false);
+                    if (parentRelation.getLeaf()) {
+                        //更新父节点isLeaf 为false
+                        partyRelationRepository.updateLeaf(parentId, false);
+                    }
                 } else {
                     logger.error("添加团系关系失败，没有找到符合要求的连接规则....");
                     throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
@@ -125,7 +127,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
             if (null == partyRelation.getParentId()) {
                 TreeNode rootNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
                 //有子节点递归遍历
-                if (!partyRelation.isLeaf()) {
+                if (!partyRelation.getLeaf()) {
                     partyRelationList = partyRelationList.stream().filter(relation ->
                             !partyRelation.getId().equals(relation.getId())).collect(Collectors.toList());
                     List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, roleSet);
@@ -165,13 +167,13 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     }
                 }
 
-                if (!partyRelation.isLeaf()) {
+                if (!partyRelation.getLeaf()) {
                     nodeList = nodeList.stream().filter(relation ->
                             !partyRelation.getId().equals(relation.getId())).collect(Collectors.toList());
                     List<TreeNode> leafNodes = this.getChildTreeNode(partyRelation.getId(), nodeList, roleSet);
                     leafNode.setChildren(leafNodes);
                 }
-                if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.isLeaf()) {
+                if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.getLeaf()) {
                     leafNode.setState(TreeNode.NodeState.OPEN);
                 }
                 resultList.add(leafNode);
@@ -239,5 +241,19 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
             }
         }
         return resultList;
+    }
+
+    @Override
+    public void delete(AuPartyRelation entity) {
+        super.delete(entity);
+        if (entity.getParentId() != null) {
+            AuPartyRelation parentRelation = partyRelationRepository.findById(entity.getParentId()).orElse(entity);
+            AuPartyRelation queryRelation = new AuPartyRelation();
+            queryRelation.setParentId(parentRelation.getId());
+            long parentCnt = partyRelationRepository.count(Example.of(queryRelation));
+            if (parentCnt <= 0) {
+                partyRelationRepository.updateLeaf(parentRelation.getId(), true);
+            }
+        }
     }
 }
