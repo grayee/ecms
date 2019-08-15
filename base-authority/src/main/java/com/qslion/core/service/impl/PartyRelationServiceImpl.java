@@ -3,6 +3,7 @@
  */
 package com.qslion.core.service.impl;
 
+import com.google.common.collect.Maps;
 import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -134,12 +136,16 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     rootNode.setChildren(childrenList);
                 }
                 rootNode.setState(TreeNode.NodeState.OPEN);
+                Map<String, Object> attributes = Maps.newHashMap();
+                attributes.put("orgType",partyRelation.getAuParty().getAuPartyType().name());
+                rootNode.setAttributes(attributes);
                 resultList.add(rootNode);
             }
         }
         return resultList;
     }
 
+    @Override
     public List<TreeNode> getGlobalRelationTree(Set<AuRole> roleSet) {
         List<TreeNode> resultList = new ArrayList<TreeNode>();
         //以所有团体关系类型为根节点
@@ -176,6 +182,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.getLeaf()) {
                     leafNode.setState(TreeNode.NodeState.OPEN);
                 }
+
+                Map<String, Object> attributes = Maps.newHashMap();
+                attributes.put("orgType",partyRelation.getAuParty().getAuPartyType().name());
+                leafNode.setAttributes(attributes);
                 resultList.add(leafNode);
             }
         }

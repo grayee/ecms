@@ -3,6 +3,7 @@ package com.qslion.custom.entity;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.framework.bean.DisplayColumn;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import io.swagger.annotations.ApiModel;
 import javax.persistence.Basic;
@@ -24,6 +25,7 @@ import javax.validation.constraints.Pattern;
 @Table(name = "au_company")
 public class AuCompany extends PartyEntity {
 
+    @DisplayColumn(id=1,title = "公司编码")
     private String companyNo;
     @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
