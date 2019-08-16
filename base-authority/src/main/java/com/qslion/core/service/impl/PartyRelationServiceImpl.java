@@ -136,9 +136,6 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     rootNode.setChildren(childrenList);
                 }
                 rootNode.setState(TreeNode.NodeState.OPEN);
-                Map<String, Object> attributes = Maps.newHashMap();
-                attributes.put("orgType",partyRelation.getAuParty().getAuPartyType().name());
-                rootNode.setAttributes(attributes);
                 resultList.add(rootNode);
             }
         }
@@ -182,10 +179,6 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.getLeaf()) {
                     leafNode.setState(TreeNode.NodeState.OPEN);
                 }
-
-                Map<String, Object> attributes = Maps.newHashMap();
-                attributes.put("orgType",partyRelation.getAuParty().getAuPartyType().name());
-                leafNode.setAttributes(attributes);
                 resultList.add(leafNode);
             }
         }

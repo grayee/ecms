@@ -2,10 +2,9 @@
 package com.qslion.framework.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.qslion.framework.bean.*;
 import com.qslion.framework.bean.Order;
-import com.qslion.framework.bean.Pageable;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.dao.IGenericRepository;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.service.IGenericService;
@@ -24,8 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +50,19 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
 
     private IGenericRepository<T, ID> genericRepository;
+
+    protected Class<T> entityClazz;
+
+    @SuppressWarnings("unchecked")
+    public GenericServiceImpl() {
+        this.entityClazz = null;
+        Class c = getClass();
+        Type type = c.getGenericSuperclass();
+        if (type instanceof ParameterizedType) {
+            Type[] parameterizedType = ((ParameterizedType) type).getActualTypeArguments();
+            this.entityClazz = (Class<T>) parameterizedType[0];
+        }
+    }
 
     @Autowired
     protected void setGenericRepository(IGenericRepository<T, ID> genericRepository) {
@@ -179,7 +196,10 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
         List<T> result = Lists.newArrayList();
         result.addAll(page.getContent());
-        return new Pager<>(result, page.getTotalElements(), pageable);
+
+        Map<String, Object> extras = Maps.newHashMap();
+        extras.put("displayColumns", DisplayColumn.getDisplayColumns(entityClazz));
+        return new Pager<>(result, page.getTotalElements(), pageable, extras);
     }
 
     @Transactional(value = "transactionManager", readOnly = true)

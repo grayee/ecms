@@ -1,10 +1,13 @@
 package com.qslion.framework.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -34,6 +37,12 @@ public class Pager<T> implements Serializable {
     @JsonIgnore
     private final Pageable pageable;
 
+
+    /**
+     * 自定义数据
+     */
+    private Map<String, Object> extras;
+
     /**
      * 构造方法
      */
@@ -45,14 +54,21 @@ public class Pager<T> implements Serializable {
     /**
      * 构造方法
      *
-     * @param content 内容
+     * @param content    内容
      * @param totalCount 总记录数
-     * @param pageable 分页信息
+     * @param pageable   分页信息
      */
     public Pager(List<T> content, long totalCount, Pageable pageable) {
         this.content.addAll(content);
         this.totalCount = totalCount;
         this.pageable = pageable;
+    }
+
+    public Pager(List<T> content, long totalCount, Pageable pageable, Map<String, Object> extras) {
+        this.content.addAll(content);
+        this.totalCount = totalCount;
+        this.pageable = pageable;
+        this.extras = extras;
     }
 
     /**
@@ -196,4 +212,11 @@ public class Pager<T> implements Serializable {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    public Map<String, Object> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(Map<String, Object> extras) {
+        this.extras = extras;
+    }
 }

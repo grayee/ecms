@@ -11,6 +11,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+
+import com.qslion.framework.bean.DisplayField;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -33,6 +35,7 @@ public class BaseEntity<T> implements Serializable {
     /**
      * 创建日期
      */
+    @DisplayField(id = 100, title = "创建时间",show = false)
     @CreatedDate
     protected Date createDate;
     /**

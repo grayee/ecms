@@ -3,7 +3,7 @@ package com.qslion.custom.entity;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
-import com.qslion.framework.bean.DisplayColumn;
+import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import io.swagger.annotations.ApiModel;
 import javax.persistence.Basic;
@@ -25,24 +25,31 @@ import javax.validation.constraints.Pattern;
 @Table(name = "au_company")
 public class AuCompany extends PartyEntity {
 
-    @DisplayColumn(id=1,title = "公司编码")
+    @DisplayField(id = 1, title = "{display.column.title.company.no}")
     private String companyNo;
+    @DisplayField(id = 2, title = "公司名称")
     @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
     private String companyFlag;
     private String companyType;
     private Short companyLevel;
+    @DisplayField(id = 3, title = "公司简称")
     private String shortName;
     private String area;
     private String linkMan;
+    @DisplayField(id = 7, title = "联系电话")
     @Pattern(regexp = "^1([345789])\\d{9}$", message = "座机号码格式错误")
     @NotBlank(message = "座机号码不能为空", groups = {AddGroup.class})
     private String tel;
     private String fax;
+    @DisplayField(id = 4, title = "公司地址")
     private String address;
+    @DisplayField(id = 5, title = "公司邮编")
     private String postalCode;
+    @DisplayField(id = 7, title = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;
+    @DisplayField(id = 6, title = "公司网址")
     private String webSite;
     private String remark;
 

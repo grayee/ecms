@@ -3,19 +3,30 @@
  */
 package com.qslion.core.controller.org;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.qslion.core.entity.AuPartyRelation;
-import com.qslion.core.entity.AuUser;
+import com.google.common.collect.Maps;
+import com.qslion.core.entity.*;
 import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
+import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
+import com.qslion.core.vo.DetailVO;
+import com.qslion.custom.entity.AuDepartment;
+import com.qslion.custom.service.AuCompanyService;
+import com.qslion.custom.service.AuDepartmentService;
+import com.qslion.custom.service.AuEmployeeService;
+import com.qslion.custom.service.AuPositionService;
 import com.qslion.framework.bean.*;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,11 +45,23 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping(value = "/org/relation")
 public class OrgRelationController extends BaseController<AuPartyRelation> {
     @Autowired
-    public PartyRelationService partyRelationService;
+    private PartyRelationService partyRelationService;
     @Autowired
-    public ConnectionRuleService connectionRuleService;
+    private ConnectionRuleService connectionRuleService;
     @Autowired
-    public PartyService partyService;
+    private PartyService partyService;
+
+    @Autowired
+    private AuCompanyService auCompanyService;
+    @Autowired
+    private AuDepartmentService auDepartmentService;
+    @Autowired
+    private AuPositionService auPositionService;
+    @Autowired
+    private AuEmployeeService auEmployeeService;
+    @Autowired
+    private AuRoleService auRoleService;
+
 
     @PostMapping(value = "/list/{relationTypeId}")
     public Pager<AuPartyRelation> list(@PathVariable int relationTypeId, @RequestParam Pageable pageable) {
@@ -52,8 +75,46 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     }
 
     @GetMapping(value = "/detail/{id}")
-    public AuPartyRelation input(@PathVariable Long id) {
-        return partyRelationService.findById(id);
+    public DetailVO<PartyEntity> detail(@PathVariable Long id) {
+        AuPartyRelation partyRelation = partyRelationService.findById(id);
+        AuParty party = partyRelation.getAuParty();
+        AuPartyType orgType = party.getAuPartyType();
+        DetailVO<PartyEntity> detailVO = new DetailVO<>();
+        PartyEntity content = null;
+        switch (orgType) {
+            case COMPANY:
+                content = auCompanyService.findByParty(party);
+                break;
+            case DEPARTMENT:
+                content = auDepartmentService.findById(id);
+                break;
+            case POSITION:
+                content = auPositionService.findById(id);
+                break;
+            case EMPLOYEE:
+                content = auEmployeeService.findById(id);
+                break;
+            case ROLE:
+                content = auRoleService.findById(id);
+                break;
+            case PROXY:
+                break;
+        }
+        detailVO.setContent(content);
+
+        List<AuPartyType> subOrgTypes = connectionRuleService.findAll().stream()
+                .filter(auConnectionRule -> auConnectionRule.getCurPartyType() == orgType)
+                .map(AuConnectionRule::getSubPartyType).collect(Collectors.toList());
+
+        Map<String, Object> extras = Maps.newHashMap();
+
+        extras.put("subOrgTypes", subOrgTypes.stream().map(pType-> ImmutableMap.of(pType.getId(),pType.getName()))
+                .collect(Collectors.toList()));
+        if (content != null) {
+            extras.put("displayColumns", DisplayColumn.getDisplayColumns(content.getClass()));
+        }
+        detailVO.setExtras(extras);
+        return detailVO;
     }
 
     @DeleteMapping
@@ -78,7 +139,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         return Lists.newArrayList(AuPartyRelationType.values());
     }
 
-    @GetMapping(value = {"/tree/{relationType}","/tree"})
+    @GetMapping(value = {"/tree/{relationType}", "/tree"})
     public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyRelationType relationType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<TreeNode> resultList;
         if (relationType == null) {

@@ -46,6 +46,11 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
 
 
     @Override
+    public AuCompany findByParty(AuParty party) {
+        return companyRepository.findByAuParty(party);
+    }
+
+    @Override
     public AuCompany insert(AuCompany company) {
         //如果用户不手工编号，则系统自动编号
         if (StringUtils.isEmpty(company.getCompanyNo())) {

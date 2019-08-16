@@ -4,6 +4,7 @@ package com.qslion.core.enums;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import com.qslion.framework.enums.IEnum;
 import com.qslion.framework.util.Localize;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Set;
  * @author Gray.Z
  * @date 2018/5/1 19:45.
  */
-public enum AuPartyType {
+public enum AuPartyType implements IEnum<Integer> {
     /**
      * 公司
      */
@@ -51,7 +52,8 @@ public enum AuPartyType {
         this.category = category;
     }
 
-    public int getId() {
+    @Override
+    public Integer getId() {
         return id;
     }
 
