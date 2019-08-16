@@ -14,7 +14,6 @@ import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.service.PartyService;
 import com.qslion.core.vo.DetailVO;
-import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.custom.service.AuDepartmentService;
 import com.qslion.custom.service.AuEmployeeService;
@@ -23,15 +22,14 @@ import com.qslion.framework.bean.*;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 团体关系控制类
@@ -99,6 +97,8 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
                 break;
             case PROXY:
                 break;
+            default:
+                break;
         }
         detailVO.setContent(content);
 
@@ -108,7 +108,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
 
         Map<String, Object> extras = Maps.newHashMap();
 
-        extras.put("subOrgTypes", subOrgTypes.stream().map(pType-> ImmutableMap.of(pType.getId(),pType.getName()))
+        extras.put("subOrgTypes", subOrgTypes.stream().map(pType -> ImmutableMap.of("name", pType.getName(), "value", pType.getId()))
                 .collect(Collectors.toList()));
         if (content != null) {
             extras.put("displayColumns", DisplayColumn.getDisplayColumns(content.getClass()));
