@@ -108,6 +108,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
 
         Map<String, Object> extras = Maps.newHashMap();
 
+        extras.put("curOrgType", orgType.getId());
         extras.put("subOrgTypes", subOrgTypes.stream().map(pType -> ImmutableMap.of("name", pType.getName(), "value", pType.getId()))
                 .collect(Collectors.toList()));
         if (content != null) {

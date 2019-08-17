@@ -158,10 +158,12 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
                 throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
             } else {
                 parent.setLeaf(false);
-                parent.setType(MenuType.CATALOG);
-                parent.setUrl(StringUtils.EMPTY);
+                if (menu.getType() == MenuType.FUNCTION_MENU) {
+                    parent.setType(MenuType.CATALOG);
+                    parent.setUrl(StringUtils.EMPTY);
+                }
                 update(parent);
-                menu.setLevel((short) (parent.getLevel() + 1));
+                menu.setLevel(parent.getLevel() + 1);
             }
         }
 

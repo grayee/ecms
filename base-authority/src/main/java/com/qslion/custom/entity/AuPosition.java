@@ -4,6 +4,8 @@ package com.qslion.custom.entity;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.framework.bean.DisplayField;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +21,11 @@ import javax.persistence.Table;
 @Table(name = "au_position")
 public class AuPosition extends PartyEntity {
 
+    @DisplayField(id = 1, title = "岗位编号")
     private String positionNo;
+    @DisplayField(id = 2, title = "岗位名称")
     private String positionName;
+    @DisplayField(id = 3, title = "岗位标识")
     private String positionFlag;
     private String positionType;
     private String positionLevel;

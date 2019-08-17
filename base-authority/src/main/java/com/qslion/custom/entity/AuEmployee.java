@@ -3,6 +3,8 @@ package com.qslion.custom.entity;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.framework.bean.DisplayField;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,14 +20,22 @@ import javax.persistence.Table;
 @Table(name = "au_employee")
 public class AuEmployee extends PartyEntity {
 
+    @DisplayField(id = 1, title = "员工编号")
     private String personNo;
+    @DisplayField(id = 2, title = "员工姓名")
     private String personName;
+    @DisplayField(id = 3, title = "英文名称")
     private String englishName;
     private String personType;
+    @DisplayField(id = 4, title = "性别")
     private String sex;
+    @DisplayField(id = 5, title = "手机号码")
     private String mobile;
+    @DisplayField(id = 6, title = "电话")
     private String tel;
+    @DisplayField(id = 7, title = "邮箱")
     private String email;
+    @DisplayField(id = 8, title = "联系地址")
     private String address;
     private String postalCode;
     private String remark;

@@ -27,7 +27,7 @@ public class AuMenu extends BaseEntity<Long> {
     private String name;
     private MenuType type;
     private String url;
-    private Short level;
+    private Integer level;
     private Long parentId;
     private String icon;
     private Short orderNo;
@@ -83,11 +83,11 @@ public class AuMenu extends BaseEntity<Long> {
 
     @Basic
     @Column(name = "level", nullable = true)
-    public Short getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(Short level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 

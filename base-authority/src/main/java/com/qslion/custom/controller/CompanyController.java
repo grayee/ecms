@@ -71,7 +71,6 @@ public class CompanyController extends BaseController<AuCompany> {
 
     @PostMapping(value = "/list")
     public Pager<AuCompany> list(@RequestBody Pageable pageable) {
-
         return companyService.findPage(pageable);
     }
 
