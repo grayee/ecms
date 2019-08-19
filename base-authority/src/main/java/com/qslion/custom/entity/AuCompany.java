@@ -39,8 +39,13 @@ public class AuCompany extends PartyEntity {
     private String linkMan;
     @DisplayField(id = 7, title = "联系电话")
     @Pattern(regexp = "^1([345789])\\d{9}$", message = "座机号码格式错误")
+    @NotBlank(message = "手机号码不能为空", groups = {AddGroup.class})
+    private String mobilePhone;
+
+    @DisplayField(id = 7, title = "联系电话")
     @NotBlank(message = "座机号码不能为空", groups = {AddGroup.class})
-    private String tel;
+    private String telPhone;
+
     private String fax;
     @DisplayField(id = 4, title = "公司地址")
     private String address;
@@ -134,13 +139,23 @@ public class AuCompany extends PartyEntity {
     }
 
     @Basic
-    @Column(name = "tel", length = 32)
-    public String getTel() {
-        return tel;
+    @Column(name = "tel_phone", length = 32)
+    public String getTelPhone() {
+        return telPhone;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setTelPhone(String telPhone) {
+        this.telPhone = telPhone;
+    }
+
+    @Basic
+    @Column(name = "mobile_phone", length = 11)
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
     @Basic
@@ -241,7 +256,7 @@ public class AuCompany extends PartyEntity {
         if (linkMan != null ? !linkMan.equals(auCompany.linkMan) : auCompany.linkMan != null) {
             return false;
         }
-        if (tel != null ? !tel.equals(auCompany.tel) : auCompany.tel != null) {
+        if (telPhone != null ? !telPhone.equals(auCompany.telPhone) : auCompany.telPhone != null) {
             return false;
         }
         if (fax != null ? !fax.equals(auCompany.fax) : auCompany.fax != null) {
@@ -273,7 +288,7 @@ public class AuCompany extends PartyEntity {
         result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
         result = 31 * result + (area != null ? area.hashCode() : 0);
         result = 31 * result + (linkMan != null ? linkMan.hashCode() : 0);
-        result = 31 * result + (tel != null ? tel.hashCode() : 0);
+        result = 31 * result + (telPhone != null ? telPhone.hashCode() : 0);
         result = 31 * result + (fax != null ? fax.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);

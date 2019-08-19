@@ -1,6 +1,8 @@
 package com.qslion.core.vo;
 
 
+import com.google.common.collect.Maps;
+
 import java.util.Map;
 
 /**
@@ -18,6 +20,11 @@ public class DetailVO<T> {
      */
     private Map<String, Object> extras;
 
+
+    public DetailVO(T content) {
+        this.content = content;
+    }
+
     public T getContent() {
         return content;
     }
@@ -32,5 +39,12 @@ public class DetailVO<T> {
 
     public void setExtras(Map<String, Object> extras) {
         this.extras = extras;
+    }
+
+    public void addExtras(String key, Object value) {
+        if (this.extras == null) {
+            this.extras = Maps.newHashMap();
+        }
+        this.extras.put(key, value);
     }
 }

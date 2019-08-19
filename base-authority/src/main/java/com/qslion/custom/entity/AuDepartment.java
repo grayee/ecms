@@ -9,6 +9,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * 实体类 - 部门
@@ -32,7 +33,10 @@ public class AuDepartment extends PartyEntity {
     private String deptLevel;
     @DisplayField(id = 6, title = "部门领导")
     private String deptLeader;
-    @DisplayField(id = 7, title = "部门描述")
+    @DisplayField(id = 7, title = "成立时间")
+    private Date foundDate;
+
+    @DisplayField(id = 8, title = "部门描述")
     private String remark;
 
     @Basic
@@ -93,6 +97,16 @@ public class AuDepartment extends PartyEntity {
 
     public void setDeptLeader(String deptLeader) {
         this.deptLeader = deptLeader;
+    }
+
+    @Basic
+    @Column(name = "found_date")
+    public Date getFoundDate() {
+        return foundDate;
+    }
+
+    public void setFoundDate(Date foundDate) {
+        this.foundDate = foundDate;
     }
 
     @Basic

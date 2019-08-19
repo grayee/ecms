@@ -30,9 +30,9 @@ public class AuEmployee extends PartyEntity {
     @DisplayField(id = 4, title = "性别")
     private String sex;
     @DisplayField(id = 5, title = "手机号码")
-    private String mobile;
+    private String mobilePhone;
     @DisplayField(id = 6, title = "电话")
-    private String tel;
+    private String telPhone;
     @DisplayField(id = 7, title = "邮箱")
     private String email;
     @DisplayField(id = 8, title = "联系地址")
@@ -92,23 +92,23 @@ public class AuEmployee extends PartyEntity {
     }
 
     @Basic
-    @Column(name = "mobile", nullable = true, length = 32)
-    public String getMobile() {
-        return mobile;
+    @Column(name = "mobile_phone", nullable = true, length = 32)
+    public String getMobilePhone() {
+        return mobilePhone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
     @Basic
-    @Column(name = "tel", nullable = true, length = 32)
-    public String getTel() {
-        return tel;
+    @Column(name = "tel_phone", nullable = true, length = 32)
+    public String getTelPhone() {
+        return telPhone;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setTelPhone(String telPhone) {
+        this.telPhone = telPhone;
     }
 
     @Basic
@@ -180,10 +180,10 @@ public class AuEmployee extends PartyEntity {
         if (sex != null ? !sex.equals(that.sex) : that.sex != null) {
             return false;
         }
-        if (mobile != null ? !mobile.equals(that.mobile) : that.mobile != null) {
+        if (mobilePhone != null ? !mobilePhone.equals(that.mobilePhone) : that.mobilePhone != null) {
             return false;
         }
-        if (tel != null ? !tel.equals(that.tel) : that.tel != null) {
+        if (telPhone != null ? !telPhone.equals(that.telPhone) : that.telPhone != null) {
             return false;
         }
         if (email != null ? !email.equals(that.email) : that.email != null) {
@@ -223,8 +223,8 @@ public class AuEmployee extends PartyEntity {
         result = 31 * result + (englishName != null ? englishName.hashCode() : 0);
         result = 31 * result + (personType != null ? personType.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
-        result = 31 * result + (mobile != null ? mobile.hashCode() : 0);
-        result = 31 * result + (tel != null ? tel.hashCode() : 0);
+        result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
+        result = 31 * result + (telPhone != null ? telPhone.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);

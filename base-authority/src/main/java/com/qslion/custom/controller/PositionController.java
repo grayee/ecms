@@ -6,6 +6,7 @@ package com.qslion.custom.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.framework.bean.TreeNode;
@@ -74,7 +75,7 @@ public class PositionController extends BaseController<AuPosition> {
                 }
                 model.addAttribute("entity", entity);*/
             }
-            List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, null);
+            List<TreeNode> resultList = partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, AuPartyType.POSITION);
             model.addAttribute("data", JSON.toJSON(resultList));
         }
         return forward("input", false);

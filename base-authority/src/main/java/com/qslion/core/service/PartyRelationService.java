@@ -18,10 +18,19 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     /**
      * 局部团体关系树
      *
-     * @param relationType 关系类型
+     * @param partyType 团体类型
      * @return 树
      */
-    List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType);
+    List<TreeNode> getPartyRelationTree(AuPartyType partyType);
+
+    /**
+     * 局部团体关系树
+     *
+     * @param relationType 关系类型
+     * @param partyType 团体类型
+     * @return 树
+     */
+    List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, AuPartyType partyType);
 
     /**
      * 团体关系树
@@ -38,8 +47,6 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     //全局团体关系树
     List<TreeNode> getGlobalRelationTree(Set<AuRole> roleSet);
 
-    //根据团体类型获得关系树
-    List<TreeNode> getRelationTreeByPartyTypes(List<AuPartyType> partyTypes);
 
     /**
      * 添加团体关系

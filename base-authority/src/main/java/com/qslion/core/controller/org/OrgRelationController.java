@@ -77,7 +77,6 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         AuPartyRelation partyRelation = partyRelationService.findById(id);
         AuParty party = partyRelation.getAuParty();
         AuPartyType orgType = party.getAuPartyType();
-        DetailVO<PartyEntity> detailVO = new DetailVO<>();
         PartyEntity content = null;
         switch (orgType) {
             case COMPANY:
@@ -100,21 +99,19 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
             default:
                 break;
         }
-        detailVO.setContent(content);
+        DetailVO<PartyEntity> detailVO = new DetailVO<>(content);
 
         List<AuPartyType> subOrgTypes = connectionRuleService.findAll().stream()
                 .filter(auConnectionRule -> auConnectionRule.getCurPartyType() == orgType)
                 .map(AuConnectionRule::getSubPartyType).collect(Collectors.toList());
 
-        Map<String, Object> extras = Maps.newHashMap();
-
-        extras.put("curOrgType", orgType.getId());
-        extras.put("subOrgTypes", subOrgTypes.stream().map(pType -> ImmutableMap.of("name", pType.getName(), "value", pType.getId()))
+        detailVO.addExtras("curOrgType", orgType.getId());
+        detailVO.addExtras("subOrgTypes", subOrgTypes.stream().map(pType -> ImmutableMap.of("name", pType.getName(), "value", pType.getId()))
                 .collect(Collectors.toList()));
         if (content != null) {
-            extras.put("displayColumns", DisplayColumn.getDisplayColumns(content.getClass()));
+            detailVO.addExtras("displayColumns", DisplayColumn.getDisplayColumns(content.getClass()));
         }
-        detailVO.setExtras(extras);
+
         return detailVO;
     }
 
@@ -140,13 +137,13 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         return Lists.newArrayList(AuPartyRelationType.values());
     }
 
-    @GetMapping(value = {"/tree/{relationType}", "/tree"})
-    public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyRelationType relationType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
+    @GetMapping(value = {"/tree/{orgType}", "/tree"})
+    public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<TreeNode> resultList;
-        if (relationType == null) {
+        if (orgType == null) {
             resultList = this.partyRelationService.getGlobalRelationTree(user.getRoles());
         } else {
-            resultList = this.partyRelationService.getPartyRelationTree(relationType, user.getRoles());
+            resultList = this.partyRelationService.getPartyRelationTree(orgType);
         }
         return resultList;
     }
