@@ -14,18 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 项目名称：authority 类名称：EmployeeServiceImpl 类描述： 创建人：Administrator 创建时间：2011-8-8 下午02:58:36
- * 修改人：Administrator 修改时间：2011-8-8 下午02:58:36 修改备注：
+ * 员工Service类
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 13:56.
  */
 @Service("employeeService")
 public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> implements AuEmployeeService {
     @Autowired
-    private AuEmployeeRepository employeeDao;
+    private AuEmployeeRepository employeeRepository;
     @Autowired
     private AuPartyRepository partyRepository;
 
     @Autowired
-    private PartyRelationRepository partyRelationDao;
+    private PartyRelationRepository partyRelationRepository;
 
 
     /**
@@ -55,6 +57,11 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
            // OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
         }
         return partyId;
+    }
+
+    @Override
+    public AuEmployee findByParty(AuParty party) {
+        return employeeRepository.findByAuParty(party);
     }
 
     /**

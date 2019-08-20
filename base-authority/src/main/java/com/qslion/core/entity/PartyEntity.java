@@ -47,7 +47,7 @@ public abstract class PartyEntity extends BaseEntity<Long> {
     @OneToOne(targetEntity = AuParty.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "party_id", referencedColumnName = "id")
     public AuParty getAuParty() {
-        return this.auParty == null ? buildAuParty() : this.auParty;
+        return this.auParty;
     }
 
     public void setAuParty(AuParty auParty) {

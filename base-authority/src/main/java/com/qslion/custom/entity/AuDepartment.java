@@ -1,9 +1,11 @@
 package com.qslion.custom.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -21,7 +23,7 @@ import java.util.Date;
 @Table(name = "au_department")
 public class AuDepartment extends PartyEntity {
 
-    @DisplayField(id = 1, title = "部门编号")
+    @DisplayField(id = 1, title = "部门编码")
     private String deptNo;
     @DisplayField(id = 2, title = "部门名称")
     private String deptName;
@@ -34,6 +36,7 @@ public class AuDepartment extends PartyEntity {
     @DisplayField(id = 6, title = "部门领导")
     private String deptLeader;
     @DisplayField(id = 7, title = "成立时间")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",timezone = "GMT+8")
     private Date foundDate;
 
     @DisplayField(id = 8, title = "部门描述")

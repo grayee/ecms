@@ -30,6 +30,7 @@ public class AuCompany extends PartyEntity {
     @DisplayField(id = 2, title = "公司名称")
     @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
+    @DisplayField(id = 4, title = "公司标识")
     private String companyFlag;
     private String companyType;
     private Short companyLevel;
@@ -37,12 +38,12 @@ public class AuCompany extends PartyEntity {
     private String shortName;
     private String area;
     private String linkMan;
-    @DisplayField(id = 7, title = "联系电话")
+    @DisplayField(id = 9, title = "联系电话")
     @Pattern(regexp = "^1([345789])\\d{9}$", message = "座机号码格式错误")
     @NotBlank(message = "手机号码不能为空", groups = {AddGroup.class})
     private String mobilePhone;
 
-    @DisplayField(id = 7, title = "联系电话")
+    @DisplayField(id = 8, title = "座机电话")
     @NotBlank(message = "座机号码不能为空", groups = {AddGroup.class})
     private String telPhone;
 

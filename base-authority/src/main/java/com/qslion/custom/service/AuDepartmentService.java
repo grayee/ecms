@@ -12,23 +12,27 @@
 package com.qslion.custom.service;
 
 
+import com.qslion.core.entity.AuParty;
+import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.entity.AuDepartment;
 import com.qslion.framework.service.IGenericService;
 
 import java.util.List;
 
 /**
- * 功能、用途、现存BUG:
- * @version 1.0.0
- *  需要参见的其它类
- * @since 1.0.0
+ * 部门Service类
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 13:56.
  */
-
 public interface AuDepartmentService extends IGenericService<AuDepartment, Long> {
+
+
+    AuDepartment findByParty(AuParty party);
 
     /**
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
-     * 
+     *
      * @param vo 用于添加的VO对象
      * @return 若添加成功，则返回新添加记录的主键
      */
@@ -42,5 +46,5 @@ public interface AuDepartmentService extends IGenericService<AuDepartment, Long>
      * @return boolean
      */
     boolean remove(List<Long> ids);
-    
+
 }

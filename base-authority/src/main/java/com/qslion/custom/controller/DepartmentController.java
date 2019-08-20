@@ -54,7 +54,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<AuDepartment> list(Pageable pageable) {
+    public Pager<AuDepartment> list(@RequestBody Pageable pageable) {
         return departmentService.findPage(pageable);
     }
 

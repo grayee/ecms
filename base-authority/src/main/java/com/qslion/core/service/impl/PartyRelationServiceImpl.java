@@ -45,7 +45,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
     @Override
     public boolean addPartyRelation(PartyEntity partyEntity, AuPartyRelationType relationType) {
-        AuParty party = partyEntity.getAuParty();
+        AuParty party = partyEntity.getAuParty() == null ? partyEntity.buildAuParty() : partyEntity.getAuParty();
         Long parentId = partyEntity.getParentId();
         if (parentId != null) {
             AuPartyRelation parentRelation = partyRelationRepository.findById(parentId).orElse(null);

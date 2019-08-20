@@ -2,7 +2,6 @@
 package com.qslion.custom.service.impl;
 
 
-import com.google.common.collect.Lists;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
@@ -19,7 +18,6 @@ import com.qslion.framework.util.CopyUtils;
 
 import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;

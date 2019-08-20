@@ -26,11 +26,10 @@ import java.util.List;
 
 
 /**
- * 功能、用途、现存BUG:
+ * 部门Service类
  *
- * @version 1.0.0
- *          需要参见的其它类
- * @since 1.0.0
+ * @author Gray.Z
+ * @date 2018/4/30 13:56.
  */
 @Service("departmentService")
 public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Long> implements AuDepartmentService {
@@ -43,6 +42,11 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
 
     @Autowired
     private PartyRelationRepository partyRelationRepository;
+
+    @Override
+    public AuDepartment findByParty(AuParty party) {
+        return departmentRepository.findByAuParty(party);
+    }
 
     /**
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）

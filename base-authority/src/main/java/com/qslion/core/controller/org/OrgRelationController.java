@@ -83,13 +83,13 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
                 content = auCompanyService.findByParty(party);
                 break;
             case DEPARTMENT:
-                content = auDepartmentService.findById(id);
+                content = auDepartmentService.findByParty(party);
                 break;
             case POSITION:
-                content = auPositionService.findById(id);
+                content = auPositionService.findByParty(party);
                 break;
             case EMPLOYEE:
-                content = auEmployeeService.findById(id);
+                content = auEmployeeService.findByParty(party);
                 break;
             case ROLE:
                 content = auRoleService.findById(id);

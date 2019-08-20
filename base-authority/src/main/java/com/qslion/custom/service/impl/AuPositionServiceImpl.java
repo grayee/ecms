@@ -6,6 +6,7 @@ import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuParty;
 import com.qslion.custom.dao.AuPositionRepository;
+import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.entity.AuPosition;
 import com.qslion.custom.service.AuPositionService;
 import com.qslion.framework.bean.Pager;
@@ -15,17 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 项目名称：authority 类名称：PositionServiceImpl 类描述： 创建人：Administrator 创建时间：2011-8-8 下午03:10:43
- * 修改人：Administrator 修改时间：2011-8-8 下午03:10:43 修改备注：
+ * 职位Service类
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 13:56.
  */
 @Service("positionService")
 public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> implements AuPositionService {
     @Autowired
-    private AuPositionRepository positionDao;
+    private AuPositionRepository positionRepository;
     @Autowired
     private AuPartyRepository partyRepository;
     @Autowired
-    private PartyRelationRepository partyRelationDao;
+    private PartyRelationRepository partyRelationRepository;
 
 
     /**
@@ -55,6 +58,11 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
            // OrgHelper.addAuPartyRelation(partyId, parentRelId, relTypeId);
         }
         return partyId;
+    }
+
+    @Override
+    public AuPosition findByParty(AuParty party) {
+        return positionRepository.findByAuParty(party);
     }
 
     /**
