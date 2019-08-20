@@ -73,27 +73,20 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
      */
     @Override
     public boolean remove(List<Long> ids) {
-        List<AuDepartment> deptList = Lists.newArrayList();
-        List<AuPartyRelation> relationList = Lists.newArrayList();
         ids.forEach(departmentId -> {
-            AuDepartment department = departmentRepository.findById(departmentId).get();
-            AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(department.getAuParty());
-            if (partyRelation != null && partyRelation.getLeaf()) {
-                deptList.add(department);
-                relationList.add(partyRelation);
-            } else {
-                throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
+            AuDepartment department = departmentRepository.findById(departmentId).orElse(null);
+            if (department != null) {
+                departmentRepository.delete(department);
+                partyRelationService.removePartyRelation(department.getAuParty());
             }
         });
-        departmentRepository.deleteAll(deptList);
-        partyRelationRepository.deleteAll(relationList);
         return true;
     }
 
     /**
      * 更新单条记录，同时调用接口更新相应的团体、团体关系记录
      *
-     * @param vo 用于更新的VO对象
+     * @param department 用于更新的VO对象
      * @return 成功更新的记录数
      */
     @Override

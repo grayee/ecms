@@ -27,7 +27,7 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
      * 局部团体关系树
      *
      * @param relationType 关系类型
-     * @param partyType 团体类型
+     * @param partyType    团体类型
      * @return 树
      */
     List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, AuPartyType partyType);
@@ -55,6 +55,15 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
      * @param relationType 关系类型
      */
     boolean addPartyRelation(PartyEntity party, AuPartyRelationType relationType);
+
+
+    /**
+     * 删除团体关系
+     *
+     * @param party 团体
+     * @return boolean
+     */
+    boolean removePartyRelation(AuParty party);
 
     /**
      * 初始化根节点

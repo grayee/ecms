@@ -69,14 +69,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
             AuCompany company = companyRepository.findById(companyId).orElse(null);
             if (company != null) {
                 companyRepository.delete(company);
-                AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(company.getAuParty());
-                if (partyRelation != null) {
-                    if (partyRelation.getLeaf()) {
-                        partyRelationService.delete(partyRelation);
-                    } else {
-                        throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
-                    }
-                }
+                partyRelationService.removePartyRelation(company.getAuParty());
             }
         });
         return true;

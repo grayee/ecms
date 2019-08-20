@@ -54,8 +54,8 @@ public class AuUserController extends BaseController<AuUser> {
     /**
      * 列表
      */
-    @GetMapping(value = "/list")
-    public Pager<AuUser> list(Pageable pageable) {
+    @PostMapping(value = "/list")
+    public Pager<AuUser> list(@RequestBody Pageable pageable) {
         return auUserService.findPage(pageable);
     }
 

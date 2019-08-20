@@ -84,9 +84,16 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         return true;
     }
 
-    public void addPartyRelation(AuPartyRelation paramAuPartyRelationVo) {
-        // TODO Auto-generated method stub
-
+    public boolean removePartyRelation(AuParty party) {
+        AuPartyRelation partyRelation = partyRelationRepository.findByAuPartyAndPartyRelationType(party,AuPartyRelationType.ADMINISTRATIVE);
+        if (partyRelation != null) {
+            if (partyRelation.getLeaf()) {
+                partyRelationRepository.delete(partyRelation);
+            } else {
+                throw new BusinessException(ResultCode.PARAMETER_ERROR, "包含非叶子节点数据，请确认!");
+            }
+        }
+        return true;
     }
 
 

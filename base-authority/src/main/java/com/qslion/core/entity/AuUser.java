@@ -1,6 +1,7 @@
 package com.qslion.core.entity;
 
 import com.google.common.collect.Sets;
+import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
@@ -33,20 +34,26 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private static final long serialVersionUID = -8685902226854146300L;
+    @DisplayField(id=1,title = "用户名")
     private String username;
     @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{5,19}$", groups = AddGroup.class, message = "{custom.pwd.invalid}")
     private String password;
+    @DisplayField(id=2,title = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;
+    @DisplayField(id=3,title = "手机号码")
     @Pattern(regexp = "^1([345789])\\d{9}$", message = "手机号码格式错误")
     @NotBlank(message = "手机号码不能为空")
     private String mobile;
+    @DisplayField(id=4,title = "昵称")
     private String nickname;
+    @DisplayField(id=5,title = "手机号码")
     private Integer age;
     private Date birthday;
     private String loginId;
     private String loginIp;
+    @DisplayField(id=6,title = "状态")
     private EnableStatus enableStatus;
     private Date lockedDate;
     private Integer loginFailureCount;

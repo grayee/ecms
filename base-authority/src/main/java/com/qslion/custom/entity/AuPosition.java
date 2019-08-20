@@ -27,10 +27,13 @@ public class AuPosition extends PartyEntity {
     private String positionName;
     @DisplayField(id = 3, title = "岗位标识")
     private String positionFlag;
+    @DisplayField(id = 4, title = "岗位类型")
     private String positionType;
     private String positionLevel;
+    @DisplayField(id = 5, title = "领导标志")
     private String leaderFlag;
     private String leaderLevel;
+    @DisplayField(id = 6, title = "岗位描述")
     private String remark;
 
     @Basic
