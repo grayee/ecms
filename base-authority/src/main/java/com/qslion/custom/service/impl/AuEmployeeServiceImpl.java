@@ -50,8 +50,8 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
      */
     public AuEmployee insert(AuEmployee employee) {
         //如果用户不手工编号，则系统自动编号
-        if (StringUtils.isEmpty(employee.getPersonNo())) {
-            employee.setPersonNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
+        if (StringUtils.isEmpty(employee.getEmployeeNo())) {
+            employee.setEmployeeNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
         }
         //添加团体关系
         partyRelationService.addPartyRelation(employee, AuPartyRelationType.ADMINISTRATIVE);
@@ -91,7 +91,6 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
      */
     public AuEmployee update(AuEmployee vo) {
         AuParty party = partyRepository.getOne(vo.getId());
-        party.setName(vo.getPersonName());//团体名称
         party.setRemark(vo.getRemark());//备注
         //vo.setAuParty(party);
        /* employeeDao.clear();

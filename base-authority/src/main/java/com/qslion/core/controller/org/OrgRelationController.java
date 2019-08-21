@@ -5,7 +5,6 @@ package com.qslion.core.controller.org;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.qslion.core.entity.*;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

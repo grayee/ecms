@@ -1,11 +1,9 @@
 package com.qslion.custom.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;

@@ -2,11 +2,14 @@ package com.qslion.moudles.ddic.controller;
 
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.moudles.ddic.entity.DictDataValue;
 import com.qslion.moudles.ddic.entity.DictDataType;
 import com.qslion.moudles.ddic.service.DictionaryService;
+
 import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,8 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/12/6.
  */
+@ResponseResult
 @RestController
-@RequestMapping(value = "/dict")
+@RequestMapping(value = "/sys/dict")
 public class DictionaryController extends BaseController<DictDataType> {
 
     @Autowired
@@ -37,8 +41,8 @@ public class DictionaryController extends BaseController<DictDataType> {
         return dictionaryService.findByTypeId(typeId);
     }
 
-    @GetMapping(value = "/list")
-    public Pager<DictDataType> list(Pageable pageable) {
+    @PostMapping(value = "/list")
+    public Pager<DictDataType> list(@RequestBody Pageable pageable) {
         return dictionaryService.findPage(pageable);
     }
 

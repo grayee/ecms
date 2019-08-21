@@ -4,11 +4,9 @@ import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
+import com.qslion.framework.enums.SexEnum;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 实体类 - 雇员
@@ -21,14 +19,14 @@ import javax.persistence.Table;
 public class AuEmployee extends PartyEntity {
 
     @DisplayField(id = 1, title = "员工编号")
-    private String personNo;
+    private String employeeNo;
     @DisplayField(id = 2, title = "员工姓名")
-    private String personName;
+    private String employeeName;
     @DisplayField(id = 3, title = "英文名称")
     private String englishName;
-    private String personType;
+    private String employeeType;
     @DisplayField(id = 4, title = "性别")
-    private String sex;
+    private SexEnum sex;
     @DisplayField(id = 5, title = "手机号码")
     private String mobilePhone;
     @DisplayField(id = 6, title = "电话")
@@ -40,25 +38,23 @@ public class AuEmployee extends PartyEntity {
     private String postalCode;
     private String remark;
 
-
     @Basic
-    @Column(name = "person_no", nullable = true, length = 64)
-    public String getPersonNo() {
-        return personNo;
+    @Column(name = "employee_no", nullable = true, length = 64)
+    public String getEmployeeNo() {
+        return employeeNo;
     }
-
-    public void setPersonNo(String personNo) {
-        this.personNo = personNo;
+    public void setEmployeeNo(String employeeNo) {
+        this.employeeNo = employeeNo;
     }
 
     @Basic
-    @Column(name = "person_name", nullable = true, length = 64)
-    public String getPersonName() {
-        return personName;
+    @Column(name = "employee_name", nullable = true, length = 64)
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setPersonName(String personName) {
-        this.personName = personName;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
     @Basic
@@ -72,22 +68,23 @@ public class AuEmployee extends PartyEntity {
     }
 
     @Basic
-    @Column(name = "person_type", nullable = true, length = 64)
-    public String getPersonType() {
-        return personType;
+    @Column(name = "employee_type", nullable = true, length = 64)
+    public String getEmployeeType() {
+        return employeeType;
     }
 
-    public void setPersonType(String personType) {
-        this.personType = personType;
+    public void setEmployeeType(String employeeType) {
+        this.employeeType = employeeType;
     }
 
     @Basic
     @Column(name = "sex", nullable = true, length = 1)
-    public String getSex() {
+    @Enumerated
+    public SexEnum getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(SexEnum sex) {
         this.sex = sex;
     }
 
@@ -165,16 +162,16 @@ public class AuEmployee extends PartyEntity {
         if (id != that.id) {
             return false;
         }
-        if (personNo != null ? !personNo.equals(that.personNo) : that.personNo != null) {
+        if (employeeNo != null ? !employeeNo.equals(that.employeeNo) : that.employeeNo != null) {
             return false;
         }
-        if (personName != null ? !personName.equals(that.personName) : that.personName != null) {
+        if (employeeName != null ? !employeeName.equals(that.employeeName) : that.employeeName != null) {
             return false;
         }
         if (englishName != null ? !englishName.equals(that.englishName) : that.englishName != null) {
             return false;
         }
-        if (personType != null ? !personType.equals(that.personType) : that.personType != null) {
+        if (employeeType != null ? !employeeType.equals(that.employeeType) : that.employeeType != null) {
             return false;
         }
         if (sex != null ? !sex.equals(that.sex) : that.sex != null) {
@@ -218,10 +215,10 @@ public class AuEmployee extends PartyEntity {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (personNo != null ? personNo.hashCode() : 0);
-        result = 31 * result + (personName != null ? personName.hashCode() : 0);
+        result = 31 * result + (employeeNo != null ? employeeNo.hashCode() : 0);
+        result = 31 * result + (employeeName != null ? employeeName.hashCode() : 0);
         result = 31 * result + (englishName != null ? englishName.hashCode() : 0);
-        result = 31 * result + (personType != null ? personType.hashCode() : 0);
+        result = 31 * result + (employeeType != null ? employeeType.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
         result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
         result = 31 * result + (telPhone != null ? telPhone.hashCode() : 0);
@@ -240,7 +237,7 @@ public class AuEmployee extends PartyEntity {
     public AuParty buildAuParty() {
         auParty = new AuParty();
         auParty.setAuPartyType(AuPartyType.EMPLOYEE);
-        auParty.setName(getPersonName());
+        auParty.setName(getEmployeeName());
         auParty.setRemark(getRemark());
         auParty.setEnableStatus(getEnableStatus());
         auParty.setInherit(true);
