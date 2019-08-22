@@ -17,7 +17,13 @@ public class CommonDistrict extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
     private String name;
+    /**
+     * 地区等级：1，省级；2，市级；3，县级；4，乡镇
+     */
     private Integer level;
+    /**
+     * 使用对象：0:都不启用; 1:出生地; 2:居住地; 3:都启用
+     */
     private Integer usetype;
     private Long upid;
 
