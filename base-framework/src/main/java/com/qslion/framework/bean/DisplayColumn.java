@@ -55,8 +55,7 @@ public class DisplayColumn {
         for (Field field : fieldList) {
             if (field.isAnnotationPresent(DisplayField.class)) {
                 DisplayField displayAnn = field.getAnnotation(DisplayField.class);
-                String fieldName = field.getName();
-                DisplayColumn displayColumn = new DisplayColumn(fieldName, displayAnn);
+                DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayAnn);
                 displayColumns.add(displayColumn);
             }
         }

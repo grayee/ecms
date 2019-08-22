@@ -1,17 +1,19 @@
 package com.qslion.moudles.ddic.controller;
 
-import com.qslion.framework.bean.Pageable;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.ResponseResult;
+import com.google.common.collect.Lists;
+import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.moudles.ddic.entity.DictDataValue;
 import com.qslion.moudles.ddic.entity.DictDataType;
 import com.qslion.moudles.ddic.service.DictionaryService;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,14 +38,36 @@ public class DictionaryController extends BaseController<DictDataType> {
     @Autowired
     private DictionaryService dictionaryService;
 
+
+    @GetMapping(value = "/tree/{typeId}")
+    public TreeNode tree(@PathVariable Long typeId) {
+        DictDataType dictDataType = dictionaryService.findById(typeId);
+        TreeNode root = new TreeNode(dictDataType.getId().toString(), dictDataType.getName());
+        if (dictDataType != null) {
+            List<TreeNode> valueNodes = dictDataType.getDictDataValueList().stream().map(dictDataValue ->
+                    new TreeNode(dictDataValue.getId().toString(), dictDataValue.getName())).collect(Collectors.toList());
+            root.setChildren(valueNodes);
+        }
+        return root;
+    }
+
     @GetMapping(value = "/detail/{typeId}")
     public List<DictDataValue> detail(@PathVariable Long typeId) {
         return dictionaryService.findByTypeId(typeId);
     }
 
     @PostMapping(value = "/list")
-    public Pager<DictDataType> list(@RequestBody Pageable pageable) {
-        return dictionaryService.findPage(pageable);
+    public Pager<EntityVo> list(@RequestBody Pageable pageable) {
+        Pager<DictDataType> pager = dictionaryService.findPage(pageable);
+        return pager.wrap(getEntityVoFunction());
+    }
+
+    private Function<DictDataType, EntityVo> getEntityVoFunction() {
+        return dictDataType -> {
+            EntityVo ev = EntityVo.get(dictDataType, Lists.newArrayList("name", "code", "description"));
+            ev.put("isSystem", dictDataType.isSystem() ? "是" : "否");
+            return ev;
+        };
     }
 
     @PutMapping

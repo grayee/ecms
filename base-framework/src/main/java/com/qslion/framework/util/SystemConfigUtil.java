@@ -35,13 +35,13 @@ public class SystemConfigUtil {
             for (DictDataValue dictDataValue : dictDataValues) {
                 switch (dictDataValue.getCode()) {
                     case "Is_Login_Failure_Lock":
-                        systemConfig.setIsLoginFailureLock(Boolean.valueOf(dictDataValue.getValue()));
+                       // systemConfig.setIsLoginFailureLock(Boolean.valueOf(dictDataValue.getValue()));
                         break;
                     case "login_failure_lock_count":
-                        systemConfig.setLoginFailureLockCount(Integer.valueOf(dictDataValue.getValue()));
+                        //systemConfig.setLoginFailureLockCount(Integer.valueOf(dictDataValue.getValue()));
                         break;
                     case "login_failure_lock_time":
-                        systemConfig.setLoginFailureLockTime(Integer.valueOf(dictDataValue.getValue()));
+                        //systemConfig.setLoginFailureLockTime(Integer.valueOf(dictDataValue.getValue()));
                         break;
                     default:
                         break;

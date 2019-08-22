@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -69,6 +71,11 @@ public class Pager<T> implements Serializable {
         this.totalCount = totalCount;
         this.pageable = pageable;
         this.extras = extras;
+    }
+
+    public Pager<EntityVo> wrap(Function<? super T, EntityVo> mapper) {
+        List<EntityVo> content = getContent().stream().map(mapper).collect(Collectors.toList());
+        return new Pager<>(content, getTotalCount(), getPageable(), getExtras());
     }
 
     /**

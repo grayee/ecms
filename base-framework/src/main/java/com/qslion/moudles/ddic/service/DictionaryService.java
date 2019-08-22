@@ -1,8 +1,10 @@
 package com.qslion.moudles.ddic.service;
 
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
 import com.qslion.moudles.ddic.entity.DictDataValue;
 import com.qslion.moudles.ddic.entity.DictDataType;
+
 import java.util.List;
 
 /**
@@ -36,4 +38,5 @@ public interface DictionaryService extends IGenericService<DictDataType, Long> {
      * @return 字典列表
      */
     List<DictDataValue> findByCode(String code);
+
 }

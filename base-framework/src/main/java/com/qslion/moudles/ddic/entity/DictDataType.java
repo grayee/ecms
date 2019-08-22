@@ -1,5 +1,6 @@
 package com.qslion.moudles.ddic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import java.util.List;
@@ -27,6 +28,7 @@ public class DictDataType extends BaseEntity<Long> {
     private String description;
     @DisplayField(id = 4, title = "是否内置")
     private boolean isSystem;
+    @JsonIgnore
     private List<DictDataValue> dictDataValueList;
 
     @OneToMany

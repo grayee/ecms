@@ -1,11 +1,9 @@
 package com.qslion.moudles.ddic.entity;
 
 import com.qslion.framework.entity.BaseEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.qslion.framework.enums.EnableStatus;
+
+import javax.persistence.*;
 
 /**
  * 实体类 - 数据字典基础表
@@ -24,15 +22,13 @@ public class DictDataValue extends BaseEntity<Long> {
 
     private String name;
 
-    private String value;
-
-    private String status;
+    protected EnableStatus enableStatus;
 
     private String description;
     /**
      * 显示序号
      */
-    private Short orderNo;
+    private Integer orderNo;
 
     private DictDataType dictDataType;
 
@@ -65,22 +61,14 @@ public class DictDataValue extends BaseEntity<Long> {
         this.name = name;
     }
 
-    @Column(name = "VALUE", nullable = false, length = 64)
-    public String getValue() {
-        return value;
+    @Enumerated
+    @Column(name = "ENABLE_STATUS", nullable = false, length = 10)
+    public EnableStatus getEnableStatus() {
+        return enableStatus;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Column(name = "STATUS", nullable = false, length = 10)
-    public String getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setEnableStatus(EnableStatus enableStatus) {
+        this.enableStatus = enableStatus;
     }
 
     @Column(name = "DESCRIPTION", length = 256)
@@ -93,11 +81,11 @@ public class DictDataValue extends BaseEntity<Long> {
     }
 
     @Column(name = "ORDER_NO", nullable = false)
-    public Short getOrderNo() {
+    public Integer getOrderNo() {
         return orderNo;
     }
 
-    public void setOrderNo(Short orderNo) {
+    public void setOrderNo(Integer orderNo) {
         this.orderNo = orderNo;
     }
 }

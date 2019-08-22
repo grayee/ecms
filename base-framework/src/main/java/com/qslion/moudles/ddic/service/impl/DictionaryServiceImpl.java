@@ -1,5 +1,6 @@
 package com.qslion.moudles.ddic.service.impl;
 
+import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.moudles.ddic.dao.DictDataTypeRepository;
 import com.qslion.moudles.ddic.dao.DictDataValueRepository;
@@ -7,6 +8,8 @@ import com.qslion.moudles.ddic.entity.DictDataType;
 import com.qslion.moudles.ddic.entity.DictDataValue;
 import com.qslion.moudles.ddic.service.DictionaryService;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
