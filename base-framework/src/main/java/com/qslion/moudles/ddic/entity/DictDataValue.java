@@ -22,6 +22,8 @@ public class DictDataValue extends BaseEntity<Long> {
 
     private String name;
 
+    private String value;
+
     protected EnableStatus enableStatus;
 
     private String description;
@@ -61,6 +63,14 @@ public class DictDataValue extends BaseEntity<Long> {
         this.name = name;
     }
 
+    @Column(name = "VALUE", nullable = false, length = 64)
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
     @Enumerated
     @Column(name = "ENABLE_STATUS", nullable = false, length = 10)
     public EnableStatus getEnableStatus() {

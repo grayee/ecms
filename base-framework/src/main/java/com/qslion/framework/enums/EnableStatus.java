@@ -1,6 +1,7 @@
 package com.qslion.framework.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -10,45 +11,43 @@ import java.util.Optional;
  * @author Gray.Z
  * @date 2018/9/20.
  */
-public enum EnableStatus {
+public enum EnableStatus implements IEnum<Integer> {
 
-  /**
-   * 禁用
-   */
-  DISABLE(0, "禁用"),
-  /**
-   * 启用
-   */
-  ENABLE(1, "启用"),
+    /**
+     * 禁用
+     */
+    DISABLE(0, "禁用"),
+    /**
+     * 启用
+     */
+    ENABLE(1, "启用"),;
+    private Integer id;
+    private String name;
 
-  ;
-  private Integer id;
-  private String name;
+    EnableStatus(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-  EnableStatus(Integer id, String name) {
-    this.id = id;
-    this.name = name;
-  }
+    public Optional<EnableStatus> get(Integer id) {
+        return Arrays.stream(EnableStatus.values()).filter(menuStatus -> menuStatus.getId() == id).findFirst();
+    }
 
-  public Optional<EnableStatus> get(Integer id) {
-    return Arrays.stream(EnableStatus.values()).filter(menuStatus -> menuStatus.getId() == id).findFirst();
-  }
+    @JsonValue
+    public Integer getId() {
+        return id;
+    }
 
-  @JsonValue
-  public Integer getId() {
-    return id;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

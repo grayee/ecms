@@ -1,14 +1,13 @@
 package com.qslion.moudles.ddic.service.impl;
 
-import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.moudles.ddic.dao.DictDataTypeRepository;
 import com.qslion.moudles.ddic.dao.DictDataValueRepository;
 import com.qslion.moudles.ddic.entity.DictDataType;
 import com.qslion.moudles.ddic.entity.DictDataValue;
 import com.qslion.moudles.ddic.service.DictionaryService;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,20 @@ public class DictionaryServiceImpl extends GenericServiceImpl<DictDataType, Long
     @Override
     public DictDataValue insert(DictDataValue dictDataValue) {
         return dictDataValueRepository.save(dictDataValue);
+    }
+
+    @Override
+    public boolean deleteValue(Long id) {
+        dictDataValueRepository.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public boolean updateValue(Long id, DictDataValue dictDataValue) {
+        DictDataType dictDataType = dictDataTypeRepository.findById(id).orElse(null);
+        dictDataValue.setDictDataType(dictDataType);
+        dictDataValueRepository.saveAndFlush(dictDataValue);
+        return false;
     }
 
     @Override

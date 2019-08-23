@@ -10,6 +10,7 @@ import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
+import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2018/4/21 13:43.
  */
 @Api(value = "角色Controller", description = "角色Controller", tags = {"角色控制器"})
+@ResponseResult
 @RestController
 @RequestMapping(value = "/au/role")
 public class AuRoleController extends BaseController<AuRole> {

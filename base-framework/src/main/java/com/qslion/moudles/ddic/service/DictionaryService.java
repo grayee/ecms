@@ -24,6 +24,23 @@ public interface DictionaryService extends IGenericService<DictDataType, Long> {
     DictDataValue insert(DictDataValue dictDataValue);
 
     /**
+     * 删除字典值
+     *
+     * @param id 字典值id
+     * @return boolean
+     */
+    boolean deleteValue(Long id);
+
+    /**
+     * 删除字典值
+     *
+     * @param id 字典值id
+     * @param dictDataValue 字典值i
+     * @return boolean
+     */
+    boolean updateValue(Long id, DictDataValue dictDataValue);
+
+    /**
      * 获取字典列表
      *
      * @param typeId 字典类型ID

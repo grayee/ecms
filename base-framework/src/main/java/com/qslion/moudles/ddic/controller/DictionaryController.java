@@ -36,8 +36,12 @@ public class DictionaryController extends BaseController<DictDataType> {
         TreeNode root = new TreeNode(dictDataType.getId().toString(), dictDataType.getName());
         root.setState(TreeNode.NodeState.OPEN);
         if (dictDataType != null) {
-            List<TreeNode> valueNodes = dictDataType.getDictDataValueList().stream().map(dictDataValue ->
-                    new TreeNode(dictDataValue.getId().toString(), dictDataValue.getName())).collect(Collectors.toList());
+            List<TreeNode> valueNodes = dictDataType.getDictDataValueList().stream().map(dictDataValue -> {
+                TreeNode tn = new TreeNode(dictDataValue.getId().toString(), dictDataValue.getName());
+                tn.setState(TreeNode.NodeState.OPEN);
+                tn.addAttribute("meta",dictDataValue);
+                return tn;
+            }).collect(Collectors.toList());
             root.setChildren(valueNodes);
         }
         return Lists.newArrayList(root);
@@ -68,6 +72,11 @@ public class DictionaryController extends BaseController<DictDataType> {
         return baseDataType == null;
     }
 
+    @PutMapping(value = "/{id}")
+    public boolean updateValue(@PathVariable Long id, @Validated @RequestBody DictDataValue dictDataValue) {
+        return  dictionaryService.updateValue(id,dictDataValue);
+    }
+
     @PostMapping
     public Long save(@Validated @RequestBody DictDataType dictDataType) {
         DictDataType baseDataType = dictionaryService.save(dictDataType);
@@ -90,5 +99,10 @@ public class DictionaryController extends BaseController<DictDataType> {
             }
         }
         return false;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public boolean deleteValue(@PathVariable Long id) {
+        return dictionaryService.deleteValue(id);
     }
 }

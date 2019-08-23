@@ -3,6 +3,8 @@
  */
 package com.qslion.framework.bean;
 
+import com.google.common.collect.Maps;
+
 import java.util.List;
 import java.util.Map;
 
@@ -120,6 +122,13 @@ public class TreeNode {
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public void addAttribute(String key, Object value) {
+        if (this.attributes == null) {
+            this.attributes = Maps.newHashMap();
+        }
+        this.attributes.put(key, value);
     }
 
     public String getPath() {
