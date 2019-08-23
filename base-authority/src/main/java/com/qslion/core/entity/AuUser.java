@@ -1,27 +1,21 @@
 package com.qslion.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * 用户实体类
@@ -65,6 +59,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private Set<AuRole> roles = Sets.newHashSet();
 
+    @JsonIgnore
     private Set<AuUserGroup> userGroups = Sets.newHashSet();
 
     /**
