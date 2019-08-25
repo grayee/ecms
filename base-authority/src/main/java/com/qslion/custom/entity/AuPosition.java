@@ -5,10 +5,7 @@ import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 实体类 - 职位
@@ -181,11 +178,13 @@ public class AuPosition extends PartyEntity {
         return result;
     }
 
+    @Transient
     @Override
     public AuPartyType getPartyType() {
         return AuPartyType.POSITION;
     }
 
+    @Transient
     @Override
     public String getPartyName() {
         return positionName;

@@ -4,10 +4,7 @@ import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -72,12 +69,14 @@ public abstract class PartyEntity extends BaseEntity<Long> {
      *
      * @return AuPartyType
      */
+    @Transient
     public abstract AuPartyType getPartyType();
 
     /**
      * 构建团体
-     *
+    *
      * @return AuPartyType
      */
+    @Transient
     public abstract String getPartyName();
 }

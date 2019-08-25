@@ -97,12 +97,12 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
     public String getAuthority() {
         return value;
     }
-
+    @Transient
     @Override
     public AuPartyType getPartyType() {
         return AuPartyType.ROLE;
     }
-
+    @Transient
     @Override
     public String getPartyName() {
         return name;

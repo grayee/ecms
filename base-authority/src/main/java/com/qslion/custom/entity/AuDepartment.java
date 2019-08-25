@@ -4,10 +4,7 @@ import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -175,12 +172,12 @@ public class AuDepartment extends PartyEntity {
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
     }
-
+    @Transient
     @Override
     public AuPartyType getPartyType() {
         return AuPartyType.DEPARTMENT;
     }
-
+    @Transient
     @Override
     public String getPartyName() {
         return deptName;

@@ -48,9 +48,10 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
             company.setEnableStatus(EnableStatus.ENABLE);
             company.setEnableDate(DateTime.now().toDate());
         }
+        AuCompany auCompany = companyRepository.save(company);
         //添加公司团体
-        partyRelationService.addPartyRelation(company, AuPartyRelationType.ADMINISTRATIVE);
-        return companyRepository.save(company);
+        partyRelationService.addPartyRelation(auCompany, AuPartyRelationType.ADMINISTRATIVE);
+        return auCompany;
     }
 
     @Override

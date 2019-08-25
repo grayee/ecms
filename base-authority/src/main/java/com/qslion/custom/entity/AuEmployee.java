@@ -220,12 +220,12 @@ public class AuEmployee extends PartyEntity {
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
     }
-
+    @Transient
     @Override
     public AuPartyType getPartyType() {
         return AuPartyType.EMPLOYEE;
     }
-
+    @Transient
     @Override
     public String getPartyName() {
         return employeeName;
