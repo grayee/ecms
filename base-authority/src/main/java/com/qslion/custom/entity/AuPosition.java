@@ -1,7 +1,6 @@
 
 package com.qslion.custom.entity;
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
@@ -33,8 +32,7 @@ public class AuPosition extends PartyEntity {
     @DisplayField(id = 5, title = "领导标志")
     private String leaderFlag;
     private String leaderLevel;
-    @DisplayField(id = 6, title = "岗位描述")
-    private String remark;
+
 
     @Basic
     @Column(name = "position_no", nullable = true, length = 64)
@@ -104,16 +102,6 @@ public class AuPosition extends PartyEntity {
 
     public void setLeaderLevel(String leaderLevel) {
         this.leaderLevel = leaderLevel;
-    }
-
-    @Basic
-    @Column(name = "remark", nullable = true, length = 255)
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     @Override
@@ -194,15 +182,13 @@ public class AuPosition extends PartyEntity {
     }
 
     @Override
-    public AuParty buildAuParty() {
-        auParty = new AuParty();
-        auParty.setAuPartyType(AuPartyType.POSITION);
-        auParty.setName(getPositionName());
-        auParty.setRemark(getRemark());
-        auParty.setEnableStatus(getEnableStatus());
-        auParty.setInherit(true);
-        auParty.setReal(true);
-        setAuParty(auParty);
-        return auParty;
+    public AuPartyType getPartyType() {
+        return AuPartyType.POSITION;
     }
+
+    @Override
+    public String getPartyName() {
+        return positionName;
+    }
+
 }

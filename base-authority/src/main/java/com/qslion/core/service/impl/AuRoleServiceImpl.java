@@ -2,7 +2,6 @@ package com.qslion.core.service.impl;
 
 
 import com.qslion.core.dao.AuRoleRepository;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.AuRoleService;

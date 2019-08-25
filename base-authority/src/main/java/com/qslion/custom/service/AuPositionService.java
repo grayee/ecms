@@ -1,8 +1,6 @@
 package com.qslion.custom.service;
 
 
-import com.qslion.core.entity.AuParty;
-import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.entity.AuPosition;
 import com.qslion.framework.service.IGenericService;
 
@@ -22,10 +20,6 @@ public interface AuPositionService extends IGenericService<AuPosition, Long> {
      * @return AuPosition
      */
     AuPosition insert(AuPosition position);
-
-
-    AuPosition findByParty(AuParty party);
-
 
     /**
      * 删除多条记录，删除自身并同时删除相应的团体、团体关系

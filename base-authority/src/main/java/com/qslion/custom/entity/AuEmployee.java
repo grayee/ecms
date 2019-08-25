@@ -1,6 +1,5 @@
 package com.qslion.custom.entity;
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
@@ -36,7 +35,6 @@ public class AuEmployee extends PartyEntity {
     @DisplayField(id = 8, title = "联系地址")
     private String address;
     private String postalCode;
-    private String remark;
 
     @Basic
     @Column(name = "employee_no", nullable = true, length = 64)
@@ -138,16 +136,6 @@ public class AuEmployee extends PartyEntity {
         this.postalCode = postalCode;
     }
 
-    @Basic
-    @Column(name = "remark", nullable = true, length = 255)
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -234,15 +222,12 @@ public class AuEmployee extends PartyEntity {
     }
 
     @Override
-    public AuParty buildAuParty() {
-        auParty = new AuParty();
-        auParty.setAuPartyType(AuPartyType.EMPLOYEE);
-        auParty.setName(getEmployeeName());
-        auParty.setRemark(getRemark());
-        auParty.setEnableStatus(getEnableStatus());
-        auParty.setInherit(true);
-        auParty.setReal(true);
-        setAuParty(auParty);
-        return auParty;
+    public AuPartyType getPartyType() {
+        return AuPartyType.EMPLOYEE;
+    }
+
+    @Override
+    public String getPartyName() {
+        return employeeName;
     }
 }

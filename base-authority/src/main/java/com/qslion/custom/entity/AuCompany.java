@@ -1,11 +1,11 @@
 package com.qslion.custom.entity;
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import io.swagger.annotations.ApiModel;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern;
  * @author Gray.Z
  * @date 2018/4/30 13:56.
  */
-@ApiModel(description="公司对象Company")
+@ApiModel(description = "公司对象Company")
 @Entity
 @Table(name = "au_company")
 public class AuCompany extends PartyEntity {
@@ -57,7 +57,7 @@ public class AuCompany extends PartyEntity {
     private String email;
     @DisplayField(id = 6, title = "公司网址")
     private String webSite;
-    private String remark;
+
 
     @Basic
     @Column(name = "company_no", length = 64)
@@ -209,16 +209,6 @@ public class AuCompany extends PartyEntity {
         this.webSite = webSite;
     }
 
-    @Basic
-    @Column(name = "remark")
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -300,15 +290,12 @@ public class AuCompany extends PartyEntity {
     }
 
     @Override
-    public AuParty buildAuParty() {
-        auParty = new AuParty();
-        auParty.setAuPartyType(AuPartyType.COMPANY);
-        auParty.setName(getCompanyName());
-        auParty.setRemark(getRemark());
-        auParty.setEnableStatus(getEnableStatus());
-        auParty.setInherit(true);
-        auParty.setReal(true);
-        setAuParty(auParty);
-        return auParty;
+    public AuPartyType getPartyType() {
+        return AuPartyType.COMPANY;
+    }
+
+    @Override
+    public String getPartyName() {
+        return companyName;
     }
 }

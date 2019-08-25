@@ -1,18 +1,14 @@
 package com.qslion.core.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 
-import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import java.util.Date;
 
 /**
  * 实体类 - 团体基础类
@@ -26,8 +22,8 @@ public abstract class PartyEntity extends BaseEntity<Long> {
     private static final long serialVersionUID = 4656704236281853404L;
 
     protected Long parentId;
-    @JsonIgnore
-    protected AuParty auParty;
+
+    protected String remark;
     protected EnableStatus enableStatus;
     protected Date enableDate;
 
@@ -39,19 +35,6 @@ public abstract class PartyEntity extends BaseEntity<Long> {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
-    }
-
-    /**
-     * 根据两张表的主键关联
-     */
-    @OneToOne(targetEntity = AuParty.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id", referencedColumnName = "id")
-    public AuParty getAuParty() {
-        return this.auParty;
-    }
-
-    public void setAuParty(AuParty auParty) {
-        this.auParty = auParty;
     }
 
     @Basic
@@ -75,10 +58,26 @@ public abstract class PartyEntity extends BaseEntity<Long> {
         this.enableDate = enableDate;
     }
 
+    @Basic
+    @Column(name = "remark")
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
     /**
      * 构建团体
      *
-     * @return AuParty
+     * @return AuPartyType
      */
-    public abstract AuParty buildAuParty();
+    public abstract AuPartyType getPartyType();
+
+    /**
+     * 构建团体
+     *
+     * @return AuPartyType
+     */
+    public abstract String getPartyName();
 }

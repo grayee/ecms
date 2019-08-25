@@ -1,19 +1,12 @@
 package com.qslion.custom.service.impl;
 
 
-import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
-import com.qslion.core.entity.AuParty;
-import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuEmployeeRepository;
-import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.entity.AuEmployee;
 import com.qslion.custom.service.AuEmployeeService;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.enums.ResultCode;
-import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +25,6 @@ import java.util.List;
 public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> implements AuEmployeeService {
     @Autowired
     private AuEmployeeRepository employeeRepository;
-    @Autowired
-    private AuPartyRepository partyRepository;
 
     @Autowired
     private PartyRelationService partyRelationService;
@@ -70,16 +61,10 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
             AuEmployee employee = employeeRepository.findById(employeeId).orElse(null);
             if (employee != null) {
                 employeeRepository.delete(employee);
-                partyRelationService.removePartyRelation(employee.getAuParty());
+                partyRelationService.removePartyRelation(employee);
             }
         });
         return true;
-    }
-
-
-    @Override
-    public AuEmployee findByParty(AuParty party) {
-        return employeeRepository.findByAuParty(party);
     }
 
 
@@ -90,8 +75,7 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
      * @return 成功更新的记录数
      */
     public AuEmployee update(AuEmployee vo) {
-        AuParty party = partyRepository.getOne(vo.getId());
-        party.setRemark(vo.getRemark());//备注
+
         //vo.setAuParty(party);
        /* employeeDao.clear();
         boolean flag = employeeDao.update(vo);

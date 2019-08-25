@@ -4,9 +4,7 @@
 package com.qslion.custom.service;
 
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.custom.entity.AuEmployee;
-import com.qslion.custom.entity.AuPosition;
 import com.qslion.framework.service.IGenericService;
 
 import java.util.List;
@@ -35,7 +33,4 @@ public interface AuEmployeeService extends IGenericService<AuEmployee, Long> {
      * @return boolean
      */
     boolean remove(List<Long> ids);
-
-    AuEmployee findByParty(AuParty party);
-
 }

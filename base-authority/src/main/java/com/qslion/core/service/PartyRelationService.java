@@ -1,6 +1,5 @@
 package com.qslion.core.service;
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.PartyEntity;
@@ -63,16 +62,16 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
      * @param party 团体
      * @return boolean
      */
-    boolean removePartyRelation(AuParty party);
+    boolean removePartyRelation(PartyEntity partyEntity);
 
     /**
      * 初始化根节点
      *
-     * @param party        团体
+     * @param partyEntity        团体
      * @param relationType 团体关系类型
      * @return boolean
      */
-    boolean initRoot(AuParty party, AuPartyRelationType relationType);
+    boolean initRoot(PartyEntity partyEntity, AuPartyRelationType relationType);
 
     AuPartyRelation getRelationByPartyId(String partyId, String relTypeId);
 

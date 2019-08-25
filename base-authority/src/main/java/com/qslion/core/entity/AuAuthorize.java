@@ -1,13 +1,8 @@
 package com.qslion.core.entity;
 
 import com.qslion.framework.entity.BaseEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 
 
 /**
@@ -18,7 +13,7 @@ import javax.persistence.Table;
 public class AuAuthorize extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
-    private AuParty auParty;
+    private Long partyId;
     private String partyCode;
     private String partyType;
     private String resourceCode;
@@ -29,14 +24,13 @@ public class AuAuthorize extends BaseEntity<Long> {
     private AuResource auResource;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "party_id", nullable = false)
-    public AuParty getAuParty() {
-        return this.auParty;
+    @Column(name = "party_id", nullable = false)
+    public Long getPartyId() {
+        return this.partyId;
     }
 
-    public void setAuParty(AuParty auParty) {
-        this.auParty = auParty;
+    public void setPartyId(Long partyId) {
+        this.partyId = partyId;
     }
 
 

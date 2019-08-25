@@ -1,20 +1,13 @@
 package com.qslion.custom.service.impl;
 
 
-import com.google.common.collect.Lists;
-import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuDepartmentRepository;
-import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.service.AuDepartmentService;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.enums.ResultCode;
-import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.CopyUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -42,11 +35,6 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
 
     @Autowired
     private PartyRelationRepository partyRelationRepository;
-
-    @Override
-    public AuDepartment findByParty(AuParty party) {
-        return departmentRepository.findByAuParty(party);
-    }
 
     /**
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
@@ -77,7 +65,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
             AuDepartment department = departmentRepository.findById(departmentId).orElse(null);
             if (department != null) {
                 departmentRepository.delete(department);
-                partyRelationService.removePartyRelation(department.getAuParty());
+                partyRelationService.removePartyRelation(department);
             }
         });
         return true;
@@ -92,10 +80,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
     @Override
     public AuDepartment update(AuDepartment department) {
         AuDepartment auDepartment = departmentRepository.findById(department.getId()).get();
-        AuParty party = auDepartment.getAuParty();
-        party.setName(department.getDeptName());
-        party.setRemark(department.getRemark());
-        AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(party);
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyId(department.getId());
         partyRelation.setName(department.getDeptName());
         partyRelation.setRemark(department.getRemark());
         partyRelationRepository.saveAndFlush(partyRelation);

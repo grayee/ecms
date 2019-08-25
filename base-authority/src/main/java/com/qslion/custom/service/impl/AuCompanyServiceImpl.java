@@ -3,7 +3,6 @@ package com.qslion.custom.service.impl;
 
 
 import com.qslion.core.dao.PartyRelationRepository;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.PartyRelationService;
@@ -11,18 +10,15 @@ import com.qslion.custom.dao.AuCompanyRepository;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.framework.enums.EnableStatus;
-import com.qslion.framework.enums.ResultCode;
-import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.CopyUtils;
-
-import java.util.List;
-
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 公司Service类
@@ -41,12 +37,6 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
 
     @Autowired
     private PartyRelationService partyRelationService;
-
-
-    @Override
-    public AuCompany findByParty(AuParty party) {
-        return companyRepository.findByAuParty(party);
-    }
 
     @Override
     public AuCompany insert(AuCompany company) {
@@ -69,7 +59,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
             AuCompany company = companyRepository.findById(companyId).orElse(null);
             if (company != null) {
                 companyRepository.delete(company);
-                partyRelationService.removePartyRelation(company.getAuParty());
+                partyRelationService.removePartyRelation(company);
             }
         });
         return true;
@@ -84,10 +74,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Override
     public AuCompany update(AuCompany company) {
         AuCompany auCompany = companyRepository.findById(company.getId()).get();
-        AuParty party = auCompany.getAuParty();
-        party.setName(company.getCompanyName());
-        party.setRemark(company.getRemark());
-        AuPartyRelation partyRelation = partyRelationRepository.findByAuParty(party);
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyId(company.getId());
         partyRelation.setName(company.getCompanyName());
         partyRelation.setRemark(company.getRemark());
         partyRelationRepository.saveAndFlush(partyRelation);

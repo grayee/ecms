@@ -2,16 +2,12 @@
 package com.qslion.custom.service.impl;
 
 
-import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuPositionRepository;
-import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.entity.AuPosition;
 import com.qslion.custom.service.AuPositionService;
-import com.qslion.framework.bean.Pager;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +26,6 @@ import java.util.List;
 public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> implements AuPositionService {
     @Autowired
     private AuPositionRepository positionRepository;
-    @Autowired
-    private AuPartyRepository partyRepository;
     @Autowired
     private PartyRelationRepository partyRelationRepository;
     @Autowired
@@ -54,17 +48,12 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
     }
 
     @Override
-    public AuPosition findByParty(AuParty party) {
-        return positionRepository.findByAuParty(party);
-    }
-
-    @Override
     public boolean remove(List<Long> ids) {
         ids.forEach(positionId -> {
             AuPosition position = positionRepository.findById(positionId).orElse(null);
             if (position != null) {
                 positionRepository.delete(position);
-                partyRelationService.removePartyRelation(position.getAuParty());
+                partyRelationService.removePartyRelation(position);
             }
         });
         return true;
@@ -78,9 +67,7 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
      * @return 成功更新的记录数
      */
     public AuPosition update(AuPosition vo) {
-        AuParty party = partyRepository.getOne(vo.getId());
-        party.setName(vo.getPositionName());//团体名称
-        party.setRemark(vo.getRemark());//备注
+
         //vo.setAuParty(party);
 //        positionDao.clear();
         //      boolean flag = positionDao.update(vo);

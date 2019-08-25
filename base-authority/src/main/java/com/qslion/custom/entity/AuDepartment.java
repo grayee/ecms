@@ -1,6 +1,5 @@
 package com.qslion.custom.entity;
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
@@ -37,8 +36,6 @@ public class AuDepartment extends PartyEntity {
     //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",timezone = "GMT+8")
     private Date foundDate;
 
-    @DisplayField(id = 8, title = "部门描述")
-    private String remark;
 
     @Basic
     @Column(name = "dept_no", nullable = true, length = 64)
@@ -110,17 +107,6 @@ public class AuDepartment extends PartyEntity {
         this.foundDate = foundDate;
     }
 
-    @Basic
-    @Column(name = "remark", nullable = true, length = 255)
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -191,15 +177,12 @@ public class AuDepartment extends PartyEntity {
     }
 
     @Override
-    public AuParty buildAuParty() {
-        auParty = new AuParty();
-        auParty.setAuPartyType(AuPartyType.DEPARTMENT);
-        auParty.setName(getDeptName());
-        auParty.setRemark(getRemark());
-        auParty.setEnableStatus(getEnableStatus());
-        auParty.setInherit(true);
-        auParty.setReal(true);
-        setAuParty(auParty);
-        return auParty;
+    public AuPartyType getPartyType() {
+        return AuPartyType.DEPARTMENT;
+    }
+
+    @Override
+    public String getPartyName() {
+        return deptName;
     }
 }

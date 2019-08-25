@@ -3,7 +3,6 @@
 package com.qslion.custom.service;
 
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.framework.service.IGenericService;
 
@@ -16,9 +15,6 @@ import java.util.List;
  * @date 2018/4/21 13:43.
  */
 public interface AuCompanyService extends IGenericService<AuCompany, Long> {
-
-
-    AuCompany findByParty(AuParty party);
 
     /**
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）

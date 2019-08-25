@@ -1,6 +1,5 @@
 package com.qslion.core.dao;
 
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.framework.dao.IGenericRepository;
@@ -31,10 +30,10 @@ public interface PartyRelationRepository extends IGenericRepository<AuPartyRelat
     /**
      * 根据团体获取团体关系
      *
-     * @param auParty 团体
+     * @param partyId 团体id
      * @return 团体关系
      */
-    AuPartyRelation findByAuParty(AuParty auParty);
+    AuPartyRelation findByPartyId(Long partyId);
 
     /**
      * 根据团体关系类型获取团体关系
@@ -48,11 +47,11 @@ public interface PartyRelationRepository extends IGenericRepository<AuPartyRelat
     /**
      * 根据团体获取团体关系
      *
-     * @param auParty           团体
+     * @param partyId           团体
      * @param partyRelationType 团体关系类型
      * @return 团体关系
      */
-    AuPartyRelation findByAuPartyAndPartyRelationType(AuParty auParty, AuPartyRelationType partyRelationType);
+    AuPartyRelation findByPartyIdAndPartyRelationType(Long partyId, AuPartyRelationType partyRelationType);
 
 
 }

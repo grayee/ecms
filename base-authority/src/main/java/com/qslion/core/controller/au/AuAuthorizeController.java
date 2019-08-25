@@ -2,22 +2,21 @@ package com.qslion.core.controller.au;
 
 import com.qslion.core.entity.AuAuthorize;
 import com.qslion.core.entity.AuMenu;
-import com.qslion.core.entity.AuParty;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.core.service.AuResourceService;
 import com.qslion.core.service.AuthorizeService;
-import com.qslion.core.service.PartyService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Set;
 
 
 /**
@@ -32,8 +31,6 @@ public class AuAuthorizeController extends BaseController<AuAuthorize> {
 
     @Autowired
     public AuthorizeService authorizeService;
-    @Autowired
-    public PartyService partyService;
     @Autowired
     public AuResourceService resourceService;
     @Autowired
@@ -105,7 +102,7 @@ public class AuAuthorizeController extends BaseController<AuAuthorize> {
     @RequestMapping(value = "/admin/authorize/grantAuth.jspx")
     public void grantedAuthorities(HttpServletRequest request, HttpServletResponse response) {
         String partyId = "";
-        AuParty auParty = null;//partyService.get(partyId);
+        //AuParty auParty = null;//partyService.get(partyId);
         String funcIds = "";
         String[] funcIdArray = funcIds.split(",");
         //团体自身拥有的权限
@@ -115,7 +112,7 @@ public class AuAuthorizeController extends BaseController<AuAuthorize> {
             for (AuAuthorize auth : partyAuths) {
                 AuAuthorize authorize = new AuAuthorize();
                 // authorize.setAuResource(functree.getAuResource());
-                authorize.setAuParty(auParty);
+                //authorize.setAuParty(auParty);
                 //authorize.setPartyType(auParty.getAuPartyType().getId());
                 // auParty.getAuAuthorizes().add(authorize);
             }

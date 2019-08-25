@@ -1,6 +1,7 @@
 package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.NestTreeEntity;
 
 import javax.persistence.*;
@@ -18,8 +19,8 @@ import javax.persistence.*;
 public class AuPartyRelation extends NestTreeEntity {
 
     private AuPartyRelationType partyRelationType;
-    private AuParty auParty;
-
+    private Long partyId;
+    private AuPartyType partyType;
     private String name;
     private String remark;
 
@@ -50,14 +51,23 @@ public class AuPartyRelation extends NestTreeEntity {
         this.partyRelationType = partyRelationType;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "party_id")
-    public AuParty getAuParty() {
-        return this.auParty;
+    public Long getPartyId() {
+        return this.partyId;
     }
 
-    public void setAuParty(AuParty auParty) {
-        this.auParty = auParty;
+    public void setPartyId(Long partyId) {
+        this.partyId = partyId;
+    }
+    @Enumerated
+    @Column(name = "party_type_id", nullable = false)
+    public AuPartyType getPartyType() {
+        return partyType;
+    }
+
+    public AuPartyRelation setPartyType(AuPartyType partyType) {
+        this.partyType = partyType;
+        return this;
     }
 
     @Column(name = "remark")

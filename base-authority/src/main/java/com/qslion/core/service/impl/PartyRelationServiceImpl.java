@@ -3,7 +3,6 @@
  */
 package com.qslion.core.service.impl;
 
-import com.qslion.core.dao.AuPartyRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.*;
 import com.qslion.core.enums.AuPartyRelationType;
@@ -35,27 +34,24 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
     private static final Integer nodeStateOpenLevel = 2;
     @Autowired
-    private AuPartyRepository partyRepository;
-    @Autowired
     private PartyRelationRepository partyRelationRepository;
     @Autowired
     public ConnectionRuleService connectionRuleService;
 
     @Override
     public boolean addPartyRelation(PartyEntity partyEntity, AuPartyRelationType relationType) {
-        AuParty party = partyEntity.getAuParty() == null ? partyEntity.buildAuParty() : partyEntity.getAuParty();
         Long parentId = partyEntity.getParentId();
         if (parentId != null) {
             AuPartyRelation parentRelation = partyRelationRepository.findById(parentId).orElse(null);
             if (parentRelation != null) {
-                AuPartyType curPartyType = parentRelation.getAuParty().getAuPartyType();
-                if (connectionRuleService.checkRule(curPartyType, party.getAuPartyType(), relationType)) {
+                AuPartyType curPartyType = parentRelation.getPartyType();
+                if (connectionRuleService.checkRule(curPartyType, partyEntity.getPartyType(), relationType)) {
                     AuPartyRelation partyRelation = new AuPartyRelation();
                     partyRelation.setParentId(parentId);
                     partyRelation.setLeaf(true);
-                    partyRelation.setAuParty(party);
-                    partyRelation.setName(party.getName());
-                    partyRelation.setRemark(party.getRemark());
+                    partyRelation.setPartyId(partyEntity.getId());
+                    partyRelation.setName(partyEntity.getPartyName());
+                    partyRelation.setRemark(partyEntity.getRemark());
                     partyRelation.setPartyRelationType(relationType);
                     partyRelation.setLevel(parentRelation.getLevel() + 1);
 
@@ -77,13 +73,14 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 throw new BusinessException(ResultCode.PARAMETER_IS_INVALID);
             }
         } else {
-            return initRoot(party, relationType);
+            return initRoot(partyEntity, relationType);
         }
         return true;
     }
 
-    public boolean removePartyRelation(AuParty party) {
-        AuPartyRelation partyRelation = partyRelationRepository.findByAuPartyAndPartyRelationType(party,AuPartyRelationType.ADMINISTRATIVE);
+    @Override
+    public boolean removePartyRelation(PartyEntity partyEntity) {
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyRelationType(partyEntity.getId(),AuPartyRelationType.ADMINISTRATIVE);
         if (partyRelation != null) {
             if (partyRelation.getLeaf()) {
                 partyRelationRepository.delete(partyRelation);
@@ -96,11 +93,12 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
 
     @Override
-    public boolean initRoot(AuParty party, AuPartyRelationType relationType) {
+    public boolean initRoot(PartyEntity partyEntity, AuPartyRelationType relationType) {
         AuPartyRelation partyRelation = new AuPartyRelation();
-        partyRelation.setAuParty(party);
-        partyRelation.setName(party.getName());
-        partyRelation.setRemark(party.getRemark());
+        partyRelation.setPartyId(partyEntity.getId());
+        partyRelation.setPartyType(partyEntity.getPartyType());
+        partyRelation.setName(partyEntity.getPartyName());
+        partyRelation.setRemark(partyEntity.getRemark());
         partyRelation.setPartyRelationType(relationType);
         partyRelation.setLevel(0);
         partyRelation.setLeaf(true);
@@ -136,7 +134,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     .filter(auConnectionRule -> auConnectionRule.getSubPartyType() == partyType)
                     .map(AuConnectionRule::getCurPartyType).collect(Collectors.toList());
             partyRelationList = partyRelationList.stream().filter(auPartyRelation ->
-                    parentPartyTypes.contains(auPartyRelation.getAuParty().getAuPartyType())).collect(Collectors.toList());
+                    parentPartyTypes.contains(auPartyRelation.getPartyType())).collect(Collectors.toList());
         }
         for (AuPartyRelation partyRelation : partyRelationList) {
             //从根节点开始查找，如果PARENTCODE与ID相同则为根节点
@@ -174,7 +172,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     !partyRelation.getParentId().equals(partyRelation.getId())) {
                 TreeNode leafNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
 
-                AuPartyType partyType = partyRelation.getAuParty().getAuPartyType();
+                AuPartyType partyType = partyRelation.getPartyType();
                 if (partyType == AuPartyType.ROLE) {
                     for (AuRole role : roleSet) {
                         if (role.getId().toString().equals(leafNode.getId())) {

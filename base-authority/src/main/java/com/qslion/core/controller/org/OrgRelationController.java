@@ -11,7 +11,6 @@ import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
-import com.qslion.core.service.PartyService;
 import com.qslion.core.vo.DetailVO;
 import com.qslion.custom.service.AuCompanyService;
 import com.qslion.custom.service.AuDepartmentService;
@@ -44,8 +43,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     private PartyRelationService partyRelationService;
     @Autowired
     private ConnectionRuleService connectionRuleService;
-    @Autowired
-    private PartyService partyService;
+
 
     @Autowired
     private AuCompanyService auCompanyService;
@@ -73,24 +71,23 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     @GetMapping(value = "/detail/{id}")
     public DetailVO<PartyEntity> detail(@PathVariable Long id) {
         AuPartyRelation partyRelation = partyRelationService.findById(id);
-        AuParty party = partyRelation.getAuParty();
-        AuPartyType orgType = party.getAuPartyType();
+        AuPartyType orgType = partyRelation.getPartyType();
         PartyEntity content = null;
         switch (orgType) {
             case COMPANY:
-                content = auCompanyService.findByParty(party);
+                content = auCompanyService.findById(partyRelation.getPartyId());
                 break;
             case DEPARTMENT:
-                content = auDepartmentService.findByParty(party);
+                content = auDepartmentService.findById(partyRelation.getPartyId());
                 break;
             case POSITION:
-                content = auPositionService.findByParty(party);
+                content = auPositionService.findById(partyRelation.getPartyId());
                 break;
             case EMPLOYEE:
-                content = auEmployeeService.findByParty(party);
+                content = auEmployeeService.findById(partyRelation.getPartyId());
                 break;
             case ROLE:
-                content = auRoleService.findById(id);
+                content = auRoleService.findById(partyRelation.getPartyId());
                 break;
             case PROXY:
                 break;
