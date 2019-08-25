@@ -1,37 +1,36 @@
-package com.qslion.framework.enums;
+package com.qslion.accounting.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.qslion.framework.enums.IEnum;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 启用状态
+ * ecms
  *
  * @author Gray.Z
- * @date 2018/9/20.
+ * @date 2019/8/24 13:58.
  */
-public enum EnableStatus implements IEnum<Integer> {
+public enum SubjectType implements IEnum<Integer> {
+    ASSETS(1, "资产类"),
+    DEBTS(2, "负债类"),
+    EQUITY(3, "权益类"),
+    COMMON(4, "共同类"),
+    COSTS(5, "成本类"),
+    GAINS(6, "损益类");
 
-    /**
-     * 禁用
-     */
-    DISABLE(0, "禁用"),
-    /**
-     * 启用
-     */
-    ENABLE(1, "启用"),;
     private Integer id;
     private String name;
 
-    EnableStatus(Integer id, String name) {
+    SubjectType(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Optional<EnableStatus> get(Integer id) {
-        return Arrays.stream(EnableStatus.values()).filter(menuStatus -> Objects.equals(menuStatus.getId(), id)).findFirst();
+    public Optional<SubjectType> get(Integer id) {
+        return Arrays.stream(SubjectType.values()).filter(st -> Objects.equals(st.getId(), id)).findFirst();
     }
 
     @Override

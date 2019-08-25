@@ -1,37 +1,33 @@
-package com.qslion.framework.enums;
+package com.qslion.accounting.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.qslion.framework.enums.IEnum;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 启用状态
+ * 余额方向
  *
  * @author Gray.Z
- * @date 2018/9/20.
+ * @date 2019/8/24 16:23.
  */
-public enum EnableStatus implements IEnum<Integer> {
+public enum BalanceDirection implements IEnum<Integer> {
 
-    /**
-     * 禁用
-     */
-    DISABLE(0, "禁用"),
-    /**
-     * 启用
-     */
-    ENABLE(1, "启用"),;
+    DEBIT(0, "借方"),
+    CREDIT(1, "贷方");
+
     private Integer id;
     private String name;
 
-    EnableStatus(Integer id, String name) {
+    BalanceDirection(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Optional<EnableStatus> get(Integer id) {
-        return Arrays.stream(EnableStatus.values()).filter(menuStatus -> Objects.equals(menuStatus.getId(), id)).findFirst();
+    public Optional<BalanceDirection> get(Integer id) {
+        return Arrays.stream(BalanceDirection.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
     }
 
     @Override
@@ -51,5 +47,4 @@ public enum EnableStatus implements IEnum<Integer> {
     public void setName(String name) {
         this.name = name;
     }
-
 }
