@@ -1,5 +1,6 @@
 package com.qslion.accounting.entity;
 
+import com.qslion.accounting.enums.AcctBookType;
 import com.qslion.accounting.enums.BalanceDirection;
 import com.qslion.accounting.enums.SubjectType;
 import com.qslion.framework.entity.BaseEntity;
@@ -56,7 +57,7 @@ public class AccountSubject extends BaseEntity<Long> {
      * https://baijiahao.baidu.com/s?id=1620159106860707000&wfr=spider&for=pc
      * 帐簿类型：普通多栏、增值税多栏、三栏
      */
-    private String bookType;
+    private AcctBookType acctBookType;
 
 
     private EnableStatus enableStatus;
@@ -139,16 +140,18 @@ public class AccountSubject extends BaseEntity<Long> {
         return this;
     }
 
+    @Enumerated
     @Basic
     @Column(name = "book_type", nullable = false)
-    public String getBookType() {
-        return bookType;
+    public AcctBookType getAcctBookType() {
+        return acctBookType;
     }
 
-    public AccountSubject setBookType(String bookType) {
-        this.bookType = bookType;
+    public AccountSubject setAcctBookType(AcctBookType acctBookType) {
+        this.acctBookType = acctBookType;
         return this;
     }
+
 
     @Basic
     @Column(name = "parent_id", nullable = false)
