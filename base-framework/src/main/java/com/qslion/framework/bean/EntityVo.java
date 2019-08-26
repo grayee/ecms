@@ -1,9 +1,6 @@
 package com.qslion.framework.bean;
 
-import com.google.common.collect.Lists;
 import com.qslion.moudles.ddic.entity.DictDataType;
-import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.util.ReflectionUtils;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -19,8 +16,9 @@ import java.util.List;
  */
 public class EntityVo extends LinkedHashMap<String, Object> {
 
-    public static EntityVo get(Object obj, List<String> fields) {
+    public static EntityVo getResult(Object obj) {
         EntityVo entityVo = new EntityVo();
+        List<String> fields = DisplayColumn.getFields(obj.getClass());
         if (!fields.contains("id")) {
             fields.add("id");
         }
@@ -40,7 +38,7 @@ public class EntityVo extends LinkedHashMap<String, Object> {
         test.setCode("1");
         test.setSystem(true);
 
-        EntityVo vo = EntityVo.get(test, Lists.newArrayList("code", "system"));
+        EntityVo vo = EntityVo.getResult(test);
         System.out.println(vo);
     }
 }

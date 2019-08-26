@@ -60,7 +60,7 @@ public class DictionaryController extends BaseController<DictDataType> {
 
     private Function<DictDataType, EntityVo> getEntityVoFunction() {
         return dictDataType -> {
-            EntityVo ev = EntityVo.get(dictDataType, Lists.newArrayList("name", "code", "description"));
+            EntityVo ev = EntityVo.getResult(dictDataType);
             ev.put("isSystem", dictDataType.isSystem() ? "是" : "否");
             return ev;
         };

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.framework.bean.DisplayField;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -20,7 +21,9 @@ import java.util.Set;
 public class AuRole extends PartyEntity implements GrantedAuthority {
 
     private static final long serialVersionUID = 5739472491120418264L;
+    @DisplayField(id = 1, title = "角色名称")
     private String name;
+    @DisplayField(id = 2, title = "角色编码")
     private String value;
 
     @JsonIgnore

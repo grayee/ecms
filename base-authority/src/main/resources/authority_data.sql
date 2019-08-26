@@ -235,12 +235,12 @@ INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_
 VALUES (8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '行政关系规则-岗位-员工', '行政关系-岗位-员工', 2, 3);
 
 --au_party_relation--
-INSERT INTO au_party_relation (id,create_date, modify_date, version, lft, parent_id, rgt, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark, party_id)
-VALUES (1,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, NULL, NULL, NULL, 1, NULL, 0, 0, '角色管理', '1', '角色管理根节点', 1);
+ INSERT INTO au_party_relation (id,create_date, modify_date, version, lft, parent_id, rgt, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark, party_type_id,party_id)
+VALUES (1,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, NULL, NULL, NULL, 1, NULL, 0, 0, '角色管理', 0, '角色管理根节点', 4,0);
 
-INSERT INTO au_party_relation (id,create_date, modify_date, version, lft, parent_id, rgt, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark, party_id)
-VALUES (2,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, NULL, 1, NULL, 1, NULL, 0, 0, '超级管理员', '1', '超级管理员', 2);
+INSERT INTO au_party_relation (id,create_date, modify_date, version, lft, parent_id, rgt, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark,party_type_id, party_id)
+VALUES (2,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, NULL, 1, NULL, 1, NULL, 0, 0, '超级管理员', 1, '超级管理员', 4,1);
 
-INSERT INTO au_party_relation (id,create_date, modify_date, version, lft, parent_id, rgt, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark, party_id)
-VALUES (3,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, NULL, 1, NULL, 1, NULL, 0, 0, '普通用户', '1', '普通用户', 3);
+INSERT INTO au_party_relation (id,create_date, modify_date, version, lft, parent_id, rgt, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark,party_type_id, party_id)
+VALUES (3,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, NULL, 1, NULL, 1, NULL, 0, 0, '普通用户', 2, '普通用户', 4,2);
 

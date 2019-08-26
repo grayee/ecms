@@ -42,9 +42,10 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
         if (StringUtils.isEmpty(position.getPositionNo())) {
             position.setPositionNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
         }
+        AuPosition auPosition= positionRepository.save(position);
         //添加团体关系
-        partyRelationService.addPartyRelation(position, AuPartyRelationType.ADMINISTRATIVE);
-        return positionRepository.save(position);
+        partyRelationService.addPartyRelation(auPosition, AuPartyRelationType.ADMINISTRATIVE);
+        return auPosition;
     }
 
     @Override

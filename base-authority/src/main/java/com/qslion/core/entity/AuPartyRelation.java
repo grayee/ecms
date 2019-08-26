@@ -18,7 +18,7 @@ import javax.persistence.*;
 @Table(name = "au_party_relation")
 public class AuPartyRelation extends NestTreeEntity {
 
-    private AuPartyRelationType partyRelationType;
+    private AuPartyRelationType relationType;
     private Long partyId;
     private AuPartyType partyType;
     private String name;
@@ -43,12 +43,12 @@ public class AuPartyRelation extends NestTreeEntity {
 
     @Enumerated
     @Column(name = "relation_type")
-    public AuPartyRelationType getPartyRelationType() {
-        return this.partyRelationType;
+    public AuPartyRelationType getRelationType() {
+        return this.relationType;
     }
 
-    public void setPartyRelationType(AuPartyRelationType partyRelationType) {
-        this.partyRelationType = partyRelationType;
+    public void setRelationType(AuPartyRelationType relationType) {
+        this.relationType = relationType;
     }
 
     @JoinColumn(name = "party_id")
@@ -59,6 +59,7 @@ public class AuPartyRelation extends NestTreeEntity {
     public void setPartyId(Long partyId) {
         this.partyId = partyId;
     }
+
     @Enumerated
     @Column(name = "party_type_id", nullable = false)
     public AuPartyType getPartyType() {
@@ -114,6 +115,7 @@ public class AuPartyRelation extends NestTreeEntity {
     public void setLeaf(Boolean leaf) {
         isLeaf = leaf;
     }
+
     @Column(name = "is_inherit", length = 1)
     public Boolean getInherit() {
         return isInherit;

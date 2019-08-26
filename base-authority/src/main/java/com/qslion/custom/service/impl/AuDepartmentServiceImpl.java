@@ -4,6 +4,7 @@ package com.qslion.custom.service.impl;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.custom.dao.AuDepartmentRepository;
 import com.qslion.custom.entity.AuDepartment;
@@ -48,9 +49,10 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
         if (StringUtils.isEmpty(department.getDeptNo())) {
             department.setDeptNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
         }
+        AuDepartment auDepartment = departmentRepository.save(department);
         //添加团体关系
-        partyRelationService.addPartyRelation(department, AuPartyRelationType.ADMINISTRATIVE);
-        return departmentRepository.save(department);
+        partyRelationService.addPartyRelation(auDepartment, AuPartyRelationType.ADMINISTRATIVE);
+        return auDepartment;
     }
 
     /**
@@ -80,7 +82,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
     @Override
     public AuDepartment update(AuDepartment department) {
         AuDepartment auDepartment = departmentRepository.findById(department.getId()).get();
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyId(department.getId());
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(department.getId(), department.getPartyType(), AuPartyRelationType.ADMINISTRATIVE);
         partyRelation.setName(department.getDeptName());
         partyRelation.setRemark(department.getRemark());
         partyRelationRepository.saveAndFlush(partyRelation);

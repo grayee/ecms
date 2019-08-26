@@ -104,9 +104,11 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         detailVO.addExtras("subOrgTypes", subOrgTypes.stream().map(pType -> ImmutableMap.of("name", pType.getName(), "value", pType.getId()))
                 .collect(Collectors.toList()));
         if (content != null) {
-            detailVO.addExtras("displayColumns", DisplayColumn.getDisplayColumns(content.getClass()));
+            List<DisplayColumn> columnList = DisplayColumn.getDisplayColumns(content.getClass())
+                    .stream().filter(displayColumn -> !displayColumn.getField().equals("parentId"))
+                    .collect(Collectors.toList());
+            detailVO.addExtras("displayColumns", columnList);
         }
-
         return detailVO;
     }
 

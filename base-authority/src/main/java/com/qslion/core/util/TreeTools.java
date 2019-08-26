@@ -3,80 +3,37 @@
  */
 package com.qslion.core.util;
 
-import com.qslion.framework.util.DbUtil;
-import java.sql.ResultSet;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.PartyEntity;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 修改备注：
+ * 组织机构树工具类
+ *
+ * @author Gray.Z
+ * @date 2018/4/21 13:43.
  */
-
 public class TreeTools {
-    public static String getTreeCode(String tableName, String columnName, int stepLen, String parentCode) {
-        int pLen = parentCode.length();
-        String wildcard = "";
-        for (int i = 0; i < stepLen; ++i) {
-            wildcard = wildcard + "_";
+
+    public static String getOrgStr(List<AuPartyRelation> relations, PartyEntity partyEntity) {
+        Map<Long, AuPartyRelation> dictMap = Maps.newHashMap();
+        for (AuPartyRelation relation : relations) {
+            dictMap.put(relation.getId(), relation);
         }
-
-        String strSql = "select MAX(" + columnName + ") maxcode from " + tableName + " t where " + columnName + " like'" + parentCode + wildcard + "'";
-        //String maxcode = (String)getCommonBsInstance().doQueryForObject(strSql, new RowMapper() {
-        //  public Object mapRow(ResultSet rs, int i) throws SQLException {
-        //   return rs.getString("maxcode"); } });
-        ResultSet rs = null;
-        String maxcode = null;
-        try {
-            rs = DbUtil.execute(strSql);
-            maxcode = rs.getString("maxcode");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        List<String> orgList = Lists.newArrayList();
+        AuPartyRelation parentRelation = dictMap.get(partyEntity.getParentId());
+        while (parentRelation != null) {
+            orgList.add(parentRelation.getName());
+            parentRelation = dictMap.get(parentRelation.getParentId());
         }
-        String code = null;
-        if ((maxcode == null) || (maxcode.length() == 0))
-            code = "1";
-        else
-            code = String.valueOf(Integer.parseInt(maxcode.substring(pLen)) + 1);
-
-        while (code.length() < stepLen)
-            code = "0" + code;
-
-        return parentCode + code;
-    }
-
-    public static String[] splitTreeCode(String code, int rootLen, int stepLen) {
-        if ((code == null) || (stepLen == 0))
-            return null;
-
-        int pLen = code.length();
-        int arrLen = (pLen - rootLen) / stepLen + 1;
-        String[] codeArray = new String[arrLen];
-        for (int i = 0; i < arrLen; ++i) {
-            code = code.substring(0, pLen);
-            codeArray[i] = code;
-            pLen = pLen - stepLen;
-        }
-        return codeArray;
-    }
-
-    public static String[] splitTreeCode(String code) {
-        return splitTreeCode(code, 19, 5);
-    }
-/*
-      public static ICommonBs getCommonBsInstance() {
-	    return ((ICommonBs)Helper.getBean("au_common_bs"));
-	  }*/
-
-    public static boolean judgeNum(int bigNum, int smallNum) {
-        if (smallNum < 1)
-            return false;
-        if (smallNum == 1)
-            return true;
-        for (int i = 1; i * smallNum <= bigNum; ++i)
-            if (i * smallNum == bigNum)
-                return true;
-
-        return false;
+        Collections.reverse(orgList);
+        return Joiner.on(GlobalConstants.ORG_TREE_SEPARATOR).join(orgList);
     }
 
     public static void main(String[] args) {

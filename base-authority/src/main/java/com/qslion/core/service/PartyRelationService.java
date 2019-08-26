@@ -40,8 +40,7 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
      */
     List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Set<AuRole> roleSet);
 
-    //明细关系树
-    List<TreeNode> getPartyDetailRelationTree(String partyId, String relationTypeId);
+
 
     //全局团体关系树
     List<TreeNode> getGlobalRelationTree(Set<AuRole> roleSet);
@@ -73,10 +72,7 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
      */
     boolean initRoot(PartyEntity partyEntity, AuPartyRelationType relationType);
 
-    AuPartyRelation getRelationByPartyId(String partyId, String relTypeId);
 
-
-    //检查简化版机构根节点
-    boolean hasCustomRoot(String orgCode);
+    List<AuPartyRelation> findByRelationType(AuPartyRelationType relationType);
 
 }

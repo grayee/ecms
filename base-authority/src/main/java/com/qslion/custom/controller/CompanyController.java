@@ -1,8 +1,13 @@
 package com.qslion.custom.controller;
 
 
+import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.service.PartyRelationService;
+import com.qslion.core.util.TreeTools;
 import com.qslion.custom.entity.AuCompany;
 import com.qslion.custom.service.AuCompanyService;
+import com.qslion.framework.bean.EntityVo;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
@@ -38,6 +43,9 @@ public class CompanyController extends BaseController<AuCompany> {
     @Autowired
     private AuCompanyService companyService;
 
+    @Autowired
+    private PartyRelationService partyRelationService;
+
     /**
      * 保存
      *
@@ -70,8 +78,14 @@ public class CompanyController extends BaseController<AuCompany> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<AuCompany> list(@RequestBody Pageable pageable) {
-        return companyService.findPage(pageable);
+    public Pager<EntityVo> list(@RequestBody Pageable pageable) {
+        Pager<AuCompany> pager = companyService.findPage(pageable);
+        List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        return pager.wrap(company -> {
+            EntityVo ev = EntityVo.getResult(company);
+            ev.put("parentId", TreeTools.getOrgStr(relations, company));
+            return ev;
+        });
     }
 
     /**

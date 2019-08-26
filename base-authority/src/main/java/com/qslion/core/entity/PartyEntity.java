@@ -1,6 +1,7 @@
 package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 
@@ -18,6 +19,7 @@ public abstract class PartyEntity extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 4656704236281853404L;
 
+    @DisplayField(id = 4, title = "组织机构")
     protected Long parentId;
 
     protected String remark;

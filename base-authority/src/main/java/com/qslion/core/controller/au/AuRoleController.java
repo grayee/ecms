@@ -92,7 +92,7 @@ public class AuRoleController extends BaseController<AuRole> {
         return pager.wrap(user -> {
             EntityVo ev = null;
             if (!role.getUsers().contains(user)) {
-                ev = EntityVo.get(user, Lists.newArrayList("username", "loginId", "nickname", "mobile"));
+                ev = EntityVo.getResult(user);
             }
             return ev;
         });

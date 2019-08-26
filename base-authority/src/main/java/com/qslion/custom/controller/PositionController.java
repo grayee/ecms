@@ -4,8 +4,13 @@
 package com.qslion.custom.controller;
 
 
+import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
+import com.qslion.core.util.TreeTools;
+import com.qslion.custom.entity.AuCompany;
+import com.qslion.framework.bean.EntityVo;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.custom.entity.AuPosition;
 import com.qslion.custom.service.AuPositionService;
@@ -72,8 +77,14 @@ public class PositionController extends BaseController<AuPosition> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<AuPosition> list(@RequestBody Pageable pageable) {
-        return positionService.findPage(pageable);
+    public Pager<EntityVo> list(@RequestBody Pageable pageable) {
+        Pager<AuPosition> pager = positionService.findPage(pageable);
+        List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        return pager.wrap(position -> {
+            EntityVo ev = EntityVo.getResult(position);
+            ev.put("parentId", TreeTools.getOrgStr(relations, position));
+            return ev;
+        });
     }
 
     /**

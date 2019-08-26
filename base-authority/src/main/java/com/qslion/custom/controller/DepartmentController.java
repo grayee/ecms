@@ -1,10 +1,16 @@
 package com.qslion.custom.controller;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.PartyEntity;
+import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.service.PartyRelationService;
+import com.qslion.core.util.TreeTools;
 import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.service.AuDepartmentService;
-import com.qslion.framework.bean.Pageable;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.ResponseResult;
+import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 
 
@@ -14,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,6 +39,10 @@ public class DepartmentController extends BaseController<AuDepartment> {
 
     @Autowired
     public AuDepartmentService departmentService;
+
+    @Autowired
+    private PartyRelationService partyRelationService;
+
 
     @PostMapping
     public Long save(@Validated @RequestBody AuDepartment department) {
@@ -54,8 +66,14 @@ public class DepartmentController extends BaseController<AuDepartment> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<AuDepartment> list(@RequestBody Pageable pageable) {
-        return departmentService.findPage(pageable);
+    public Pager<EntityVo> list(@RequestBody Pageable pageable) {
+        Pager<AuDepartment> pager =departmentService.findPage(pageable);
+        List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        return pager.wrap(dept -> {
+            EntityVo ev = EntityVo.getResult(dept);
+            ev.put("parentId", TreeTools.getOrgStr(relations, dept));
+            return ev;
+        });
     }
 
     /**

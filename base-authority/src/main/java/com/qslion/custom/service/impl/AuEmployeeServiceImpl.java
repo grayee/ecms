@@ -44,9 +44,10 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
         if (StringUtils.isEmpty(employee.getEmployeeNo())) {
             employee.setEmployeeNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
         }
+        AuEmployee auEmployee = employeeRepository.save(employee);
         //添加团体关系
-        partyRelationService.addPartyRelation(employee, AuPartyRelationType.ADMINISTRATIVE);
-        return employeeRepository.save(employee);
+        partyRelationService.addPartyRelation(auEmployee, AuPartyRelationType.ADMINISTRATIVE);
+        return auEmployee;
     }
 
     /**

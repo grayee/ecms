@@ -4,4 +4,6 @@ public class GlobalConstants {
 
 	// Fields
 	public static final String SEPARATOR = ",";
+
+	public static  final String ORG_TREE_SEPARATOR ="->";
 }

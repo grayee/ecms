@@ -2,9 +2,11 @@ package com.qslion.framework.bean;
 
 import com.google.common.collect.Lists;
 import com.qslion.framework.util.Localize;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -23,6 +25,8 @@ public class DisplayColumn {
     private boolean show;
     private String align;
     private boolean sortable;
+
+    private static List<String> fields = Lists.newArrayList();
 
     public DisplayColumn(String field, DisplayField displayField) {
         this.id = displayField.id();
@@ -43,23 +47,40 @@ public class DisplayColumn {
         this.sortable = displayField.sortable();
     }
 
+
+    public static List<String> getFields(Class<?> entityClazz) {
+        if (CollectionUtils.isEmpty(fields)) {
+            for (Field field : getFieldList(entityClazz)) {
+                fields.add(field.getName());
+            }
+        }
+        return fields;
+    }
+
     public static List<DisplayColumn> getDisplayColumns(Class<?> entityClazz) {
         List<DisplayColumn> displayColumns = Lists.newArrayList();
-        List<Field> fieldList = Lists.newArrayList();
-        Class tempClass = entityClazz;
-        while (tempClass != null) {
-            fieldList.addAll(Arrays.asList(tempClass.getDeclaredFields()));
-            tempClass = tempClass.getSuperclass();
-        }
+        List<Field> fieldList = getFieldList(entityClazz);
 
         for (Field field : fieldList) {
             if (field.isAnnotationPresent(DisplayField.class)) {
                 DisplayField displayAnn = field.getAnnotation(DisplayField.class);
                 DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayAnn);
                 displayColumns.add(displayColumn);
+                fields.add(field.getName());
             }
         }
+        displayColumns.sort(Comparator.comparing(DisplayColumn::getId));
         return displayColumns;
+    }
+
+    private static List<Field> getFieldList(Class<?> entityClazz) {
+        List<Field> fieldList = Lists.newArrayList();
+        Class tempClass = entityClazz;
+        while (tempClass != null) {
+            fieldList.addAll(Arrays.asList(tempClass.getDeclaredFields()));
+            tempClass = tempClass.getSuperclass();
+        }
+        return fieldList;
     }
 
     public Integer getId() {

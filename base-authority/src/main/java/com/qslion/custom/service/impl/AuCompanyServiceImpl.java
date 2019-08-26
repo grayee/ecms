@@ -75,7 +75,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Override
     public AuCompany update(AuCompany company) {
         AuCompany auCompany = companyRepository.findById(company.getId()).get();
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyId(company.getId());
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(company.getId(), company.getPartyType(), AuPartyRelationType.ADMINISTRATIVE);
         partyRelation.setName(company.getCompanyName());
         partyRelation.setRemark(company.getRemark());
         partyRelationRepository.saveAndFlush(partyRelation);

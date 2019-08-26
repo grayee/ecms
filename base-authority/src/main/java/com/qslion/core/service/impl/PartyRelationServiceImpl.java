@@ -50,9 +50,10 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     partyRelation.setParentId(parentId);
                     partyRelation.setLeaf(true);
                     partyRelation.setPartyId(partyEntity.getId());
+                    partyRelation.setPartyType(partyEntity.getPartyType());
                     partyRelation.setName(partyEntity.getPartyName());
                     partyRelation.setRemark(partyEntity.getRemark());
-                    partyRelation.setPartyRelationType(relationType);
+                    partyRelation.setRelationType(relationType);
                     partyRelation.setLevel(parentRelation.getLevel() + 1);
 
                     AuPartyRelation levelRelation = new AuPartyRelation();
@@ -80,7 +81,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
     @Override
     public boolean removePartyRelation(PartyEntity partyEntity) {
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyRelationType(partyEntity.getId(),AuPartyRelationType.ADMINISTRATIVE);
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(partyEntity.getId(), partyEntity.getPartyType(), AuPartyRelationType.ADMINISTRATIVE);
         if (partyRelation != null) {
             if (partyRelation.getLeaf()) {
                 partyRelationRepository.delete(partyRelation);
@@ -99,7 +100,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         partyRelation.setPartyType(partyEntity.getPartyType());
         partyRelation.setName(partyEntity.getPartyName());
         partyRelation.setRemark(partyEntity.getRemark());
-        partyRelation.setPartyRelationType(relationType);
+        partyRelation.setRelationType(relationType);
         partyRelation.setLevel(0);
         partyRelation.setLeaf(true);
         partyRelation.setParentId(null);
@@ -109,6 +110,11 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         partyRelation.setOrderCode(topLevelCnt + 1);
         partyRelationRepository.save(partyRelation);
         return true;
+    }
+
+    @Override
+    public List<AuPartyRelation> findByRelationType(AuPartyRelationType relationType) {
+        return partyRelationRepository.findByRelationType(relationType);
     }
 
     @Override
@@ -128,7 +134,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
     private List<TreeNode> getTreeNodes(AuPartyRelationType relationType, AuPartyType partyType, Set<AuRole> roleSet) {
         List<TreeNode> resultList = new ArrayList<>();
-        List<AuPartyRelation> partyRelationList = partyRelationRepository.findByPartyRelationType(relationType);
+        List<AuPartyRelation> partyRelationList = partyRelationRepository.findByRelationType(relationType);
         if (partyType != null) {
             List<AuPartyType> parentPartyTypes = connectionRuleService.findAll().stream()
                     .filter(auConnectionRule -> auConnectionRule.getSubPartyType() == partyType)
@@ -137,7 +143,6 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     parentPartyTypes.contains(auPartyRelation.getPartyType())).collect(Collectors.toList());
         }
         for (AuPartyRelation partyRelation : partyRelationList) {
-            //从根节点开始查找，如果PARENTCODE与ID相同则为根节点
             if (null == partyRelation.getParentId()) {
                 TreeNode rootNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
                 //有子节点递归遍历
@@ -172,16 +177,6 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     !partyRelation.getParentId().equals(partyRelation.getId())) {
                 TreeNode leafNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
 
-                AuPartyType partyType = partyRelation.getPartyType();
-                if (partyType == AuPartyType.ROLE) {
-                    for (AuRole role : roleSet) {
-                        if (role.getId().toString().equals(leafNode.getId())) {
-                            leafNode.setText(role.getName() + "(已关联)");
-                            leafNode.setChecked(true);
-                        }
-                    }
-                }
-
                 if (!partyRelation.getLeaf()) {
                     nodeList = nodeList.stream().filter(relation ->
                             !partyRelation.getId().equals(relation.getId())).collect(Collectors.toList());
@@ -197,41 +192,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         return resultList;
     }
 
-    public boolean hasCustomRoot(String relTypeId) {
-        // TODO Auto-generated method stub
-        return false;//partyRelationRepository.findByProperty("auPartyRelationType.id", relTypeId).size() > 0;
-    }
 
-    public AuPartyRelation getRelationByPartyId(String partyId, String relTypeId) {
-        // TODO Auto-generated method stub
-        return null;//partyRelationRepository.findByPartyId(partyId, relTypeId);
-    }
-
-    public List<AuPartyRelation> queryPartyRelation(
-            AuPartyRelation auPartyRelationVo) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List<TreeNode> getPartyDetailRelationTree(String partyId, String relationTypeId) {
-        // TODO Auto-generated method stub
-        List<TreeNode> resultList = new ArrayList<TreeNode>();
-        List<AuPartyRelation> partyRelationList = null;//partyRelationRepository.getSinglePartyRelation(partyId, relationTypeId);
-        for (AuPartyRelation partyRelation : partyRelationList) {
-            //从根节点开始查找，如果PARENTCODE与ID相同则为根节点
-            if (null == partyRelation.getParentId() || "".equals(partyRelation.getParentId())) {
-                //TreeNode rootNode = new TreeNode(partyRelation.getId(), partyRelation.getName());
-
-                //有子节点递归遍历
-                // if (partyRelation.getIsLeaf().equals("0")) {
-                //List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, false);
-                //rootNode.setChildren(childrenList);
-                //}
-                //resultList.add(rootNode);
-            }
-        }
-        return resultList;
-    }
 
     @Override
     public void delete(AuPartyRelation entity) {
