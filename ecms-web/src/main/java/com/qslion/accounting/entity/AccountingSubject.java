@@ -1,5 +1,6 @@
 package com.qslion.accounting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.accounting.enums.AcctBookType;
 import com.qslion.accounting.enums.BalanceDirection;
 import com.qslion.accounting.enums.SubjectType;
@@ -7,6 +8,7 @@ import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 会计科目表
@@ -15,8 +17,8 @@ import javax.persistence.*;
  * @date 2019/8/22 20:50.
  */
 @Entity
-@Table(name = "acc_subject")
-public class AccountSubject extends BaseEntity<Long> {
+@Table(name = "accounting_subject")
+public class AccountingSubject extends BaseEntity<Long> {
 
     private Long parentId;
     /**
@@ -59,8 +61,48 @@ public class AccountSubject extends BaseEntity<Long> {
      */
     private AcctBookType acctBookType;
 
+    /**
+     * 数量核算
+     */
+    private Boolean isAmountCheck;
+
+    /**
+     * 计量单位
+     */
+    private String amountUnit;
+
+    /**
+     * 外币核算
+     */
+    private Boolean isForeignCurrencyCheck;
+
+    /**
+     * 币种
+     */
+    private String currency;
+
+    /**
+     * 辅助核算
+     */
+    private Boolean isAssistCheck;
+
+    /**
+     * 辅助核算项
+     */
+    @JsonIgnore
+    private List<AccountingAssistType> assistTypes;
 
     private EnableStatus enableStatus;
+
+    @OneToMany
+    @JoinColumn(name = "REFERENCE_ID")
+    public List<AccountingAssistType> getAssistTypes() {
+        return assistTypes;
+    }
+
+    public void setAssistTypes(List<AccountingAssistType> assistTypes) {
+        this.assistTypes = assistTypes;
+    }
 
     @Basic
     @Column(name = "subject_code", nullable = false, length = 32)
@@ -68,7 +110,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return subjectCode;
     }
 
-    public AccountSubject setSubjectCode(String subjectCode) {
+    public AccountingSubject setSubjectCode(String subjectCode) {
         this.subjectCode = subjectCode;
         return this;
     }
@@ -79,7 +121,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return subjectName;
     }
 
-    public AccountSubject setSubjectName(String subjectName) {
+    public AccountingSubject setSubjectName(String subjectName) {
         this.subjectName = subjectName;
         return this;
     }
@@ -90,7 +132,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return shortName;
     }
 
-    public AccountSubject setShortName(String shortName) {
+    public AccountingSubject setShortName(String shortName) {
         this.shortName = shortName;
         return this;
     }
@@ -101,7 +143,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return englishName;
     }
 
-    public AccountSubject setEnglishName(String englishName) {
+    public AccountingSubject setEnglishName(String englishName) {
         this.englishName = englishName;
         return this;
     }
@@ -112,7 +154,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return balanceDir;
     }
 
-    public AccountSubject setBalanceDir(BalanceDirection balanceDir) {
+    public AccountingSubject setBalanceDir(BalanceDirection balanceDir) {
         this.balanceDir = balanceDir;
         return this;
     }
@@ -123,7 +165,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return level;
     }
 
-    public AccountSubject setLevel(Integer level) {
+    public AccountingSubject setLevel(Integer level) {
         this.level = level;
         return this;
     }
@@ -135,7 +177,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return subjectType;
     }
 
-    public AccountSubject setSubjectType(SubjectType subjectType) {
+    public AccountingSubject setSubjectType(SubjectType subjectType) {
         this.subjectType = subjectType;
         return this;
     }
@@ -147,7 +189,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return acctBookType;
     }
 
-    public AccountSubject setAcctBookType(AcctBookType acctBookType) {
+    public AccountingSubject setAcctBookType(AcctBookType acctBookType) {
         this.acctBookType = acctBookType;
         return this;
     }
@@ -159,7 +201,7 @@ public class AccountSubject extends BaseEntity<Long> {
         return parentId;
     }
 
-    public AccountSubject setParentId(Long parentId) {
+    public AccountingSubject setParentId(Long parentId) {
         this.parentId = parentId;
         return this;
     }
@@ -171,8 +213,48 @@ public class AccountSubject extends BaseEntity<Long> {
         return enableStatus;
     }
 
-    public AccountSubject setEnableStatus(EnableStatus enableStatus) {
+    public AccountingSubject setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
         return this;
+    }
+
+    public Boolean getAmountCheck() {
+        return isAmountCheck;
+    }
+
+    public void setAmountCheck(Boolean amountCheck) {
+        isAmountCheck = amountCheck;
+    }
+
+    public String getAmountUnit() {
+        return amountUnit;
+    }
+
+    public void setAmountUnit(String amountUnit) {
+        this.amountUnit = amountUnit;
+    }
+
+    public Boolean getForeignCurrencyCheck() {
+        return isForeignCurrencyCheck;
+    }
+
+    public void setForeignCurrencyCheck(Boolean foreignCurrencyCheck) {
+        isForeignCurrencyCheck = foreignCurrencyCheck;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public Boolean getAssistCheck() {
+        return isAssistCheck;
+    }
+
+    public void setAssistCheck(Boolean assistCheck) {
+        isAssistCheck = assistCheck;
     }
 }

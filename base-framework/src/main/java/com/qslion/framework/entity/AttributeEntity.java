@@ -14,21 +14,9 @@ public abstract class AttributeEntity extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long referenceId;
-
     private String key;
 
     private String value;
-
-    private String valueType;
-
-    public Long getReferenceId() {
-        return referenceId;
-    }
-
-    public void setReferenceId(Long referenceId) {
-        this.referenceId = referenceId;
-    }
 
     public String getKey() {
         return key;
@@ -44,14 +32,6 @@ public abstract class AttributeEntity extends BaseEntity<Long> {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getValueType() {
-        return valueType;
-    }
-
-    public void setValueType(String valueType) {
-        this.valueType = valueType;
     }
 
     @Transient
