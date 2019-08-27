@@ -14,16 +14,17 @@ public abstract class AttributeEntity extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 
-    private String key;
+    private String name;
 
     private String value;
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public AttributeEntity setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public String getValue() {

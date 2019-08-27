@@ -3,9 +3,10 @@ package com.qslion.accounting.entity;
 import com.qslion.framework.entity.AttributeEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
- * 会计科目表
+ * 辅助核算
  *
  * @author Gray.Z
  * @date 2019/8/22 20:50.
@@ -17,16 +18,16 @@ public class AccountingAssistType extends AttributeEntity {
     /**
      * 会计科目
      */
-    private AccountingSubject accountingSubject;
+    private List<AccountingSubject> subjects;
 
-    @ManyToOne
-    @JoinColumn(name = "REFERENCE_ID")
-    public AccountingSubject getAccountingSubject() {
-        return accountingSubject;
+    @ManyToMany(targetEntity = AccountingSubject.class, mappedBy = "assistTypes", fetch = FetchType.LAZY)
+    public List<AccountingSubject> getSubjects() {
+        return subjects;
     }
 
-    public void setAccountingSubject(AccountingSubject accountingSubject) {
-        this.accountingSubject = accountingSubject;
+    public AccountingAssistType setSubjects(List<AccountingSubject> subjects) {
+        this.subjects = subjects;
+        return this;
     }
 
     @Transient

@@ -94,8 +94,9 @@ public class AccountingSubject extends BaseEntity<Long> {
 
     private EnableStatus enableStatus;
 
-    @OneToMany
-    @JoinColumn(name = "REFERENCE_ID")
+    @ManyToMany(targetEntity = AccountingAssistType.class)
+    @JoinTable(name = "accounting_subject_assist", joinColumns = {
+            @JoinColumn(name = "subject_id")}, inverseJoinColumns = {@JoinColumn(name = "assist_id")})
     public List<AccountingAssistType> getAssistTypes() {
         return assistTypes;
     }
