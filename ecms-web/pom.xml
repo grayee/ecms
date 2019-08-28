@@ -16,7 +16,6 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-
   <properties>
     <docker.image.prefix>ecms</docker.image.prefix>
   </properties>
@@ -46,16 +45,52 @@
       <version>4.4.8</version>
     </dependency>
 
+    <!--
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
     </dependency>
-
+-->
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
       <version>2.6.0</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.qslion</groupId>
+      <artifactId>base-authority</artifactId>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch-->
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch</artifactId>
+      <version>6.3.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/transport-->
+    <dependency>
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>transport</artifactId>
+      <version>6.3.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.elasticsearch.plugin/transport-netty4-client-->
+    <dependency>
+      <groupId>org.elasticsearch.plugin</groupId>
+      <artifactId>transport-netty4-client</artifactId>
+      <version>6.3.2</version>
+    </dependency>
+
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -73,41 +108,6 @@
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-framework</artifactId>
       <version>4.0.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-
-    <dependency>
-      <groupId>com.qslion</groupId>
-      <artifactId>base-framework</artifactId>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-      <version>6.3.2</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/transport -->
-    <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>transport</artifactId>
-      <version>6.3.2</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.elasticsearch.plugin/transport-netty4-client -->
-    <dependency>
-      <groupId>org.elasticsearch.plugin</groupId>
-      <artifactId>transport-netty4-client</artifactId>
-      <version>6.3.2</version>
     </dependency>
   </dependencies>
 
@@ -172,5 +172,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

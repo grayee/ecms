@@ -94,6 +94,11 @@ public class AccountingSubject extends BaseEntity<Long> {
 
     private EnableStatus enableStatus;
 
+    /**
+     * 是否系统内置
+     */
+    private Boolean isSystem;
+
     @ManyToMany(targetEntity = AccountingAssistType.class)
     @JoinTable(name = "accounting_subject_assist", joinColumns = {
             @JoinColumn(name = "subject_id")}, inverseJoinColumns = {@JoinColumn(name = "assist_id")})
@@ -257,5 +262,13 @@ public class AccountingSubject extends BaseEntity<Long> {
 
     public void setAssistCheck(Boolean assistCheck) {
         isAssistCheck = assistCheck;
+    }
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public void setSystem(Boolean system) {
+        isSystem = system;
     }
 }
