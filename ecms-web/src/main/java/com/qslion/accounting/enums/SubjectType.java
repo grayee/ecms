@@ -14,12 +14,12 @@ import java.util.Optional;
  * @date 2019/8/24 13:58.
  */
 public enum SubjectType implements IEnum<Integer> {
-    ASSETS(1, "资产类"),
-    DEBTS(2, "负债类"),
-    EQUITY(3, "权益类"),
-    COMMON(4, "共同类"),
-    COSTS(5, "成本类"),
-    GAINS(6, "损益类");
+    ASSETS(0, "资产类"),
+    DEBTS(1, "负债类"),
+    EQUITY(2, "权益类"),
+    COMMON(3, "共同类"),
+    COSTS(4, "成本类"),
+    GAINS(5, "损益类");
 
     private Integer id;
     private String name;

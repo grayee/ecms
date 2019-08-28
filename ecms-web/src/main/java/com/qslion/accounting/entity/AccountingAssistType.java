@@ -16,6 +16,11 @@ import java.util.List;
 public class AccountingAssistType extends AttributeEntity {
 
     /**
+     * 是否系统内置
+     */
+    private Boolean isSystem;
+    
+    /**
      * 会计科目
      */
     private List<AccountingSubject> subjects;
@@ -27,6 +32,15 @@ public class AccountingAssistType extends AttributeEntity {
 
     public AccountingAssistType setSubjects(List<AccountingSubject> subjects) {
         this.subjects = subjects;
+        return this;
+    }
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public AccountingAssistType setSystem(Boolean system) {
+        isSystem = system;
         return this;
     }
 

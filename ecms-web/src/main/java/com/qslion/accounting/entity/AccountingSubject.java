@@ -133,7 +133,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "short_name", nullable = false, length = 128)
+    @Column(name = "short_name", length = 128)
     public String getShortName() {
         return shortName;
     }
@@ -144,7 +144,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "english_name", nullable = false, length = 128)
+    @Column(name = "english_name", length = 128)
     public String getEnglishName() {
         return englishName;
     }
@@ -166,7 +166,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "level", nullable = false)
+    @Column(name = "level")
     public Integer getLevel() {
         return level;
     }
@@ -190,7 +190,7 @@ public class AccountingSubject extends BaseEntity<Long> {
 
     @Enumerated
     @Basic
-    @Column(name = "book_type", nullable = false)
+    @Column(name = "book_type")
     public AcctBookType getAcctBookType() {
         return acctBookType;
     }
@@ -202,7 +202,7 @@ public class AccountingSubject extends BaseEntity<Long> {
 
 
     @Basic
-    @Column(name = "parent_id", nullable = false)
+    @Column(name = "parent_id")
     public Long getParentId() {
         return parentId;
     }
@@ -214,7 +214,7 @@ public class AccountingSubject extends BaseEntity<Long> {
 
     @Enumerated
     @Basic
-    @Column(name = "enable_status", nullable = false)
+    @Column(name = "enable_status")
     public EnableStatus getEnableStatus() {
         return enableStatus;
     }
