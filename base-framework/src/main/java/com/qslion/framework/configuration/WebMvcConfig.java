@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qslion.framework.enums.EnumConvertFactory;
 import com.qslion.framework.interceptor.AuthHandlerInterceptor;
 import com.qslion.framework.interceptor.ResponseResultInterceptor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -88,12 +90,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return lci;
     }
 
-
-    private ResourceBundleMessageSource getMessageSource() {
-        ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
-        rbms.setDefaultEncoding("UTF-8");
-        rbms.setBasenames("i18n/validation/ValidationMessages");
-        return rbms;
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+        source.setDefaultEncoding("UTF-8");
+        source.setBasenames("classpath:i18n/validation/ValidationMessages", "classpath:i18n/messages", "classpath:messages");
+        source.setFallbackToSystemLocale(Boolean.TRUE);
+        return source;
     }
 
     @Override
@@ -101,7 +104,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Nonnull
     public Validator getValidator() {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-        validator.setValidationMessageSource(getMessageSource());
+        validator.setValidationMessageSource(messageSource());
         return validator;
     }
 
