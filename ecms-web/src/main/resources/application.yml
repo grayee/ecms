@@ -30,7 +30,7 @@ spring:
     charset: utf-8
     location: classpath:/config/banner.txt
   messages:
-    basename: i18n/messages
+    basename: classpath:i18n/messages
     encoding: UTF-8
   thymeleaf:
     prefix: classpath:/templates/
