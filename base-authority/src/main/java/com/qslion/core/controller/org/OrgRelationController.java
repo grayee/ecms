@@ -109,6 +109,10 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
                     .collect(Collectors.toList());
             detailVO.addExtras("displayColumns", columnList);
         }
+        if (orgType == AuPartyType.ROLE) {
+            AuRole role = (AuRole) content;
+            detailVO.addExtras("users", role != null ? role.getUsers() : Lists.newArrayList());
+        }
         return detailVO;
     }
 
@@ -138,7 +142,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<TreeNode> resultList;
         if (orgType == null) {
-            resultList = this.partyRelationService.getGlobalRelationTree(user.getRoles());
+            resultList = this.partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, user.getRoles());
         } else {
             resultList = this.partyRelationService.getPartyRelationTree(orgType);
         }

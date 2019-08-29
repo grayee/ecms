@@ -73,7 +73,7 @@ public class ConnectionRuleServiceImpl extends GenericServiceImpl<AuConnectionRu
     }
 
     @Override
-    public List<AuConnectionRule> getRuleByChildPartyTypeId(String childPartyTypeId, String relTypeId) {
-        return null;
+    public List<AuConnectionRule> getRuleBySubParty(AuPartyRelationType relationType, AuPartyType partyType) {
+        return connectionRuleRepository.findByPartyRelationTypeAndSubPartyType(relationType,partyType);
     }
 }

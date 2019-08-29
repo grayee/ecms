@@ -1,6 +1,7 @@
 package com.qslion.framework.bean;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.qslion.framework.util.Localize;
 import org.springframework.util.CollectionUtils;
 
@@ -8,6 +9,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -25,8 +28,6 @@ public class DisplayColumn {
     private boolean show;
     private String align;
     private boolean sortable;
-
-    private static List<String> fields = Lists.newArrayList();
 
     public DisplayColumn(String field, DisplayField displayField) {
         this.id = displayField.id();
@@ -47,14 +48,8 @@ public class DisplayColumn {
         this.sortable = displayField.sortable();
     }
 
-
     public static List<String> getFields(Class<?> entityClazz) {
-        if (CollectionUtils.isEmpty(fields)) {
-            for (Field field : getFieldList(entityClazz)) {
-                fields.add(field.getName());
-            }
-        }
-        return fields;
+        return getFieldList(entityClazz).stream().map(Field::getName).collect(Collectors.toList());
     }
 
     public static List<DisplayColumn> getDisplayColumns(Class<?> entityClazz) {
@@ -66,7 +61,6 @@ public class DisplayColumn {
                 DisplayField displayAnn = field.getAnnotation(DisplayField.class);
                 DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayAnn);
                 displayColumns.add(displayColumn);
-                fields.add(field.getName());
             }
         }
         displayColumns.sort(Comparator.comparing(DisplayColumn::getId));
@@ -74,13 +68,13 @@ public class DisplayColumn {
     }
 
     private static List<Field> getFieldList(Class<?> entityClazz) {
-        List<Field> fieldList = Lists.newArrayList();
+        Set<Field> fieldSets = Sets.newHashSet();
         Class tempClass = entityClazz;
         while (tempClass != null) {
-            fieldList.addAll(Arrays.asList(tempClass.getDeclaredFields()));
+            fieldSets.addAll(Arrays.asList(tempClass.getDeclaredFields()));
             tempClass = tempClass.getSuperclass();
         }
-        return fieldList;
+        return fieldSets.stream().filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList());
     }
 
     public Integer getId() {

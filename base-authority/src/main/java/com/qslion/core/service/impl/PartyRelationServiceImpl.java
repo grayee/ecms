@@ -9,6 +9,7 @@ import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
+import com.qslion.core.util.TreeTools;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
@@ -136,11 +137,9 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         List<TreeNode> resultList = new ArrayList<>();
         List<AuPartyRelation> partyRelationList = partyRelationRepository.findByRelationType(relationType);
         if (partyType != null) {
-            List<AuPartyType> parentPartyTypes = connectionRuleService.findAll().stream()
-                    .filter(auConnectionRule -> auConnectionRule.getSubPartyType() == partyType)
+            List<AuPartyType> parentPartyTypes = connectionRuleService.getRuleBySubParty(relationType, partyType).stream()
                     .map(AuConnectionRule::getCurPartyType).collect(Collectors.toList());
-            partyRelationList = partyRelationList.stream().filter(auPartyRelation ->
-                    parentPartyTypes.contains(auPartyRelation.getPartyType())).collect(Collectors.toList());
+            partyRelationList = TreeTools.getRelationByPartyType(partyRelationList, parentPartyTypes);
         }
         for (AuPartyRelation partyRelation : partyRelationList) {
             if (null == partyRelation.getParentId()) {

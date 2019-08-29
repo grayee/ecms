@@ -42,6 +42,11 @@ public interface ConnectionRuleService extends IGenericService<AuConnectionRule,
     //根据父团体类型ID和团体关系类型查找链接规则
     List<AuConnectionRule> getRuleByParentPartyTypeId(String parentPartyTypeId, String relTypeId);
 
-    //根据子团体类型ID和团体关系类型查找链接规则
-    List<AuConnectionRule> getRuleByChildPartyTypeId(String childPartyTypeId, String relTypeId);
+    /**
+     * 根据子团体类型ID和团体关系类型查找链接规则
+     * @param relationType 团体关系
+     * @param partyType 下级团体类型
+     * @return List
+     */
+    List<AuConnectionRule> getRuleBySubParty(AuPartyRelationType relationType, AuPartyType partyType);
 }

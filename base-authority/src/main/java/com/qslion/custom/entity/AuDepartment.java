@@ -1,5 +1,6 @@
 package com.qslion.custom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.DisplayField;
@@ -172,11 +173,13 @@ public class AuDepartment extends PartyEntity {
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
     }
+    @JsonIgnore
     @Transient
     @Override
     public AuPartyType getPartyType() {
         return AuPartyType.DEPARTMENT;
     }
+    @JsonIgnore
     @Transient
     @Override
     public String getPartyName() {
