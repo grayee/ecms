@@ -37,7 +37,7 @@ public class TreeNode {
     /**
      * 节点状态
      */
-    private NodeState state = NodeState.CLOSED;
+    private NodeState state = NodeState.OPEN;
     /**
      * 请求路径
      */

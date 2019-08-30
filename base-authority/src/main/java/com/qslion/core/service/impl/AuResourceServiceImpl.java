@@ -1,7 +1,10 @@
 package com.qslion.core.service.impl;
 
+import com.google.common.collect.Sets;
+import com.qslion.core.dao.AuPermissionRepository;
 import com.qslion.core.dao.AuResourceRepository;
 import com.qslion.core.entity.AuMenu;
+import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.service.AuResourceService;
 import com.qslion.framework.bean.TreeNode;
@@ -9,6 +12,7 @@ import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +37,8 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     @Autowired
     public AuResourceRepository auResourceRepository;
 
+    @Autowired
+    private AuPermissionRepository auPermissionRepository;
 
     @Override
     public AuResource insert(AuResource auResource) {
@@ -55,6 +63,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     List<TreeNode> children = this.getChildTreeNode(resource.getId(), resourceList);
                     rootNode.setChildren(children);
                 }
+                rootNode.addAttribute("permissions", resource.getPermissions());
                 resultList.add(rootNode);
             }
         }
@@ -73,6 +82,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     List<TreeNode> children = this.getChildTreeNode(resource.getId(), nodeList);
                     leafNode.setChildren(children);
                 }
+                leafNode.addAttribute("permissions", resource.getPermissions());
                 resultList.add(leafNode);
             }
         }
@@ -109,5 +119,33 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     @Override
     public AuResource findByMenu(AuMenu menu) {
         return auResourceRepository.findByMenu(menu);
+    }
+
+    @Override
+    public boolean addPermission(Long id, AuPermission permission) {
+        AuPermission auPermission = auPermissionRepository.save(permission);
+        Optional<AuResource> resource = auResourceRepository.findById(id);
+        resource.ifPresent(auResource -> {
+            auResource.getPermissions().add(auPermission);
+            auResourceRepository.saveAndFlush(auResource);
+        });
+        return true;
+    }
+
+    @Override
+    public boolean removePermission(List<Long> ids) {
+        if (CollectionUtils.isNotEmpty(ids)) {
+            List<AuPermission> permissions = auPermissionRepository.findAllById(ids);
+            auPermissionRepository.deleteAll(permissions);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updatePermission(Long id, AuPermission permission) {
+        Optional<AuResource> resource = auResourceRepository.findById(id);
+        permission.setResource(resource.get());
+        auPermissionRepository.saveAndFlush(permission);
+        return true;
     }
 }

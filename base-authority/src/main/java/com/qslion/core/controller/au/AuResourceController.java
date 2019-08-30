@@ -1,5 +1,6 @@
 package com.qslion.core.controller.au;
 
+import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuResourceService;
@@ -22,11 +23,11 @@ import java.util.List;
  */
 @ResponseResult
 @RestController
-@RequestMapping(value = "/au/resource")
+@RequestMapping(value = "/auth/resource")
 public class AuResourceController extends BaseController<AuResource> {
 
     @Autowired
-    public AuResourceService resourceService;
+    private AuResourceService resourceService;
 
     @PostMapping
     public Long save(@Validated @RequestBody AuResource resource) {
@@ -34,41 +35,19 @@ public class AuResourceController extends BaseController<AuResource> {
         return auResource.getId();
     }
 
-    @RequestMapping(value = "/update")
-    public String update( @ModelAttribute("entity") AuResource entity) {
-        //级联更新
-        AuResource resVo = null;//this.resourceService.get(entity.getId());
-        resVo.setName(entity.getName());
-        resVo.setValue(entity.getValue());
-        this.resourceService.update(entity);
-        return ("manage");
+    @PostMapping(value = "/permission/{id}")
+    public boolean addPermission(@PathVariable Long id, @Validated @RequestBody AuPermission permission) {
+        return resourceService.addPermission(id, permission);
     }
 
-    @DeleteMapping
-    public String delete(@ModelAttribute("entity") AuResource entity) {
-        boolean flag = false;
-        //步骤：首先判断该节点是否包含子节点，有的话下需要删除子节点,同时删除对应的资源然后更新父节点的状态
-        //entity = resourceService.get(entity.getId());
-        //存在下级子节点
-        //if (entity.getIsLeaf().equals("0")) {
-        List<AuResource> childrens = resourceService.getChildren(entity);
-        String[] ids = new String[childrens.size()];
-        for (int i = 0; i < childrens.size(); i++) {
-            //ids[i] = childrens.get(i).getId();
-        }
-        //删除所有下级子节点以及相应的资源
-        // resourceService.delete(ids);
-        //resourceService.delete(ids);
-        // }
-        resourceService.delete(entity.getId());
-        //resourceService.delete(entity.getId());
-        //判断父节点是否还 存在子节点
-        if (resourceService.getParentChildren(entity).size() <= 0) {
-            AuResource parent = this.resourceService.getParent(entity);
-            //parent.isLeaf(true);
-            resourceService.update(parent);
-        }
-        return ("manage");
+    @PutMapping(value = "/permission/{id}")
+    public boolean updatePermission(@PathVariable Long id, @RequestBody AuPermission permission) {
+        return resourceService.updatePermission(id, permission);
+    }
+
+    @DeleteMapping(value = "/permission")
+    public boolean removePermission(@RequestBody List<Long> ids) {
+        return resourceService.removePermission(ids);
     }
 
     @GetMapping(value = "/tree")

@@ -4,6 +4,7 @@
 package com.qslion.core.service;
 
 import com.qslion.core.entity.AuMenu;
+import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
@@ -59,4 +60,31 @@ public interface AuResourceService extends IGenericService<AuResource, Long> {
     boolean checkUnique(AuResource auResource);
 
     AuResource findByMenu(AuMenu menu);
+
+    /**
+     * 资源增加权限
+     *
+     * @param id         资源id
+     * @param permission permission
+     * @return boolean
+     */
+    boolean addPermission(Long id, AuPermission permission);
+
+
+    /**
+     * 资源删除权限
+     *
+     * @param ids 权限id
+     * @return boolean
+     */
+    boolean removePermission(List<Long> ids);
+
+    /**
+     * 更新权限信息
+     *
+     * @param id         权限id
+     * @param permission permission
+     * @return boolean
+     */
+    boolean updatePermission(Long id, AuPermission permission);
 }

@@ -1,5 +1,6 @@
 package com.qslion.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
@@ -56,6 +57,7 @@ public class AuPermission extends BaseEntity<Long> {
      */
     private AuResource resource;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "RESOURCE_ID")
     public AuResource getResource() {
@@ -66,6 +68,7 @@ public class AuPermission extends BaseEntity<Long> {
         this.resource = resource;
     }
 
+    @JsonIgnore
     @ManyToMany(targetEntity = AuRole.class, mappedBy = "permissions", fetch = FetchType.EAGER)
     public Set<AuRole> getRoles() {
         return roles;
