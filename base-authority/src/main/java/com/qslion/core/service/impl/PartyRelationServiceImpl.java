@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.qslion.core.enums.AuPartyRelationType.ADMINISTRATIVE;
+
 /**
  * 团体关系Service实现
  *
@@ -82,7 +84,11 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
     @Override
     public boolean removePartyRelation(PartyEntity partyEntity) {
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(partyEntity.getId(), partyEntity.getPartyType(), AuPartyRelationType.ADMINISTRATIVE);
+        AuPartyRelationType relationType = AuPartyRelationType.ADMINISTRATIVE;
+        if (partyEntity.getPartyType() == AuPartyType.ROLE) {
+            relationType = AuPartyRelationType.ROLE;
+        }
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(partyEntity.getId(), partyEntity.getPartyType(), relationType);
         if (partyRelation != null) {
             if (partyRelation.getLeaf()) {
                 partyRelationRepository.delete(partyRelation);
@@ -120,7 +126,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
 
     @Override
     public List<TreeNode> getPartyRelationTree(AuPartyType partyType) {
-        return getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, partyType);
+        return getPartyRelationTree(ADMINISTRATIVE, partyType);
     }
 
     @Override
@@ -190,7 +196,6 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         }
         return resultList;
     }
-
 
 
     @Override

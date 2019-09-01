@@ -1,10 +1,12 @@
 package com.qslion.core.service;
 
 
+import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuRole;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.service.IGenericService;
+
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ public interface AuRoleService extends IGenericService<AuRole, Long> {
     /**
      * 根据类型查询角色
      *
-     * @param typeId 类型ID
+     * @param typeId   类型ID
      * @param pageable 查询条件
      * @return 类型对应的角色
      */
@@ -28,17 +30,30 @@ public interface AuRoleService extends IGenericService<AuRole, Long> {
     /**
      * 新增角色
      *
-     * @param role 角色
-     * @param parentId 上级ID
+     * @param role     角色
      * @return 角色
      */
-    AuRole insert(AuRole role, Long parentId);
+    AuRole insert(AuRole role);
 
 
     /**
-     * 授权
+     * 功能授权
+     *
+     * @param role          角色
+     * @param permissionIds 权限ID
+     * @return boolean
      */
-    void grantedAuthorities();
+    Boolean grantFuncAuth(AuRole role, List<Long> permissionIds);
+
+
+    /**
+     * 数据授权
+     *
+     * @param role          角色
+     * @param partyRelations 机构
+     * @return
+     */
+    Boolean grantDataAuth(AuRole role, List<AuPartyRelation> partyRelations);
 
     /**
      * 删除多条记录

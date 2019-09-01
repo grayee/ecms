@@ -54,7 +54,7 @@ public class TreeTools {
         Set<AuPartyRelation> resultRelations = Sets.newHashSet(childRelations);
         for (AuPartyRelation childRelation : childRelations) {
             AuPartyRelation parentRelation = dictMap.get(childRelation.getParentId());
-            while (parentRelation != null && parentRelation.getLevel() > 0) {
+            while (parentRelation != null) {
                 resultRelations.add(parentRelation);
                 parentRelation = dictMap.get(parentRelation.getParentId());
             }

@@ -1,6 +1,7 @@
 package com.qslion.core.controller.au;
 
 import com.google.common.collect.Lists;
+import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.enums.AuPartyRelationType;
@@ -32,11 +33,11 @@ import java.util.List;
 public class AuRoleController extends BaseController<AuRole> {
 
     @Autowired
-    public AuRoleService auRoleService;
+    private AuRoleService auRoleService;
     @Autowired
-    public PartyRelationService partyRelationService;
+    private PartyRelationService partyRelationService;
     @Autowired
-    public AuUserService auUserService;
+    private AuUserService auUserService;
 
     @GetMapping(value = "/list/{typeId}")
     public Pager<AuRole> list(@PathVariable Long typeId, Pageable pageable) {
@@ -44,8 +45,8 @@ public class AuRoleController extends BaseController<AuRole> {
     }
 
     @PostMapping
-    public Long save(@Validated @RequestBody AuRole role, @RequestParam(required = false) Long parentId) {
-        AuRole auRole = auRoleService.insert(role, parentId);
+    public Long save(@Validated @RequestBody AuRole role) {
+        AuRole auRole = auRoleService.insert(role);
         return auRole.getId();
     }
 
@@ -112,6 +113,7 @@ public class AuRoleController extends BaseController<AuRole> {
         return auRoleService.saveOrUpdate(role) == null;
     }
 
+
     /**
      * 授权管理>>角色授权
      */
@@ -119,4 +121,26 @@ public class AuRoleController extends BaseController<AuRole> {
     public Pager<AuRole> roleAuth(@RequestBody Pageable pageable) {
         return auRoleService.findPage(pageable);
     }
+
+
+    /**
+     * 角色管理>功能授权
+     */
+    @PostMapping(value = "/function/{roleId}")
+    public Boolean grantFuncAuth(@PathVariable Long roleId, @RequestBody List<Long> permissionIds) {
+        AuRole role = auRoleService.findById(roleId);
+        return auRoleService.grantFuncAuth(role, permissionIds);
+    }
+
+
+    /**
+     * 角色管理>数据授权
+     */
+    @PostMapping(value = "/data/{roleId}")
+    public Boolean grantDataAuth(@PathVariable Long roleId, @RequestBody List<Long> ids) {
+        AuRole role = auRoleService.findById(roleId);
+        List<AuPartyRelation> partyRelations = partyRelationService.findList(ids.toArray(new Long[0]));
+        return auRoleService.grantDataAuth(role, partyRelations);
+    }
+
 }

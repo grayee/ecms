@@ -3,7 +3,6 @@ package com.qslion.framework.bean;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.qslion.framework.util.Localize;
-import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -56,13 +55,11 @@ public class DisplayColumn {
         List<DisplayColumn> displayColumns = Lists.newArrayList();
         List<Field> fieldList = getFieldList(entityClazz);
 
-        for (Field field : fieldList) {
-            if (field.isAnnotationPresent(DisplayField.class)) {
-                DisplayField displayAnn = field.getAnnotation(DisplayField.class);
-                DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayAnn);
-                displayColumns.add(displayColumn);
-            }
-        }
+        fieldList.stream().filter(field -> field.isAnnotationPresent(DisplayField.class)).forEach(field -> {
+            DisplayField displayAnn = field.getAnnotation(DisplayField.class);
+            DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayAnn);
+            displayColumns.add(displayColumn);
+        });
         displayColumns.sort(Comparator.comparing(DisplayColumn::getId));
         return displayColumns;
     }
@@ -74,7 +71,7 @@ public class DisplayColumn {
             fieldSets.addAll(Arrays.asList(tempClass.getDeclaredFields()));
             tempClass = tempClass.getSuperclass();
         }
-        return fieldSets.stream().filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList());
+        return fieldSets.stream().filter(f -> !"serialVersionUID".equals(f.getName())).collect(Collectors.toList());
     }
 
     public Integer getId() {

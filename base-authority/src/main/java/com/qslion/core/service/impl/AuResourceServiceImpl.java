@@ -1,6 +1,5 @@
 package com.qslion.core.service.impl;
 
-import com.google.common.collect.Sets;
 import com.qslion.core.dao.AuPermissionRepository;
 import com.qslion.core.dao.AuResourceRepository;
 import com.qslion.core.entity.AuMenu;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -123,12 +121,10 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
 
     @Override
     public boolean addPermission(Long id, AuPermission permission) {
-        AuPermission auPermission = auPermissionRepository.save(permission);
+        permission.setType(AuPermission.PermitType.FUNCTION);
         Optional<AuResource> resource = auResourceRepository.findById(id);
-        resource.ifPresent(auResource -> {
-            auResource.getPermissions().add(auPermission);
-            auResourceRepository.saveAndFlush(auResource);
-        });
+        resource.ifPresent(permission::setResource);
+        auPermissionRepository.save(permission);
         return true;
     }
 

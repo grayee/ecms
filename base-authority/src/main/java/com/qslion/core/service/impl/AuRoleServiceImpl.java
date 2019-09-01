@@ -1,7 +1,12 @@
 package com.qslion.core.service.impl;
 
 
+import com.google.common.collect.Sets;
+import com.qslion.core.dao.AuPermissionRepository;
 import com.qslion.core.dao.AuRoleRepository;
+import com.qslion.core.dao.PartyRelationRepository;
+import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.AuRoleService;
@@ -11,11 +16,12 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.service.impl.GenericServiceImpl;
-
-import java.util.List;
-
+import com.qslion.framework.util.CopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -29,7 +35,10 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
 
     @Autowired
     private AuRoleRepository auRoleRepository;
-
+    @Autowired
+    private AuPermissionRepository auPermissionRepository;
+    @Autowired
+    private PartyRelationRepository partyRelationRepository;
     @Autowired
     private PartyRelationService partyRelationService;
 
@@ -45,42 +54,60 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     /**
      * 功能: 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
      *
-     * @param role     用于添加的VO对象
-     * @param parentId 上级节点团体关系主键
+     * @param role 用于添加的VO对象
      * @return 若添加成功，则返回新添加记录的主键
      */
     @Override
-    public AuRole insert(AuRole role, Long parentId) {
-        partyRelationService.addPartyRelation(role, AuPartyRelationType.ADMINISTRATIVE);
-        return auRoleRepository.save(role);
+    public AuRole insert(AuRole role) {
+        AuRole auRole = auRoleRepository.save(role);
+        partyRelationService.addPartyRelation(auRole, AuPartyRelationType.ROLE);
+        return auRole;
+    }
+
+    @Override
+    public Boolean grantFuncAuth(AuRole role, List<Long> permissionIds) {
+        List<AuPermission> pList = auPermissionRepository.findAllById(permissionIds);
+        role.setPermissions(Sets.newHashSet(pList));
+        AuRole auRole = auRoleRepository.saveAndFlush(role);
+        return auRole.getId() == null;
+    }
+
+    @Override
+    public Boolean grantDataAuth(AuRole role, List<AuPartyRelation> partyRelations) {
+        List<AuPermission> pList = partyRelations.stream().map(partyRelation -> {
+            AuPermission permission = new AuPermission();
+            permission.setName(partyRelation.getName());
+            permission.setValue(partyRelation.getPartyType() + ":" + partyRelation.getPartyId());
+            permission.setType(AuPermission.PermitType.DATA);
+            return permission;
+        }).collect(Collectors.toList());
+        role.setPermissions(Sets.newHashSet(pList));
+        AuRole auRole = auRoleRepository.saveAndFlush(role);
+        return auRole.getId() == null;
     }
 
     @Override
     public AuRole update(AuRole role) {
-     /*   AuParty party = partyRepository.findOne(vo.getId());
-        party.setName(vo.getName());//团体名称
-        party.setEmail("");//团体EMAIL（对员工类型为必填）
-        party.setRemark(vo.getDescription());//备注
-        vo.setAuParty(party);*/
-        //  roleRepository.clear();
-        // boolean flag = roleRepository.update(vo);
-       /* AuPartyRelation relation = partyRelationDao.findByPartyId(vo.getId(), GlobalConstants.getRelTypeRole());
-        relation.setName(vo.getName());
-        partyRelationDao.update(relation);*/
-        //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "更新了" + sum + "条记录,id=" + String.valueOf(vo.getId()));
-        return null;
+        AuRole auRole = auRoleRepository.findById(role.getId()).get();
+        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(role.getId(), role.getPartyType(), AuPartyRelationType.ROLE);
+        partyRelation.setName(role.getName());
+        partyRelation.setRemark(role.getRemark());
+        partyRelationRepository.saveAndFlush(partyRelation);
+        CopyUtils.copyProperties(role, auRole);
+        return auRoleRepository.saveAndFlush(auRole);
     }
 
-
-    @Override
-    public void grantedAuthorities() {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public boolean remove(List<Long> ids) {
-        return false;
+        ids.forEach(roleId -> {
+            AuRole role = auRoleRepository.findById(roleId).orElse(null);
+            if (role != null) {
+                auRoleRepository.delete(role);
+                partyRelationService.removePartyRelation(role);
+            }
+        });
+        return true;
     }
 
 }

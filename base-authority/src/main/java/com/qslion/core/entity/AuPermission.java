@@ -4,16 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
+
+import javax.persistence.*;
 import java.util.Set;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 /**
  * 实体类 - 权限
@@ -40,13 +33,13 @@ public class AuPermission extends BaseEntity<Long> {
     /**
      * 权限类型
      */
-    private PermitType type;
+    private PermitType type = PermitType.FUNCTION;
 
-    enum PermitType {
+    public enum PermitType {
         /**
-         * 菜单、资源
+         * 功能权限、数据权限
          */
-        MENU, RESOURCE
+        FUNCTION, DATA
     }
 
     private EnableStatus enableStatus;
@@ -157,7 +150,7 @@ public class AuPermission extends BaseEntity<Long> {
             return false;
         }
         if (enableStatus != null ? !enableStatus.equals(that.enableStatus)
-            : that.enableStatus != null) {
+                : that.enableStatus != null) {
             return false;
         }
         if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) {

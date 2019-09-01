@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.accounting.enums.AcctBookType;
 import com.qslion.accounting.enums.BalanceDirection;
 import com.qslion.accounting.enums.SubjectType;
+import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 
@@ -24,10 +25,12 @@ public class AccountingSubject extends BaseEntity<Long> {
     /**
      * 科目编码
      */
+    @DisplayField(id = 1, title = "科目编码")
     private String subjectCode;
     /**
      * 科目名称
      */
+    @DisplayField(id = 2, title = "科目名称")
     private String subjectName;
 
     /**
@@ -42,6 +45,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     /**
      * 余额方向
      */
+    @DisplayField(id = 4, title = "余额方向")
     private BalanceDirection balanceDir;
 
     /**
@@ -52,6 +56,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     /**
      * 科目类型
      */
+    @DisplayField(id = 3, title = "科目类型")
     private SubjectType subjectType;
 
     /**
@@ -116,9 +121,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return subjectCode;
     }
 
-    public AccountingSubject setSubjectCode(String subjectCode) {
+    public void setSubjectCode(String subjectCode) {
         this.subjectCode = subjectCode;
-        return this;
     }
 
     @Basic
@@ -127,9 +131,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return subjectName;
     }
 
-    public AccountingSubject setSubjectName(String subjectName) {
+    public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
-        return this;
     }
 
     @Basic
@@ -138,9 +141,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return shortName;
     }
 
-    public AccountingSubject setShortName(String shortName) {
+    public void setShortName(String shortName) {
         this.shortName = shortName;
-        return this;
     }
 
     @Basic
@@ -149,9 +151,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return englishName;
     }
 
-    public AccountingSubject setEnglishName(String englishName) {
+    public void setEnglishName(String englishName) {
         this.englishName = englishName;
-        return this;
     }
 
     @Basic
@@ -160,9 +161,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return balanceDir;
     }
 
-    public AccountingSubject setBalanceDir(BalanceDirection balanceDir) {
+    public void setBalanceDir(BalanceDirection balanceDir) {
         this.balanceDir = balanceDir;
-        return this;
     }
 
     @Basic
@@ -171,9 +171,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return level;
     }
 
-    public AccountingSubject setLevel(Integer level) {
+    public void setLevel(Integer level) {
         this.level = level;
-        return this;
     }
 
     @Enumerated
@@ -183,9 +182,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return subjectType;
     }
 
-    public AccountingSubject setSubjectType(SubjectType subjectType) {
+    public void setSubjectType(SubjectType subjectType) {
         this.subjectType = subjectType;
-        return this;
     }
 
     @Enumerated
@@ -195,9 +193,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return acctBookType;
     }
 
-    public AccountingSubject setAcctBookType(AcctBookType acctBookType) {
+    public void setAcctBookType(AcctBookType acctBookType) {
         this.acctBookType = acctBookType;
-        return this;
     }
 
 
@@ -207,9 +204,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return parentId;
     }
 
-    public AccountingSubject setParentId(Long parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
-        return this;
     }
 
     @Enumerated
@@ -219,9 +215,8 @@ public class AccountingSubject extends BaseEntity<Long> {
         return enableStatus;
     }
 
-    public AccountingSubject setEnableStatus(EnableStatus enableStatus) {
+    public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
-        return this;
     }
 
     public Boolean getAmountCheck() {
