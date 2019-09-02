@@ -77,6 +77,10 @@ public class QueryFilter implements Serializable {
          * 包含
          */
         in,
+        /**
+         * 不包含
+         */
+        notIn,
 
         /**
          * 为Null

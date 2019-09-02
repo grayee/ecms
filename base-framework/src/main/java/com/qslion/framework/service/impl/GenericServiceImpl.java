@@ -93,7 +93,14 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return (Specification<T>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
             queryFilters.forEach(filter -> {
-                Path path = root.get(filter.getProperty());
+                Path path = null;
+                if (filter.getProperty().contains("->")) {
+                    String[] joinProperties = filter.getProperty().split("->");
+                    root.join(joinProperties[0], JoinType.INNER).get(joinProperties[1]);
+                } else {
+                    path = root.get(filter.getProperty());
+                }
+
                 Object valueObj = filter.getValue();
                 if (valueObj instanceof String) {
                     Date dateValue = DateConverter.getDate(valueObj.toString());
@@ -128,6 +135,9 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                         break;
                     case in:
                         predicates.add(path.in(valueObj));
+                        break;
+                    case notIn:
+                        predicates.add(criteriaBuilder.not(path.in(valueObj)));
                         break;
                     case isNull:
                         predicates.add(criteriaBuilder.isNull(path));

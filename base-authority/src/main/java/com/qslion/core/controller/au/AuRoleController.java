@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -89,14 +90,12 @@ public class AuRoleController extends BaseController<AuRole> {
     @PostMapping(value = "/getRefUser/{roleId}")
     public Pager<EntityVo> getReferenceUser(@PathVariable Long roleId, @RequestBody Pageable pageable) {
         AuRole role = auRoleService.findById(roleId);
+        List<Long> userIds = role.getUsers().stream().map(AuUser::getId).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(userIds)) {
+            pageable.getQueryFilters().add(new QueryFilter("id", QueryFilter.Operator.notIn, userIds));
+        }
         Pager<AuUser> pager = auUserService.findPage(pageable);
-        return pager.wrap(user -> {
-            EntityVo ev = null;
-            if (!role.getUsers().contains(user)) {
-                ev = EntityVo.getResult(user);
-            }
-            return ev;
-        });
+        return pager.wrap(EntityVo::getResult);
     }
 
     /**
