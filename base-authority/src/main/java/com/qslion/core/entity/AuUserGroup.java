@@ -1,6 +1,7 @@
 
 package com.qslion.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
@@ -23,8 +24,10 @@ public class AuUserGroup extends BaseEntity<Long> {
     private String description;
     private EnableStatus enableStatus;
 
+    @JsonIgnore
     private Set<AuUser> users = Sets.newHashSet();
 
+    @JsonIgnore
     private Set<AuRole> roles = Sets.newHashSet();
 
     /**

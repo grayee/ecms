@@ -1,5 +1,6 @@
 package com.qslion.core.controller.au;
 
+import com.google.common.collect.Lists;
 import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuUser;
@@ -52,6 +53,15 @@ public class AuResourceController extends BaseController<AuResource> {
 
     @GetMapping(value = "/tree")
     public List<TreeNode> getResourceTree(@ApiIgnore @AuthenticationPrincipal AuUser user) {
-        return resourceService.getResourceTree();
+        List<AuPermission> userPerms = Lists.newArrayList();
+        user.getRoles().forEach(auRole -> userPerms.addAll(auRole.getPermissions()));
+        return resourceService.getResourceTree(userPerms,false);
+    }
+
+    @GetMapping(value = "/perm/tree")
+    public List<TreeNode> getPermResourceTree(@ApiIgnore @AuthenticationPrincipal AuUser user) {
+        List<AuPermission> userPerms = Lists.newArrayList();
+        user.getRoles().forEach(auRole -> userPerms.addAll(auRole.getPermissions()));
+        return resourceService.getResourceTree(userPerms,true);
     }
 }

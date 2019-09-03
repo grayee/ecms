@@ -1,20 +1,20 @@
 package com.qslion.security.controller;
 
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.util.LoginHelper;
 import com.qslion.framework.exception.GlobalExceptionHandler;
 import com.qslion.framework.util.IpUtil;
 import com.qslion.framework.util.JSONUtils;
 import com.qslion.framework.util.RequestContextUtil;
+
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -66,7 +66,7 @@ public class RestControllerAspect {
         String ip = IpUtil.getRealIp(request);
         String methodName = this.getMethodName(joinPoint);
         String params = this.getParamsJson(joinPoint);
-        String requester = loginUser==null?"unknown":loginUser.getLoginId();
+        String requester = loginUser == null ? "unknown" : loginUser.getLoginId();
 
         String callSource = request.getHeader(HEADER_CLIENT_NAME);
         String appVersion = request.getHeader(HEADER_APP_VERSION);
@@ -74,11 +74,11 @@ public class RestControllerAspect {
         String userAgent = request.getHeader("user-agent");
 
         logger.info("Started request requester 【{}】 method 【{}】\n Params:【{}】\n IP： 【{}】\n CallSource: 【{}】\n AppVersion: 【{}】\n ApiVersion: 【{}】\n UserAgent: 【{}】",
-            requester, methodName, params, ip, callSource, appVersion, apiVersion, userAgent);
+                requester, methodName, params, ip, callSource, appVersion, apiVersion, userAgent);
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         logger.info("Ended request requester 【{}] method 【{}】\n Params:【{}】\n Response :【{}】\n Time cost: 【{}】 millis ",
-            requester, methodName, params, JSONUtils.writeValueAsString(result), System.currentTimeMillis() - start);
+                requester, methodName, params, JSONUtils.writeValueAsString(result), System.currentTimeMillis() - start);
         return result;
     }
 
@@ -117,7 +117,7 @@ public class RestControllerAspect {
      */
     private boolean needToLog(Method method) {
         return method.getAnnotation(GetMapping.class) == null
-            && !method.getDeclaringClass().equals(GlobalExceptionHandler.class);
+                && !method.getDeclaringClass().equals(GlobalExceptionHandler.class);
     }
 
     /**
@@ -127,28 +127,21 @@ public class RestControllerAspect {
      * @return 去除敏感内容后的参数对象
      */
     private String deleteSensitiveContent(Object obj) {
-        JSONObject jsonObject = new JSONObject();
         if (obj == null || obj instanceof Exception) {
-            return jsonObject.toJSONString();
+            return Maps.newHashMap().toString();
         }
-
         try {
-            String param = JSON.toJSONString(obj, SerializerFeature.IgnoreErrorGetter);
-            if (obj instanceof JSONObject) {
-                jsonObject = JSONObject.parseObject(param);
-            }
-
+            String param = JSONUtils.writeValueAsString(obj);
             List<String> sensitiveFieldList = this.getSensitiveFieldList();
             for (String sensitiveField : sensitiveFieldList) {
-                if (jsonObject.containsKey(sensitiveField)) {
-                    jsonObject.put(sensitiveField, "******");
+                if (param != null && param.contains(sensitiveField)) {
+                    param = param.replace(sensitiveField, "******");
                 }
             }
-
+            return param;
         } catch (ClassCastException e) {
             return String.valueOf(obj);
         }
-        return jsonObject.toJSONString();
     }
 
     /**

@@ -93,10 +93,10 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return (Specification<T>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = Lists.newArrayList();
             queryFilters.forEach(filter -> {
-                Path path = null;
+                Path path;
                 if (filter.getProperty().contains("->")) {
                     String[] joinProperties = filter.getProperty().split("->");
-                    root.join(joinProperties[0], JoinType.INNER).get(joinProperties[1]);
+                    path = root.join(joinProperties[0], JoinType.INNER).get(joinProperties[1]);
                 } else {
                     path = root.get(filter.getProperty());
                 }

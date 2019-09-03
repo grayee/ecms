@@ -96,7 +96,7 @@ public class AuMenuController extends BaseController<AuMenu> {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         //根据登录用户获取菜单树
         List<TreeNode> menuTree = this.auMenuService.getMenuTree(username);
-        if (menuTree.size() <= 1) {
+        if (CollectionUtils.isNotEmpty(menuTree) && menuTree.size() <= 1) {
             menuTree = menuTree.get(0).getChildren();
         }
         logger.info("用户：{} 菜单树JSON:{}", username, JSONUtils.writeValueAsString(menuTree));

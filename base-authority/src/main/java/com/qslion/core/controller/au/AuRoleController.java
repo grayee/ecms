@@ -112,6 +112,19 @@ public class AuRoleController extends BaseController<AuRole> {
         return auRoleService.saveOrUpdate(role) == null;
     }
 
+    /**
+     * 角色管理>删除关联用户
+     */
+    @DeleteMapping(value = "/refUser/{roleId}")
+    public Boolean removeReferenceUser(@PathVariable Long roleId, @RequestBody List<Long> userIds) {
+        AuRole role = auRoleService.findById(roleId);
+        List<AuUser> userList = auUserService.findList(userIds.toArray(new Long[0]));
+        role.getUsers().removeAll(userList);
+        for (AuUser auUser : userList) {
+            auUser.getRoles().remove(role);
+        }
+        return auRoleService.saveOrUpdate(role) == null;
+    }
 
     /**
      * 授权管理>>角色授权

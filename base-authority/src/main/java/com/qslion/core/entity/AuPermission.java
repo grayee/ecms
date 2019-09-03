@@ -44,6 +44,7 @@ public class AuPermission extends BaseEntity<Long> {
 
     private EnableStatus enableStatus;
 
+    @JsonIgnore
     private Set<AuRole> roles = Sets.newHashSet();
     /**
      * 一个资源拥有多个权限

@@ -31,7 +31,7 @@ public interface AuResourceService extends IGenericService<AuResource, Long> {
      *
      * @return list
      */
-    List<TreeNode> getResourceTree();
+    List<TreeNode> getResourceTree(List<AuPermission> userPerms,boolean showPermission);
 
     /**
      * 取得当前菜单节点下的所有子节点
