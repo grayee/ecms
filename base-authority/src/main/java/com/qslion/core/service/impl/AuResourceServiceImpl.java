@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +48,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     }
 
     @Override
-    public List<TreeNode> getResourceTree(List<AuPermission> userPerms,boolean showPermission) {
+    public List<TreeNode> getResourceTree(List<AuPermission> userPerms, boolean showPermission) {
         List<TreeNode> resultList = new ArrayList<>();
         List<AuResource> resourceList = auResourceRepository.findByEnableStatus(EnableStatus.ENABLE);
         for (AuResource resource : resourceList) {
@@ -58,7 +59,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     resourceList = resourceList.stream().filter(auResource ->
                             !resource.getId().equals(auResource.getId())).collect(Collectors.toList());
 
-                    List<TreeNode> children = this.getChildTreeNode(resource.getId(), resourceList,showPermission,userPerms);
+                    List<TreeNode> children = this.getChildTreeNode(resource.getId(), resourceList, showPermission, userPerms);
                     rootNode.setChildren(children);
                 }
                 setPerm(userPerms, showPermission, resource, rootNode);
@@ -69,22 +70,25 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     }
 
     private void setPerm(List<AuPermission> userPerms, boolean showPermission, AuResource resource, TreeNode rootNode) {
-        if (CollectionUtils.isNotEmpty(resource.getPermissions())) {
+        Set<AuPermission> perms = resource.getPermissions();
+        if (CollectionUtils.isNotEmpty(perms)) {
             if (showPermission) {
-                rootNode.setChildren(resource.getPermissions().stream().map(perm ->{
+                rootNode.setState(TreeNode.NodeState.CLOSED);
+                rootNode.setChildren(perms.stream().map(perm -> {
                     TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
-                    if(userPerms.contains(perm)){
+                    if (userPerms.contains(perm)) {
                         permNode.setChecked(true);
                     }
+                    permNode.addAttribute("isPerm", true);
                     return permNode;
                 }).collect(Collectors.toList()));
             } else {
-                rootNode.addAttribute("permissions", resource.getPermissions());
+                rootNode.addAttribute("permissions", perms);
             }
         }
     }
 
-    private List<TreeNode> getChildTreeNode(Long parentId, List<AuResource> nodeList,boolean showPermission,List<AuPermission> userPerms) {
+    private List<TreeNode> getChildTreeNode(Long parentId, List<AuResource> nodeList, boolean showPermission, List<AuPermission> userPerms) {
         List<TreeNode> resultList = new ArrayList<>();
         for (AuResource resource : nodeList) {
             if (resource.getParentId() != null && parentId.equals(resource.getParentId())) {
@@ -93,7 +97,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     nodeList = nodeList.stream().filter(auResource ->
                             !resource.getId().equals(auResource.getId())).collect(Collectors.toList());
 
-                    List<TreeNode> children = this.getChildTreeNode(resource.getId(), nodeList,showPermission,userPerms);
+                    List<TreeNode> children = this.getChildTreeNode(resource.getId(), nodeList, showPermission, userPerms);
                     leafNode.setChildren(children);
                 }
 

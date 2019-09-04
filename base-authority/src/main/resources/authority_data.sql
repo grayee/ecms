@@ -42,18 +42,8 @@ INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (1, 1);
 INSERT INTO au_usergroup_user (usergroup_id, user_id) VALUES (2, 2);
 
 -- 权限 --
-INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (1, now(), now(), 1, '管理权限', '1', 'manager', '1', 'common:manager');
-INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (2, now(), now(), 1, '查看权限', '1', 'view', '1', 'common:view');
-INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (3, now(), now(), 1, '增加权限', '1', 'add', '1', 'common:add');
-INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (4, now(), now(), 1, '修改权限', '1', 'update', '1', 'common:update');
-INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (5, now(), now(), 1, '删除权限', '1', 'delete', '1', 'common:delete');
-INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value)
-VALUES (6, now(), now(), 1, '运行权限', '1', 'run', '1', 'common:run');
+INSERT INTO au_permission (id, create_date, modify_date, version, description, enable_status, name, type, value,system)
+VALUES (1, now(), now(), 1, '管理权限', '1', '系统默认管理权限', 0, 'common:manager',1);
 
 
 -- 资源权限关系 --

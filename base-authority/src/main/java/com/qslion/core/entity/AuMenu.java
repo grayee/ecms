@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.core.enums.MenuType;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,12 +36,16 @@ public class AuMenu extends BaseEntity<Long> {
     private Short status;
     private EnableStatus enableStatus;
     private String remark;
+    /**
+     * 权限编码，多个以逗号分隔
+     */
+    private String authCode;
     private boolean isLeaf;
 
     private AuResource resource;
 
     @JsonIgnore
-    @OneToOne(targetEntity = AuResource.class, fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = AuResource.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "resource_id", referencedColumnName = "id")
     public AuResource getResource() {
         return resource;
@@ -170,6 +175,14 @@ public class AuMenu extends BaseEntity<Long> {
         this.isLeaf = isLeaf;
     }
 
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -206,7 +219,7 @@ public class AuMenu extends BaseEntity<Long> {
             return false;
         }
         if (enableStatus != null ? !enableStatus.equals(auMenu.enableStatus)
-            : auMenu.enableStatus != null) {
+                : auMenu.enableStatus != null) {
             return false;
         }
         if (createDate != null ? !createDate.equals(auMenu.createDate) : auMenu.createDate != null) {

@@ -7,12 +7,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.qslion.core.dao.AuMenuRepository;
+import com.qslion.core.dao.AuPermissionRepository;
 import com.qslion.core.dao.AuResourceRepository;
 import com.qslion.core.dao.AuUserRepository;
-import com.qslion.core.entity.AuMenu;
-import com.qslion.core.entity.AuPermission;
-import com.qslion.core.entity.AuRole;
-import com.qslion.core.entity.AuUser;
+import com.qslion.core.entity.*;
 import com.qslion.core.enums.MenuType;
 import com.qslion.core.service.AuMenuService;
 import com.qslion.framework.bean.TreeNode;
@@ -46,6 +44,8 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     public AuResourceRepository resourceRepository;
     @Autowired
     private AuUserRepository auUserRepository;
+    @Autowired
+    private AuPermissionRepository auPermissionRepository;
 
     @Override
     public List<TreeNode> getMenuTree(String username) {
@@ -146,31 +146,74 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         if (menu.getParentId() == null) {
             //根节点
             menu.setParentId(1L);
+            menu.setLevel(1);
         }
         if (checkUnique(menu)) {
             throw new BusinessException(ResultCode.DATA_ALREADY_EXISTED);
         }
+        AuPermission perm = new AuPermission();
+        Set<AuPermission> perms = Sets.newHashSet();
+
+        menu.setLeaf(true);
+        menu.setStatus((short) NodeState.CLOSED.ordinal());
+        menu.setEnableStatus(EnableStatus.ENABLE);
+        AuResource resource = menu.buildResource();
+
         AuMenu parent = getParent(menu);
-        if (parent != null && parent.isLeaf()) {
+        if (parent != null) {
             if (parent.getType() == MenuType.PAGE_BUTTON) {
                 throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
             } else if (menu.getType() == MenuType.PAGE_BUTTON && parent.getType() != MenuType.FUNCTION_MENU) {
                 throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
             } else {
-                parent.setLeaf(false);
-                if (menu.getType() == MenuType.FUNCTION_MENU) {
-                    parent.setType(MenuType.CATALOG);
-                    parent.setUrl(StringUtils.EMPTY);
+                if (parent.isLeaf()) {
+                    parent.setLeaf(false);
+                    if (menu.getType() == MenuType.FUNCTION_MENU && parent.getType() != MenuType.CATALOG) {
+                        parent.setType(MenuType.CATALOG);
+                        parent.setUrl(StringUtils.EMPTY);
+                        parent.setAuthCode(StringUtils.EMPTY);
+                        parent.getResource().setPermissions(Sets.newHashSet());
+                    }
+                }
+                if (menu.getType() == MenuType.PAGE_BUTTON) {
+                    perms.addAll(parent.getResource().getPermissions());
+                    //将按钮注册为权限
+                    perm.setName(menu.getName());
+                    perm.setValue(menu.getAuthCode());
+                    perm.setDescription(menu.getRemark());
+                    perm.setEnableStatus(EnableStatus.ENABLE);
+                    auPermissionRepository.save(perm);
+                    perms.add(perm);
+                    parent.getResource().setPermissions(perms);
                 }
                 update(parent);
-                menu.setLevel(parent.getLevel() + 1);
+
+                if (parent.getLevel() != null) {
+                    menu.setLevel(parent.getLevel() + 1);
+                } else {
+                    Integer level = 1;
+                    AuMenu temMenu = menu;
+                    while (temMenu.getParentId() != null) {
+                        temMenu = getParent(temMenu);
+                        level++;
+                    }
+                    menu.setLevel(level);
+                }
             }
         }
 
-        menu.setLeaf(true);
-        menu.setStatus((short) NodeState.CLOSED.ordinal());
-        menu.setEnableStatus(EnableStatus.ENABLE);
-        menu.setResource(menu.buildResource());
+        if (menu.getType() == MenuType.FUNCTION_MENU) {
+            //默认权限
+            perm.setName("默认权限");
+            perm.setValue(StringUtils.defaultString(menu.getAuthCode(), "common:view"));
+            perm.setDescription("系统默认权限");
+            perm.setSystem(true);
+            perm.setEnableStatus(EnableStatus.ENABLE);
+            auPermissionRepository.save(perm);
+            perms.add(perm);
+            resource.setPermissions(perms);
+            menu.setResource(resource);
+        }
         return save(menu);
     }
 

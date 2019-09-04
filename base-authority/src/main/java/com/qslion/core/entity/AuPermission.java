@@ -46,8 +46,13 @@ public class AuPermission extends BaseEntity<Long> {
 
     @JsonIgnore
     private Set<AuRole> roles = Sets.newHashSet();
+
     /**
-     * 一个资源拥有多个权限
+     * 是否为系统默认权限，资源为空表示为系统默认权限
+     */
+    private Boolean isSystem;
+    /**
+     * 一个资源拥有多个权限,资源为空表示为系统默认权限
      */
     private AuResource resource;
 
@@ -122,6 +127,14 @@ public class AuPermission extends BaseEntity<Long> {
 
     public void setEnableStatus(EnableStatus enableStatus) {
         this.enableStatus = enableStatus;
+    }
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public void setSystem(Boolean system) {
+        isSystem = system;
     }
 
     @Override
