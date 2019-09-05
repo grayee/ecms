@@ -5,9 +5,11 @@ package com.qslion.core.controller.org;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.qslion.core.entity.*;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
+import com.qslion.core.service.AuResourceService;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
@@ -20,6 +22,7 @@ import com.qslion.framework.bean.*;
 import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +47,8 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     @Autowired
     private ConnectionRuleService connectionRuleService;
 
+    @Autowired
+    private AuResourceService resourceService;
 
     @Autowired
     private AuCompanyService auCompanyService;
@@ -112,6 +117,10 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         if (orgType == AuPartyType.ROLE) {
             AuRole role = (AuRole) content;
             detailVO.addExtras("users", role != null ? role.getUsers() : Lists.newArrayList());
+            if (role != null && CollectionUtils.isNotEmpty(role.getPermissions())) {
+                detailVO.addExtras("funcAuth", resourceService.getAuthedResourceTree(Lists.newArrayList(role.getPermissions())));
+                detailVO.addExtras("dataAuth", partyRelationService.getAuthedRelationTree(AuPartyType.COMPANY, Sets.newHashSet(role)));
+            }
         }
         return detailVO;
     }
@@ -144,7 +153,7 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         if (orgType == null) {
             resultList = this.partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, user.getRoles());
         } else {
-            resultList = this.partyRelationService.getPartyRelationTree(orgType);
+            resultList = this.partyRelationService.getPartyRelationTree(orgType, user.getRoles());
         }
         return resultList;
     }

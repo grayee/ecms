@@ -15,12 +15,14 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
 import com.qslion.framework.bean.QueryFilter.Operator;
+import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.CopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -75,13 +77,23 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     @Override
     public Boolean grantDataAuth(AuRole role, List<AuPartyRelation> partyRelations) {
         List<AuPermission> pList = partyRelations.stream().map(partyRelation -> {
-            AuPermission permission = new AuPermission();
-            permission.setName(partyRelation.getName());
-            permission.setValue(partyRelation.getPartyType() + ":" + partyRelation.getPartyId());
-            permission.setType(AuPermission.PermitType.DATA);
+            AuPermission permission = auPermissionRepository.findByTypeAndValue(AuPermission.PermitType.DATA, partyRelation.getPartyId().toString());
+            if (permission == null) {
+                permission = new AuPermission();
+                permission.setName(partyRelation.getPartyType() + ":" + partyRelation.getName());
+                permission.setValue(partyRelation.getId().toString());
+                permission.setType(AuPermission.PermitType.DATA);
+                permission.setDescription(partyRelation.getName());
+                permission.setEnableStatus(EnableStatus.ENABLE);
+                permission.setSystem(false);
+                auPermissionRepository.save(permission);
+            }
             return permission;
         }).collect(Collectors.toList());
-        role.setPermissions(Sets.newHashSet(pList));
+
+        Set<AuPermission> perms = Sets.newHashSet(pList);
+        perms.addAll(role.getPermissions());
+        role.setPermissions(perms);
         AuRole auRole = auRoleRepository.saveAndFlush(role);
         return auRole.getId() == null;
     }

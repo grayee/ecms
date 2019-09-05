@@ -14,4 +14,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuPermissionRepository extends IGenericRepository<AuPermission, Long> {
 
+    AuPermission findByTypeAndValue(AuPermission.PermitType type, String value);
 }

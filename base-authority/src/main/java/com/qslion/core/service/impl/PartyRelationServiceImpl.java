@@ -3,6 +3,7 @@
  */
 package com.qslion.core.service.impl;
 
+import com.google.common.collect.Lists;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.*;
 import com.qslion.core.enums.AuPartyRelationType;
@@ -14,6 +15,7 @@ import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -125,28 +127,42 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
     }
 
     @Override
-    public List<TreeNode> getPartyRelationTree(AuPartyType partyType) {
-        return getPartyRelationTree(ADMINISTRATIVE, partyType);
+    public List<TreeNode> getPartyRelationTree(AuPartyType partyType, Set<AuRole> roleSet) {
+        return getTreeNodes(ADMINISTRATIVE, partyType, roleSet);
     }
 
     @Override
-    public List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, AuPartyType partyType) {
-        return getTreeNodes(relationType, partyType, null);
+    public List<TreeNode> getAuthedRelationTree(AuPartyType partyType, Set<AuRole> roleSet) {
+        List<AuPartyRelation> partyRelationList = partyRelationRepository.findByRelationType(ADMINISTRATIVE);
+        if (partyType != null) {
+            List<AuPartyType> parentPartyTypes = connectionRuleService.getRuleBySubParty(ADMINISTRATIVE, partyType).stream()
+                    .map(AuConnectionRule::getCurPartyType).collect(Collectors.toList());
+            partyRelationList = TreeTools.getRelationByPartyType(partyRelationList, parentPartyTypes);
+        }
+        List<AuPermission> auPermissions = Lists.newArrayList();
+        roleSet.forEach(role -> auPermissions.addAll(role.getPermissions().stream().filter(perm->perm.getType()== AuPermission.PermitType.DATA).collect(Collectors.toList())));
+        partyRelationList = TreeTools.getPathTreeData(partyRelationList, auPermissions.stream().map(perm -> Long.valueOf(perm.getValue())).collect(Collectors.toList()));
+        return getTreeNodes(roleSet, partyRelationList);
     }
 
     @Override
     public List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Set<AuRole> roleSet) {
-        return getTreeNodes(relationType, null, roleSet);
+        List<AuPartyRelation> partyRelationList = partyRelationRepository.findByRelationType(relationType);
+        return getTreeNodes(roleSet, partyRelationList);
     }
 
     private List<TreeNode> getTreeNodes(AuPartyRelationType relationType, AuPartyType partyType, Set<AuRole> roleSet) {
-        List<TreeNode> resultList = new ArrayList<>();
         List<AuPartyRelation> partyRelationList = partyRelationRepository.findByRelationType(relationType);
         if (partyType != null) {
             List<AuPartyType> parentPartyTypes = connectionRuleService.getRuleBySubParty(relationType, partyType).stream()
                     .map(AuConnectionRule::getCurPartyType).collect(Collectors.toList());
             partyRelationList = TreeTools.getRelationByPartyType(partyRelationList, parentPartyTypes);
         }
+        return getTreeNodes(roleSet, partyRelationList);
+    }
+
+    private List<TreeNode> getTreeNodes(Set<AuRole> roleSet, List<AuPartyRelation> partyRelationList) {
+        List<TreeNode> resultList = new ArrayList<>();
         for (AuPartyRelation partyRelation : partyRelationList) {
             if (null == partyRelation.getParentId()) {
                 TreeNode rootNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
@@ -158,10 +174,22 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     rootNode.setChildren(childrenList);
                 }
                 rootNode.setState(TreeNode.NodeState.OPEN);
+                setPermCheckState(roleSet, rootNode);
                 resultList.add(rootNode);
             }
         }
         return resultList;
+    }
+
+    private void setPermCheckState(Set<AuRole> roleSet, TreeNode rootNode) {
+        if (CollectionUtils.isNotEmpty(roleSet)) {
+            List<AuPermission> perms = Lists.newArrayList();
+            roleSet.forEach(role -> perms.addAll(role.getPermissions()));
+            List<String> permIds = perms.stream().map(AuPermission::getValue).collect(Collectors.toList());
+            if (permIds.contains(rootNode.getId())) {
+                rootNode.setChecked(true);
+            }
+        }
     }
 
     @Override
@@ -191,6 +219,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.getLeaf()) {
                     leafNode.setState(TreeNode.NodeState.OPEN);
                 }
+                setPermCheckState(roleSet, leafNode);
                 resultList.add(leafNode);
             }
         }

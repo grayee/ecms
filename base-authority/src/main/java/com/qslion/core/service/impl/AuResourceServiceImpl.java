@@ -6,6 +6,7 @@ import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.service.AuResourceService;
+import com.qslion.core.util.TreeTools;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
@@ -48,9 +49,24 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     }
 
     @Override
-    public List<TreeNode> getResourceTree(List<AuPermission> userPerms, boolean showPermission) {
-        List<TreeNode> resultList = new ArrayList<>();
+    public List<TreeNode> getResourceTree(List<AuPermission> rolePerms, boolean showPermission) {
         List<AuResource> resourceList = auResourceRepository.findByEnableStatus(EnableStatus.ENABLE);
+        return getTreeNodes(rolePerms, showPermission, resourceList);
+    }
+
+    @Override
+    public List<TreeNode> getAuthedResourceTree(List<AuPermission> rolePerms) {
+        List<AuResource> resourceList = auResourceRepository.findByEnableStatus(EnableStatus.ENABLE);
+        List<Long> resIds = rolePerms.stream().filter(perm -> perm.getType() == AuPermission.PermitType.FUNCTION)
+                .map(perm -> perm.getResource().getId()).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(resIds)) {
+            resourceList = TreeTools.getPathTree(resourceList, resIds);
+        }
+        return getTreeNodes(rolePerms, true, resourceList);
+    }
+
+    private List<TreeNode> getTreeNodes(List<AuPermission> rolePerms, boolean showPermission, List<AuResource> resourceList) {
+        List<TreeNode> resultList = new ArrayList<>();
         for (AuResource resource : resourceList) {
             //获取跟节点
             if (resource.getParentId() == null || "".equals(resource.getParentId())) {
@@ -59,24 +75,24 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     resourceList = resourceList.stream().filter(auResource ->
                             !resource.getId().equals(auResource.getId())).collect(Collectors.toList());
 
-                    List<TreeNode> children = this.getChildTreeNode(resource.getId(), resourceList, showPermission, userPerms);
+                    List<TreeNode> children = this.getChildTreeNode(resource.getId(), resourceList, showPermission, rolePerms);
                     rootNode.setChildren(children);
                 }
-                setPerm(userPerms, showPermission, resource, rootNode);
+                setPerm(rolePerms, showPermission, resource, rootNode);
                 resultList.add(rootNode);
             }
         }
         return resultList;
     }
 
-    private void setPerm(List<AuPermission> userPerms, boolean showPermission, AuResource resource, TreeNode rootNode) {
+    private void setPerm(List<AuPermission> rolePerms, boolean showPermission, AuResource resource, TreeNode rootNode) {
         Set<AuPermission> perms = resource.getPermissions();
         if (CollectionUtils.isNotEmpty(perms)) {
             if (showPermission) {
                 rootNode.setState(TreeNode.NodeState.CLOSED);
                 rootNode.setChildren(perms.stream().map(perm -> {
                     TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
-                    if (userPerms.contains(perm)) {
+                    if (rolePerms.contains(perm)) {
                         permNode.setChecked(true);
                     }
                     permNode.addAttribute("isPerm", true);

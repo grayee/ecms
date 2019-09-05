@@ -1,10 +1,13 @@
 package com.qslion.core.controller.au;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.enums.AuPartyRelationType;
+import com.qslion.core.enums.AuPartyType;
+import com.qslion.core.service.AuResourceService;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.PartyRelationService;
@@ -39,6 +42,9 @@ public class AuRoleController extends BaseController<AuRole> {
     private PartyRelationService partyRelationService;
     @Autowired
     private AuUserService auUserService;
+
+    @Autowired
+    private AuResourceService resourceService;
 
     @GetMapping(value = "/list/{typeId}")
     public Pager<AuRole> list(@PathVariable Long typeId, Pageable pageable) {
@@ -153,6 +159,31 @@ public class AuRoleController extends BaseController<AuRole> {
         AuRole role = auRoleService.findById(roleId);
         List<AuPartyRelation> partyRelations = partyRelationService.findList(ids.toArray(new Long[0]));
         return auRoleService.grantDataAuth(role, partyRelations);
+    }
+
+    /**
+     * 功能权限树
+     *
+     * @param roleId 角色ID
+     * @return tree
+     */
+    @GetMapping(value = "/func/tree/{roleId}")
+    public List<TreeNode> getPermResourceTree(@PathVariable Long roleId) {
+        AuRole role = auRoleService.findById(roleId);
+        return resourceService.getResourceTree(Lists.newArrayList(role.getPermissions()), true);
+    }
+
+
+    /**
+     * 数据权限树
+     *
+     * @param roleId 角色ID
+     * @return tree
+     */
+    @GetMapping(value = "/org/tree/{roleId}")
+    public List<TreeNode> getPermOrgTree(@PathVariable Long roleId) {
+        AuRole role = auRoleService.findById(roleId);
+        return partyRelationService.getPartyRelationTree(AuPartyType.COMPANY, Sets.newHashSet(role));
     }
 
 }

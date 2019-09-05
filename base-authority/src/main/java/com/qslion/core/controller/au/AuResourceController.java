@@ -57,11 +57,4 @@ public class AuResourceController extends BaseController<AuResource> {
         user.getRoles().forEach(auRole -> userPerms.addAll(auRole.getPermissions()));
         return resourceService.getResourceTree(userPerms,false);
     }
-
-    @GetMapping(value = "/perm/tree")
-    public List<TreeNode> getPermResourceTree(@ApiIgnore @AuthenticationPrincipal AuUser user) {
-        List<AuPermission> userPerms = Lists.newArrayList();
-        user.getRoles().forEach(auRole -> userPerms.addAll(auRole.getPermissions()));
-        return resourceService.getResourceTree(userPerms,true);
-    }
 }
