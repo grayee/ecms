@@ -85,12 +85,12 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
         return resultList;
     }
 
-    private void setPerm(List<AuPermission> rolePerms, boolean showPermission, AuResource resource, TreeNode rootNode) {
+    private void setPerm(List<AuPermission> rolePerms, boolean showPermission, AuResource resource, TreeNode treeNode) {
         Set<AuPermission> perms = resource.getPermissions();
         if (CollectionUtils.isNotEmpty(perms)) {
+            perms = perms.stream() .filter(permission -> !permission.getSystem()).collect(Collectors.toSet());
             if (showPermission) {
-                rootNode.setState(TreeNode.NodeState.CLOSED);
-                rootNode.setChildren(perms.stream().map(perm -> {
+                treeNode.setChildren(perms.stream().map(perm -> {
                     TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
                     if (rolePerms.contains(perm)) {
                         permNode.setChecked(true);
@@ -99,7 +99,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     return permNode;
                 }).collect(Collectors.toList()));
             } else {
-                rootNode.addAttribute("permissions", perms);
+                treeNode.addAttribute("permissions", perms);
             }
         }
     }

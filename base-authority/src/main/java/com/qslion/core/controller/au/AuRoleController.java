@@ -3,6 +3,7 @@ package com.qslion.core.controller.au;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.enums.AuPartyRelationType;
@@ -145,8 +146,19 @@ public class AuRoleController extends BaseController<AuRole> {
      * 角色管理>功能授权
      */
     @PostMapping(value = "/function/{roleId}")
-    public Boolean grantFuncAuth(@PathVariable Long roleId, @RequestBody List<Long> permissionIds) {
+    public Boolean grantFuncAuth(@PathVariable Long roleId, @RequestBody List<String> checkedIds) {
         AuRole role = auRoleService.findById(roleId);
+        List<Long> permissionIds = Lists.newArrayList();
+        List<Long> resIds = Lists.newArrayList();
+        checkedIds.forEach(id -> {
+            if (Boolean.valueOf(id.split("@")[1])) {
+                permissionIds.add(Long.valueOf(id.split("@")[0]));
+            } else {
+                Long resId = Long.valueOf(id.split("@")[0]);
+                resIds.add(resId);
+            }
+        });
+        //resourceService.findList(resIds.toArray());
         return auRoleService.grantFuncAuth(role, permissionIds);
     }
 
@@ -170,7 +182,9 @@ public class AuRoleController extends BaseController<AuRole> {
     @GetMapping(value = "/func/tree/{roleId}")
     public List<TreeNode> getPermResourceTree(@PathVariable Long roleId) {
         AuRole role = auRoleService.findById(roleId);
-        return resourceService.getResourceTree(Lists.newArrayList(role.getPermissions()), true);
+        List<AuPermission> perms = role.getPermissions().stream()
+                .filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION).collect(Collectors.toList());
+        return resourceService.getResourceTree(perms, true);
     }
 
 

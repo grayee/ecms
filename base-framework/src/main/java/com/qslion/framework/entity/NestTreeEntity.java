@@ -24,10 +24,36 @@ public class NestTreeEntity extends BaseEntity<Long> implements NestTreeable<Lon
         this.parentId = parentId;
     }
 
+    @JsonIgnore
+    @Transient
+    @Override
+    public String getLftName() {
+        return null;
+    }
+    @JsonIgnore
+    @Transient
+    @Override
+    public String getRgtName() {
+        return null;
+    }
+    @JsonIgnore
+    @Transient
+    @Override
+    public String getParentName() {
+        return null;
+    }
+
     @Override
     @Column(name = "parent_id")
     public Long getParentId() {
         return this.parentId;
+    }
+
+    @JsonIgnore
+    @Transient
+    @Override
+    public String getTreeCondition() {
+        return null;
     }
 
 

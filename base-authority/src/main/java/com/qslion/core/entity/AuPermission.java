@@ -50,7 +50,7 @@ public class AuPermission extends BaseEntity<Long> {
     /**
      * 是否为系统默认权限，资源为空表示为系统默认权限
      */
-    private Boolean isSystem;
+    private Boolean isSystem = false;
     /**
      * 一个资源拥有多个权限,资源为空表示为系统默认权限
      */

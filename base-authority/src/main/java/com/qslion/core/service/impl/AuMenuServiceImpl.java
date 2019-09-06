@@ -59,7 +59,8 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             auUser.getUserGroups().forEach(auUserGroup -> auRoleSet.addAll(auUserGroup.getRoles()));
             Set<AuPermission> permissionSet = Sets.newHashSet();
             auRoleSet.forEach(auRole -> permissionSet.addAll(auRole.getPermissions()));
-            permissionSet.forEach(permission -> menuList.add(permission.getResource().getMenu()));
+            permissionSet.stream().filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION)
+                    .forEach(permission -> menuList.add(permission.getResource().getMenu()));
         }
 
         menuList.sort(Comparator.comparing(AuMenu::getOrderNo));
@@ -172,7 +173,6 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
                         parent.setType(MenuType.CATALOG);
                         parent.setUrl(StringUtils.EMPTY);
                         parent.setAuthCode(StringUtils.EMPTY);
-                        parent.getResource().setPermissions(Sets.newHashSet());
                     }
                 }
                 if (menu.getType() == MenuType.PAGE_BUTTON) {
@@ -193,7 +193,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
                 } else {
                     Integer level = 1;
                     AuMenu temMenu = menu;
-                    while (temMenu.getParentId() != null) {
+                    while (temMenu.getParentId() != null && level < 100) {
                         temMenu = getParent(temMenu);
                         level++;
                     }

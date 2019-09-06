@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资源控制类
@@ -55,6 +56,6 @@ public class AuResourceController extends BaseController<AuResource> {
     public List<TreeNode> getResourceTree(@ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<AuPermission> userPerms = Lists.newArrayList();
         user.getRoles().forEach(auRole -> userPerms.addAll(auRole.getPermissions()));
-        return resourceService.getResourceTree(userPerms,false);
+        return resourceService.getResourceTree(userPerms.stream().filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION).collect(Collectors.toList()),false);
     }
 }

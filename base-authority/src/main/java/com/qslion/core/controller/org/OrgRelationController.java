@@ -118,7 +118,9 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
             AuRole role = (AuRole) content;
             detailVO.addExtras("users", role != null ? role.getUsers() : Lists.newArrayList());
             if (role != null && CollectionUtils.isNotEmpty(role.getPermissions())) {
-                detailVO.addExtras("funcAuth", resourceService.getAuthedResourceTree(Lists.newArrayList(role.getPermissions())));
+                List<AuPermission> perms = role.getPermissions().stream()
+                        .filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION).collect(Collectors.toList());
+                detailVO.addExtras("funcAuth", resourceService.getAuthedResourceTree(perms));
                 detailVO.addExtras("dataAuth", partyRelationService.getAuthedRelationTree(AuPartyType.COMPANY, Sets.newHashSet(role)));
             }
         }
