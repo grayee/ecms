@@ -53,4 +53,6 @@ public interface NestTreeable<T> {
      * @return 为null则不添加任何附加条件
      */
     String getTreeCondition();
+
+    String getName();
 }

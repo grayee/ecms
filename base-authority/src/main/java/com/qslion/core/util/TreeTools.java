@@ -12,6 +12,7 @@ import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.bean.TreeNode;
+import com.qslion.framework.entity.NestTreeEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,16 +28,25 @@ import java.util.stream.Collectors;
  */
 public class TreeTools {
 
-    public static String getOrgStr(List<AuPartyRelation> relations, PartyEntity partyEntity) {
-        Map<Long, AuPartyRelation> dictMap = Maps.newHashMap();
-        for (AuPartyRelation relation : relations) {
-            dictMap.put(relation.getId(), relation);
-        }
+    private static Integer MAX_DEPTH = 100;
+
+    /**
+     * 根据parentId 获取树路径
+     *
+     * @param treeEntities NestTreeEntity
+     * @param parentId     parentId
+     * @return String
+     */
+    public static String getPathTreeStr(List<NestTreeEntity> treeEntities, Long parentId) {
+        Map<Long, NestTreeEntity> dictMap = Maps.newHashMapWithExpectedSize(treeEntities.size());
+        treeEntities.forEach(tree -> dictMap.put(tree.getId(), tree));
         List<String> orgList = Lists.newArrayList();
-        AuPartyRelation parentRelation = dictMap.get(partyEntity.getParentId());
-        while (parentRelation != null) {
-            orgList.add(parentRelation.getName());
-            parentRelation = dictMap.get(parentRelation.getParentId());
+        NestTreeEntity parent = dictMap.get(parentId);
+        int depth = 0;
+        while (parent != null && depth < MAX_DEPTH) {
+            orgList.add(parent.getName());
+            parent = dictMap.get(parent.getParentId());
+            depth++;
         }
         Collections.reverse(orgList);
         return Joiner.on(GlobalConstants.ORG_TREE_SEPARATOR).join(orgList);
@@ -44,22 +54,22 @@ public class TreeTools {
 
 
     public static List<AuPartyRelation> getRelationByPartyType(List<AuPartyRelation> relations, List<AuPartyType> parentPartyTypes) {
-        List<AuPartyRelation> childRelations = Lists.newArrayList();
-        Map<Long, AuPartyRelation> dictMap = Maps.newHashMap();
+        List<AuPartyRelation> children = Lists.newArrayList();
+        Map<Long, AuPartyRelation> dictMap = Maps.newHashMapWithExpectedSize(relations.size());
         relations.forEach(relation -> {
             if (parentPartyTypes.contains(relation.getPartyType())) {
-                childRelations.add(relation);
+                children.add(relation);
             }
             dictMap.put(relation.getId(), relation);
         });
 
-        Set<AuPartyRelation> resultRelations = getAuPartyRelations(childRelations, dictMap);
+        Set<AuPartyRelation> resultRelations = getAuPartyRelations(children, dictMap);
         return resultRelations.stream().collect(Collectors.toList());
     }
 
     public static List<AuPartyRelation> getPathTreeData(List<AuPartyRelation> relations, List<Long> targetIds) {
         List<AuPartyRelation> childRelations = Lists.newArrayList();
-        Map<Long, AuPartyRelation> dictMap = Maps.newHashMap();
+        Map<Long, AuPartyRelation> dictMap = Maps.newHashMapWithExpectedSize(relations.size());
         relations.forEach(relation -> {
             if (targetIds.contains(relation.getId())) {
                 childRelations.add(relation);
@@ -67,42 +77,47 @@ public class TreeTools {
             dictMap.put(relation.getId(), relation);
         });
 
-        Set<AuPartyRelation> resultRelations = getAuPartyRelations(childRelations, dictMap);
-        return resultRelations.stream().collect(Collectors.toList());
-    }
-
-    private static Set<AuPartyRelation> getAuPartyRelations(List<AuPartyRelation> childRelations, Map<Long, AuPartyRelation> dictMap) {
-        Set<AuPartyRelation> resultRelations = Sets.newHashSet(childRelations);
-        for (AuPartyRelation childRelation : childRelations) {
-            AuPartyRelation parentRelation = dictMap.get(childRelation.getParentId());
-            while (parentRelation != null) {
-                resultRelations.add(parentRelation);
-                parentRelation = dictMap.get(parentRelation.getParentId());
-            }
-        }
-        return resultRelations;
+        Set<AuPartyRelation> result = getAuPartyRelations(childRelations, dictMap);
+        return result.stream().collect(Collectors.toList());
     }
 
     public static List<AuResource> getPathTree(List<AuResource> resources, List<Long> targetIds) {
-        List<AuResource> childResource = Lists.newArrayList();
-        Map<Long, AuResource> dictMap = Maps.newHashMap();
+        List<AuResource> children = Lists.newArrayList();
+        Map<Long, AuResource> dictMap = Maps.newHashMapWithExpectedSize(resources.size());
         resources.forEach(resource -> {
             if (targetIds.contains(resource.getId())) {
-                childResource.add(resource);
+                children.add(resource);
             }
             dictMap.put(resource.getId(), resource);
         });
 
-        Set<AuResource> resultResource = Sets.newHashSet(childResource);
-        for (AuResource resource : childResource) {
-            AuResource parentResource = dictMap.get(resource.getParentId());
-            while (parentResource != null) {
-                resultResource.add(parentResource);
-                parentResource = dictMap.get(parentResource.getParentId());
+        Set<AuResource> result = Sets.newHashSet(children);
+        for (AuResource resource : children) {
+            AuResource parent = dictMap.get(resource.getParentId());
+            int depth = 0;
+            while (parent != null && depth < MAX_DEPTH) {
+                result.add(parent);
+                parent = dictMap.get(parent.getParentId());
+                depth++;
             }
         }
-        return resultResource.stream().collect(Collectors.toList());
+        return result.stream().collect(Collectors.toList());
     }
+
+    private static Set<AuPartyRelation> getAuPartyRelations(List<AuPartyRelation> children, Map<Long, AuPartyRelation> dictMap) {
+        Set<AuPartyRelation> result = Sets.newHashSet(children);
+        for (AuPartyRelation child : children) {
+            AuPartyRelation parent = dictMap.get(child.getParentId());
+            int depth = 0;
+            while (parent != null && depth < MAX_DEPTH) {
+                result.add(parent);
+                parent = dictMap.get(parent.getParentId());
+                depth++;
+            }
+        }
+        return result;
+    }
+
 
     public static void main(String[] args) {
     }

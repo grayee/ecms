@@ -21,7 +21,6 @@ public class AuPartyRelation extends NestTreeEntity {
     private AuPartyRelationType relationType;
     private Long partyId;
     private AuPartyType partyType;
-    private String name;
     private String remark;
 
     /**
@@ -78,15 +77,6 @@ public class AuPartyRelation extends NestTreeEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    @Column(name = "name", length = 100)
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Column(name = "order_code", length = 2)

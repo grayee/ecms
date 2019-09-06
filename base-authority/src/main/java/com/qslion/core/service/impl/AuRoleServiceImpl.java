@@ -77,7 +77,7 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     @Override
     public Boolean grantDataAuth(AuRole role, List<AuPartyRelation> partyRelations) {
         List<AuPermission> pList = partyRelations.stream().map(partyRelation -> {
-            AuPermission permission = auPermissionRepository.findByTypeAndValue(AuPermission.PermitType.DATA, partyRelation.getPartyId().toString());
+            AuPermission permission = auPermissionRepository.findByTypeAndValue(AuPermission.PermitType.DATA, partyRelation.getId().toString());
             if (permission == null) {
                 permission = new AuPermission();
                 permission.setName(partyRelation.getPartyType() + ":" + partyRelation.getName());

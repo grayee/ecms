@@ -1,7 +1,9 @@
 package com.qslion.framework.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.bean.NestTreeable;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -16,11 +18,7 @@ public class NestTreeEntity extends BaseEntity<Long> implements NestTreeable<Lon
 
     private Long parentId;
 
-    /**
-     * 改进前序遍历树,左值和右值
-     */
-    private Integer lft;
-    private Integer rgt;
+    private String name;
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
@@ -32,50 +30,30 @@ public class NestTreeEntity extends BaseEntity<Long> implements NestTreeable<Lon
         return this.parentId;
     }
 
-    @Column(name = "lft", length = 5)
-    public Integer getLft() {
-        return lft;
-    }
-
-    public void setLft(Integer lft) {
-        this.lft = lft;
-    }
-
-    @Column(name = "rgt", length = 5)
-    public Integer getRgt() {
-        return rgt;
-    }
-
-    public void setRgt(Integer rgt) {
-        this.rgt = rgt;
-    }
-
-    @Override
-    @Transient
-    public String getLftName() {
-        return DEF_LEFT_NAME;
-    }
-
-    @Override
-    @Transient
-    public String getParentName() {
-        return DEF_PARENT_NAME;
-    }
-
-    @Override
-    @Transient
-    public String getRgtName() {
-        return DEF_RIGHT_NAME;
-    }
-
-    @Override
-    @Transient
-    public String getTreeCondition() {
-        return null;
-    }
 
     @Override
     public int hashCode() {
         return id == null ? System.identityHashCode(this) : id.hashCode();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonIgnore
+    @Transient
+    public NestTreeEntity getTree() {
+        NestTreeEntity treeEntity = new NestTreeEntity();
+        treeEntity.setParentId(getParentId());
+        treeEntity.setId(getId());
+        treeEntity.setName(getName());
+        return treeEntity;
     }
 }

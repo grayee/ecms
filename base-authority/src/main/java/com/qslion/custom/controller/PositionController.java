@@ -9,7 +9,6 @@ import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.util.TreeTools;
-import com.qslion.custom.entity.AuCompany;
 import com.qslion.framework.bean.EntityVo;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.custom.entity.AuPosition;
@@ -18,7 +17,9 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.qslion.framework.entity.NestTreeEntity;
 import com.qslion.framework.util.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -82,7 +83,7 @@ public class PositionController extends BaseController<AuPosition> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(position -> {
             EntityVo ev = EntityVo.getResult(position);
-            ev.put("parentId", TreeTools.getOrgStr(relations, position));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(NestTreeEntity::getTree).collect(Collectors.toList()), position.getParentId()));
             return ev;
         });
     }

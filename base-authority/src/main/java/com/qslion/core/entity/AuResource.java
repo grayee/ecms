@@ -3,7 +3,9 @@ package com.qslion.core.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.entity.NestTreeEntity;
 import com.qslion.framework.enums.EnableStatus;
+
 import java.util.Set;
 import javax.persistence.*;
 
@@ -15,12 +17,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_resource")
-public class AuResource extends BaseEntity<Long> {
-
-    private String name;
+public class AuResource extends NestTreeEntity {
     private String value;
     private String description;
-    private Long parentId;
     private EnableStatus enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
     private AuMenu menu;
@@ -46,16 +45,6 @@ public class AuResource extends BaseEntity<Long> {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = 30)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Basic
     @Column(name = "value", nullable = true, length = 30)
     public String getValue() {
         return value;
@@ -75,16 +64,6 @@ public class AuResource extends BaseEntity<Long> {
         this.description = description;
     }
 
-
-    @Basic
-    @Column(name = "parent_id")
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
 
     @Basic
     @Enumerated
@@ -111,20 +90,16 @@ public class AuResource extends BaseEntity<Long> {
         if (id != that.id) {
             return false;
         }
-        if (name != null ? !name.equals(that.name) : that.name != null) {
-            return false;
-        }
+
         if (value != null ? !value.equals(that.value) : that.value != null) {
             return false;
         }
         if (description != null ? !description.equals(that.description) : that.description != null) {
             return false;
         }
-        if (parentId != null ? !parentId.equals(that.parentId) : that.parentId != null) {
-            return false;
-        }
+
         if (enableStatus != null ? !enableStatus.equals(that.enableStatus)
-            : that.enableStatus != null) {
+                : that.enableStatus != null) {
             return false;
         }
         if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) {
@@ -140,10 +115,8 @@ public class AuResource extends BaseEntity<Long> {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (parentId != null ? parentId.hashCode() : 0);
         result = 31 * result + (enableStatus != null ? enableStatus.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);

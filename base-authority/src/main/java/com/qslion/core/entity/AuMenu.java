@@ -3,6 +3,7 @@ package com.qslion.core.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.core.enums.MenuType;
 import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.entity.NestTreeEntity;
 import com.qslion.framework.enums.EnableStatus;
 
 import javax.persistence.Basic;
@@ -23,13 +24,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "au_menu")
-public class AuMenu extends BaseEntity<Long> {
+public class AuMenu extends NestTreeEntity {
 
-    private String name;
     private MenuType type;
     private String url;
     private Integer level;
-    private Long parentId;
     private String icon;
     private Short orderNo;
     private String component;
@@ -54,16 +53,6 @@ public class AuMenu extends BaseEntity<Long> {
     public AuMenu setResource(AuResource resource) {
         this.resource = resource;
         return this;
-    }
-
-    @Basic
-    @Column(name = "name", nullable = true, length = 30)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Enumerated
@@ -94,16 +83,6 @@ public class AuMenu extends BaseEntity<Long> {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    @Basic
-    @Column(name = "parent_id", nullable = true)
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
     }
 
     @Basic
@@ -197,18 +176,14 @@ public class AuMenu extends BaseEntity<Long> {
         if (id != auMenu.id) {
             return false;
         }
-        if (name != null ? !name.equals(auMenu.name) : auMenu.name != null) {
-            return false;
-        }
+
         if (url != null ? !url.equals(auMenu.url) : auMenu.url != null) {
             return false;
         }
         if (level != null ? !level.equals(auMenu.level) : auMenu.level != null) {
             return false;
         }
-        if (parentId != null ? !parentId.equals(auMenu.parentId) : auMenu.parentId != null) {
-            return false;
-        }
+
         if (icon != null ? !icon.equals(auMenu.icon) : auMenu.icon != null) {
             return false;
         }
@@ -235,10 +210,8 @@ public class AuMenu extends BaseEntity<Long> {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (level != null ? level.hashCode() : 0);
-        result = 31 * result + (parentId != null ? parentId.hashCode() : 0);
         result = 31 * result + (icon != null ? icon.hashCode() : 0);
         result = 31 * result + (orderNo != null ? orderNo.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);

@@ -9,7 +9,6 @@ import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.ConnectionRuleService;
 import com.qslion.core.service.PartyRelationService;
 import com.qslion.core.util.TreeTools;
-import com.qslion.custom.entity.AuDepartment;
 import com.qslion.custom.entity.AuEmployee;
 import com.qslion.custom.service.AuEmployeeService;
 import com.qslion.framework.bean.EntityVo;
@@ -18,6 +17,7 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 
+import com.qslion.framework.entity.NestTreeEntity;
 import com.qslion.framework.util.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 雇员控制类
@@ -81,7 +82,7 @@ public class EmployeeController extends BaseController<AuEmployee> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(emp -> {
             EntityVo ev = EntityVo.getResult(emp);
-            ev.put("parentId", TreeTools.getOrgStr(relations, emp));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(NestTreeEntity::getTree).collect(Collectors.toList()), emp.getParentId()));
             return ev;
         });
     }
