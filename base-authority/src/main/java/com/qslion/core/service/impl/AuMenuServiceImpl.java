@@ -13,6 +13,7 @@ import com.qslion.core.dao.AuUserRepository;
 import com.qslion.core.entity.*;
 import com.qslion.core.enums.MenuType;
 import com.qslion.core.service.AuMenuService;
+import com.qslion.core.util.TreeTools;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.TreeNode.NodeState;
 import com.qslion.framework.enums.EnableStatus;
@@ -50,22 +51,26 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     @Override
     public List<TreeNode> getMenuTree(String username) {
         AuUser auUser = auUserRepository.findUserByUsername(username);
+        List<AuMenu> finalMenuList ;
         //当前用户所拥有的权限菜单集合
         List<AuMenu> menuList = Lists.newArrayList();
         if (auUser.isAdmin()) {
             menuList.addAll(auMenuRepository.findAll());
+            finalMenuList = menuList;
         } else {
             Set<AuRole> auRoleSet = auUser.getRoles();
             auUser.getUserGroups().forEach(auUserGroup -> auRoleSet.addAll(auUserGroup.getRoles()));
             Set<AuPermission> permissionSet = Sets.newHashSet();
             auRoleSet.forEach(auRole -> permissionSet.addAll(auRole.getPermissions()));
+
             permissionSet.stream().filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION)
                     .forEach(permission -> menuList.add(permission.getResource().getMenu()));
+            finalMenuList =TreeTools.getMenuPath(auMenuRepository.findAll(), menuList.stream().map(AuMenu::getId).collect(Collectors.toList()));
         }
 
         menuList.sort(Comparator.comparing(AuMenu::getOrderNo));
         return menuList.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId()))
-                .map(menu -> getTreeNode(menuList, menu)).collect(Collectors.toList());
+                .map(menu -> getTreeNode(finalMenuList, menu)).collect(Collectors.toList());
     }
 
     private TreeNode getTreeNode(List<AuMenu> nodeList, AuMenu menu) {

@@ -7,6 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.PartyEntity;
@@ -94,6 +95,29 @@ public class TreeTools {
         Set<AuResource> result = Sets.newHashSet(children);
         for (AuResource resource : children) {
             AuResource parent = dictMap.get(resource.getParentId());
+            int depth = 0;
+            while (parent != null && depth < MAX_DEPTH) {
+                result.add(parent);
+                parent = dictMap.get(parent.getParentId());
+                depth++;
+            }
+        }
+        return result.stream().collect(Collectors.toList());
+    }
+
+    public static List<AuMenu> getMenuPath(List<AuMenu> menus, List<Long> targetIds) {
+        List<AuMenu> children = Lists.newArrayList();
+        Map<Long, AuMenu> dictMap = Maps.newHashMapWithExpectedSize(menus.size());
+        menus.forEach(menu -> {
+            if (targetIds.contains(menu.getId())) {
+                children.add(menu);
+            }
+            dictMap.put(menu.getId(), menu);
+        });
+
+        Set<AuMenu> result = Sets.newHashSet(children);
+        for (AuMenu menu : children) {
+            AuMenu parent = dictMap.get(menu.getParentId());
             int depth = 0;
             while (parent != null && depth < MAX_DEPTH) {
                 result.add(parent);

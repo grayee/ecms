@@ -106,7 +106,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                 treeNode.setChildren(children);
                 Set<AuResource> sysPermRes = allPerms.stream().filter(AuPermission::getSystem)
                         .map(AuPermission::getResource).collect(Collectors.toSet());
-                if (sysPermRes.contains(resource)) {
+                if (sysPermRes.contains(resource) && sysPermRes.size() == 1) {
                     treeNode.setChecked(true);
                 }
             } else {
