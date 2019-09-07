@@ -1,5 +1,6 @@
 package com.qslion.core.service.impl;
 
+import com.google.common.collect.Lists;
 import com.qslion.core.dao.AuPermissionRepository;
 import com.qslion.core.dao.AuResourceRepository;
 import com.qslion.core.entity.AuMenu;
@@ -86,11 +87,15 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     }
 
     private void setPerm(List<AuPermission> rolePerms, boolean showPermission, AuResource resource, TreeNode treeNode) {
-        Set<AuPermission> perms = resource.getPermissions();
-        if (CollectionUtils.isNotEmpty(perms)) {
-            perms = perms.stream() .filter(permission -> !permission.getSystem()).collect(Collectors.toSet());
+        Set<AuPermission> allPerms = resource.getPermissions();
+        if (CollectionUtils.isNotEmpty(allPerms)) {
+            Set<AuPermission> perms = allPerms.stream().filter(permission -> !permission.getSystem()).collect(Collectors.toSet());
             if (showPermission) {
-                treeNode.setChildren(perms.stream().map(perm -> {
+                List<TreeNode> children = treeNode.getChildren();
+                if (CollectionUtils.isEmpty(children)) {
+                    children = Lists.newArrayList();
+                }
+                children.addAll(perms.stream().map(perm -> {
                     TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
                     if (rolePerms.contains(perm)) {
                         permNode.setChecked(true);
@@ -98,6 +103,12 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                     permNode.addAttribute("isPerm", true);
                     return permNode;
                 }).collect(Collectors.toList()));
+                treeNode.setChildren(children);
+                Set<AuResource> sysPermRes = allPerms.stream().filter(AuPermission::getSystem)
+                        .map(AuPermission::getResource).collect(Collectors.toSet());
+                if (sysPermRes.contains(resource)) {
+                    treeNode.setChecked(true);
+                }
             } else {
                 treeNode.addAttribute("permissions", perms);
             }

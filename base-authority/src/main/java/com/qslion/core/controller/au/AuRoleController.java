@@ -146,20 +146,9 @@ public class AuRoleController extends BaseController<AuRole> {
      * 角色管理>功能授权
      */
     @PostMapping(value = "/function/{roleId}")
-    public Boolean grantFuncAuth(@PathVariable Long roleId, @RequestBody List<String> checkedIds) {
+    public Boolean grantFuncAuth(@PathVariable Long roleId, @RequestBody List<String> permAndResIds) {
         AuRole role = auRoleService.findById(roleId);
-        List<Long> permissionIds = Lists.newArrayList();
-        List<Long> resIds = Lists.newArrayList();
-        checkedIds.forEach(id -> {
-            if (Boolean.valueOf(id.split("@")[1])) {
-                permissionIds.add(Long.valueOf(id.split("@")[0]));
-            } else {
-                Long resId = Long.valueOf(id.split("@")[0]);
-                resIds.add(resId);
-            }
-        });
-        //resourceService.findList(resIds.toArray());
-        return auRoleService.grantFuncAuth(role, permissionIds);
+        return auRoleService.grantFuncAuth(role, permAndResIds);
     }
 
 

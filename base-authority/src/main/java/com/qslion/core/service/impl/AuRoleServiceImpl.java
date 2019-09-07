@@ -1,12 +1,15 @@
 package com.qslion.core.service.impl;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.qslion.core.dao.AuPermissionRepository;
+import com.qslion.core.dao.AuResourceRepository;
 import com.qslion.core.dao.AuRoleRepository;
 import com.qslion.core.dao.PartyRelationRepository;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuPermission;
+import com.qslion.core.entity.AuResource;
 import com.qslion.core.entity.AuRole;
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.service.AuRoleService;
@@ -18,6 +21,8 @@ import com.qslion.framework.bean.QueryFilter.Operator;
 import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.CopyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +48,8 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     private PartyRelationRepository partyRelationRepository;
     @Autowired
     private PartyRelationService partyRelationService;
+    @Autowired
+    private AuResourceRepository auResourceRepository;
 
 
     @Override
@@ -67,7 +74,36 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     }
 
     @Override
-    public Boolean grantFuncAuth(AuRole role, List<Long> permissionIds) {
+    public Boolean grantFuncAuth(AuRole role, List<String> permAndResIds) {
+        List<Long> permissionIds = Lists.newArrayList();
+        List<Long> resIds = Lists.newArrayList();
+        permAndResIds.forEach(id -> {
+            String[] pars = id.split("@");
+            if (Boolean.valueOf(pars[1])) {
+                permissionIds.add(Long.valueOf(pars[0]));
+            } else {
+                Long resId = Long.valueOf(pars[0]);
+                resIds.add(resId);
+            }
+        });
+        List<AuResource> resources = auResourceRepository.findAllById(resIds);
+        if (CollectionUtils.isNotEmpty(resources)) {
+            resources.forEach(res -> {
+                Set<AuPermission> perms = res.getPermissions();
+                if (CollectionUtils.isEmpty(perms)) {
+                    AuPermission perm = new AuPermission();
+                    perm.setName("默认权限");
+                    perm.setValue("common:view");
+                    perm.setDescription("系统默认权限");
+                    perm.setSystem(true);
+                    perm.setEnableStatus(EnableStatus.ENABLE);
+                    perm.setResource(res);
+                    auPermissionRepository.save(perm);
+                    perms.add(perm);
+                }
+                permissionIds.addAll(perms.stream().map(AuPermission::getId).collect(Collectors.toList()));
+            });
+        }
         List<AuPermission> pList = auPermissionRepository.findAllById(permissionIds);
         role.setPermissions(Sets.newHashSet(pList));
         AuRole auRole = auRoleRepository.saveAndFlush(role);

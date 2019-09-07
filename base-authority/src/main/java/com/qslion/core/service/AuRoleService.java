@@ -40,10 +40,10 @@ public interface AuRoleService extends IGenericService<AuRole, Long> {
      * 功能授权
      *
      * @param role          角色
-     * @param permissionIds 权限ID
+     * @param permAndResIds 资源权限ID，逗号分隔，@区分是资源还是权限
      * @return boolean
      */
-    Boolean grantFuncAuth(AuRole role, List<Long> permissionIds);
+    Boolean grantFuncAuth(AuRole role, List<String> permAndResIds);
 
 
     /**
