@@ -10,10 +10,8 @@ import com.google.common.collect.Sets;
 import com.qslion.core.entity.AuMenu;
 import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuResource;
-import com.qslion.core.entity.PartyEntity;
 import com.qslion.core.enums.AuPartyType;
-import com.qslion.framework.bean.TreeNode;
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,11 +36,11 @@ public class TreeTools {
      * @param parentId     parentId
      * @return String
      */
-    public static String getPathTreeStr(List<NestTreeEntity> treeEntities, Long parentId) {
-        Map<Long, NestTreeEntity> dictMap = Maps.newHashMapWithExpectedSize(treeEntities.size());
+    public static <T> String getPathTreeStr(List<BaseTree<T, Long>> treeEntities, Long parentId) {
+        Map<Long, BaseTree<T, Long>> dictMap = Maps.newHashMapWithExpectedSize(treeEntities.size());
         treeEntities.forEach(tree -> dictMap.put(tree.getId(), tree));
         List<String> orgList = Lists.newArrayList();
-        NestTreeEntity parent = dictMap.get(parentId);
+        BaseTree<T, Long> parent = dictMap.get(parentId);
         int depth = 0;
         while (parent != null && depth < MAX_DEPTH) {
             orgList.add(parent.getName());

@@ -17,7 +17,7 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
 
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.util.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -82,7 +82,7 @@ public class EmployeeController extends BaseController<AuEmployee> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(emp -> {
             EntityVo ev = EntityVo.getResult(emp);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(NestTreeEntity::getTree).collect(Collectors.toList()), emp.getParentId()));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(BaseTree::newTree).collect(Collectors.toList()), emp.getParentId()));
             return ev;
         });
     }

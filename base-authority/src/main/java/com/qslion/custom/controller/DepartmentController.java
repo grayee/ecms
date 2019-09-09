@@ -10,7 +10,7 @@ import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 
 
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(dept -> {
             EntityVo ev = EntityVo.getResult(dept);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(NestTreeEntity::getTree).collect(Collectors.toList()), dept.getParentId()));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(BaseTree::newTree).collect(Collectors.toList()), dept.getParentId()));
             return ev;
         });
     }

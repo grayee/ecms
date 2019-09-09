@@ -104,6 +104,8 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
                 permissionIds.addAll(perms.stream().map(AuPermission::getId).collect(Collectors.toList()));
             });
         }
+        //删除已有权限
+        auPermissionRepository.deleteAll(role.getPermissions());
         List<AuPermission> pList = auPermissionRepository.findAllById(permissionIds);
         role.setPermissions(Sets.newHashSet(pList));
         AuRole auRole = auRoleRepository.saveAndFlush(role);

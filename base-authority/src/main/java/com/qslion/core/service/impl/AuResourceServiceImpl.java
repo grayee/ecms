@@ -13,6 +13,7 @@ import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
+import com.qslion.framework.service.impl.TreeServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +31,7 @@ import java.util.stream.Collectors;
  * @date 2018/4/30 19:15.
  */
 @Service
-public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> implements AuResourceService {
+public class AuResourceServiceImpl extends TreeServiceImpl<AuResource, Long> implements AuResourceService {
 
     @Autowired
     public AuResourceRepository auResourceRepository;
@@ -52,6 +50,17 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     @Override
     public List<TreeNode> getResourceTree(List<AuPermission> rolePerms, boolean showPermission) {
         List<AuResource> resourceList = auResourceRepository.findByEnableStatus(EnableStatus.ENABLE);
+        Map<Boolean, List<AuResource>> dataMap = resourceList.stream().collect(Collectors.groupingBy(res -> res.getParentId() == null));
+
+    /*    List<AuResource> resources = Lists.newArrayList();
+        dataMap.get(true).forEach(res -> resources.addAll(getChildTreeList(dataMap.get(false), res.getParentId())));
+        for (AuResource resource : resources) {
+            TreeNode rootNode = new TreeNode(resource.getId().toString(), resource.getName());
+            if (CollectionUtils.isNotEmpty(resource.getChildren())) {
+
+            }
+        }*/
+
         return getTreeNodes(rolePerms, showPermission, resourceList);
     }
 

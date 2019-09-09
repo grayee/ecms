@@ -1,6 +1,6 @@
 package com.qslion.framework.service;
 
-import com.qslion.framework.bean.BaseTree;
+import com.qslion.framework.entity.BaseTree;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,39 +11,32 @@ import java.util.List;
  * @author Gray.Z
  * @date 2018/4/13 10:54.
  */
-public interface TreeInterface<T extends BaseTree<T, ID>, ID extends Serializable> {
+public interface TreeService<T extends BaseTree<T, ID>, ID extends Serializable> extends IGenericService<T, ID>  {
     /**
      * 获得指定节点下所有归档
      *
-     * @param list
-     * @param parentId
-     * @return
+     * @param list     列表数据
+     * @param parentId 父id
+     * @return List
      */
-    List<T> getChildTreeObjects(List<T> list, ID parentId);
+    List<T> getChildTreeList(List<T> list, ID parentId);
 
-    /**
-     * 递归列表
-     *
-     * @param list
-     * @param t
-     */
-    void recursionFn(List<T> list, T t);
 
     /**
      * 获得指定节点下的所有子节点
      *
-     * @param list
-     * @param t
-     * @return
+     * @param list List
+     * @param t    指定节点
+     * @return List
      */
     List<T> getChildList(List<T> list, T t);
 
     /**
      * 判断是否还有下一个子节点
      *
-     * @param list
-     * @param t
-     * @return
+     * @param list List
+     * @param t    指定节点
+     * @return boolean
      */
     boolean hasChild(List<T> list, T t);
 }

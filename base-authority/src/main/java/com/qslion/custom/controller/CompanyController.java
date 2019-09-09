@@ -12,7 +12,7 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.util.ValidatorUtils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,7 +86,7 @@ public class CompanyController extends BaseController<AuCompany> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(company -> {
             EntityVo ev = EntityVo.getResult(company);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(NestTreeEntity::getTree).collect(Collectors.toList()), company.getParentId()));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(BaseTree::newTree).collect(Collectors.toList()), company.getParentId()));
             return ev;
         });
     }

@@ -206,8 +206,7 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
     private List<TreeNode> getChildTreeNode(Long parentId, List<AuPartyRelation> nodeList, Set<AuRole> roleSet) {
         List<TreeNode> resultList = new ArrayList<>();
         for (AuPartyRelation partyRelation : nodeList) {
-            if (partyRelation.getParentId() != null && partyRelation.getParentId().equals(parentId) &&
-                    !partyRelation.getParentId().equals(partyRelation.getId())) {
+            if (partyRelation.getParentId() != null && partyRelation.getParentId().equals(parentId)) {
                 TreeNode leafNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
 
                 if (!partyRelation.getLeaf()) {

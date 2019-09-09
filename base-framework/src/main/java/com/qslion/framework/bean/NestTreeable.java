@@ -1,7 +1,7 @@
 package com.qslion.framework.bean;
 
 
-public interface NestTreeable<T> {
+public interface NestTreeable<ID> {
     /**
      * 默认树左边属性名称
      */
@@ -22,17 +22,23 @@ public interface NestTreeable<T> {
     /**
      * 获得树左边属性名称
      */
-    String getLftName();
+    default String getLftName() {
+        return DEF_LEFT_NAME;
+    }
 
     /**
      * 获得树右边属性名称
      */
-    String getRgtName();
+    default String getRgtName() {
+        return DEF_RIGHT_NAME;
+    }
 
     /**
      * 获得父节点属性名称
      */
-    String getParentName();
+    default String getParentName() {
+        return DEF_PARENT_NAME;
+    }
 
 
     /**
@@ -40,19 +46,21 @@ public interface NestTreeable<T> {
      *
      * @return 如果没有父节点，则返回null。
      */
-    T getParentId();
+    ID getParentId();
 
     /**
      * 获得树ID
      */
-    T getId();
+    ID getId();
 
     /**
      * 获得附加条件 <p> 通过附加条件可以维护多棵树相互独立的树，附加条件使用hql语句，实体别名为bean。例如：bean.website.id=5
      *
      * @return 为null则不添加任何附加条件
      */
-    String getTreeCondition();
+    default String getTreeCondition() {
+        return ENTITY_ALIAS + "=?";
+    }
 
     String getName();
 }

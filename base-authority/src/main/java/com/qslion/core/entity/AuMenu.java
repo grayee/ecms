@@ -2,8 +2,7 @@ package com.qslion.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.core.enums.MenuType;
-import com.qslion.framework.entity.BaseEntity;
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.enums.EnableStatus;
 
 import javax.persistence.Basic;
@@ -24,7 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "au_menu")
-public class AuMenu extends NestTreeEntity {
+public class AuMenu  extends BaseTree<AuMenu, Long> {
 
     private MenuType type;
     private String url;

@@ -2,8 +2,7 @@ package com.qslion.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
-import com.qslion.framework.entity.BaseEntity;
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.enums.EnableStatus;
 
 import java.util.Set;
@@ -17,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_resource")
-public class AuResource extends NestTreeEntity {
+public class AuResource extends BaseTree<AuResource, Long> {
     private String value;
     private String description;
     private EnableStatus enableStatus;

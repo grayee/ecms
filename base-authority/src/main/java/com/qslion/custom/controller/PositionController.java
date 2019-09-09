@@ -19,7 +19,7 @@ import com.qslion.framework.controller.BaseController;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.util.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -83,7 +83,7 @@ public class PositionController extends BaseController<AuPosition> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(position -> {
             EntityVo ev = EntityVo.getResult(position);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(NestTreeEntity::getTree).collect(Collectors.toList()), position.getParentId()));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(BaseTree::newTree).collect(Collectors.toList()), position.getParentId()));
             return ev;
         });
     }

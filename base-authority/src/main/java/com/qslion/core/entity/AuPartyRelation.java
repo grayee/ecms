@@ -2,7 +2,7 @@ package com.qslion.core.entity;
 
 import com.qslion.core.enums.AuPartyRelationType;
 import com.qslion.core.enums.AuPartyType;
-import com.qslion.framework.entity.NestTreeEntity;
+import com.qslion.framework.entity.BaseTree;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_party_relation")
-public class AuPartyRelation extends NestTreeEntity {
+public class AuPartyRelation extends BaseTree<AuPartyRelation, Long> {
 
     private AuPartyRelationType relationType;
     private Long partyId;
