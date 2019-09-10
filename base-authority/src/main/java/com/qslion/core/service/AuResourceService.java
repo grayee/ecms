@@ -40,7 +40,7 @@ public interface AuResourceService extends IGenericService<AuResource, Long> {
      * @param rolePerms
      * @return tree
      */
-    List<TreeNode> getAuthedResourceTree(List<AuPermission> rolePerms);
+    List<TreeNode> getGrantedFuncTree(List<AuPermission> rolePerms);
 
     /**
      * 取得当前菜单节点下的所有子节点

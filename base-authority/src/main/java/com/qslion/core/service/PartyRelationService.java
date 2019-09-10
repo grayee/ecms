@@ -23,7 +23,7 @@ public interface PartyRelationService extends IGenericService<AuPartyRelation, L
     List<TreeNode> getPartyRelationTree(AuPartyType partyType, Set<AuRole> roleSet);
 
 
-    List<TreeNode>  getAuthedRelationTree(AuPartyType partyType, Set<AuRole> roleSet);
+    List<TreeNode> getGrantedDataTree(AuPartyType partyType, Set<AuRole> roleSet);
 
     /**
      * 团体关系树

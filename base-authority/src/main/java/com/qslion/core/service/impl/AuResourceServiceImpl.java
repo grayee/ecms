@@ -53,12 +53,12 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
     }
 
     @Override
-    public List<TreeNode> getAuthedResourceTree(List<AuPermission> rolePerms) {
+    public List<TreeNode> getGrantedFuncTree(List<AuPermission> rolePerms) {
         List<AuResource> resourceList = auResourceRepository.findByEnableStatus(EnableStatus.ENABLE);
         List<Long> resIds = rolePerms.stream().filter(perm -> perm.getType() == AuPermission.PermitType.FUNCTION)
                 .map(perm -> perm.getResource().getId()).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(resIds)) {
-            resourceList = TreeTools.getPathTree(resourceList, resIds);
+            resourceList = TreeTools.filterTreePath(resourceList, resIds);
         }
         return getTreeNodes(rolePerms, true, resourceList);
     }

@@ -120,8 +120,8 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
             if (role != null && CollectionUtils.isNotEmpty(role.getPermissions())) {
                 List<AuPermission> perms = role.getPermissions().stream()
                         .filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION).collect(Collectors.toList());
-                detailVO.addExtras("funcAuth", resourceService.getAuthedResourceTree(perms));
-                detailVO.addExtras("dataAuth", partyRelationService.getAuthedRelationTree(AuPartyType.COMPANY, Sets.newHashSet(role)));
+                detailVO.addExtras("funcAuth", resourceService.getGrantedFuncTree(perms));
+                detailVO.addExtras("dataAuth", partyRelationService.getGrantedDataTree(AuPartyType.COMPANY, Sets.newHashSet(role)));
             }
         }
         return detailVO;

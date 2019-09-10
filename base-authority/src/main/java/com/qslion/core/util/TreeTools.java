@@ -49,48 +49,22 @@ public class TreeTools {
         return Joiner.on(GlobalConstants.ORG_TREE_SEPARATOR).join(orgList);
     }
 
-
-    public static List<AuPartyRelation> getRelationByPartyType(List<AuPartyRelation> relations, List<AuPartyType> parentPartyTypes) {
-        List<AuPartyRelation> children = Lists.newArrayList();
-        Map<Long, AuPartyRelation> dictMap = Maps.newHashMapWithExpectedSize(relations.size());
-        relations.forEach(relation -> {
-            if (parentPartyTypes.contains(relation.getPartyType())) {
-                children.add(relation);
-            }
-            dictMap.put(relation.getId(), relation);
-        });
-
-        Set<AuPartyRelation> resultRelations = getAuPartyRelations(children, dictMap);
-        return resultRelations.stream().collect(Collectors.toList());
-    }
-
-    public static List<AuPartyRelation> getPathTreeData(List<AuPartyRelation> relations, List<Long> targetIds) {
-        List<AuPartyRelation> childRelations = Lists.newArrayList();
-        Map<Long, AuPartyRelation> dictMap = Maps.newHashMapWithExpectedSize(relations.size());
-        relations.forEach(relation -> {
-            if (targetIds.contains(relation.getId())) {
-                childRelations.add(relation);
-            }
-            dictMap.put(relation.getId(), relation);
-        });
-
-        Set<AuPartyRelation> result = getAuPartyRelations(childRelations, dictMap);
-        return result.stream().collect(Collectors.toList());
-    }
-
-    public static List<AuResource> getPathTree(List<AuResource> resources, List<Long> targetIds) {
-        List<AuResource> children = Lists.newArrayList();
-        Map<Long, AuResource> dictMap = Maps.newHashMapWithExpectedSize(resources.size());
-        resources.forEach(resource -> {
+    public static <T extends BaseTree<Long>> List<T> filterTreePath(List<T> list, List<Long> targetIds) {
+        List<T> children = Lists.newArrayList();
+        Map<Long, T> dictMap = Maps.newHashMapWithExpectedSize(list.size());
+        list.forEach(resource -> {
             if (targetIds.contains(resource.getId())) {
                 children.add(resource);
             }
             dictMap.put(resource.getId(), resource);
         });
+        return getTs(children, dictMap);
+    }
 
-        Set<AuResource> result = Sets.newHashSet(children);
-        for (AuResource resource : children) {
-            AuResource parent = dictMap.get(resource.getParentId());
+    private static <T extends BaseTree<Long>> List<T> getTs(List<T> children, Map<Long, T> dictMap) {
+        Set<T> result = Sets.newHashSet(children);
+        for (T t : children) {
+            T parent = dictMap.get(t.getParentId());
             int depth = 0;
             while (parent != null && depth < MAX_DEPTH) {
                 result.add(parent);
@@ -100,44 +74,6 @@ public class TreeTools {
         }
         return result.stream().collect(Collectors.toList());
     }
-
-    public static List<AuMenu> getMenuPath(List<AuMenu> menus, List<Long> targetIds) {
-        List<AuMenu> children = Lists.newArrayList();
-        Map<Long, AuMenu> dictMap = Maps.newHashMapWithExpectedSize(menus.size());
-        menus.forEach(menu -> {
-            if (targetIds.contains(menu.getId())) {
-                children.add(menu);
-            }
-            dictMap.put(menu.getId(), menu);
-        });
-
-        Set<AuMenu> result = Sets.newHashSet(children);
-        for (AuMenu menu : children) {
-            AuMenu parent = dictMap.get(menu.getParentId());
-            int depth = 0;
-            while (parent != null && depth < MAX_DEPTH) {
-                result.add(parent);
-                parent = dictMap.get(parent.getParentId());
-                depth++;
-            }
-        }
-        return result.stream().collect(Collectors.toList());
-    }
-
-    private static Set<AuPartyRelation> getAuPartyRelations(List<AuPartyRelation> children, Map<Long, AuPartyRelation> dictMap) {
-        Set<AuPartyRelation> result = Sets.newHashSet(children);
-        for (AuPartyRelation child : children) {
-            AuPartyRelation parent = dictMap.get(child.getParentId());
-            int depth = 0;
-            while (parent != null && depth < MAX_DEPTH) {
-                result.add(parent);
-                parent = dictMap.get(parent.getParentId());
-                depth++;
-            }
-        }
-        return result;
-    }
-
 
     public static <T extends BaseTree<Long>> List<T> getChildTreeList(List<T> list, Long parentId) {
         List<T> returnList = new ArrayList<>();
@@ -151,7 +87,6 @@ public class TreeTools {
         }
         return returnList;
     }
-
 
     private static <T extends BaseTree<Long>> List<T> getChildren(List<T> list, T t) {
         List<T> childList = getChildList(list, t);
@@ -168,7 +103,6 @@ public class TreeTools {
         }
         return childList;
     }
-
 
     private static <T extends BaseTree<Long>> List<T> getChildList(List<T> list, T t) {
         List<T> childList = new ArrayList<>();

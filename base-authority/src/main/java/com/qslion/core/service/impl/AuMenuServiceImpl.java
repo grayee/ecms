@@ -64,7 +64,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             List<AuMenu> finalMenuList = Lists.newArrayList();
             permissionSet.stream().filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION)
                     .forEach(permission -> finalMenuList.add(permission.getResource().getMenu()));
-            menuList.addAll(TreeTools.getMenuPath(auMenuRepository.findAll(), finalMenuList.stream().map(AuMenu::getId).collect(Collectors.toList())));
+            menuList.addAll(TreeTools.filterTreePath(auMenuRepository.findAll(), finalMenuList.stream().map(AuMenu::getId).collect(Collectors.toList())));
         }
 
         menuList.sort(Comparator.comparing(AuMenu::getOrderNo));
