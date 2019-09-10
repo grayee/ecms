@@ -23,7 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "au_menu")
-public class AuMenu  extends BaseTree<AuMenu, Long> {
+public class AuMenu  extends BaseTree<Long> {
 
     private MenuType type;
     private String url;

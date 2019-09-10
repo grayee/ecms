@@ -13,7 +13,6 @@ import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
 import com.qslion.framework.service.impl.GenericServiceImpl;
-import com.qslion.framework.service.impl.TreeServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  * @date 2018/4/30 19:15.
  */
 @Service
-public class AuResourceServiceImpl extends TreeServiceImpl<AuResource, Long> implements AuResourceService {
+public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> implements AuResourceService {
 
     @Autowired
     public AuResourceRepository auResourceRepository;
@@ -50,17 +49,6 @@ public class AuResourceServiceImpl extends TreeServiceImpl<AuResource, Long> imp
     @Override
     public List<TreeNode> getResourceTree(List<AuPermission> rolePerms, boolean showPermission) {
         List<AuResource> resourceList = auResourceRepository.findByEnableStatus(EnableStatus.ENABLE);
-        Map<Boolean, List<AuResource>> dataMap = resourceList.stream().collect(Collectors.groupingBy(res -> res.getParentId() == null));
-
-    /*    List<AuResource> resources = Lists.newArrayList();
-        dataMap.get(true).forEach(res -> resources.addAll(getChildTreeList(dataMap.get(false), res.getParentId())));
-        for (AuResource resource : resources) {
-            TreeNode rootNode = new TreeNode(resource.getId().toString(), resource.getName());
-            if (CollectionUtils.isNotEmpty(resource.getChildren())) {
-
-            }
-        }*/
-
         return getTreeNodes(rolePerms, showPermission, resourceList);
     }
 

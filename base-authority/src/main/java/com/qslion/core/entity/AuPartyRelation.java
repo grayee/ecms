@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_party_relation")
-public class AuPartyRelation extends BaseTree<AuPartyRelation, Long> {
+public class AuPartyRelation extends BaseTree<Long> {
 
     private AuPartyRelationType relationType;
     private Long partyId;

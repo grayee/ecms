@@ -18,11 +18,11 @@ import java.util.List;
  * @date 2018/9/22 22:05.
  */
 @MappedSuperclass
-public class BaseTree<T, ID extends Serializable> extends BaseEntity<ID> implements NestTreeable<ID> {
+public class BaseTree<ID extends Serializable> extends BaseEntity<ID> implements NestTreeable<ID> {
     private static final long serialVersionUID = 1L;
     private String name;
     private ID parentId;
-    private List<T> children = new ArrayList<>();
+    private List<? extends BaseTree<ID>> children = new ArrayList<>();
 
     @Basic
     @Column(name = "name")
@@ -45,21 +45,11 @@ public class BaseTree<T, ID extends Serializable> extends BaseEntity<ID> impleme
 
     @JsonIgnore
     @Transient
-    public List<T> getChildren() {
+    public List<? extends BaseTree<ID>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<T> children) {
+    public void setChildren(List<? extends BaseTree<ID>> children) {
         this.children = children;
-    }
-
-    @JsonIgnore
-    @Transient
-    public BaseTree<T, ID> newTree() {
-        BaseTree<T, ID> treeNode = new BaseTree<>();
-        treeNode.setParentId(getParentId());
-        treeNode.setId(getId());
-        treeNode.setName(getName());
-        return treeNode;
     }
 }

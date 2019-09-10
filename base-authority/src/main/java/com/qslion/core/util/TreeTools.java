@@ -12,11 +12,9 @@ import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuResource;
 import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseTree;
+import org.apache.commons.collections.CollectionUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,15 +30,15 @@ public class TreeTools {
     /**
      * 根据parentId 获取树路径
      *
-     * @param treeEntities NestTreeEntity
-     * @param parentId     parentId
+     * @param list     list
+     * @param parentId parentId
      * @return String
      */
-    public static <T> String getPathTreeStr(List<BaseTree<T, Long>> treeEntities, Long parentId) {
-        Map<Long, BaseTree<T, Long>> dictMap = Maps.newHashMapWithExpectedSize(treeEntities.size());
-        treeEntities.forEach(tree -> dictMap.put(tree.getId(), tree));
+    public static <T extends BaseTree<Long>> String getPathTreeStr(List<T> list, Long parentId) {
+        Map<Long, BaseTree<Long>> dictMap = Maps.newHashMapWithExpectedSize(list.size());
+        list.forEach(tree -> dictMap.put(tree.getId(), tree));
         List<String> orgList = Lists.newArrayList();
-        BaseTree<T, Long> parent = dictMap.get(parentId);
+        BaseTree<Long> parent = dictMap.get(parentId);
         int depth = 0;
         while (parent != null && depth < MAX_DEPTH) {
             orgList.add(parent.getName());
@@ -138,6 +136,54 @@ public class TreeTools {
             }
         }
         return result;
+    }
+
+
+    public static <T extends BaseTree<Long>> List<T> getChildTreeList(List<T> list, Long parentId) {
+        List<T> returnList = new ArrayList<>();
+        for (T res : list) {
+            //判断第一个对象是否为第一个节点
+            if (res.getParentId() != null && res.getParentId().equals(parentId)) {
+                //相等--说明第一个节点为父节点--递归下面的子节点
+                res.setChildren(getChildren(list, res));
+                returnList.add(res);
+            }
+        }
+        return returnList;
+    }
+
+
+    private static <T extends BaseTree<Long>> List<T> getChildren(List<T> list, T t) {
+        List<T> childList = getChildList(list, t);
+        list = list.stream().filter(l -> !t.getId().equals(l.getId())).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(childList)) {
+            //迭代--这些子集的对象--时候还有下一级的子级对象
+            for (T nextChild : childList) {
+                //下一个对象，与所有的资源集进行判断
+                if (hasChild(list, nextChild)) {
+                    //有下一个子节点,递归 所有的对象--跟当前这个childList 的对象子节点
+                    nextChild.setChildren(getChildren(list, nextChild));
+                }
+            }
+        }
+        return childList;
+    }
+
+
+    private static <T extends BaseTree<Long>> List<T> getChildList(List<T> list, T t) {
+        List<T> childList = new ArrayList<>();
+        list.forEach(child -> {
+            //判断集合的父ID是否等于上一级的id
+            if (child.getParentId() != null && child.getParentId().equals(t.getId())) {
+                childList.add(child);
+            }
+        });
+        return childList;
+    }
+
+
+    private static <T extends BaseTree<Long>> boolean hasChild(List<T> list, T t) {
+        return getChildList(list, t).size() > 0;
     }
 
 

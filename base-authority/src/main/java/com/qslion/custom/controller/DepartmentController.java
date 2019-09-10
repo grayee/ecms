@@ -67,7 +67,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(dept -> {
             EntityVo ev = EntityVo.getResult(dept);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(BaseTree::newTree).collect(Collectors.toList()), dept.getParentId()));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations, dept.getParentId()));
             return ev;
         });
     }

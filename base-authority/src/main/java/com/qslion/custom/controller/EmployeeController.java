@@ -82,7 +82,7 @@ public class EmployeeController extends BaseController<AuEmployee> {
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(emp -> {
             EntityVo ev = EntityVo.getResult(emp);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations.stream().map(BaseTree::newTree).collect(Collectors.toList()), emp.getParentId()));
+            ev.put("parentId", TreeTools.getPathTreeStr(relations, emp.getParentId()));
             return ev;
         });
     }

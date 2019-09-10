@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_resource")
-public class AuResource extends BaseTree<AuResource, Long> {
+public class AuResource extends BaseTree<Long> {
     private String value;
     private String description;
     private EnableStatus enableStatus;

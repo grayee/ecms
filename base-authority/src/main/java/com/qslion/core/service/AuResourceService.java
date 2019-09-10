@@ -8,7 +8,6 @@ import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
-import com.qslion.framework.service.TreeService;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * 修改备注：
  */
 
-public interface AuResourceService extends TreeService<AuResource, Long> {
+public interface AuResourceService extends IGenericService<AuResource, Long> {
 
 
     /**
