@@ -132,6 +132,15 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
     }
 
     @Override
+    public List<TreeNode> getTargetTree(AuPartyType partyType, Set<AuRole> roleSet) {
+        List<AuPartyRelation> relations = partyRelationRepository.findByRelationType(ADMINISTRATIVE);
+        List<Long> filteredIds = relations.stream().filter(r -> partyType == r.getPartyType())
+                .map(AuPartyRelation::getId).collect(Collectors.toList());
+        relations = TreeTools.filterTreePath(relations, filteredIds);
+        return getTreeNodes(roleSet, relations);
+    }
+
+    @Override
     public List<TreeNode> getGrantedDataTree(AuPartyType partyType, Set<AuRole> roleSet) {
         List<AuPartyRelation> relations = partyRelationRepository.findByRelationType(ADMINISTRATIVE);
         if (partyType != null) {
@@ -158,7 +167,8 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         if (partyType != null) {
             List<AuPartyType> pTypes = connectionRuleService.getRuleBySubParty(relationType, partyType).stream()
                     .map(AuConnectionRule::getCurPartyType).collect(Collectors.toList());
-            List<Long> filteredIds = relations.stream().filter(r -> pTypes.contains(r.getPartyType())).map(AuPartyRelation::getId).collect(Collectors.toList());
+            List<Long> filteredIds = relations.stream().filter(r -> pTypes.contains(r.getPartyType()))
+                    .map(AuPartyRelation::getId).collect(Collectors.toList());
             relations = TreeTools.filterTreePath(relations, filteredIds);
         }
         return getTreeNodes(roleSet, relations);

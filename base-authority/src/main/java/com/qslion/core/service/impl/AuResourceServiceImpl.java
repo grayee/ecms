@@ -67,7 +67,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
         List<TreeNode> resultList = new ArrayList<>();
         for (AuResource resource : resourceList) {
             //获取跟节点
-            if (resource.getParentId() == null || "".equals(resource.getParentId())) {
+            if (resource.getParentId() == null) {
                 TreeNode rootNode = new TreeNode(resource.getId().toString(), resource.getName());
                 if (StringUtils.isEmpty(resource.getValue())) {
                     resourceList = resourceList.stream().filter(auResource ->
@@ -92,14 +92,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                 if (CollectionUtils.isEmpty(children)) {
                     children = Lists.newArrayList();
                 }
-                children.addAll(perms.stream().map(perm -> {
-                    TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
-                    if (rolePerms.contains(perm)) {
-                        permNode.setChecked(true);
-                    }
-                    permNode.addAttribute("isPerm", true);
-                    return permNode;
-                }).collect(Collectors.toList()));
+                children.addAll(getPermTreeNodes(rolePerms, perms));
                 treeNode.setChildren(children);
                 Set<AuResource> sysPermRes = allPerms.stream().filter(AuPermission::getSystem)
                         .map(AuPermission::getResource).collect(Collectors.toSet());
@@ -110,6 +103,17 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
                 treeNode.addAttribute("permissions", perms);
             }
         }
+    }
+
+    private List<TreeNode> getPermTreeNodes(List<AuPermission> rolePerms, Set<AuPermission> perms) {
+        return perms.stream().map(perm -> {
+            TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
+            if (rolePerms.contains(perm)) {
+                permNode.setChecked(true);
+            }
+            permNode.addAttribute("isPerm", true);
+            return permNode;
+        }).collect(Collectors.toList());
     }
 
     private List<TreeNode> getChildTreeNode(Long parentId, List<AuResource> nodeList, boolean showPermission, List<AuPermission> userPerms) {

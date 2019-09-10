@@ -30,16 +30,17 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     private static final long serialVersionUID = -8685902226854146300L;
     @DisplayField(id=1,title = "用户名")
     private String username;
-    @JsonIgnore
     @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{5,19}$", groups = AddGroup.class, message = "{custom.pwd.invalid}")
     private String password;
+
+    private String pwdConfirm;
+
     @DisplayField(id=2,title = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;
     @DisplayField(id=3,title = "手机号码")
-    @Pattern(regexp = "^1([345789])\\d{9}$", message = "手机号码格式错误")
-    @NotBlank(message = "手机号码不能为空")
+    //@Pattern(regexp = "^1([345789])\\d{9}$", message = "手机号码格式错误")
     private String mobile;
     @DisplayField(id=4,title = "昵称")
     private String nickname;
@@ -106,13 +107,23 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     @Override
     @Basic
-    @Column(name = "password", nullable = false, length = 30)
+    @Column(name = "password", nullable = false, length = 128)
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Transient
+    @JsonIgnore
+    public String getPwdConfirm() {
+        return pwdConfirm;
+    }
+
+    public void setPwdConfirm(String pwdConfirm) {
+        this.pwdConfirm = pwdConfirm;
     }
 
     @Basic

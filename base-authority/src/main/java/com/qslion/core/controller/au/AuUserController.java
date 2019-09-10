@@ -1,21 +1,27 @@
 package com.qslion.core.controller.au;
 
 import com.alibaba.fastjson.JSON;
+import com.qslion.core.entity.AuPartyRelation;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.AuUserService;
 import com.qslion.core.service.PartyRelationService;
+import com.qslion.custom.entity.AuEmployee;
+import com.qslion.custom.service.AuEmployeeService;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
+
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Api(value="用户Controller",description="用户Controller",tags={"用户控制器"})
+@Api(value = "用户Controller", description = "用户Controller", tags = {"用户控制器"})
 @ResponseResult
 @RestController
 @RequestMapping(value = "/au/user")
@@ -48,6 +54,8 @@ public class AuUserController extends BaseController<AuUser> {
     private AuRoleService roleService;
     @Autowired
     private PartyRelationService partyRelationService;
+    @Autowired
+    private AuEmployeeService auEmployeeService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -66,6 +74,22 @@ public class AuUserController extends BaseController<AuUser> {
     public Long save(@Validated @RequestBody AuUser user) {
         String encrypt = passwordEncoder.encode(user.getPassword());
         user.setPassword(encrypt);
+        AuUser auUser = auUserService.save(user);
+        return auUser.getId();
+    }
+
+    /**
+     * 增加
+     */
+    @PostMapping(value = "/ref")
+    public Long refSave(@Validated @RequestBody AuUser user) {
+        String encrypt = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encrypt);
+        AuPartyRelation relation = partyRelationService.findById(Long.valueOf(user.getUsername()));
+        AuEmployee emp = auEmployeeService.findById(relation.getPartyId());
+        user.setUsername(emp.getEnglishName());
+        user.setEmail(emp.getEmail());
+        user.setMobile(emp.getMobilePhone());
         AuUser auUser = auUserService.save(user);
         return auUser.getId();
     }
@@ -104,7 +128,7 @@ public class AuUserController extends BaseController<AuUser> {
      */
     @RequestMapping(value = "/getAuthUser")
     public String getAuthUser(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-        @ModelAttribute("pager") Pager<AuUser> pager) {
+                              @ModelAttribute("pager") Pager<AuUser> pager) {
         // pager = auUserService.findByPager(pager);
         model.addAttribute("pager", pager);
         return "";

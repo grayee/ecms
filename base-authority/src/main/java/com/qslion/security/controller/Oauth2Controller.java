@@ -37,6 +37,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -83,6 +84,9 @@ public class Oauth2Controller extends BaseController {
     private LoginLogService loginLogService;
     @Autowired
     private TokenStore tokenStore;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 

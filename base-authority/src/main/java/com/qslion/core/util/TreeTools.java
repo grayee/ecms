@@ -7,10 +7,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.qslion.core.entity.AuMenu;
-import com.qslion.core.entity.AuPartyRelation;
-import com.qslion.core.entity.AuResource;
-import com.qslion.core.enums.AuPartyType;
 import com.qslion.framework.entity.BaseTree;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -75,15 +71,14 @@ public class TreeTools {
         return result.stream().collect(Collectors.toList());
     }
 
-    public static <T extends BaseTree<Long>> List<T> getChildTreeList(List<T> list, Long parentId) {
+    public static <T extends BaseTree<Long>> List<T> getChildTreeList(List<T> list) {
+        Map<Boolean, List<T>> dMap = list.stream().collect(Collectors.groupingBy(t -> t.getParentId() == null));
+        List<T> rootList = dMap.get(true);
+        List<T> subList = dMap.get(false);
         List<T> returnList = new ArrayList<>();
-        for (T res : list) {
-            //判断第一个对象是否为第一个节点
-            if (res.getParentId() != null && res.getParentId().equals(parentId)) {
-                //相等--说明第一个节点为父节点--递归下面的子节点
-                res.setChildren(getChildren(list, res));
-                returnList.add(res);
-            }
+        for (T root : rootList) {
+            root.setChildren(getChildren(subList, root));
+            returnList.add(root);
         }
         return returnList;
     }
@@ -116,7 +111,7 @@ public class TreeTools {
     }
 
 
-    private static <T extends BaseTree<Long>> boolean hasChild(List<T> list, T t) {
+    public static <T extends BaseTree<Long>> boolean hasChild(List<T> list, T t) {
         return getChildList(list, t).size() > 0;
     }
 

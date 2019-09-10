@@ -159,4 +159,10 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
         }
         return resultList;
     }
+
+    @GetMapping(value = "/tree/target/{orgType}")
+    public List<TreeNode> getTargetTypeTree(@PathVariable(required = false) AuPartyType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
+        return this.partyRelationService.getTargetTree(orgType, user.getRoles());
+    }
+
 }

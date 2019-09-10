@@ -48,8 +48,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] PERMIT_ALL_URLS = new String[]{"/", "/login/*", "/logout/*", "/login*", "/logout**", "error**", "/swagger**",
-        "/swagger**/*",
-        "/webjars/**", "/csrf**", "/index", "/v2/*", "/hello*"};
+            "/swagger**/*",
+            "/webjars/**", "/csrf**", "/index", "/v2/*", "/hello*"};
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -77,27 +77,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**").authorizeRequests()
-            .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers(PERMIT_ALL_URLS).permitAll()
-            .anyRequest().authenticated()
-            //.and().csrf()
-            // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            //.csrfTokenRepository(csrfTokenRepository()).and()//.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
-            .and().oauth2Login().loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
-            .permitAll().and()
-            //.rememberMe().key("test.com").and()
-            .addFilterBefore(ssoFilter, BasicAuthenticationFilter.class)
-            .addFilterAt(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(auFilterSecurityInterceptor, FilterSecurityInterceptor.class)
-            .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).and()
-            .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
-            .and().exceptionHandling().accessDeniedPage("/accessDenied")
-            .and().csrf().disable()
-            //session管理,失效后跳转
-            //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login")
-            //.and()
-            //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
-            .sessionManagement().maximumSessions(1).expiredUrl("/login");
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers(PERMIT_ALL_URLS).permitAll()
+                .anyRequest().authenticated()
+                //.and().csrf()
+                // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //.csrfTokenRepository(csrfTokenRepository()).and()//.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
+                .and().oauth2Login().loginPage("/login").failureUrl("/loginFailure").defaultSuccessUrl("/loginSuccess")
+                .permitAll().and()
+                //.rememberMe().key("test.com").and()
+                .addFilterBefore(ssoFilter, BasicAuthenticationFilter.class)
+                .addFilterAt(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(auFilterSecurityInterceptor, FilterSecurityInterceptor.class)
+                .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
+                .and().exceptionHandling().accessDeniedPage("/accessDenied")
+                .and().csrf().disable()
+                //session管理,失效后跳转
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login")
+                //.and()
+                //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
+                .sessionManagement().maximumSessions(1).expiredUrl("/login");
     }
 
     @Override
@@ -112,11 +112,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         usernamePasswordAuthenticationFilter.setUsernameParameter(SPRING_SECURITY_FORM_USERNAME_KEY);
         usernamePasswordAuthenticationFilter.setPasswordParameter(SPRING_SECURITY_FORM_PASSWORD_KEY);
         usernamePasswordAuthenticationFilter
-            .setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
+                .setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
         usernamePasswordAuthenticationFilter
-            .setAuthenticationFailureHandler(new AuAuthenticationFailureHandler("/loginFailure"));
+                .setAuthenticationFailureHandler(new AuAuthenticationFailureHandler("/loginFailure"));
         usernamePasswordAuthenticationFilter
-            .setAuthenticationSuccessHandler(new AuAuthenticationSuccessHandler("/loginSuccess"));
+                .setAuthenticationSuccessHandler(new AuAuthenticationSuccessHandler("/loginSuccess"));
         return usernamePasswordAuthenticationFilter;
     }
 
@@ -130,8 +130,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                FilterChain filterChain)
-                throws ServletException, IOException {
+                                            FilterChain filterChain)
+                    throws ServletException, IOException {
                 CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
                 if (csrf != null) {
                     Cookie cookie = new Cookie("XSRF-TOKEN", csrf.getToken());
@@ -152,6 +152,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
         System.out.println(new BCryptPasswordEncoder().encode("admin"));
+        System.out.println(new BCryptPasswordEncoder().encode("test"));
+        System.out.println(new BCryptPasswordEncoder().encode("client_secret_1234567890"));
     }
 
 }
