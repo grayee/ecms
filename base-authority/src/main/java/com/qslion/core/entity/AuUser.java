@@ -28,7 +28,7 @@ import java.util.Set;
 public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private static final long serialVersionUID = -8685902226854146300L;
-    @DisplayField(id=1,title = "用户名")
+    @DisplayField(id = 1, title = "用户名")
     private String username;
     @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{5,19}$", groups = AddGroup.class, message = "{custom.pwd.invalid}")
@@ -36,23 +36,23 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private String pwdConfirm;
 
-    @DisplayField(id=2,title = "邮箱")
+    @DisplayField(id = 2, title = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;
-    @DisplayField(id=3,title = "手机号码")
+    @DisplayField(id = 3, title = "手机号码")
     //@Pattern(regexp = "^1([345789])\\d{9}$", message = "手机号码格式错误")
     private String mobile;
-    @DisplayField(id=4,title = "昵称")
+    @DisplayField(id = 4, title = "昵称")
     private String nickname;
-    @DisplayField(id=5,title = "手机号码")
+    @DisplayField(id = 5, title = "手机号码")
     private Integer age;
     private Date birthday;
     private String loginId;
     private String loginIp;
-    @DisplayField(id=6,title = "状态")
+    @DisplayField(id = 6, title = "状态")
     private EnableStatus enableStatus;
     private Date lockedDate;
-    private Integer loginFailureCount;
+    private Integer loginFailureCount = 0;
     /**
      * 头像图片地址
      */
@@ -85,7 +85,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     @ManyToMany(targetEntity = AuRole.class)
     @JoinTable(name = "au_user_role", joinColumns = {
-        @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+            @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     public Set<AuRole> getRoles() {
         return roles;
     }
@@ -332,7 +332,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
             return false;
         }
         if (enableStatus != null ? !enableStatus.equals(auUser.enableStatus)
-            : auUser.enableStatus != null) {
+                : auUser.enableStatus != null) {
             return false;
         }
         if (createDate != null ? !createDate.equals(auUser.createDate) : auUser.createDate != null) {
@@ -364,7 +364,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     }
 
     @Transient
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return getRoles().stream().anyMatch(auRole -> "ROLE_ADMIN".equals(auRole.getValue()));
     }
 }

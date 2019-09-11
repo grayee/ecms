@@ -15,6 +15,7 @@ import com.qslion.framework.util.IpUtil;
 import com.qslion.framework.util.SystemConfigUtil;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import io.swagger.annotations.Api;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
@@ -37,6 +39,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -46,7 +49,6 @@ import org.springframework.security.oauth2.client.resource.UserRedirectRequiredE
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -85,28 +87,26 @@ public class Oauth2Controller extends BaseController {
     @Autowired
     private TokenStore tokenStore;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
     @PostMapping(value = "/login/oauth")
     public OAuth2AccessToken login(HttpServletRequest request, @RequestBody @Validated LoginDTO loginDTO,
-        @RequestHeader(HttpHeaders.AUTHORIZATION) String header, HttpServletResponse response) {
+                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String header, HttpServletResponse response) {
         String clientId = StringUtils.EMPTY;
+        String clientSecret = StringUtils.EMPTY;
         //这里需要注意为 Basic 而非 Bearer
         if (header != null && header.startsWith("Basic ")) {
             try {
                 String[] tokens = this.extractAndDecodeHeader(header);
                 assert tokens.length == 2;
                 clientId = tokens[0];
+                clientSecret = tokens[1];
             } catch (IOException e) {
                 logger.error(e);
             }
         }
 
         OAuth2AccessToken oAuth2AccessToken = null;
-
         AuUser admin = auUserService.findUserByUsername(loginDTO.getUsername());
         if (admin != null) {
             //登录失败锁定次数，默认5次失败后将锁定帐号5分钟
@@ -126,12 +126,12 @@ public class Oauth2Controller extends BaseController {
                 admin.setLoginFailureCount(admin.getLoginFailureCount() + 1);
                 auUserService.update(admin);
                 throw new BusinessException(ResultCode.USER_ACCOUNT_FAILURE_LOCK,
-                    String.valueOf(loginFailureLockCount));
+                        String.valueOf(loginFailureLockCount));
             } else if (!admin.isEnabled()) {
                 throw new BusinessException(ResultCode.USER_ACCOUNT_FORBIDDEN);
             } else if (!admin.isAccountNonExpired()) {
                 int lockDuration = Minutes.minutesBetween(DateTime.now(), new DateTime(admin.getLockedDate()))
-                    .getMinutes();
+                        .getMinutes();
                 if (lockDuration > getSystemConfig().getLoginFailureLockTime()) {
                     admin.setAccountNonLocked(true);
                     auUserService.update(admin);
@@ -141,9 +141,7 @@ public class Oauth2Controller extends BaseController {
             }
 
             try {
-                ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-                ResourceOwnerPasswordResourceDetails resources = getResourceOwnerPasswordResourceDetails(loginDTO,
-                    clientDetails);
+                ResourceOwnerPasswordResourceDetails resources = getResourceOwnerPasswordResourceDetails(loginDTO, clientId, clientSecret);
                 OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(resources, oauth2ClientContext);
                 oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
                 oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
@@ -173,14 +171,14 @@ public class Oauth2Controller extends BaseController {
     }
 
     private ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResourceDetails(LoginDTO loginDTO,
-        ClientDetails clientDetails) {
+                                                                                         String clientId, String clientSecret) {
         ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
         resourceDetails.setUsername(loginDTO.getUsername());
         resourceDetails.setPassword(loginDTO.getPassword());
         Provider provider = oAuth2ClientProperties.getProvider().get(ECMS_PROVIDER);
         resourceDetails.setAccessTokenUri(provider.getTokenUri());
-        resourceDetails.setClientId(clientDetails.getClientId());
-        resourceDetails.setClientSecret(clientDetails.getClientSecret());
+        resourceDetails.setClientId(clientId);
+        resourceDetails.setClientSecret(clientSecret);
         return resourceDetails;
     }
 
@@ -233,7 +231,7 @@ public class Oauth2Controller extends BaseController {
         @NotBlank(message = "密码不能为空", groups = {AddGroup.class})
         @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{5,19}$", groups = AddGroup.class, message = "{custom.pwd.invalid}")
         private String password;
-        private Boolean isRobot;
+        private Boolean isRobot = false;
 
         public String getUsername() {
             return username;
@@ -317,7 +315,6 @@ public class Oauth2Controller extends BaseController {
     }
 
     public static void main(String[] args) {
-        System.out
-            .println(Base64.getEncoder().encodeToString("client_id_1234567890:client_secret_1234567890".getBytes()));
+        System.out.println(Base64.getEncoder().encodeToString("client_id_1234567890:client_secret_1234567890".getBytes()));
     }
 }

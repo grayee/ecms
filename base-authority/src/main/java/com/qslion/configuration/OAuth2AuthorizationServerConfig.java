@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+    private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = TimeUnit.HOURS.toSeconds(1);
+    private static final Long FREFRESH_TOKEN_VALIDITY_SECONDS = TimeUnit.HOURS.toSeconds(6);
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -87,8 +90,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
         //通过注入 AuthenticationManager 来开启密码授权
         endpoints.authenticationManager(authenticationManager)
-            .tokenStore(tokenStore())
-            .userDetailsService(userDetailService);
+                .tokenStore(tokenStore())
+                .userDetailsService(userDetailService);
         //endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory))  --redis 存储TOKEN
         endpoints.tokenServices(defaultTokenServices());
 /*
@@ -112,10 +115,10 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         tokenServices.setTokenStore(tokenStore());
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(clientDetails());
-        // token有效期自定义设置，默认12小时
-        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 12);
-        //默认30天，这里修改
-        tokenServices.setRefreshTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30));
+        // token有效期自定义设置，默认1小时
+        tokenServices.setAccessTokenValiditySeconds(Math.toIntExact(ACCESS_TOKEN_VALIDITY_SECONDS));
+        //默认6小时，这里修改
+        tokenServices.setRefreshTokenValiditySeconds(Math.toIntExact(FREFRESH_TOKEN_VALIDITY_SECONDS));
         return tokenServices;
     }
 

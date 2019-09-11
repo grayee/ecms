@@ -6,6 +6,7 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 import com.qslion.security.AuAuthenticationFailureHandler;
 import com.qslion.security.AuAuthenticationSuccessHandler;
 import com.qslion.security.filter.AuFilterSecurityInterceptor;
+
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,18 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //return new BCryptPasswordEncoder();
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence charSequence) {
-                return charSequence.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence charSequence, String s) {
-                return s.equals(charSequence.toString());
-            }
-        };
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -153,6 +144,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static void main(String[] args) {
         System.out.println(new BCryptPasswordEncoder().encode("admin"));
         System.out.println(new BCryptPasswordEncoder().encode("test"));
+        System.out.println(new BCryptPasswordEncoder().encode("wang"));
         System.out.println(new BCryptPasswordEncoder().encode("client_secret_1234567890"));
     }
 

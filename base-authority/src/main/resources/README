@@ -3,7 +3,7 @@ Spring Security的核心思想是用户授权和资源认证。认证访问系�
 * 认证是调用authenticationManager.authenticate()方法来获得证书authentication，一般我们采用用户名、密码方式认证，
 那么authentication的实现类就是UsernamePasswordAuthentication。
 
-* 授权是让用户可以访问哪些资源，一般在WebSecurityConfigurerApdater的继承类中编写。
+* 授权是让用户可以访问哪些资源，一般在WebSecurityConfigurerAdapter的继承类中编写。
 
 
 
