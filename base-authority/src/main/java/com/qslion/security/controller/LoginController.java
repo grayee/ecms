@@ -1,13 +1,18 @@
 package com.qslion.security.controller;
 
 
+import com.qslion.core.entity.AuLoginLog;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuUserService;
-import com.qslion.framework.bean.SystemConfig;
+import com.qslion.core.service.LoginLogService;
+import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.Localize;
 import com.qslion.framework.util.SystemConfigUtil;
+
 import javax.servlet.http.HttpServletRequest;
+
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -20,26 +25,24 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * FORM登录控制类
+ * 登录日志控制类
  *
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Controller
+@Api(value = "登录Controller", description = "登录Controller", tags = {"登录控制器"})
+@ResponseResult
+@RestController
 public class LoginController extends BaseController {
 
     @Autowired
     private AuUserService auUserService;
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
-    private OAuth2ClientProperties oAuth2ClientProperties;
+    private LoginLogService loginLogService;
 
     @RequestMapping(value = "/")
     public String root() {
@@ -69,7 +72,7 @@ public class LoginController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/api/test")
     public String test() {
-       logger.info("==================test=============");
+        logger.info("==================test=============");
         return "just for api test";
     }
 
@@ -89,7 +92,7 @@ public class LoginController extends BaseController {
          * see SimpleUrlAuthenticationFailureHandler >>onAuthenticationFailure
          */
         Exception springSecurityLastException = (Exception) request.getSession().getAttribute(
-            WebAttributes.AUTHENTICATION_EXCEPTION);
+                WebAttributes.AUTHENTICATION_EXCEPTION);
 
         if (springSecurityLastException != null) {
             if (springSecurityLastException instanceof BadCredentialsException) {
@@ -104,7 +107,7 @@ public class LoginController extends BaseController {
                     boolean isLoginFailureLock = getSystemConfig().getIsLoginFailureLock();
                     if (isLoginFailureLock && loginFailureLockCount - loginFailureCount <= 3) {
                         model.addAttribute("login_error",
-                            Localize.getMessage("login_failure_lock", loginFailureLockCount));
+                                Localize.getMessage("login_failure_lock", loginFailureLockCount));
                     } else {
                         model.addAttribute("login_error", Localize.getMessage("login_username_or_password_error"));
                     }
@@ -127,6 +130,13 @@ public class LoginController extends BaseController {
         }
         logger.warn("系统登录失败，账户错误信息:{}", model.get("login_error"));
         return "login";
+    }
+
+    @PostMapping(value = "/login/log")
+    public Pager<AuLoginLog> list(@RequestBody Pageable pageable) {
+        pageable.setOrderDirection(Order.Direction.desc);
+        pageable.setOrderProperty("loginTime");
+        return loginLogService.findPage(pageable);
     }
 
     // 获取系统配置信息

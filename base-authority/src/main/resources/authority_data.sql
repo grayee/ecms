@@ -102,7 +102,7 @@ INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_lea
 VALUES (18, '字典管理',1,'/sys/dict','字典管理备注信息',4,17,1,true,1,'fa-o',18,now(),now(),'Dictionary',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (19, '登陆日志管理',1,'/sys/login_log','登陆日志管理备注信息',4,17,1,true,1,'fa-o',19,now(),now(),'',1,1);
+VALUES (19, '登陆日志管理',1,'/sys/login/log','登陆日志管理备注信息',4,17,1,true,1,'fa-o',19,now(),now(),'LoginLog',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (20, '添加公司',2,'/org/company/add','添加公司',1,4,1,true,1,'fa-o',20,now(),now(),'CompanyAdd',1,1);

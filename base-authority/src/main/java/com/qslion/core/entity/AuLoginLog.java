@@ -1,6 +1,8 @@
 package com.qslion.core.entity;
 
+import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
+
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,13 +35,18 @@ public class AuLoginLog extends BaseEntity<Long> {
         ONLINE, OFFLINE
     }
 
+    @DisplayField(id = 1, title = "登录ID")
     private String loginId;
+    @DisplayField(id = 2, title = "用户名")
     private String username;
+    @DisplayField(id = 2, title = "登录IP")
     private String loginIp;
     private String client;
     private String os;
     private String host;
+    @DisplayField(id = 3, title = "登录类型")
     private LoginType loginType;
+    @DisplayField(id = 4, title = "登录时间")
     private Date loginTime;
     private LoginState loginState;
     private String loginMac;

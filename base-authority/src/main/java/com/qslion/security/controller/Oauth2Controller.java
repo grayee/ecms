@@ -189,6 +189,14 @@ public class Oauth2Controller extends BaseController {
         tokenStore.removeAccessToken(accessToken);
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            CompletableFuture.runAsync(() -> {
+                AuLoginLog loginLog = new AuLoginLog();
+                loginLog.setLoginId(auth.getName());
+                loginLog.setUsername(auth.getName());
+                loginLog.setLoginIp(IpUtil.getRealIp(request));
+                loginLog.setLoginType(LoginType.LOGOUT);
+                loginLogService.addLoginLog(loginLog);
+            });
         }
         return true;
     }

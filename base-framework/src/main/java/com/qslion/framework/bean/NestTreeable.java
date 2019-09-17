@@ -1,6 +1,10 @@
 package com.qslion.framework.bean;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.Transient;
+
 public interface NestTreeable<ID> {
     /**
      * 默认树左边属性名称
@@ -22,6 +26,8 @@ public interface NestTreeable<ID> {
     /**
      * 获得树左边属性名称
      */
+    @JsonIgnore
+    @Transient
     default String getLftName() {
         return DEF_LEFT_NAME;
     }
@@ -29,6 +35,8 @@ public interface NestTreeable<ID> {
     /**
      * 获得树右边属性名称
      */
+    @JsonIgnore
+    @Transient
     default String getRgtName() {
         return DEF_RIGHT_NAME;
     }
@@ -36,6 +44,8 @@ public interface NestTreeable<ID> {
     /**
      * 获得父节点属性名称
      */
+    @JsonIgnore
+    @Transient
     default String getParentName() {
         return DEF_PARENT_NAME;
     }
@@ -58,6 +68,8 @@ public interface NestTreeable<ID> {
      *
      * @return 为null则不添加任何附加条件
      */
+    @JsonIgnore
+    @Transient
     default String getTreeCondition() {
         return ENTITY_ALIAS + "=?";
     }
