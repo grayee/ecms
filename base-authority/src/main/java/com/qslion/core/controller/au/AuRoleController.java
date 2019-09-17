@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -86,9 +87,16 @@ public class AuRoleController extends BaseController<AuRole> {
     /**
      * 角色关系树
      */
-    @GetMapping(value = "/tree")
-    public List<TreeNode> getRoleTree(@AuthenticationPrincipal AuUser user) {
-        return partyRelationService.getPartyRelationTree(AuPartyRelationType.ROLE, user.getRoles());
+    @GetMapping(value = {"/tree/{userId}", "/tree"})
+    public List<TreeNode> getRoleTree(@PathVariable(required = false) Long userId, @AuthenticationPrincipal AuUser user) {
+        Set<AuRole> roles;
+        if (userId == null) {
+            roles = user.getRoles();
+        } else {
+            AuUser authUser = auUserService.findById(userId);
+            roles = authUser.getRoles();
+        }
+        return partyRelationService.getPartyRelationTree(AuPartyRelationType.ROLE, roles);
     }
 
     /**
@@ -163,7 +171,7 @@ public class AuRoleController extends BaseController<AuRole> {
     }
 
     /**
-     * 功能权限树
+     * 角色授权-功能权限树
      *
      * @param roleId 角色ID
      * @return tree
@@ -178,7 +186,7 @@ public class AuRoleController extends BaseController<AuRole> {
 
 
     /**
-     * 数据权限树
+     * 角色授权-数据权限树
      *
      * @param roleId 角色ID
      * @return tree

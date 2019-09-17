@@ -2,6 +2,7 @@ package com.qslion.core.controller.au;
 
 import com.alibaba.fastjson.JSON;
 import com.qslion.core.entity.AuPartyRelation;
+import com.qslion.core.entity.AuRole;
 import com.qslion.core.entity.AuUser;
 import com.qslion.core.service.AuRoleService;
 import com.qslion.core.service.AuUserService;
@@ -16,6 +17,7 @@ import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -79,7 +81,7 @@ public class AuUserController extends BaseController<AuUser> {
     }
 
     /**
-     * 增加
+     * 通过关联职员档案增加
      */
     @PostMapping(value = "/ref")
     public Long refSave(@Validated @RequestBody AuUser user) {
@@ -123,46 +125,17 @@ public class AuUserController extends BaseController<AuUser> {
         return auUserService.findById(id);
     }
 
-    /**
-     * 授权管理>>用户授权
-     */
-    @RequestMapping(value = "/getAuthUser")
-    public String getAuthUser(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-                              @ModelAttribute("pager") Pager<AuUser> pager) {
-        // pager = auUserService.findByPager(pager);
-        model.addAttribute("pager", pager);
-        return "";
-    }
 
     /**
-     * 授权管理>>用户授权>>用户关联角色
+     * 用户关联角色
      */
-    @RequestMapping(value = "/setReferenceRole")
-    public String setReferenceRole(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String roleIds = "";
-        String userId = "";
-        // AuUser user = auUserService.get(userId);
-        String[] roleIdArray = roleIds.split(",");
-        for (int i = 0; i < roleIdArray.length; i++) {
-            // AuRole role = roleService.get(roleIdArray[i]);
-            //role.getAuUserSet().add(user);
-            // user.getAuRoleSet().add(role);
-        }
-        // auUserService.insert(user);
-        return "";
-    }
-
-
-    /**
-     * 跳转用户授权
-     */
-    @RequestMapping(value = "/grantAuthDetail")
-    public String grantAuthDetail(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        String userId = "";
-        // AuUser user = auUserService.get(userId);
-        List<TreeNode> resultList = null;//partyRelationService.getPartyDetailRelationTree(user.getAuParty().getId(), GlobalConstants.getRelTypeComp());
-        model.addAttribute("data", JSON.toJSON(resultList));
-        // model.addAttribute("user", user);
-        return "";
+    @PostMapping(value = "/role/{userId}")
+    public Boolean grantRoleAuth(@PathVariable Long userId, @RequestBody Long[] relationIds) {
+        AuUser user = auUserService.findById(userId);
+        List<AuPartyRelation> relations = partyRelationService.findList(relationIds);
+        Long[] roleIds = relations.stream().map(AuPartyRelation::getPartyId).collect(Collectors.toList()).toArray(new Long[0]);
+        List<AuRole> roles = roleService.findList(roleIds);
+        user.getRoles().addAll(roles);
+        return auUserService.saveOrUpdate(user) == null;
     }
 }

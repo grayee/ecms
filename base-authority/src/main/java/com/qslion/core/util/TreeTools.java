@@ -116,6 +116,34 @@ public class TreeTools {
     }
 
 
+    public <T extends BaseTree<Long>> List<T> getTree(List<T> list) {   //调用的方法入口
+        Map<Boolean, List<T>> dMap = list.stream().collect(Collectors.groupingBy(t -> t.getParentId() == null));
+        List<T> rootList = dMap.get(true);
+        List<T> bodyList = dMap.get(false);
+
+        if (bodyList != null && !bodyList.isEmpty()) {
+            //声明一个map，用来过滤已操作过的数据
+            Map<Long, Long> map = Maps.newHashMapWithExpectedSize(bodyList.size());
+            rootList.forEach(node -> getChild(node, bodyList, map));
+            return rootList;
+        }
+        return null;
+    }
+
+    private <T extends BaseTree<Long>> void getChild(T node, List<T> bodyList, Map<Long, Long> map) {
+        List<T> childList = Lists.newArrayList();
+        List<T> filteredList = bodyList.stream().filter(c -> !map.containsKey(c.getId()))
+                .filter(c -> c.getParentId().equals(node.getId()))
+                .collect(Collectors.toList());
+
+        filteredList.forEach(c -> {
+            map.put(c.getId(), c.getParentId());
+            getChild(c, filteredList, map);
+            childList.add(c);
+        });
+        node.setChildren(childList);
+    }
+
     public static void main(String[] args) {
     }
 }

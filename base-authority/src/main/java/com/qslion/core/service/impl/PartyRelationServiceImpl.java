@@ -137,7 +137,8 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         List<Long> filteredIds = relations.stream().filter(r -> partyType == r.getPartyType())
                 .map(AuPartyRelation::getId).collect(Collectors.toList());
         relations = TreeTools.filterTreePath(relations, filteredIds);
-        return getTreeNodes(roleSet, relations);
+        List<String> permIds = getCheckedPerms(roleSet);
+        return getTreeNodes(permIds, relations);
     }
 
     @Override
@@ -153,13 +154,23 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         roleSet.forEach(role -> auPermissions.addAll(role.getPermissions().stream()
                 .filter(perm -> perm.getType() == AuPermission.PermitType.DATA).collect(Collectors.toList())));
         relations = TreeTools.filterTreePath(relations, auPermissions.stream().map(perm -> Long.valueOf(perm.getValue())).collect(Collectors.toList()));
-        return getTreeNodes(roleSet, relations);
+        List<String> permIds = getCheckedPerms(roleSet);
+        return getTreeNodes(permIds, relations);
     }
 
     @Override
     public List<TreeNode> getPartyRelationTree(AuPartyRelationType relationType, Set<AuRole> roleSet) {
-        List<AuPartyRelation> partyRelationList = partyRelationRepository.findByRelationType(relationType);
-        return getTreeNodes(roleSet, partyRelationList);
+        List<AuPartyRelation> relations = partyRelationRepository.findByRelationType(relationType);
+        List<String> permIds;
+        if (relationType == AuPartyRelationType.ROLE) {
+            List<Long> roleIds = roleSet.stream().map(AuRole::getId).collect(Collectors.toList());
+            permIds = relations.stream().filter(r -> roleIds.contains(r.getPartyId()))
+                    .map(r -> String.valueOf(r.getId())).collect(Collectors.toList());
+        } else {
+            permIds = getCheckedPerms(roleSet);
+        }
+
+        return getTreeNodes(permIds, relations);
     }
 
     private List<TreeNode> getTreeNodes(AuPartyRelationType relationType, AuPartyType partyType, Set<AuRole> roleSet) {
@@ -171,10 +182,21 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                     .map(AuPartyRelation::getId).collect(Collectors.toList());
             relations = TreeTools.filterTreePath(relations, filteredIds);
         }
-        return getTreeNodes(roleSet, relations);
+        List<String> permIds = getCheckedPerms(roleSet);
+        return getTreeNodes(permIds, relations);
     }
 
-    private List<TreeNode> getTreeNodes(Set<AuRole> roleSet, List<AuPartyRelation> partyRelationList) {
+    private List<String> getCheckedPerms(Set<AuRole> roleSet) {
+        List<String> permIds = Lists.newArrayList();
+        if (CollectionUtils.isNotEmpty(roleSet)) {
+            List<AuPermission> perms = Lists.newArrayList();
+            roleSet.forEach(role -> perms.addAll(role.getPermissions()));
+            permIds = perms.stream().map(AuPermission::getValue).collect(Collectors.toList());
+        }
+        return permIds;
+    }
+
+    private List<TreeNode> getTreeNodes(List<String> checkedIds, List<AuPartyRelation> partyRelationList) {
         List<TreeNode> resultList = new ArrayList<>();
         for (AuPartyRelation partyRelation : partyRelationList) {
             if (null == partyRelation.getParentId()) {
@@ -183,27 +205,19 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
                 if (!partyRelation.getLeaf()) {
                     partyRelationList = partyRelationList.stream().filter(relation ->
                             !partyRelation.getId().equals(relation.getId())).collect(Collectors.toList());
-                    List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, roleSet);
+                    List<TreeNode> childrenList = this.getChildTreeNode(partyRelation.getId(), partyRelationList, checkedIds);
                     rootNode.setChildren(childrenList);
                 }
                 rootNode.setState(TreeNode.NodeState.OPEN);
-                setPermCheckState(roleSet, rootNode);
+                if (checkedIds.contains(rootNode.getId())) {
+                    rootNode.setChecked(true);
+                }
                 resultList.add(rootNode);
             }
         }
         return resultList;
     }
 
-    private void setPermCheckState(Set<AuRole> roleSet, TreeNode rootNode) {
-        if (CollectionUtils.isNotEmpty(roleSet)) {
-            List<AuPermission> perms = Lists.newArrayList();
-            roleSet.forEach(role -> perms.addAll(role.getPermissions()));
-            List<String> permIds = perms.stream().map(AuPermission::getValue).collect(Collectors.toList());
-            if (permIds.contains(rootNode.getId())) {
-                rootNode.setChecked(true);
-            }
-        }
-    }
 
     @Override
     public List<TreeNode> getGlobalRelationTree(Set<AuRole> roleSet) {
@@ -216,22 +230,22 @@ public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation
         return resultList;
     }
 
-    private List<TreeNode> getChildTreeNode(Long parentId, List<AuPartyRelation> nodeList, Set<AuRole> roleSet) {
+    private List<TreeNode> getChildTreeNode(Long parentId, List<AuPartyRelation> nodeList, List<String> checkedIds) {
         List<TreeNode> resultList = new ArrayList<>();
-        for (AuPartyRelation partyRelation : nodeList) {
-            if (partyRelation.getParentId() != null && partyRelation.getParentId().equals(parentId)) {
-                TreeNode leafNode = new TreeNode(partyRelation.getId().toString(), partyRelation.getName());
-
-                if (!partyRelation.getLeaf()) {
-                    nodeList = nodeList.stream().filter(relation ->
-                            !partyRelation.getId().equals(relation.getId())).collect(Collectors.toList());
-                    List<TreeNode> leafNodes = this.getChildTreeNode(partyRelation.getId(), nodeList, roleSet);
+        for (AuPartyRelation relation : nodeList) {
+            if (relation.getParentId() != null && relation.getParentId().equals(parentId)) {
+                TreeNode leafNode = new TreeNode(relation.getId().toString(), relation.getName());
+                if (!relation.getLeaf()) {
+                    nodeList = nodeList.stream().filter(r -> !relation.getId().equals(r.getId())).collect(Collectors.toList());
+                    List<TreeNode> leafNodes = this.getChildTreeNode(relation.getId(), nodeList, checkedIds);
                     leafNode.setChildren(leafNodes);
                 }
-                if (partyRelation.getLevel() <= nodeStateOpenLevel || partyRelation.getLeaf()) {
+                if (relation.getLevel() <= nodeStateOpenLevel || relation.getLeaf()) {
                     leafNode.setState(TreeNode.NodeState.OPEN);
                 }
-                setPermCheckState(roleSet, leafNode);
+                if (checkedIds.contains(leafNode.getId())) {
+                    leafNode.setChecked(true);
+                }
                 resultList.add(leafNode);
             }
         }
