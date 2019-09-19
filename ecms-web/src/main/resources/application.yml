@@ -105,7 +105,7 @@ spring:
       hikari:
         maximum-pool-size: 30
     slave:
-      jdbc-url: jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+      jdbc-url: jdbc:mysql://localhost:3306/ecms?useUnicode=true&characterEncoding=UTF-8&useSSL=true
       username: root
       password: root
       driver-class-name: com.mysql.jdbc.Driver

@@ -26,8 +26,8 @@ import org.springframework.stereotype.Component;
 public class DataSourceAopAspect {
     private final Logger logger = LogManager.getLogger(this.getClass());
 
-    @Around("execution(* com.qslion..service.find*(..))||execution(* com.qslion..service.get*(..))" +
-            "||execution(* com.qslion..service.query*(..))||@annotation(com.qslion.framework.enums.ReadOnlyDataSource)")
+    @Around("execution(* com.qslion..*.service.impl.*.find*(..))||execution(* com.qslion..*.service.impl.*.get*(..))" +
+            "||execution(* com.qslion..*.service.impl.*.query*(..))||@annotation(com.qslion.framework.enums.ReadOnlyDataSource)")
     public Object doBefore(ProceedingJoinPoint joinPoint) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         try {
