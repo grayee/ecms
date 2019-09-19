@@ -25,7 +25,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     /**
      * 科目编码
      */
-    @DisplayField(id = 1, title = "科目编码")
+    @DisplayField(id = 1, title = "科目编码", align = "left", width = "6")
     private String subjectCode;
     /**
      * 科目名称
@@ -102,6 +102,7 @@ public class AccountingSubject extends BaseEntity<Long> {
     /**
      * 是否系统内置
      */
+    @DisplayField(id = 5, title = "是否内置")
     private Boolean isSystem;
 
     @ManyToMany(targetEntity = AccountingAssistType.class)

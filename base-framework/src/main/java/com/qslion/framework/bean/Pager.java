@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -225,5 +226,12 @@ public class Pager<T> implements Serializable {
 
     public void setExtras(Map<String, Object> extras) {
         this.extras = extras;
+    }
+
+    public void addExtras(String key, Object value) {
+        if (extras == null) {
+            extras = Maps.newHashMap();
+        }
+        extras.put(key, value);
     }
 }

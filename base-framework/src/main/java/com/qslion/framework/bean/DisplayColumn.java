@@ -2,7 +2,9 @@ package com.qslion.framework.bean;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.util.Localize;
+import com.qslion.framework.util.ReflectUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -47,13 +49,9 @@ public class DisplayColumn {
         this.sortable = displayField.sortable();
     }
 
-    public static List<String> getFields(Class<?> entityClazz) {
-        return getFieldList(entityClazz).stream().map(Field::getName).collect(Collectors.toList());
-    }
-
     public static List<DisplayColumn> getDisplayColumns(Class<?> entityClazz) {
         List<DisplayColumn> displayColumns = Lists.newArrayList();
-        List<Field> fieldList = getFieldList(entityClazz);
+        List<Field> fieldList = ReflectUtils.getFields(entityClazz);
 
         fieldList.stream().filter(field -> field.isAnnotationPresent(DisplayField.class)).forEach(field -> {
             DisplayField displayAnn = field.getAnnotation(DisplayField.class);
@@ -64,15 +62,7 @@ public class DisplayColumn {
         return displayColumns;
     }
 
-    private static List<Field> getFieldList(Class<?> entityClazz) {
-        Set<Field> fieldSets = Sets.newHashSet();
-        Class tempClass = entityClazz;
-        while (tempClass != null) {
-            fieldSets.addAll(Arrays.asList(tempClass.getDeclaredFields()));
-            tempClass = tempClass.getSuperclass();
-        }
-        return fieldSets.stream().filter(f -> !"serialVersionUID".equals(f.getName())).collect(Collectors.toList());
-    }
+
 
     public Integer getId() {
         return id;

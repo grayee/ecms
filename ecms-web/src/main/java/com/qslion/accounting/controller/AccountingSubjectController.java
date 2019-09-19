@@ -1,11 +1,11 @@
 package com.qslion.accounting.controller;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.qslion.accounting.entity.AccountingSubject;
+import com.qslion.accounting.enums.SubjectType;
 import com.qslion.accounting.service.AccountingSubjectService;
-import com.qslion.framework.bean.EntityVo;
-import com.qslion.framework.bean.Pageable;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.ResponseResult;
+import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会计科目Controller
@@ -33,11 +36,28 @@ public class AccountingSubjectController extends BaseController<AccountingSubjec
 
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
+        pageable.setOrderDirection(Order.Direction.asc);
+        pageable.setOrderProperty("subjectCode");
         Pager<AccountingSubject> pager = accountingSubjectService.findPage(pageable);
+
+        List<Map<String, Object>> sType = Lists.newArrayList();
+        for (SubjectType subjectType : SubjectType.values()) {
+            Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
+            sMap.put("value", subjectType.getId());
+            sMap.put("text", subjectType.getName());
+            sType.add(sMap);
+        }
+        pager.addExtras("subjectTypes", sType);
         return pager.wrap(subject -> {
+            int spaceLen = subject.getSubjectCode().length() - 4;
+            if (spaceLen > 0) {
+                spaceLen = subject.getSubjectCode().length() + spaceLen;
+                subject.setSubjectCode(String.format("%" + spaceLen + "s", subject.getSubjectCode()).replace(" ", "\r\n"));
+            }
             EntityVo ev = EntityVo.getResult(subject);
             ev.put("balanceDir", subject.getBalanceDir().getName());
             ev.put("subjectType", subject.getSubjectType().getName());
+            ev.put("isSystem", subject.getSystem() ? "是" : "否");
             return ev;
         });
     }

@@ -77,7 +77,6 @@ public class ReflectUtils {
     /**
      * 获取当前类的属性 包括父类
      */
-    @Deprecated
     public static List<Field> getFields(Class<?> clazz) {
         return getFields(clazz, Object.class);
     }

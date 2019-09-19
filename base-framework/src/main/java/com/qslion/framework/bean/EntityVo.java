@@ -1,9 +1,13 @@
 package com.qslion.framework.bean;
 
+import com.qslion.framework.entity.BaseEntity;
+import com.qslion.framework.util.ReflectUtils;
 import com.qslion.moudles.ddic.entity.DictDataType;
+import org.springframework.util.ReflectionUtils;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,17 +22,8 @@ public class EntityVo extends LinkedHashMap<String, Object> {
 
     public static EntityVo getResult(Object obj) {
         EntityVo entityVo = new EntityVo();
-        List<String> fields = DisplayColumn.getFields(obj.getClass());
-        if (!fields.contains("id")) {
-            fields.add("id");
-        }
-        for (String field : fields) {
-            try {
-                PropertyDescriptor pd = new PropertyDescriptor(field, obj.getClass());
-                entityVo.put(field, pd.getReadMethod().invoke(obj));
-            } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+        for (Field field : ReflectUtils.getFields(obj.getClass())) {
+            entityVo.put(field.getName(), ReflectUtils.getValueByField(field, obj));
         }
         return entityVo;
     }
