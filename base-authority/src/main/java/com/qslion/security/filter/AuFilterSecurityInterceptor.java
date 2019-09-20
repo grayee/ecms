@@ -37,6 +37,10 @@ import org.springframework.stereotype.Component;
  * 2、权限鉴定失败就直接抛出异常了。
  * 3、鉴定成功将尝试调用受保护对象，调用完成后，不管是成功调用，还是抛出异常，都将执行finallyInvocation()。
  * 4、如果在调用受保护对象后没有抛出异常，则调用afterInvocation()。
+ *  * 需要依赖:
+ * - AuthenticationManager:认证管理器，实现用户认证的入口;
+ * - AccessDecisionManager:访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源;
+ * - FilterInvocationSecurityMetadataSource:资源源数据定义，即定义某一资源可以被哪些角色访问.
  *
  *
  * spring security 自定义认证过滤器：资源访问第一个要过的filter

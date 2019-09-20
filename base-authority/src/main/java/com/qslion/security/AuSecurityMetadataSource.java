@@ -83,7 +83,7 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
         // object contains user request  URL.
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
 
-        logger.info("request url is :{}", String.format("%s %s", request.getMethod(), request.getRequestURI()));
+        logger.info("当前请求URL为 :{}", String.format("%s %s", request.getMethod(), request.getRequestURI()));
 
         for (String resourceValue : resourceMap.keySet()) {
             RequestMatcher matcher = new AntPathRequestMatcher(resourceValue);
@@ -91,6 +91,7 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
                 return resourceMap.get(resourceValue);
             }
         }
+        logger.info("当前UTL :{} 不在权限表中", String.format("%s %s", request.getMethod(), request.getRequestURI()));
         return null;
     }
 

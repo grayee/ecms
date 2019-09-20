@@ -7,6 +7,7 @@ import com.qslion.accounting.enums.SubjectType;
 import com.qslion.accounting.service.AccountingSubjectService;
 import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.moudles.ddic.util.DictUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class AccountingSubjectController extends BaseController<AccountingSubjec
             EntityVo ev = EntityVo.getResult(subject);
             ev.put("balanceDir", subject.getBalanceDir().getName());
             ev.put("subjectType", subject.getSubjectType().getName());
-            ev.put("isSystem", subject.getSystem() ? "是" : "否");
+            ev.put("isSystem", DictUtils.getValue("isSystem", subject.getSystem().toString()));
             return ev;
         });
     }

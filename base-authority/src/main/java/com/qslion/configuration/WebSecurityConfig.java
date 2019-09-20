@@ -54,9 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**", "/csrf**", "/index", "/v2/*", "/hello*"};
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    private AuFilterSecurityInterceptor auFilterSecurityInterceptor;
     @Autowired
     private Filter ssoFilter;
 
@@ -79,7 +76,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.rememberMe().key("test.com").and()
                 .addFilterBefore(ssoFilter, BasicAuthenticationFilter.class)
                 .addFilterAt(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(auFilterSecurityInterceptor, FilterSecurityInterceptor.class)
                 .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
                 .and().exceptionHandling().accessDeniedPage("/accessDenied")
