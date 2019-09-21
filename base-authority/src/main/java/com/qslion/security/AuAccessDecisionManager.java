@@ -52,11 +52,11 @@ public class AuAccessDecisionManager implements AccessDecisionManager {
         logger.info("[决策管理器]:用户 {} 拥有的权限 - {}", authentication.getName(), authentication.getAuthorities());
         //object is a URL.
         for (ConfigAttribute configAttribute : configAttributes) {
-            String needRole = configAttribute.getAttribute();
-            if (StringUtils.isNotEmpty(needRole)) {
+            String needPerm = configAttribute.getAttribute();
+            if (StringUtils.isNotEmpty(needPerm)) {
                 for (GrantedAuthority ga : authentication.getAuthorities()) {
                     //ga is user's role.
-                    if (needRole.equals(ga.getAuthority())) {
+                    if ("ALL".equals(ga.getAuthority()) || needPerm.equals(ga.getAuthority())) {
                         return;
                     }
                 }

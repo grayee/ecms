@@ -71,7 +71,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                 .antMatchers(PERMIT_ALL_URLS).permitAll()
                 .anyRequest()
                 .authenticated();//允许认证过的用户访问
-       // http.addFilterAfter(createApiAuthenticationFilter(), FilterSecurityInterceptor.class);
+        http.addFilterAfter(createApiAuthenticationFilter(), FilterSecurityInterceptor.class);
     }
 
     /**

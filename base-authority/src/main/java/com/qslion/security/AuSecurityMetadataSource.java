@@ -3,14 +3,15 @@ package com.qslion.security;
 import com.google.common.collect.Maps;
 import com.qslion.core.entity.AuPermission;
 import com.qslion.core.entity.AuResource;
-import com.qslion.core.entity.AuRole;
 import com.qslion.core.service.AuResourceService;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,16 +52,12 @@ public class AuSecurityMetadataSource implements FilterInvocationSecurityMetadat
         List<AuResource> resources = auResourceService.findAll();
         for (AuResource resource : resources) {
             Set<ConfigAttribute> itemAttributes = new HashSet<>();
-            Set<AuPermission> permissions = resource.getPermissions();
-            for (AuPermission permission : permissions) {
-                Set<AuRole> roles = permission.getRoles();
-                for (AuRole role : roles) {
-                    ConfigAttribute ca = new SecurityConfig(role.getAuthority());
-                    // 每一个请求资源对应的Role
-                    itemAttributes.add(ca);
-                    // 所有的Role对象
-                    allAttributes.add(ca);
-                }
+            for (AuPermission permission : resource.getPermissions()) {
+                ConfigAttribute ca = new SecurityConfig(permission.getAuthority());
+                // 每一个请求资源对应的Role
+                itemAttributes.add(ca);
+                // 所有的Role对象
+                allAttributes.add(ca);
             }
             String resourceValue = resource.getValue();
             if (StringUtils.isNotEmpty(resourceValue)) {

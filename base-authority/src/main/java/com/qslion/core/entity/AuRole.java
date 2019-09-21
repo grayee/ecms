@@ -18,7 +18,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "au_role")
-public class AuRole extends PartyEntity implements GrantedAuthority {
+public class AuRole extends PartyEntity {
 
     private static final long serialVersionUID = 5739472491120418264L;
     @DisplayField(id = 1, title = "角色名称")
@@ -94,12 +94,7 @@ public class AuRole extends PartyEntity implements GrantedAuthority {
     public void setValue(String value) {
         this.value = value;
     }
-    @JsonIgnore
-    @Transient
-    @Override
-    public String getAuthority() {
-        return value;
-    }
+
     @JsonIgnore
     @Transient
     @Override

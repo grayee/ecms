@@ -31,7 +31,7 @@ public class DataSourceAopAspect {
     public Object doBefore(ProceedingJoinPoint joinPoint) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         try {
-            logger.info("AOP注解切换只读数据源，className" + joinPoint.getTarget().getClass().getName() + "methodName" + method.getName());
+            logger.info("AOP注解切换只读数据源，className:{},methodName:{}", joinPoint.getTarget().getClass().getName(), method.getName());
             DataSourceContextHolder.setDataSourceType(DataSourceType.SLAVE);
             return joinPoint.proceed();
         } catch (Throwable throwable) {

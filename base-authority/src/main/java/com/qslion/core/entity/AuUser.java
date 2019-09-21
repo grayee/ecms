@@ -7,6 +7,7 @@ import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -67,7 +68,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     /**
      * @see org.springframework.security.core.userdetails.User
      */
-    private Set<AuRole> authorities = Sets.newHashSet();
+    private Set<GrantedAuthority> authorities = Sets.newHashSet();
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
@@ -269,15 +270,19 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     @Transient
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        //用户角色
-        authorities.addAll(roles);
+    public Collection<GrantedAuthority> getAuthorities() {
+        for (AuRole role : roles) {
+            authorities.addAll(role.getPermissions());
+        }
         //用户组角色
-        userGroups.forEach(auUserGroup -> authorities.addAll(auUserGroup.getRoles()));
+        userGroups.forEach(auUserGroup -> auUserGroup.getRoles().forEach(role -> authorities.addAll(role.getPermissions())));
+        if (isAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ALL"));
+        }
         return authorities;
     }
 
-    public void setAuthorities(Set<AuRole> authorities) {
+    public void setAuthorities(Set<GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
 

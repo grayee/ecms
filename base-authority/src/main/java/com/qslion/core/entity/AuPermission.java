@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "au_permission")
-public class AuPermission extends BaseEntity<Long> {
+public class AuPermission extends BaseEntity<Long> implements GrantedAuthority {
 
     /**
      * 权限名称
@@ -135,6 +136,13 @@ public class AuPermission extends BaseEntity<Long> {
 
     public void setSystem(Boolean system) {
         isSystem = system;
+    }
+
+    @JsonIgnore
+    @Transient
+    @Override
+    public String getAuthority() {
+        return value;
     }
 
     @Override
