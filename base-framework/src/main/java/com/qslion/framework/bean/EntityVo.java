@@ -23,7 +23,9 @@ public class EntityVo extends LinkedHashMap<String, Object> {
     public static EntityVo getResult(Object obj) {
         EntityVo entityVo = new EntityVo();
         for (Field field : ReflectUtils.getFields(obj.getClass())) {
-            entityVo.put(field.getName(), ReflectUtils.getValueByField(field, obj));
+            if (field.isAnnotationPresent(DisplayField.class) || "id".equals(field.getName())) {
+                entityVo.put(field.getName(), ReflectUtils.getValueByField(field, obj));
+            }
         }
         return entityVo;
     }

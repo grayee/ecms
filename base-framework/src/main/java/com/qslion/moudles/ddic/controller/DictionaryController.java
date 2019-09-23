@@ -68,7 +68,11 @@ public class DictionaryController extends BaseController<DictDataType> {
 
     @PutMapping
     public boolean update(@RequestBody DictDataType dictDataType) {
-        DictDataType baseDataType = dictionaryService.update(dictDataType);
+        DictDataType update= dictionaryService.findById(dictDataType.getId());
+        update.setCode(dictDataType.getCode());
+        update.setName(dictDataType.getName());
+        update.setDescription(dictDataType.getDescription());
+        DictDataType baseDataType = dictionaryService.update(update);
         return baseDataType == null;
     }
 

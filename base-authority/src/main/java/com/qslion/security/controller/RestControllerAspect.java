@@ -77,7 +77,7 @@ public class RestControllerAspect {
                 requester, methodName, params, ip, callSource, appVersion, apiVersion, userAgent);
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
-        logger.info("Ended request requester 【{}] method 【{}】\n Params:【{}】\n Response :【{}】\n Time cost: 【{}】 millis ",
+        logger.info("Ended request requester 【{}】 method 【{}】\n Params:【{}】\n Response :【{}】\n Time cost: 【{}】 millis ",
                 requester, methodName, params, JSONUtils.writeValueAsString(result), System.currentTimeMillis() - start);
         return result;
     }
