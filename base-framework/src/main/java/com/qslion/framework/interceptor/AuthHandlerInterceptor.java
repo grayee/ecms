@@ -18,6 +18,13 @@ public class AuthHandlerInterceptor implements HandlerInterceptor {
 
     private final Logger logger = LogManager.getLogger(this.getClass());
 
+    private static final String HEADER_TOKEN_NAME = "X-TOKEN";
+    private static final String HEADER_CLIENT_NAME = "X-CLIENT";
+    private static final String HEADER_APP_VERSION = "APP-VERSION";
+    private static final String HEADER_API_VERSION = "API-VERSION";
+    private static final String HEADER_LANG_NAME = "X-LANG";
+    private static final String TENANT_HEADER_NAME = "X-TENANT-ID";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
         return true;

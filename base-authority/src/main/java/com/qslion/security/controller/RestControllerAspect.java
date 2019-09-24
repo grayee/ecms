@@ -42,6 +42,7 @@ public class RestControllerAspect {
     private static final String HEADER_APP_VERSION = "APP-VERSION";
     private static final String HEADER_API_VERSION = "API-VERSION";
     private static final String HEADER_LANG_NAME = "X-LANG";
+    private static final String TENANT_HEADER_NAME = "X-TENANT-ID";
 
     /**
      * 环绕通知
