@@ -3,19 +3,26 @@ package com.qslion.framework.configuration;
 import com.google.common.collect.Maps;
 import com.qslion.framework.bean.DataSourceContextHolder;
 import com.qslion.framework.bean.DynamicDataSource;
+
 import java.util.Map;
+import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * DataSource配置类
@@ -24,6 +31,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
  * @date 2018/9/18.
  */
 @Configuration
+@EnableTransactionManagement(order = 10)
 public class DataSourceConfig {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());
@@ -55,23 +63,42 @@ public class DataSourceConfig {
         return new DynamicDataSource(masterDataSource, targetDataSources);
     }
 
-/*    @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean emf(DataSource masterDataSource, DataSource slaveDataSource) {
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource masterDataSource, DataSource slaveDataSource) {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(routingDataSource(masterDataSource, slaveDataSource));
-        //这里一定要是你自己App实体类的位置
+        //这里一定要是App实体类的位置
         emf.setPackagesToScan("com.qslion.**.entity");
         emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        emf.setPersistenceUnitName("master-database-persistence-unit");
+        //Setting the hibernate properties
+        emf.setJpaProperties(hibernateProperties());
+        //emf.setJpaPropertyMap(jpaProperties.getProperties());
+        logger.info("Setup of master entityManagerFactory successfully...");
         return emf;
     }
 
+    private Properties hibernateProperties() {
+        Properties properties = new Properties();
+        properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+        properties.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
+        properties.put(Environment.PHYSICAL_NAMING_STRATEGY, "com.qslion.framework.component.TableNameStrategy");
+        properties.put(Environment.SHOW_SQL, true);
+        properties.put(Environment.FORMAT_SQL, true);
+        properties.put(Environment.HBM2DDL_AUTO, "update");
+        return properties;
+    }
 
-    @Bean(name = "transactionManager")
-    public JpaTransactionManager transactionManager(DataSource masterDataSource, DataSource slaveDataSource) {
+    @Bean
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager tm = new JpaTransactionManager();
-        EntityManagerFactory e = emf(masterDataSource, slaveDataSource).getNativeEntityManagerFactory();
-        tm.setEntityManagerFactory(e);
+        tm.setEntityManagerFactory(entityManagerFactory);
+        logger.info("Setup of master transactionManager successfully...");
         return tm;
-    }*/
+    }
 
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslationPostProcessor() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
 }

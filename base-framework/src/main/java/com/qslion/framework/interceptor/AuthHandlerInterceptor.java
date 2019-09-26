@@ -2,6 +2,8 @@ package com.qslion.framework.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.qslion.tenant.TenantContextHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.lang.Nullable;
@@ -26,19 +28,21 @@ public class AuthHandlerInterceptor implements HandlerInterceptor {
     private static final String TENANT_HEADER_NAME = "X-TENANT-ID";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        String tenantId = request.getHeader(TENANT_HEADER_NAME);
+        TenantContextHolder.setTenant(tenantId);
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-        @Nullable ModelAndView modelAndView) throws Exception {
+                           @Nullable ModelAndView modelAndView) throws Exception {
 
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-        @Nullable Exception ex) throws Exception {
+                                @Nullable Exception ex) throws Exception {
 
     }
 }

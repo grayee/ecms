@@ -1,7 +1,7 @@
-package com.qslion.moudles.tenant.service;
+package com.qslion.tenant.service;
 
 import com.qslion.framework.service.IGenericService;
-import com.qslion.moudles.tenant.entity.TenantInfo;
+import com.qslion.tenant.entity.TenantInfo;
 
 /**
  * Tenant Service

@@ -27,7 +27,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextListener;
 //@EnableDiscoveryClient
 @EnableJpaAuditing
-@EnableTransactionManagement(order = 10)
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Startup {
 

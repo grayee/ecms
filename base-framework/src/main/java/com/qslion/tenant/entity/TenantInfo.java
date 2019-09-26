@@ -1,4 +1,4 @@
-package com.qslion.moudles.tenant.entity;
+package com.qslion.tenant.entity;
 
 import com.qslion.framework.entity.BaseEntity;
 

@@ -23,10 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -169,25 +167,21 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     }
 
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public T findById(ID id) {
         return genericRepository.findById(id).orElse(null);
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findAll() {
         return genericRepository.findAll();
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findList(ID... ids) {
         return genericRepository.findAllById(Lists.newArrayList(ids));
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public List<T> findList(List<QueryFilter> queryFilters, List<Order> orders) {
         Pageable pageable = new Pageable(1, 100000);
@@ -197,7 +191,6 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     }
 
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public Pager<T> findPage(Pageable pageable) {
         PageRequest pageRequest = getPageRequest(pageable);
@@ -212,62 +205,52 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
         return new Pager<>(result, page.getTotalElements(), pageable, extras);
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public long count() {
         return genericRepository.count();
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public long count(QueryFilter... queryFilters) {
         return genericRepository.count(getSpecification(Lists.newArrayList(queryFilters)));
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public boolean exists(ID id) {
         return genericRepository.existsById(id);
     }
 
-    @Transactional(value = "transactionManager", readOnly = true)
     @Override
     public boolean exists(QueryFilter... queryFilters) {
         return findList(Lists.newArrayList(queryFilters), null).size() > 0;
     }
 
-    @Transactional(value = "transactionManager")
     @Override
     public T save(T entity) {
         return genericRepository.save(entity);
     }
 
     @Override
-    @Transactional(value = "transactionManager")
     public T update(T entity) {
         return genericRepository.saveAndFlush(entity);
     }
 
     @Override
-    @Transactional(value = "transactionManager")
     public T saveOrUpdate(T entity) {
         return genericRepository.saveAndFlush(entity);
     }
 
-    @Transactional(value = "transactionManager")
     @Override
     public void delete(ID id) {
         genericRepository.deleteById(id);
     }
 
-    @Transactional(value = "transactionManager")
     @Override
     public void delete(List<T> entities) {
         genericRepository.deleteAll(entities);
     }
 
     @Override
-    @Transactional(value = "transactionManager")
     public void delete(T entity) {
         genericRepository.delete(entity);
     }

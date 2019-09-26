@@ -1,4 +1,4 @@
-package com.qslion.moudles.tenant;
+package com.qslion.tenant;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;

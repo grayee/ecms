@@ -1,4 +1,4 @@
-package com.qslion.moudles.tenant;
+package com.qslion.tenant;
 
 /**
  * 租户上下文
