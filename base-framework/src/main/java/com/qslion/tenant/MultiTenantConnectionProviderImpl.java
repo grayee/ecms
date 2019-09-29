@@ -1,5 +1,6 @@
 package com.qslion.tenant;
 
+import com.qslion.tenant.dao.TenantRepository;
 import com.qslion.tenant.entity.TenantInfo;
 import com.qslion.tenant.service.TenantService;
 import org.hibernate.engine.jdbc.connections.spi.AbstractDataSourceBasedMultiTenantConnectionProviderImpl;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMultiTenantConnectionProviderImpl {
 
     @Autowired
-    private TenantService tenantService;
+    private TenantRepository tenantRepository;
     // 使用一个map来存储我们租户和对应的数据源，租户和数据源的信息就是从我们的tenant_info表中读出来
     private static Map<String, DataSource> dataSourceMap = new HashMap<>();
 
@@ -46,7 +47,7 @@ public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMu
             return dataSourceMap.get(tenantId);
         } else {
             //load from master datasource
-            List<TenantInfo> tenants = tenantService.findAll();
+            List<TenantInfo> tenants = tenantRepository.findAll();
             tenants.forEach(tenant -> dataSourceMap.put(tenant.getTenant(), getDataSource(tenant)));
             return dataSourceMap.get("default");
         }

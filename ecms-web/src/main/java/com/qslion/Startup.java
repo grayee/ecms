@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextListener;
 //@EnableDiscoveryClient
 @EnableJpaAuditing
+@EnableTransactionManagement(order = 10)
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Startup {
 
@@ -61,7 +62,7 @@ public class Startup {
             logger.info("The Runner start to initialize ...");
             Statement st = dataSource.getConnection().createStatement();
             long count = districtRepository.count();
-            if (count <= 0) {
+            if (count < 0) {
                 //初始化区域数据
                 for (int i = 0; i < 3; i++) {
                     File file = ResourceUtils.getFile(String.format("classpath:install/data/common_district_%s.sql", i + 1));
@@ -81,7 +82,6 @@ public class Startup {
             st.executeBatch();
             st.clearBatch();
             st.close();
-
         }
     }
 

@@ -19,9 +19,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -31,7 +33,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 2018/9/18.
  */
 @Configuration
-@EnableTransactionManagement(order = 10)
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {"com.qslion.tenant.entity","com.qslion.tenant.dao"},
+        entityManagerFactoryRef = "masterEntityManagerFactory",
+        transactionManagerRef = "masterTransactionManager")
 public class DataSourceConfig {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());
@@ -63,12 +68,13 @@ public class DataSourceConfig {
         return new DynamicDataSource(masterDataSource, targetDataSources);
     }
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource masterDataSource, DataSource slaveDataSource) {
+    @Primary
+    @Bean(name = "masterEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean masterEntityManagerFactory(DataSource masterDataSource, DataSource slaveDataSource) {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(routingDataSource(masterDataSource, slaveDataSource));
         //这里一定要是App实体类的位置
-        emf.setPackagesToScan("com.qslion.**.entity");
+        emf.setPackagesToScan("com.qslion.tenant.entity");
         emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         emf.setPersistenceUnitName("master-database-persistence-unit");
         //Setting the hibernate properties
@@ -89,10 +95,10 @@ public class DataSourceConfig {
         return properties;
     }
 
-    @Bean
-    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    @Bean(name = "masterTransactionManager")
+    public PlatformTransactionManager transactionManager(@Qualifier("masterEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager tm = new JpaTransactionManager();
-        tm.setEntityManagerFactory(entityManagerFactory);
+        tm.setEntityManagerFactory(emf);
         logger.info("Setup of master transactionManager successfully...");
         return tm;
     }

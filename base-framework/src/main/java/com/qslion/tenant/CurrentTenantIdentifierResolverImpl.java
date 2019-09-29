@@ -22,6 +22,7 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
     public String resolveCurrentTenantIdentifier() {
         //通过租户上下文获取租户ID，此ID是用户登录时在header中进行设置的
         String tenant = TenantContextHolder.getTenant();
+        System.out.println("租户=========>>"+tenant);
         //如果上下文中没有找到该租户ID，则使用默认的租户ID，或者直接报异常信息
         return StringUtils.isNotBlank(tenant) ? tenant : DEFAULT_TENANT;
     }

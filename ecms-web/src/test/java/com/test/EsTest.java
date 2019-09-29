@@ -2,8 +2,8 @@ package com.test;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.qslion.entity.Book;
-import com.qslion.service.IBookService;
+import com.qslion.web.entity.Book;
+import com.qslion.web.service.IBookService;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

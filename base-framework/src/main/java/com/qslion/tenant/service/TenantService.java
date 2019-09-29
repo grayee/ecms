@@ -1,6 +1,5 @@
 package com.qslion.tenant.service;
 
-import com.qslion.framework.service.IGenericService;
 import com.qslion.tenant.entity.TenantInfo;
 
 /**
@@ -9,7 +8,7 @@ import com.qslion.tenant.entity.TenantInfo;
  * @author Gray.Z
  * @date 2018/10/30 22:43.
  */
-public interface TenantService extends IGenericService<TenantInfo, Long> {
+public interface TenantService {
 
     /**
      * TenantInfo
