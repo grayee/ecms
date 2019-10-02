@@ -1,6 +1,8 @@
 package com.qslion.tenant;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 
 /**
@@ -11,7 +13,7 @@ import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
  * @date 2018/5/5 15:30.
  */
 public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentifierResolver {
-
+    protected final Logger logger = LogManager.getLogger(this.getClass());
     /**
      * 默认的租户ID
      */
@@ -22,7 +24,7 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
     public String resolveCurrentTenantIdentifier() {
         //通过租户上下文获取租户ID，此ID是用户登录时在header中进行设置的
         String tenant = TenantContextHolder.getTenant();
-        System.out.println("租户=========>>"+tenant);
+        logger.debug("当前请求租户为：{}", tenant);
         //如果上下文中没有找到该租户ID，则使用默认的租户ID，或者直接报异常信息
         return StringUtils.isNotBlank(tenant) ? tenant : DEFAULT_TENANT;
     }

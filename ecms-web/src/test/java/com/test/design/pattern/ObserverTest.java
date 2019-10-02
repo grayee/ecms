@@ -6,7 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Created by zhangruigang on 2017/9/20.
+ * Created by gray on 2017/9/20.
  *
  * 观察者设计模式: 如果想要实现观察者模式，则必须依靠java.util包中提供的Observable类和Observer接口
  *

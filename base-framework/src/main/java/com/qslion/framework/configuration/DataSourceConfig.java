@@ -33,8 +33,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 2018/9/18.
  */
 @Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.qslion.tenant.entity","com.qslion.tenant.dao"},
+@EnableTransactionManagement(order = 0)
+@EnableJpaRepositories(basePackages = {"com.qslion.tenant.dao"},
         entityManagerFactoryRef = "masterEntityManagerFactory",
         transactionManagerRef = "masterTransactionManager")
 public class DataSourceConfig {
@@ -68,7 +68,6 @@ public class DataSourceConfig {
         return new DynamicDataSource(masterDataSource, targetDataSources);
     }
 
-    @Primary
     @Bean(name = "masterEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean masterEntityManagerFactory(DataSource masterDataSource, DataSource slaveDataSource) {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
@@ -86,7 +85,7 @@ public class DataSourceConfig {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+        properties.put(Environment.STORAGE_ENGINE, "innodb");
         properties.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         properties.put(Environment.PHYSICAL_NAMING_STRATEGY, "com.qslion.framework.component.TableNameStrategy");
         properties.put(Environment.SHOW_SQL, true);

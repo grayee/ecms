@@ -2,7 +2,8 @@ package com.qslion.tenant;
 
 import com.qslion.tenant.dao.TenantRepository;
 import com.qslion.tenant.entity.TenantInfo;
-import com.qslion.tenant.service.TenantService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.engine.jdbc.connections.spi.AbstractDataSourceBasedMultiTenantConnectionProviderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 @Component
 public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMultiTenantConnectionProviderImpl {
-
+    protected final Logger logger = LogManager.getLogger(this.getClass());
     @Autowired
     private TenantRepository tenantRepository;
     // 使用一个map来存储我们租户和对应的数据源，租户和数据源的信息就是从我们的tenant_info表中读出来
@@ -42,7 +43,7 @@ public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMu
 
     // 根据传进来的tenantId决定返回的数据源
     private DataSource getTenantDataSource(String tenantId) {
-        System.out.println("GetDataSource:" + tenantId);
+        logger.info("GetDataSource:{}" + tenantId);
         if (dataSourceMap.containsKey(tenantId)) {
             return dataSourceMap.get(tenantId);
         } else {

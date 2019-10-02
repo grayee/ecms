@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @author Gray.Z
  * @date 2018/4/13 10:56.
  */
-@Transactional(value = "tenantTransactionManager", rollbackFor = Exception.class)
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> implements IGenericService<T, ID> {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());

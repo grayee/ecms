@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class JobServiceImpl implements JobService {
 
     @Autowired
-    @Qualifier("masterEntityManagerFactory")
+    @Qualifier("entityManagerFactory")
     private EntityManagerFactory emf;
 
     private Query createNativeQuery(String sql, Object... params) {

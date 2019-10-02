@@ -8,12 +8,10 @@ import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -32,16 +30,12 @@ import java.util.Map;
  * @date 2018/5/5 15:30.
  */
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement(order = 1)
 @EnableJpaRepositories(basePackages = {
         "com.qslion.web.*.dao",
-        "com.qslion.web.*.service",
         "com.qslion.authority.*.dao",
-        "com.qslion.authority.*.service",
         "com.qslion.moudles.*.dao",
-        "com.qslion.moudles.*.service"
-}, entityManagerFactoryRef = "tenantEntityManagerFactory"
-        , transactionManagerRef = "tenantTransactionManager")
+}, considerNestedRepositories = true)
 public class TenantDataSourceConfig {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());
@@ -57,21 +51,28 @@ public class TenantDataSourceConfig {
         return new CurrentTenantIdentifierResolverImpl();
     }
 
-    @Bean
+    /**
+     * Primary ann is must.or it will be occur no transaction in progress exception...
+     *
+     * @param multiTenantConnectionProvider   tenant connection provider
+     * @param currentTenantIdentifierResolver tenant resolver
+     * @return emf
+     */
+    @Primary
+    @Bean(name = "entityManagerFactory")
     @ConditionalOnBean(name = "multiTenantConnectionProvider")
-    public LocalContainerEntityManagerFactoryBean tenantEntityManagerFactory(MultiTenantConnectionProvider multiTenantConnectionProvider,
-                                                                             CurrentTenantIdentifierResolver currentTenantIdentifierResolver) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(MultiTenantConnectionProvider multiTenantConnectionProvider,
+                                                                       CurrentTenantIdentifierResolver currentTenantIdentifierResolver) {
         // No dataSource is set to resulting entityManagerFactoryBean
         LocalContainerEntityManagerFactoryBean lcemf = new LocalContainerEntityManagerFactoryBean();
-        lcemf.setPackagesToScan("com.qslion.web.accounting.entity", "com.qslion.authority.core.entity", "com.qslion.authority.custom.entity", "com.qslion.moudles.*.entity");
+        lcemf.setPackagesToScan("com.qslion.web.*.entity", "com.qslion.authority.*.entity", "com.qslion.moudles.*.entity");
         lcemf.setPersistenceUnitName("tenant-database-persistence-unit");
         lcemf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         Map<String, Object> hibernateProps = new LinkedHashMap<>();
-
         hibernateProps.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
         hibernateProps.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
         hibernateProps.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolver);
-        hibernateProps.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+        hibernateProps.put(Environment.STORAGE_ENGINE, "innodb");
         hibernateProps.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         hibernateProps.put(Environment.PHYSICAL_NAMING_STRATEGY, "com.qslion.framework.component.TableNameStrategy");
         hibernateProps.put(Environment.SHOW_SQL, true);
@@ -82,10 +83,17 @@ public class TenantDataSourceConfig {
         return lcemf;
     }
 
-    @Bean(name = "tenantTransactionManager")
-    public PlatformTransactionManager tenantTransactionManager(EntityManagerFactory tenantEntityManagerFactory) {
+    /**
+     * Bean name is must transactionManager,because it is jpaRepository implementation SimpleJpaRepository default name
+     *
+     * @param entityManagerFactory emf
+     * @return JpaTransactionManager
+     */
+    @Primary
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(tenantEntityManagerFactory);
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
         logger.info("Setup of tenant transactionManager successfully...");
         return transactionManager;
     }

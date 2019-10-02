@@ -26,19 +26,6 @@ public class AuRole extends PartyEntity {
     private String value;
 
     @JsonIgnore
-    private AuRoleType roleType;
-
-    @ManyToOne
-    @JoinColumn(name = "TYPE_ID")
-    public AuRoleType getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(AuRoleType roleType) {
-        this.roleType = roleType;
-    }
-
-    @JsonIgnore
     private Set<AuUser> users = Sets.newHashSet();
     @JsonIgnore
     private Set<AuPermission> permissions = Sets.newHashSet();
@@ -122,7 +109,6 @@ public class AuRole extends PartyEntity {
         return Objects.equal(name, auRole.name) &&
                 Objects.equal(value, auRole.value) &&
                 Objects.equal(remark, auRole.remark) &&
-                Objects.equal(roleType, auRole.roleType) &&
                 Objects.equal(users, auRole.users) &&
                 Objects.equal(permissions, auRole.permissions) &&
                 Objects.equal(userGroups, auRole.userGroups);
@@ -130,6 +116,6 @@ public class AuRole extends PartyEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(super.hashCode(), name, value, remark, roleType, users, permissions, userGroups);
+        return Objects.hashCode(super.hashCode(), name, value, remark, users, permissions, userGroups);
     }
 }
