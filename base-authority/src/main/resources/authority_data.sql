@@ -43,7 +43,7 @@ INSERT INTO oauth_client_details (client_id, resource_ids, client_secret, scope,
 VALUES ('client_id_1234567890', 'resource_ids', '$2a$10$tGvVrgaz18nF7oVgN0H8puZ6No3yj.e4zjS2ieFTGiy9hKCGFHjli', 'select', 'password,refresh_token', 'http://localhost:8081/ecms/login', NULL, 0, 0, '{"country":"CN","country_code":"086"}', 'false');
 
 INSERT INTO clientdetails (appId, resourceIds, appSecret, scope, grantTypes, redirectUrl, authorities, access_token_validity, refresh_token_validity, additionalInformation, autoApproveScopes)
-VALUES ('appid-1234567890', 'resourceid', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null)
+VALUES ('appid-1234567890', 'resourceid', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null);
 
 -- au_menu --
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
@@ -53,55 +53,124 @@ INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_lea
 VALUES (2, '组织管理',0,NULL,'组织管理备注信息',2,1,1,false,1,'fa-org',2,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (3, '组织机构管理',1,'/org','组织机构管理备注信息',1,2,1,true,1,'fa-org',3,now(),now(),'Organization',1,1);
+VALUES (201, '组织机构管理',1,'/org','组织机构管理备注信息',1,2,1,true,1,'fa-org',201,now(),now(),'Organization',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (4, '公司档案管理',1,'/org/company','公司档案备注信息',2,2,1,true,1,'fa-org',4,now(),now(),'Company',1,1);
+VALUES (202, '公司档案管理',1,'/org/company','公司档案备注信息',2,2,1,true,1,'fa-org',202,now(),now(),'Company',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (5, '部门档案管理',1,'/org/department','部门档案备注信息',3,2,1,true,1,'fa-org',5,now(),now(),'Department',1,1);
+VALUES (203, '部门档案管理',1,'/org/department','部门档案备注信息',3,2,1,true,1,'fa-org',203,now(),now(),'Department',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (6, '岗位信息管理',1,'/org/position','岗位信息备注信息',4,2,1,true,1,'fa-org',6,now(),now(),'Position',1,1);
+VALUES (204, '岗位信息管理',1,'/org/position','岗位信息备注信息',4,2,1,true,1,'fa-org',204,now(),now(),'Position',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (7, '人员档案管理',1,'/org/employee','人员档案备注信息',5,2,1,true,1,'fa-org',7,now(),now(),'Employee',1,1);
+VALUES (205, '人员档案管理',1,'/org/employee','人员档案备注信息',5,2,1,true,1,'fa-org',205,now(),now(),'Employee',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (8, '权限管理',0,NULL,'权限管理备注信息',3,1,1,false,1,'fa-o',8,now(),now(),'',1,1);
+VALUES (206, '添加公司',2,'/org/company/add','添加公司',1,202,1,true,1,'fa-o',206,now(),now(),'CompanyAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (9, '用户管理',1,'/auth/user','用户管理备注信息',3,8,1,true,1,'fa-o',9,now(),now(),'User',1,1);
+VALUES (207, '添加部门',2,'/org/department/add','添加部门',1,203,1,true,1,'fa-o',207,now(),now(),'DepartmentAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (10, '角色管理',1,'/auth/role','角色管理备注信息',3,8,1,true,1,'fa-o',10,now(),now(),'Role',1,1);
+VALUES (208, '添加岗位',2,'/org/position/add','添加岗位',1,204,1,true,1,'fa-o',208,now(),now(),'PositionAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (11, '菜单管理',1,'/auth/menu','菜单管理备注信息',3,8,1,true,1,'fa-o',11,now(),now(),'Menu',1,1);
+VALUES (209, '添加员工',2,'/org/employee/add','添加员工',1,205,1,true,1,'fa-o',209,now(),now(),'EmployeeAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (16, '资源管理',1,'/auth/resource','资源管理备注信息',3,8,1,true,1,'fa-o',16,now(),now(),'Resource',1,1);
+VALUES (3, '权限管理',0,NULL,'权限管理备注信息',3,1,1,false,1,'fa-o',3,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (17, '系统管理',0,NULL,'系统管理备注信息',4,1,1,false,1,'fa-o',17,now(),now(),'',1,1);
+VALUES (301, '用户管理',1,'/auth/user','用户管理备注信息',1,3,1,true,1,'fa-o',301,now(),now(),'User',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (18, '字典管理',1,'/sys/dict','字典管理备注信息',4,17,1,true,1,'fa-o',18,now(),now(),'Dictionary',1,1);
+VALUES (302, '角色管理',1,'/auth/role','角色管理备注信息',2,3,1,true,1,'fa-o',302,now(),now(),'Role',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (19, '登陆日志管理',1,'/sys/login/log','登陆日志管理备注信息',4,17,1,true,1,'fa-o',19,now(),now(),'LoginLog',1,1);
+VALUES (303, '菜单管理',1,'/auth/menu','菜单管理备注信息',3,3,1,true,1,'fa-o',303,now(),now(),'Menu',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (20, '添加公司',2,'/org/company/add','添加公司',1,4,1,true,1,'fa-o',20,now(),now(),'CompanyAdd',1,1);
+VALUES (304, '资源管理',1,'/auth/resource','资源管理备注信息',4,3,1,true,1,'fa-o',304,now(),now(),'Resource',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (21, '添加部门',2,'/org/department/add','添加部门',1,5,1,true,1,'fa-o',21,now(),now(),'DepartmentAdd',1,1);
+VALUES (4, '系统管理',0,NULL,'系统管理备注信息',4,1,1,false,1,'fa-o',4,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (22, '添加岗位',2,'/org/position/add','添加岗位',1,6,1,true,1,'fa-o',22,now(),now(),'PositionAdd',1,1);
+VALUES (401, '字典管理',1,'/sys/dict','字典管理备注信息',1,4,1,true,1,'fa-o',401,now(),now(),'Dictionary',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (23, '添加员工',2,'/org/employee/add','添加员工',1,7,1,true,1,'fa-o',23,now(),now(),'EmployeeAdd',1,1);
+VALUES (402, '登陆日志管理',1,'/sys/login/log','登陆日志管理备注信息',2,4,1,true,1,'fa-o',402,now(),now(),'LoginLog',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (403, '添加字典值',2,'/sys/dict/add','添加字典值',1,401,1,true,1,'fa-o',403,now(),now(),'DictionaryAdd',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (5, '基础数据设置',0,NULL,'基础数据设置备注信息',5,1,1,false,1,'fa-o',5,now(),now(),'',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (501, '账套设置',1,'/sys/dict','账套设置备注信息',1,5,1,true,1,'fa-o',501,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (502, '科目设置',1,'/accounting/subject','科目设置备注信息',2,5,1,true,1,'fa-o',502,now(),now(),'AccountSubject',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (503, '期初设置',1,'/sys/dict','期初设置备注信息',3,5,1,true,1,'fa-o',503,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (504, '辅助核算设置',1,'/sys/dict','辅助核算设置备注信息',4,5,1,true,1,'fa-o',504,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (505, '币别设置',1,'/sys/dict','币别设置备注信息',5,5,1,true,1,'fa-o',505,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (506, '凭证字设置',1,'/sys/dict','凭证字设置备注信息',6,5,1,true,1,'fa-o',506,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (6, '账务处理',0,NULL,'账务处理备注信息',6,1,1,false,1,'fa-o',6,now(),now(),'',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (601, '凭证管理',1,'/sys/dict','凭证管理备注信息',1,6,1,true,1,'fa-o',601,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (602, '期末处理',1,'/sys/dict','期末处理备注信息',2,6,1,true,1,'fa-o',602,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (603, '账表输出',1,'/sys/dict','账表输出备注信息',3,6,1,true,1,'fa-o',603,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (7, '出纳管理',0,NULL,'出纳管理备注信息',7,1,1,false,1,'fa-o',7,now(),now(),'',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (701, '现金日记账',1,'/sys/dict','现金日记账备注信息',1,7,1,true,1,'fa-o',701,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (702, '银行日记账',1,'/sys/dict','银行日记账备注信息',2,7,1,true,1,'fa-o',702,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (703, '结账管理',1,'/sys/dict','结账管理备注信息',3,7,1,true,1,'fa-o',703,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (8, '报表管理',0,NULL,'账务处理备注信息',8,1,1,false,1,'fa-o',8,now(),now(),'',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (801, '资产负债表',1,'/sys/dict','资产负债表备注信息',1,8,1,true,1,'fa-o',801,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (802, '利润表',1,'/sys/dict','利润表备注信息',2,8,1,true,1,'fa-o',802,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (803, '利润分配表',1,'/sys/dict','利润分配表备注信息',3,8,1,true,1,'fa-o',803,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (804, '现金流量表',1,'/sys/dict','现金流量备注信息',4,8,1,true,1,'fa-o',804,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (805, '试算平衡表',1,'/sys/dict','现金流量备注信息',5,8,1,true,1,'fa-o',805,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (806, '科目余额表',1,'/sys/dict','科目余额备注信息',6,8,1,true,1,'fa-o',806,now(),now(),'Dictionary',1,1);
 
 -- au_resource --
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
@@ -111,55 +180,124 @@ INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,crea
 VALUES (2, '组织管理',NULL, '组织管理描述信息', 1, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (3, '组织机构管理','/org', '组织机构管理描述信息', 2, 1,now(),now(),1);
+VALUES (201, '组织机构管理','/org', '组织机构管理描述信息', 2, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (4, '公司档案管理','/org/company', '公司档案管理描述信息', 2, 1,now(),now(),1);
+VALUES (202, '公司档案管理','/org/company', '公司档案管理描述信息', 2, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (5, '部门档案管理','/org/department', '部门档案管理描述信息', 2, 1,now(),now(),1);
+VALUES (203, '部门档案管理','/org/department', '部门档案管理描述信息', 2, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (6, '岗位信息管理','/org/position', '岗位信息描述信息',2, 1,now(),now(),1);
+VALUES (204, '岗位信息管理','/org/position', '岗位信息描述信息',2, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (7, '人员档案管理','/org/employee', '人员档案管理描述信息', 2, 1,now(),now(),1);
+VALUES (205, '人员档案管理','/org/employee', '人员档案管理描述信息', 2, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (8, '权限管理',NULL, '权限管理描述信息', 1, 1,now(),now(),1);
+VALUES (206, '添加公司','/org/company/add', '添加公司', 202, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (9, '用户管理','/auth/user', '用户管理描述信息', 8, 1,now(),now(),1);
+VALUES (207, '添加部门','/org/department/add', '添加部门', 203, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (10, '角色管理','/auth/role', '角色管理描述信息', 8, 1,now(),now(),1);
+VALUES (208, '添加岗位','/org/position/add', '添加岗位', 204, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (11, '菜单管理','/auth/menu', '菜单管理描述信息', 8, 1,now(),now(),1);
+VALUES (209, '添加员工','/org/employee/add', '添加员工', 205, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (16, '资源管理','/auth/resource', '资源管理描述信息', 8, 1,now(),now(),1);
+VALUES (3, '权限管理',NULL, '权限管理描述信息', 1, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (17, '系统管理',NULL, '系统管理描述信息', 1, 1,now(),now(),1);
+VALUES (301, '用户管理','/auth/user', '用户管理描述信息', 3, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (18, '字典管理','/sys/ddic', '字典管理描述信息', 17, 1,now(),now(),1);
+VALUES (302, '角色管理','/auth/role', '角色管理描述信息', 3, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (19, '登陆日志管理','/sys/login_log', '登陆日志管理描述信息', 17, 1,now(),now(),1);
+VALUES (303, '菜单管理','/auth/menu', '菜单管理描述信息', 3, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (20, '添加公司','/org/company/add', '添加公司', 4, 1,now(),now(),1);
+VALUES (304, '资源管理','/auth/resource', '资源管理描述信息', 3, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (21, '添加部门','/org/department/add', '添加部门', 5, 1,now(),now(),1);
+VALUES (4, '系统管理',NULL, '系统管理描述信息', 1, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (22, '添加岗位','/org/position/add', '添加岗位', 6, 1,now(),now(),1);
+VALUES (401, '字典管理','/sys/dict', '字典管理描述信息', 4, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (23, '添加员工','/org/employee/add', '添加员工', 7, 1,now(),now(),1);
+VALUES (402, '登陆日志管理','/sys/login_log', '登陆日志管理描述信息', 4, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (403, '添加字典值','/sys/dict/add', '字典值', 401, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (5, '基础数据设置',NULL, '基础数据设置描述信息', 1, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (501, '账套设置','/sys/ddic', '账套设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (502, '科目设置','/accounting/subject', '科目设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (503, '期初设置','/sys/ddic', '期初设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (504, '辅助核算设置','/sys/ddic', '辅助核算设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (505, '币别设置','/sys/ddic', '币别设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (506, '凭证字设置','/sys/ddic', '凭证字设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (6, '账务处理',NULL, '账务处理描述信息', 1, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (601, '凭证管理','/sys/ddic', '凭证管理描述信息', 6, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (602, '期末处理','/sys/ddic', '期末处理描述信息', 6, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (603, '账表输出','/sys/ddic', '账表输出描述信息', 6, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (7, '出纳管理',NULL, '出纳管理描述信息', 1, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (701, '现金日记账','/sys/ddic', '现金日记账描述信息', 7, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (702, '银行日记账','/sys/ddic', '银行日记账描述信息', 7, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (703, '结账管理','/sys/ddic', '结账管理描述信息', 7, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (8, '报表管理',NULL, '报表管理描述信息', 1, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (801, '资产负债表','/sys/ddic', '资产负债表描述信息', 8, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (802, '利润表','/sys/ddic', '利润表描述信息', 8, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (803, '利润分配表','/sys/ddic', '利润分配表描述信息', 8, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (804, '现金流量表','/sys/ddic', '现金流量表描述信息', 8, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (805, '试算平衡表','/sys/ddic', '试算平衡表描述信息', 8, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (806, '科目余额表','/sys/ddic', '科目余额表描述信息', 8, 1,now(),now(),1);
 
 -- au_connection_rule --
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)

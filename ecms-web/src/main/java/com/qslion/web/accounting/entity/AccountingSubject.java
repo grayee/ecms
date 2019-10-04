@@ -25,12 +25,12 @@ public class AccountingSubject extends BaseEntity<Long> {
     /**
      * 科目编码
      */
-    @DisplayField(id = 1, title = "科目编码", align = "left", width = "6")
+    @DisplayField(id = 1, title = "科目编码", align = "left", width = "5")
     private String subjectCode;
     /**
      * 科目名称
      */
-    @DisplayField(id = 2, title = "科目名称")
+    @DisplayField(id = 2, title = "科目名称", align = "left")
     private String subjectName;
 
     /**

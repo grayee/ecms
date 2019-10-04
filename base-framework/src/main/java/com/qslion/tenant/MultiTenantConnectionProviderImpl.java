@@ -43,7 +43,7 @@ public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMu
 
     // 根据传进来的tenantId决定返回的数据源
     private DataSource getTenantDataSource(String tenantId) {
-        logger.info("GetDataSource:{}" + tenantId);
+        logger.info("GetDataSource:{}", tenantId);
         if (dataSourceMap.containsKey(tenantId)) {
             return dataSourceMap.get(tenantId);
         } else {
