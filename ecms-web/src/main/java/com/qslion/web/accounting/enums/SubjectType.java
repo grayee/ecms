@@ -1,11 +1,11 @@
 package com.qslion.web.accounting.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.qslion.framework.enums.IEnum;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 科目分类
@@ -16,8 +16,8 @@ import java.util.Optional;
 public enum SubjectType implements IEnum<Integer> {
     ASSETS(0, "资产类"),
     DEBTS(1, "负债类"),
-    EQUITY(2, "权益类"),
-    COMMON(3, "共同类"),
+    COMMON(2, "共同类"),
+    EQUITY(3, "权益类"),
     COSTS(4, "成本类"),
     GAINS(5, "损益类");
 
@@ -51,4 +51,14 @@ public enum SubjectType implements IEnum<Integer> {
         this.name = name;
     }
 
+    public static List<Map<String, Object>> getMapList() {
+        List<Map<String, Object>> sType = Lists.newArrayList();
+        for (SubjectType subjectType : SubjectType.values()) {
+            Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
+            sMap.put("value", subjectType.getId());
+            sMap.put("text", subjectType.getName());
+            sType.add(sMap);
+        }
+        return sType;
+    }
 }

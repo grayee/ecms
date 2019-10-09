@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "accounting_subject")
 public class AccountingSubject extends BaseEntity<Long> {
 
-    private Long parentId;
+    private Long parentCode;
     /**
      * 科目编码
      */
@@ -198,15 +198,14 @@ public class AccountingSubject extends BaseEntity<Long> {
         this.acctBookType = acctBookType;
     }
 
-
     @Basic
-    @Column(name = "parent_id")
-    public Long getParentId() {
-        return parentId;
+    @Column(name = "parent_code")
+    public Long getParentCode() {
+        return parentCode;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void setParentCode(Long parentCode) {
+        this.parentCode = parentCode;
     }
 
     @Enumerated

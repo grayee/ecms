@@ -1,11 +1,11 @@
 package com.qslion.web.accounting.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.qslion.framework.enums.IEnum;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 余额方向
@@ -46,5 +46,16 @@ public enum BalanceDirection implements IEnum<Integer> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static List<Map<String, Object>> getMapList() {
+        List<Map<String, Object>> sType = Lists.newArrayList();
+        for (BalanceDirection balanceDir : BalanceDirection.values()) {
+            Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
+            sMap.put("value", balanceDir.getId());
+            sMap.put("text", balanceDir.getName());
+            sType.add(sMap);
+        }
+        return sType;
     }
 }

@@ -95,6 +95,9 @@ INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_lea
 VALUES (304, '资源管理',1,'/auth/resource','资源管理备注信息',4,3,1,true,1,'fa-o',304,now(),now(),'Resource',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (305, '用户新增',2,'/auth/user/add','用户新增备注信息',1,301,1,true,1,'fa-o',305,now(),now(),'UserAdd',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (4, '系统管理',0,NULL,'系统管理备注信息',4,1,1,false,1,'fa-o',4,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
@@ -222,6 +225,9 @@ INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,crea
 VALUES (304, '资源管理','/auth/resource', '资源管理描述信息', 3, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (305, '用户新增','/auth/user/add', '用户新增', 301, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (4, '系统管理',NULL, '系统管理描述信息', 1, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
@@ -327,7 +333,7 @@ VALUES (8, now(), now(), 0, 0, '行政关系规则-岗位-员工', '行政关系
 INSERT INTO au_connection_rule (id, create_date, modify_date, version, relation_type, name, remark, cur_party_type, sub_party_type)
 VALUES (9, now(), now(), 0, 1, '角色关系规则-角色-角色', '角色关系-角色-角色', 4, 4);
 
---au_party_relation--
+-- au_party_relation--
 INSERT INTO au_party_relation (id,create_date, modify_date, version, parent_id, relation_type, is_inherit, is_leaf, `level`, name, order_code, remark, party_type_id,party_id)
 VALUES (1,now(), now(), 0, NULL, 1, NULL, 0, 0, '角色管理', 0, '角色管理根节点', 4,0);
 

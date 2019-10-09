@@ -52,7 +52,7 @@ public class DictUtils {
     }
 
     //获取下拉列表
-    public List<Map<String, Object>> getMapList(String code) {
+    public static List<Map<String, Object>> getMapList(String code) {
         return dictMaps.get(code);
     }
 
