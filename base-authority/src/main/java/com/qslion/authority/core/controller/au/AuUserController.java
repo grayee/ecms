@@ -12,23 +12,30 @@ import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.enums.ResultCode;
+import com.qslion.framework.exception.BusinessException;
 import io.swagger.annotations.Api;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -60,6 +67,39 @@ public class AuUserController extends BaseController<AuUser> {
     @PostMapping(value = "/list")
     public Pager<AuUser> list(@RequestBody Pageable pageable) {
         return auUserService.findPage(pageable);
+    }
+
+
+    /**
+     * 增加
+     *
+     * @param file 接受上传的文件,此处为用户头像
+     */
+    @PostMapping("/avatar")
+    public String saveAvatar(@RequestParam(value = "avatar", required = false) MultipartFile file) {
+        String destFileName = "";
+        if (file != null) {
+            //根据时间戳创建新的文件名，这样即便是第二次上传相同名称的文件，也不会把第一次的文件覆盖了
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            if (file.getSize() > 1024000L) {
+                //超过1Mb,抛出异常
+                throw new BusinessException(ResultCode.FAIL);
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Path classPath = Paths.get(ResourceUtils.getURL("classpath:").toURI());
+                Path destFilePath = Paths.get(classPath.toAbsolutePath().toString(), sdf.format(new Date()) + File.separator + fileName);
+                if (Files.notExists(destFilePath.getParent())) {
+                    Files.createDirectory(destFilePath.getParent());
+                }
+                File destFile = destFilePath.toFile();
+                file.transferTo(destFile);
+                destFileName = destFilePath.toString();
+            } catch (URISyntaxException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return destFileName;
     }
 
     /**
@@ -106,6 +146,8 @@ public class AuUserController extends BaseController<AuUser> {
      */
     @PutMapping
     public boolean update(@RequestBody AuUser user) {
+        String encrypt = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encrypt);
         AuUser auUser = auUserService.update(user);
         return auUser == null;
     }

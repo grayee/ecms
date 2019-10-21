@@ -20,4 +20,8 @@ public interface AuUserRepository extends IGenericRepository<AuUser, Long> {
 
     AuUser findUserByUsername(String username);
 
+    AuUser findUserByLoginId(String loginId);
+
+    AuUser findUserByEmail(String email);
+
 }

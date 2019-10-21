@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
+import com.qslion.framework.enums.SexEnum;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,8 +46,8 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     private String mobile;
     @DisplayField(id = 4, title = "昵称")
     private String nickname;
-    @DisplayField(id = 5, title = "手机号码")
     private Integer age;
+    @DisplayField(id = 5, title = "出生日期")
     private Date birthday;
     private String loginId;
     private String loginIp;
@@ -58,6 +59,12 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
      * 头像图片地址
      */
     private String avatar;
+
+    private SexEnum sex;
+
+    private String idNumber;
+
+    private String tel;
 
     @JsonIgnore
     private Set<AuRole> roles = Sets.newHashSet();
@@ -268,6 +275,35 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
         this.loginFailureCount = loginFailureCount;
     }
 
+
+    @Enumerated
+    public SexEnum getSex() {
+        return sex;
+    }
+
+    public void setSex(SexEnum sex) {
+        this.sex = sex;
+    }
+
+    @Basic
+    @Column(name = "id_number", length = 64)
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+    @Basic
+    @Column(name = "tel", length = 32)
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
     @Transient
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
@@ -369,6 +405,7 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
     }
 
     @Transient
+    @JsonIgnore
     public boolean isAdmin() {
         return getRoles().stream().anyMatch(auRole -> "ROLE_ADMIN".equals(auRole.getValue()));
     }

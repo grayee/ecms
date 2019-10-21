@@ -9,9 +9,11 @@ import com.qslion.authority.core.service.AuUserService;
 import com.qslion.framework.bean.SystemConfig;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import com.qslion.framework.util.JSONUtils;
+
 import java.security.Principal;
 import java.util.Date;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implements UserDetailsService,
-    AuUserService {
+        AuUserService {
 
     @Autowired
     public AuUserRepository userRepository;
@@ -47,7 +49,13 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
         logger.info("系统登录通过用户名载入用户信息开始,用户名：{}", username);
         AuUser loginUser = userRepository.findUserByUsername(username);
         if (loginUser == null) {
-            throw new UsernameNotFoundException("管理员[" + username + "]不存在!");
+            loginUser = userRepository.findUserByLoginId(username);
+            if (loginUser == null && username.contains("@")) {
+                loginUser = userRepository.findUserByEmail(username);
+            }
+            if (loginUser == null) {
+                throw new UsernameNotFoundException("管理员[" + username + "]不存在!");
+            }
         }
         // 解除管理员账户锁定
         SystemConfig systemConfig = new SystemConfig();
@@ -72,7 +80,7 @@ public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implemen
             }
         }
         logger.info("系统登录通过用户名载入用户信息结束,权限信息:{}", JSONUtils.writeValueAsString(loginUser.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
         return loginUser;
     }
 
