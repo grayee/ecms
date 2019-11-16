@@ -26,6 +26,13 @@ spring:
   servlet:
     multipart:
       maxFileSize: -1
+      location: /static/upload
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      additional-exclude: /static/**
+
   banner:
     charset: utf-8
     location: classpath:/config/banner.txt

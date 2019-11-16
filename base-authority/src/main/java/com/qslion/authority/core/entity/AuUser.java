@@ -66,6 +66,10 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     private String tel;
 
+    private String address;
+
+    private String remark;
+
     @JsonIgnore
     private Set<AuRole> roles = Sets.newHashSet();
 
@@ -329,6 +333,22 @@ public class AuUser extends BaseEntity<Long> implements UserDetails {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Override

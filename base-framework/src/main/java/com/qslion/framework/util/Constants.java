@@ -18,6 +18,8 @@ public class Constants {
     public static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
     public static final String KEY="WOLQPD7KKER1RE4UIBVJZ2AW9ERE5PIPER3CCWE";
 
+    public static final String FILE_NAME_SEPERRATOR = ".";
+
     /** 超级管理员ID */
     public static final int SUPER_ADMIN = 1;
     /** 数据权限过滤 */

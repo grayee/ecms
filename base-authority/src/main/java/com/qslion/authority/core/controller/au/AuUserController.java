@@ -1,5 +1,6 @@
 package com.qslion.authority.core.controller.au;
 
+import com.google.common.collect.Lists;
 import com.qslion.authority.core.entity.AuPartyRelation;
 import com.qslion.authority.core.entity.AuRole;
 import com.qslion.authority.core.entity.AuUser;
@@ -14,6 +15,7 @@ import com.qslion.framework.bean.Pager;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.enums.ResultCode;
 import com.qslion.framework.exception.BusinessException;
+import com.qslion.framework.util.Constants;
 import io.swagger.annotations.Api;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
@@ -61,6 +64,9 @@ public class AuUserController extends BaseController<AuUser> {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${spring.servlet.multipart.location}")
+    private String fileUploadPath;
+
     /**
      * 列表
      */
@@ -77,29 +83,36 @@ public class AuUserController extends BaseController<AuUser> {
      */
     @PostMapping("/avatar")
     public String saveAvatar(@RequestParam(value = "avatar", required = false) MultipartFile file) {
-        String destFileName = "";
+        String fileName = System.currentTimeMillis() + "_";
         if (file != null) {
             //根据时间戳创建新的文件名，这样即便是第二次上传相同名称的文件，也不会把第一次的文件覆盖了
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            fileName = fileName + file.getOriginalFilename();
             if (file.getSize() > 1024000L) {
                 //超过1Mb,抛出异常
                 throw new BusinessException(ResultCode.FAIL);
             }
+            //获取文件后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf(Constants.FILE_NAME_SEPERRATOR) + 1);
+            List<String> imgTypes = Lists.newArrayList("png", "jpeg", "bpm");
+            if (!imgTypes.contains(suffixName)) {
+                //文件类型校验,抛出异常
+                throw new BusinessException(ResultCode.FAIL);
+            }
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Path classPath = Paths.get(ResourceUtils.getURL("classpath:").toURI());
-                Path destFilePath = Paths.get(classPath.toAbsolutePath().toString(), sdf.format(new Date()) + File.separator + fileName);
+                String destFileName = fileUploadPath + sdf.format(new Date()) + File.separator + fileName;
+                Path destFilePath = Paths.get(classPath.toAbsolutePath().toString(), destFileName);
                 if (Files.notExists(destFilePath.getParent())) {
                     Files.createDirectory(destFilePath.getParent());
                 }
-                File destFile = destFilePath.toFile();
-                file.transferTo(destFile);
-                destFileName = destFilePath.toString();
+                Files.write(destFilePath, file.getBytes());
             } catch (URISyntaxException | IOException e) {
                 e.printStackTrace();
             }
         }
-        return destFileName;
+        return fileName;
     }
 
     /**
