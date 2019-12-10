@@ -1,6 +1,6 @@
 package com.qslion.web.accounting.service;
 
-import com.qslion.web.accounting.entity.AccountingSubject;
+import com.qslion.web.accounting.entity.AccountSubject;
 import com.qslion.framework.service.IGenericService;
 
 /**
@@ -9,6 +9,6 @@ import com.qslion.framework.service.IGenericService;
  * @author Gray.Z
  * @date 2019/8/27 21:09.
  */
-public interface AccountingSubjectService extends IGenericService<AccountingSubject, Long> {
+public interface AccountSubjectService extends IGenericService<AccountSubject, Long> {
 
 }

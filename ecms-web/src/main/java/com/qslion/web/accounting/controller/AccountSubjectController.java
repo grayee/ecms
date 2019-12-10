@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qslion.framework.entity.AttributeEntity;
 import com.qslion.framework.enums.CurrencyType;
-import com.qslion.web.accounting.entity.AccountingAssistType;
-import com.qslion.web.accounting.entity.AccountingSubject;
-import com.qslion.web.accounting.enums.BalanceDirection;
+import com.qslion.web.accounting.entity.AccountAssist;
+import com.qslion.web.accounting.entity.AccountSubject;
+import com.qslion.web.accounting.enums.BalanceDir;
 import com.qslion.web.accounting.enums.SubjectType;
-import com.qslion.web.accounting.service.AccountingAssistTypeService;
-import com.qslion.web.accounting.service.AccountingSubjectService;
+import com.qslion.web.accounting.service.AccountAssistService;
+import com.qslion.web.accounting.service.AccountSubjectService;
 import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.moudles.ddic.util.DictUtils;
@@ -33,20 +33,20 @@ import java.util.stream.Collectors;
 @Api(value = "会计科目Controller", description = "会计科目Controller", tags = {"会计科目控制器"})
 @ResponseResult
 @RestController
-@RequestMapping(value = "/accounting/subject")
-public class AccountingSubjectController extends BaseController<AccountingSubject> {
+@RequestMapping(value = "/baseSetting/accountSubject")
+public class AccountSubjectController extends BaseController<AccountSubject> {
     @Autowired
-    private AccountingSubjectService accountingSubjectService;
+    private AccountSubjectService accountSubjectService;
 
     @Autowired
-    private AccountingAssistTypeService accountingAssistTypeService;
+    private AccountAssistService accountAssistService;
 
 
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
         pageable.setOrderDirection(Order.Direction.asc);
         pageable.setOrderProperty("subjectCode");
-        Pager<AccountingSubject> pager = accountingSubjectService.findPage(pageable);
+        Pager<AccountSubject> pager = accountSubjectService.findPage(pageable);
         pager.addExtras("subjectTypes", SubjectType.getMapList());
         return pager.wrap(subject -> {
             int spaceLen = subject.getSubjectCode().length() - 4;
@@ -66,8 +66,8 @@ public class AccountingSubjectController extends BaseController<AccountingSubjec
 
     @ApiOperation("保存科目信息")
     @PostMapping
-    public Long save(@Validated @RequestBody AccountingSubject accountingSubject) {
-        AccountingSubject subject = accountingSubjectService.save(accountingSubject);
+    public Long save(@Validated @RequestBody AccountSubject accountSubject) {
+        AccountSubject subject = accountSubjectService.save(accountSubject);
         return subject.getId();
     }
 
@@ -76,21 +76,21 @@ public class AccountingSubjectController extends BaseController<AccountingSubjec
      */
     @GetMapping(value = {"/detail/{id}", "/detail"})
     public EntityVo detail(@PathVariable(required = false) Long id) {
-        AccountingSubject subject = new AccountingSubject();
+        AccountSubject subject = new AccountSubject();
         if (id != null) {
-            subject = accountingSubjectService.findById(id);
+            subject = accountSubjectService.findById(id);
         }
         EntityVo ev = EntityVo.getResult(subject);
-        ev.put("balanceDirMap", BalanceDirection.getMapList());
+        ev.put("balanceDirMap", BalanceDir.getMapList());
         ev.put("subjectTypeMap", SubjectType.getMapList());
         ev.put("isSystemMap", DictUtils.getMapList("isSystem"));
         List<String> assistTypes = Lists.newArrayList();
-        if (CollectionUtils.isNotEmpty(subject.getAssistTypes())) {
-            assistTypes = subject.getAssistTypes().stream()
+        if (CollectionUtils.isNotEmpty(subject.getAcctAssists())) {
+            assistTypes = subject.getAcctAssists().stream()
                     .map(AttributeEntity::getValue).collect(Collectors.toList());
         }
         ev.put("assistTypes", assistTypes);
-        List<AccountingAssistType> assistTypeList = accountingAssistTypeService.findAll();
+        List<AccountAssist> assistTypeList = accountAssistService.findAll();
         ev.put("assistTypeMap", assistTypeList.stream().map(a -> {
             Map<String, Object> map = Maps.newHashMapWithExpectedSize(2);
             map.put("value", a.getValue());

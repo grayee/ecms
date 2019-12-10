@@ -1,8 +1,8 @@
 package com.qslion.web.accounting.controller;
 
 import com.google.common.collect.Lists;
-import com.qslion.web.accounting.entity.AccountingAssistType;
-import com.qslion.web.accounting.service.AccountingAssistTypeService;
+import com.qslion.web.accounting.entity.AccountAssist;
+import com.qslion.web.accounting.service.AccountAssistService;
 import com.qslion.framework.bean.EntityVo;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/accounting/assist")
-public class AccountingAssistTypeController extends BaseController<AccountingAssistType> {
+public class AccountAssistController extends BaseController<AccountAssist> {
     @Autowired
-    public AccountingAssistTypeService accountingAssistTypeService;
+    public AccountAssistService accountAssistService;
 
     @PostMapping(value = "/list")
     public List<EntityVo> list() {
-        List<AccountingAssistType> list = accountingAssistTypeService.findList(Lists.newArrayList(),Lists.newArrayList());
+        List<AccountAssist> list = accountAssistService.findList(Lists.newArrayList(),Lists.newArrayList());
         return list.stream().map(aat->{
             EntityVo ev= EntityVo.getResult(aat.getClass());
             ev.put("isSystem","");

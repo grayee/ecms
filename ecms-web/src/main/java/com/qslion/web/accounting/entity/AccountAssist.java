@@ -12,8 +12,8 @@ import java.util.List;
  * @date 2019/8/22 20:50.
  */
 @Entity
-@Table(name = "accounting_assist_type")
-public class AccountingAssistType extends AttributeEntity {
+@Table(name = "account_assist")
+public class AccountAssist extends AttributeEntity {
 
     /**
      * 是否系统内置
@@ -23,14 +23,14 @@ public class AccountingAssistType extends AttributeEntity {
     /**
      * 会计科目
      */
-    private List<AccountingSubject> subjects;
+    private List<AccountSubject> subjects;
 
-    @ManyToMany(targetEntity = AccountingSubject.class, mappedBy = "assistTypes", fetch = FetchType.LAZY)
-    public List<AccountingSubject> getSubjects() {
+    @ManyToMany(targetEntity = AccountSubject.class, mappedBy = "acctAssists", fetch = FetchType.LAZY)
+    public List<AccountSubject> getSubjects() {
         return subjects;
     }
 
-    public AccountingAssistType setSubjects(List<AccountingSubject> subjects) {
+    public AccountAssist setSubjects(List<AccountSubject> subjects) {
         this.subjects = subjects;
         return this;
     }
@@ -39,7 +39,7 @@ public class AccountingAssistType extends AttributeEntity {
         return isSystem;
     }
 
-    public AccountingAssistType setSystem(Boolean system) {
+    public AccountAssist setSystem(Boolean system) {
         isSystem = system;
         return this;
     }

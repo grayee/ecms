@@ -19,7 +19,7 @@ public abstract class PartyEntity extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 4656704236281853404L;
 
-    @DisplayField(id = 4, title = "组织机构")
+    @DisplayField(id = 4.20, title = "组织机构")
     protected Long parentId;
 
     protected String remark;

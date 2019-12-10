@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class DisplayColumn {
 
-    private Integer id;
+    private double id;
     private String title;
     private String field;
     private String width;
@@ -64,7 +64,7 @@ public class DisplayColumn {
 
 
 
-    public Integer getId() {
+    public double getId() {
         return id;
     }
 

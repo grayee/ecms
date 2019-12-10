@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface DisplayField {
 
-    int id() default 0;
+    double id() default 0;
 
     String title();
 

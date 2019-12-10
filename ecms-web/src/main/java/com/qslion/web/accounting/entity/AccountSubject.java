@@ -2,7 +2,7 @@ package com.qslion.web.accounting.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.web.accounting.enums.AcctBookType;
-import com.qslion.web.accounting.enums.BalanceDirection;
+import com.qslion.web.accounting.enums.BalanceDir;
 import com.qslion.web.accounting.enums.SubjectType;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
@@ -18,8 +18,8 @@ import java.util.List;
  * @date 2019/8/22 20:50.
  */
 @Entity
-@Table(name = "accounting_subject")
-public class AccountingSubject extends BaseEntity<Long> {
+@Table(name = "account_subject")
+public class AccountSubject extends BaseEntity<Long> {
 
     private Long parentCode;
     /**
@@ -46,7 +46,7 @@ public class AccountingSubject extends BaseEntity<Long> {
      * 余额方向
      */
     @DisplayField(id = 4, title = "余额方向")
-    private BalanceDirection balanceDir;
+    private BalanceDir balanceDir;
 
     /**
      * 4222科目层级：一级科目(4位)，二级科目，三级科目，四级科目
@@ -95,7 +95,7 @@ public class AccountingSubject extends BaseEntity<Long> {
      * 辅助核算项
      */
     @JsonIgnore
-    private List<AccountingAssistType> assistTypes;
+    private List<AccountAssist> acctAssists;
 
     private EnableStatus enableStatus;
 
@@ -105,15 +105,15 @@ public class AccountingSubject extends BaseEntity<Long> {
     @DisplayField(id = 5, title = "是否内置")
     private Boolean isSystem;
 
-    @ManyToMany(targetEntity = AccountingAssistType.class)
-    @JoinTable(name = "accounting_subject_assist", joinColumns = {
+    @ManyToMany(targetEntity = AccountAssist.class)
+    @JoinTable(name = "account_subject_assist", joinColumns = {
             @JoinColumn(name = "subject_id")}, inverseJoinColumns = {@JoinColumn(name = "assist_id")})
-    public List<AccountingAssistType> getAssistTypes() {
-        return assistTypes;
+    public List<AccountAssist> getAcctAssists() {
+        return acctAssists;
     }
 
-    public void setAssistTypes(List<AccountingAssistType> assistTypes) {
-        this.assistTypes = assistTypes;
+    public void setAcctAssists(List<AccountAssist> acctAssists) {
+        this.acctAssists = acctAssists;
     }
 
     @Basic
@@ -158,11 +158,11 @@ public class AccountingSubject extends BaseEntity<Long> {
 
     @Basic
     @Column(name = "balance_dir", nullable = false)
-    public BalanceDirection getBalanceDir() {
+    public BalanceDir getBalanceDir() {
         return balanceDir;
     }
 
-    public void setBalanceDir(BalanceDirection balanceDir) {
+    public void setBalanceDir(BalanceDir balanceDir) {
         this.balanceDir = balanceDir;
     }
 

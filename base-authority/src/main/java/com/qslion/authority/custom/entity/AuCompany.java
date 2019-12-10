@@ -28,7 +28,7 @@ public class AuCompany extends PartyEntity {
     @DisplayField(id = 2, title = "公司名称")
     @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
-    @DisplayField(id = 4, title = "公司标识")
+    @DisplayField(id = 5, title = "公司标识")
     private String companyFlag;
     private String companyType;
     private Short companyLevel;
@@ -41,19 +41,19 @@ public class AuCompany extends PartyEntity {
     @NotBlank(message = "手机号码不能为空", groups = {AddGroup.class})
     private String mobilePhone;
 
-    @DisplayField(id = 8, title = "座机电话")
+    @DisplayField(id = 10, title = "座机电话")
     @NotBlank(message = "座机号码不能为空", groups = {AddGroup.class})
     private String telPhone;
 
     private String fax;
-    @DisplayField(id = 4, title = "公司地址")
+    @DisplayField(id = 11, title = "公司地址")
     private String address;
-    @DisplayField(id = 5, title = "公司邮编")
+    @DisplayField(id = 6, title = "公司邮编")
     private String postalCode;
-    @DisplayField(id = 7, title = "邮箱")
+    @DisplayField(id = 8, title = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;
-    @DisplayField(id = 6, title = "公司网址")
+    @DisplayField(id = 7, title = "公司网址")
     private String webSite;
 
 

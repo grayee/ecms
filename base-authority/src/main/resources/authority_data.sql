@@ -50,10 +50,10 @@ INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_lea
 VALUES (1, '导航菜单',1,NULL,'菜单备注信息',1,NULL,1,false,1,'fa-navigation',1,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (2, '组织管理',0,NULL,'组织管理备注信息',2,1,1,false,1,'fa-org',2,now(),now(),'',1,1);
+VALUES (2, '组织管理',0,NULL,'组织管理备注信息',2,1,1,false,1,'fa fa-archive',2,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (201, '组织机构管理',1,'/org','组织机构管理备注信息',1,2,1,true,1,'fa-org',201,now(),now(),'Organization',1,1);
+VALUES (201, '组织机构管理',1,'/org/relation','组织机构管理备注信息',1,2,1,true,1,'fa-org',201,now(),now(),'Organization',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (202, '公司档案管理',1,'/org/company','公司档案备注信息',2,2,1,true,1,'fa-org',202,now(),now(),'Company',1,1);
@@ -113,13 +113,13 @@ INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_lea
 VALUES (5, '基础数据设置',0,NULL,'基础数据设置备注信息',5,1,1,false,1,'fa-o',5,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (501, '账套设置',1,'/sys/dict','账套设置备注信息',1,5,1,true,1,'fa-o',501,now(),now(),'Dictionary',1,1);
+VALUES (501, '账套设置',1,'/baseSetting/accountSet','账套设置备注信息',1,5,1,true,1,'fa-o',501,now(),now(),'AccountSet',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (502, '科目设置',1,'/accounting/subject','科目设置备注信息',2,5,1,true,1,'fa-o',502,now(),now(),'AccountSubject',1,1);
+VALUES (502, '科目设置',1,'/baseSetting/accountSubject','科目设置备注信息',2,5,1,true,1,'fa-o',502,now(),now(),'AccountSubject',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (503, '期初设置',1,'/sys/dict','期初设置备注信息',3,5,1,true,1,'fa-o',503,now(),now(),'Dictionary',1,1);
+VALUES (503, '期初余额设置',1,'/baseSetting/accountBalance','期初设置备注信息',3,5,1,true,1,'fa-o',503,now(),now(),'Dictionary',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (504, '辅助核算设置',1,'/sys/dict','辅助核算设置备注信息',4,5,1,true,1,'fa-o',504,now(),now(),'Dictionary',1,1);
@@ -129,6 +129,9 @@ VALUES (505, '币别设置',1,'/sys/dict','币别设置备注信息',5,5,1,true,
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (506, '凭证字设置',1,'/sys/dict','凭证字设置备注信息',6,5,1,true,1,'fa-o',506,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (507, '新建账套',2,'/baseSetting/accountSet/add','新建账套',1,501,1,true,1,'fa-o',507,now(),now(),'AccountSetAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (6, '账务处理',0,NULL,'账务处理备注信息',6,1,1,false,1,'fa-o',6,now(),now(),'',1,1);
@@ -243,10 +246,10 @@ INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,crea
 VALUES (5, '基础数据设置',NULL, '基础数据设置描述信息', 1, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (501, '账套设置','/sys/ddic', '账套设置描述信息', 5, 1,now(),now(),1);
+VALUES (501, '账套设置','/baseSetting/accountSet', '账套设置描述信息', 5, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (502, '科目设置','/accounting/subject', '科目设置描述信息', 5, 1,now(),now(),1);
+VALUES (502, '科目设置','/baseSetting/accountSubject', '科目设置描述信息', 5, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (503, '期初设置','/sys/ddic', '期初设置描述信息', 5, 1,now(),now(),1);
@@ -259,6 +262,9 @@ VALUES (505, '币别设置','/sys/ddic', '币别设置描述信息', 5, 1,now(),
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (506, '凭证字设置','/sys/ddic', '凭证字设置描述信息', 5, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (507, '新建账套','/baseSetting/accountSet/add', '新建账套', 501, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (6, '账务处理',NULL, '账务处理描述信息', 1, 1,now(),now(),1);

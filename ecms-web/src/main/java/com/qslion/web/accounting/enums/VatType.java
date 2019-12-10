@@ -8,26 +8,26 @@ import com.qslion.framework.enums.IEnum;
 import java.util.*;
 
 /**
- * 余额方向
+ * 增值税类型 value add tax
  *
  * @author Gray.Z
  * @date 2019/8/24 16:23.
  */
-public enum BalanceDirection implements IEnum<Integer> {
+public enum VatType implements IEnum<Integer> {
 
-    DEBIT(0, "借方"),
-    CREDIT(1, "贷方");
+    small(0, "小规模纳税人"),
+    Common(1, "一般纳税人");
 
     private Integer id;
     private String name;
 
-    BalanceDirection(Integer id, String name) {
+    VatType(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Optional<BalanceDirection> get(Integer id) {
-        return Arrays.stream(BalanceDirection.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
+    public Optional<VatType> get(Integer id) {
+        return Arrays.stream(VatType.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
     }
 
     @Override
@@ -50,7 +50,7 @@ public enum BalanceDirection implements IEnum<Integer> {
 
     public static List<Map<String, Object>> getMapList() {
         List<Map<String, Object>> sType = Lists.newArrayList();
-        for (BalanceDirection balanceDir : BalanceDirection.values()) {
+        for (VatType balanceDir : VatType.values()) {
             Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
             sMap.put("value", balanceDir.getId());
             sMap.put("text", balanceDir.getName());

@@ -24,7 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 多租户配置
+ * 多租户配置-租户业务模块数据源配置
+ * https://segmentfault.com/a/1190000019300288?utm_source=tag-newest
  *
  * @author Gray.Z
  * @date 2018/5/5 15:30.
