@@ -47,7 +47,7 @@ public class AccountSet extends BaseEntity<Long> {
     /**
      * 会计原则类型
      */
-    @DisplayField(id = 5, title = "会计原则类型")
+    @DisplayField(id = 5, title = "会计准则类型")
     private GaapType gaapType;
 
     /**

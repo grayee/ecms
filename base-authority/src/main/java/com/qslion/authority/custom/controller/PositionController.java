@@ -80,7 +80,7 @@ public class PositionController extends BaseController<AuPosition> {
         Pager<AuPosition> pager = positionService.findPage(pageable);
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(position -> {
-            EntityVo ev = EntityVo.getResult(position);
+            EntityVo ev = EntityVo.getPageResult(position);
             ev.put("parentId", TreeTools.getPathTreeStr(relations, position.getParentId()));
             return ev;
         });

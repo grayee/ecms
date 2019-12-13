@@ -8,4 +8,6 @@ package com.qslion.framework.enums;
  */
 public interface IEnum<T> {
     T getId();
+
+    String getDisplayName();
 }

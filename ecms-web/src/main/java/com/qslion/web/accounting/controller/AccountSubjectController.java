@@ -55,9 +55,7 @@ public class AccountSubjectController extends BaseController<AccountSubject> {
                 subject.setSubjectCode(String.format("%" + spaceLen + "s", subject.getSubjectCode()).replace(" ", "\r\n"));
                 subject.setSubjectName(String.format("%" + spaceLen + "s", subject.getSubjectName()).replace(" ", "\r\n"));
             }
-            EntityVo ev = EntityVo.getResult(subject);
-            ev.put("balanceDir", subject.getBalanceDir().getName());
-            ev.put("subjectType", subject.getSubjectType().getName());
+            EntityVo ev = EntityVo.getPageResult(subject);
             ev.put("isSystem", DictUtils.getValue("isSystem", subject.getSystem().toString()));
             return ev;
         });
@@ -80,7 +78,7 @@ public class AccountSubjectController extends BaseController<AccountSubject> {
         if (id != null) {
             subject = accountSubjectService.findById(id);
         }
-        EntityVo ev = EntityVo.getResult(subject);
+        EntityVo ev = EntityVo.getPageResult(subject);
         ev.put("balanceDirMap", BalanceDir.getMapList());
         ev.put("subjectTypeMap", SubjectType.getMapList());
         ev.put("isSystemMap", DictUtils.getMapList("isSystem"));

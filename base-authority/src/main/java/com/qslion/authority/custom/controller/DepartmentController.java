@@ -64,7 +64,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
         Pager<AuDepartment> pager =departmentService.findPage(pageable);
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(dept -> {
-            EntityVo ev = EntityVo.getResult(dept);
+            EntityVo ev = EntityVo.getPageResult(dept);
             ev.put("parentId", TreeTools.getPathTreeStr(relations, dept.getParentId()));
             return ev;
         });

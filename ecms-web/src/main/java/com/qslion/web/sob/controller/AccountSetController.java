@@ -7,7 +7,6 @@ import com.qslion.framework.controller.BaseController;
 import com.qslion.moudles.ddic.util.DictUtils;
 
 import com.qslion.web.accounting.enums.GaapType;
-import com.qslion.web.accounting.enums.SubjectType;
 import com.qslion.web.accounting.enums.VatType;
 
 import com.qslion.web.sob.entity.AccountSet;
@@ -37,14 +36,9 @@ public class AccountSetController extends BaseController<AccountSet> {
 
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
-        pageable.setOrderDirection(Order.Direction.asc);
-        pageable.setOrderProperty("subjectCode");
         Pager<AccountSet> pager = accountSetService.findPage(pageable);
-        pager.addExtras("subjectTypes", SubjectType.getMapList());
         return pager.wrap(sob -> {
-            EntityVo ev = EntityVo.getResult(sob);
-            ev.put("vatType", sob.getVatType().getName());
-            ev.put("gaapType", sob.getGaapType().getName());
+            EntityVo ev = EntityVo.getPageResult(sob);
             ev.put("isSystem", DictUtils.getValue("isSystem", sob.getSystem().toString()));
             return ev;
         });
@@ -54,6 +48,7 @@ public class AccountSetController extends BaseController<AccountSet> {
     @ApiOperation("保存账套信息")
     @PostMapping
     public Long save(@Validated @RequestBody AccountSet accountSet) {
+        accountSet.setSystem(false);
         AccountSet bookSet = accountSetService.save(accountSet);
         return bookSet.getId();
     }
@@ -67,10 +62,10 @@ public class AccountSetController extends BaseController<AccountSet> {
         if (id != null) {
             accountSet = accountSetService.findById(id);
         }
-        EntityVo ev = EntityVo.getResult(accountSet);
-        ev.put("vatTypeMap", VatType.getMapList());
-        ev.put("gaapTypeMap", GaapType.getMapList());
-        ev.put("isSystemMap", DictUtils.getMapList("isSystem"));
+        EntityVo ev = EntityVo.getDetailResult(accountSet);
+        ev.addExtras("vatTypeMap", VatType.getMapList());
+        ev.addExtras("gaapTypeMap", GaapType.getMapList());
+        ev.addExtras("isSystemMap", DictUtils.getMapList("isSystem"));
         return ev;
     }
 

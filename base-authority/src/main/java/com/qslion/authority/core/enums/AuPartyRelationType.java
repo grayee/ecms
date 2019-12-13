@@ -59,4 +59,8 @@ public enum AuPartyRelationType implements IEnum<Integer> {
         }
         return null;
     }
+    @Override
+    public String getDisplayName() {
+        return value;
+    }
 }

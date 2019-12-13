@@ -38,6 +38,11 @@ public enum AcctBookType implements IEnum<Integer> {
         return id;
     }
 
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -49,4 +54,6 @@ public enum AcctBookType implements IEnum<Integer> {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

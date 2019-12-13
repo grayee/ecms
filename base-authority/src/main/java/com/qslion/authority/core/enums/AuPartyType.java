@@ -85,4 +85,8 @@ public enum AuPartyType implements IEnum<Integer> {
         }
         return null;
     }
+    @Override
+    public String getDisplayName() {
+        return Localize.getMessage(name);
+    }
 }

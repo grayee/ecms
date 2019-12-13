@@ -58,4 +58,8 @@ public enum VatType implements IEnum<Integer> {
         }
         return sType;
     }
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
 }

@@ -83,7 +83,7 @@ public class CompanyController extends BaseController<AuCompany> {
         Pager<AuCompany> pager = companyService.findPage(pageable);
         List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
         return pager.wrap(company -> {
-            EntityVo ev = EntityVo.getResult(company);
+            EntityVo ev = EntityVo.getPageResult(company);
             ev.put("parentId", TreeTools.getPathTreeStr(relations, company.getParentId()));
             return ev;
         });

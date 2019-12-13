@@ -1,16 +1,13 @@
 package com.qslion.framework.bean;
 
-import com.qslion.framework.entity.BaseEntity;
+import com.google.common.collect.Maps;
+import com.qslion.framework.enums.IEnum;
 import com.qslion.framework.util.ReflectUtils;
 import com.qslion.moudles.ddic.entity.DictDataType;
-import org.springframework.util.ReflectionUtils;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Map;
 
 /**
  * EntityVo
@@ -20,14 +17,39 @@ import java.util.List;
  */
 public class EntityVo extends LinkedHashMap<String, Object> {
 
-    public static EntityVo getResult(Object obj) {
+    public static EntityVo getPageResult(Object obj) {
         EntityVo entityVo = new EntityVo();
         for (Field field : ReflectUtils.getFields(obj.getClass())) {
             if (field.isAnnotationPresent(DisplayField.class) || "id".equals(field.getName())) {
-                entityVo.put(field.getName(), ReflectUtils.getValueByField(field, obj));
+                Object fieldValueObj = ReflectUtils.getValueByField(field, obj);
+                if(fieldValueObj instanceof IEnum){
+                    entityVo.put(field.getName(), ((IEnum) fieldValueObj).getDisplayName());
+                }else{
+                    entityVo.put(field.getName(), fieldValueObj);
+                }
             }
         }
         return entityVo;
+    }
+
+    public static EntityVo getDetailResult(Object obj) {
+        EntityVo entityVo = new EntityVo();
+        for (Field field : ReflectUtils.getFields(obj.getClass())) {
+            if (field.isAnnotationPresent(DisplayField.class) || "id".equals(field.getName())) {
+                Object fieldValueObj = ReflectUtils.getValueByField(field, obj);
+                entityVo.put(field.getName(), fieldValueObj);
+            }
+        }
+        return entityVo;
+    }
+
+    public void addExtras(String key, Object value) {
+        Map<String, Object> extraMap = (Map<String, Object>) get("extras");
+        if (extraMap == null) {
+            extraMap = Maps.newHashMap();
+            put("extras", extraMap);
+        }
+        extraMap.put(key, value);
     }
 
     public static void main(String[] args) {
@@ -35,7 +57,7 @@ public class EntityVo extends LinkedHashMap<String, Object> {
         test.setCode("1");
         test.setSystem(true);
 
-        EntityVo vo = EntityVo.getResult(test);
+        EntityVo vo = EntityVo.getPageResult(test);
         System.out.println(vo);
     }
 }

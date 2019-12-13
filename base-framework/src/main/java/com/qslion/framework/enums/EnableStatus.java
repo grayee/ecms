@@ -52,4 +52,8 @@ public enum EnableStatus implements IEnum<Integer> {
         this.name = name;
     }
 
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
 }
