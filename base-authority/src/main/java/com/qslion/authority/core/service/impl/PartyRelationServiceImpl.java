@@ -19,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import static com.qslion.authority.core.enums.AuPartyRelationType.ADMINISTRATIVE
  * @date 2018/4/30 19:15.
  */
 @Service("partyRelationService")
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class PartyRelationServiceImpl extends GenericServiceImpl<AuPartyRelation, Long> implements
         PartyRelationService {
 

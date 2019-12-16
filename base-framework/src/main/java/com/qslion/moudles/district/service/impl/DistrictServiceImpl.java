@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * ecms
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
  * @date 2018/10/30 22:46.
  */
 @Service
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class DistrictServiceImpl extends GenericServiceImpl<CommonDistrict, Long> implements
     DistrictService {
 

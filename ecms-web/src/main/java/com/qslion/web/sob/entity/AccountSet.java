@@ -56,6 +56,14 @@ public class AccountSet extends BaseEntity<Long> {
     @DisplayField(id = 6, title = "是否内置")
     private Boolean isSystem;
 
+    /**
+     * 租户
+     */
+    private String tenant;
+
+    private String dbUrl;
+
+
     public String getCompanyName() {
         return companyName;
     }
@@ -102,5 +110,21 @@ public class AccountSet extends BaseEntity<Long> {
 
     public void setSystem(Boolean system) {
         isSystem = system;
+    }
+
+    public String getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
+    }
+
+    public String getDbUrl() {
+        return dbUrl;
+    }
+
+    public void setDbUrl(String dbUrl) {
+        this.dbUrl = dbUrl;
     }
 }

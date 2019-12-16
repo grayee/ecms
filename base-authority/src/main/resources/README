@@ -1,11 +1,27 @@
+1、4A
+4A是统一安全管理平台解决方案中的4个组成部分，即认证Authentication、授权Authorization、记账Accounting、审计Audit。
+该平台主要完成以下事情：
+1）集中帐号（account）管理
+为用户提供统一集中的帐号管理，支持管理的资源包括主流的操作系统、网络设备和应用系统；不仅能够实现被管理资源帐号的创建、删除及同步等帐号管理生命周期所包含的基本功能，而且也可以通过平台进行帐号密码策略，密码强度、生存周期的设定。
+2）集中认证(authentication)管理
+可以根据用户应用的实际需要，为用户提供不同强度的认证方式，既可以保持原有的静态口令方式，又可以提供具有双因子认证方式的高强度认证（一次性口令、数字证书、动态口令），而且还能够集成现有其它如生物特征等新型的认证方式。不仅可以实现用户认证的统一管理，并且能够为用户提供统一的认证门户，实现企业信息资源访问的单点登录。
+3）集中权限(authorization)管理
+可以对用户的资源访问权限进行集中控制。它既可以实现对B/S、C/S应用系统资源的访问权限控制，也可以实现对数据库、主机及网络设备的操作的权限控制，资源控制类型既包括B/S的URL、C/S的功能模块，也包括数据库的数据、记录及主机、网络设备的操作命令、IP地址及端口。
+4）集中审计(audit)管理
+将用户所有的操作日志集中记录管理和分析，不仅可以对用户行为进行监控，并且可以通过集中的审计数据进行数据挖掘，以便于事后的安全事故责任的认定。
+
+更多信息，请参考midpoint框架的基本概念：https://wiki.evolveum.com/display/midPoint/Unique+Features
+
+2、认证和权限的区别
+认证：主要完成证明你是你，可以通过用户名+密码进行认证，也可以通过认证许可进行或者其他的方式进行
+权限：主要完成你可以做什么事情，它是在认证之后判断的，即系统认为你是合法的用户后，给与你可以访问系统资源的权限集
+
 Spring Security的核心思想是用户授权和资源认证。认证访问系统的用户，而授权则是用户可以访问的资源
 
 * 认证是调用authenticationManager.authenticate()方法来获得证书authentication，一般我们采用用户名、密码方式认证，
 那么authentication的实现类就是UsernamePasswordAuthentication。
 
 * 授权是让用户可以访问哪些资源，一般在WebSecurityConfigurerAdapter的继承类中编写。
-
-
 
 https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
 

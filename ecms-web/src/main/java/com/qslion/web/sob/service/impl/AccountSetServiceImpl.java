@@ -6,6 +6,7 @@ import com.qslion.web.sob.entity.AccountSet;
 import com.qslion.web.sob.service.AccountSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *  账套Service实现
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @date 2019/8/27 21:40.
  */
 @Service
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class AccountSetServiceImpl extends GenericServiceImpl<AccountSet, Long> implements AccountSetService {
     @Autowired
     private AccountSetRepository accountSetRepository;

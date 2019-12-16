@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * server
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
  * @date 2018/4/30 19:19.
  */
 @Service
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class AuUserServiceImpl extends GenericServiceImpl<AuUser, Long> implements UserDetailsService,
         AuUserService {
 

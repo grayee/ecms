@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
  * @date 2018/4/30 13:56.
  */
 @Service("companyService")
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> implements AuCompanyService {
 
     @Autowired

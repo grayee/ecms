@@ -10,6 +10,7 @@ import com.qslion.framework.service.impl.GenericServiceImpl;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 登陆日志Service 实现
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
  * @date 2018/9/18.
  */
 @Service("loginLogService")
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class LoginLogServiceImpl extends GenericServiceImpl<AuLoginLog, Long> implements
     LoginLogService {
     @Autowired

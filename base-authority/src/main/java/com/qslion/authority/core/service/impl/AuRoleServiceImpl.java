@@ -24,6 +24,7 @@ import com.qslion.framework.util.CopyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
  * @date 2018/4/30 13:56.
  */
 @Service("roleService")
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implements AuRoleService {
 
     @Autowired

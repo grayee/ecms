@@ -1,3 +1,6 @@
+-- 租户 --
+INSERT INTO tenant_info (create_date, modify_date, version, password, tenant, tenant_type, url, username) VALUES(now(), now(), 1, 'root', 'tenant1', '0', 'jdbc:mysql://localhost:3306/tenant1?useUnicode=true&characterEncoding=UTF-8&useSSL=true', 'root');
+INSERT INTO tenant_info (create_date, modify_date, version, password, tenant, tenant_type, url, username) VALUES(now(), now(), 1, 'root', 'default', '0', 'jdbc:mysql://localhost:3306/ecms?useUnicode=true&characterEncoding=UTF-8&useSSL=true', 'root');
 -- 会计科目 ------
 INSERT INTO account_subject (subject_code, subject_name, parent_code, balance_dir, subject_type, `level`, currency, system, enable_status, version, create_date, modify_date)VALUES ('1001', '库存现金', 1, 0, 0, 1, '0', 1, 1, 0, now(), now());
 INSERT INTO account_subject (subject_code, subject_name, parent_code, balance_dir, subject_type, `level`, currency, system, enable_status, version, create_date, modify_date)VALUES ('1002', '银行存款', 1, 0, 0, 1, '0', 1, 1, 0, now(), now());

@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
 import java.io.Serializable;
@@ -36,7 +35,6 @@ import java.util.stream.Collectors;
  * @author Gray.Z
  * @date 2018/4/13 10:56.
  */
-@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializable> implements IGenericService<T, ID> {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());

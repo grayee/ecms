@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  * @date 2018/4/30 19:15.
  */
 @Service
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> implements AuResourceService {
 
     @Autowired
