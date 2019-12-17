@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.qslion.framework.component.TableNameStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.cfg.Environment;
@@ -87,7 +88,7 @@ public class DataSourceConfig {
         Properties properties = new Properties();
         properties.put(Environment.STORAGE_ENGINE, "innodb");
         properties.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
-        properties.put(Environment.PHYSICAL_NAMING_STRATEGY, "com.qslion.framework.component.TableNameStrategy");
+        properties.put(Environment.PHYSICAL_NAMING_STRATEGY, TableNameStrategy.class.getName());
         properties.put(Environment.SHOW_SQL, true);
         properties.put(Environment.FORMAT_SQL, true);
         properties.put(Environment.HBM2DDL_AUTO, "update");

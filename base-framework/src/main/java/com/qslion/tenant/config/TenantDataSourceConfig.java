@@ -1,5 +1,6 @@
 package com.qslion.tenant.config;
 
+import com.qslion.framework.component.TableNameStrategy;
 import com.qslion.tenant.CurrentTenantIdentifierResolverImpl;
 import com.qslion.tenant.MultiTenantConnectionProviderImpl;
 import org.apache.logging.log4j.LogManager;
@@ -75,7 +76,7 @@ public class TenantDataSourceConfig {
         hibernateProps.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolver);
         hibernateProps.put(Environment.STORAGE_ENGINE, "innodb");
         hibernateProps.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
-        hibernateProps.put(Environment.PHYSICAL_NAMING_STRATEGY, "com.qslion.framework.component.TableNameStrategy");
+        hibernateProps.put(Environment.PHYSICAL_NAMING_STRATEGY, TableNameStrategy.class.getName());
         hibernateProps.put(Environment.SHOW_SQL, true);
         hibernateProps.put(Environment.FORMAT_SQL, true);
         hibernateProps.put(Environment.HBM2DDL_AUTO, "update");

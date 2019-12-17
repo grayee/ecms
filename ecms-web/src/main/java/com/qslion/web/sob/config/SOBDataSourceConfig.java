@@ -1,7 +1,6 @@
 package com.qslion.web.sob.config;
 
-import com.qslion.tenant.CurrentTenantIdentifierResolverImpl;
-import com.qslion.tenant.MultiTenantConnectionProviderImpl;
+import com.qslion.framework.component.TableNameStrategy;
 import com.qslion.web.sob.CurrentSOBIdentifierResolverImpl;
 import com.qslion.web.sob.MultiSOBConnectionProviderImpl;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +9,7 @@ import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,19 +34,20 @@ import java.util.Map;
 //@Configuration
 //@EnableTransactionManagement(order = 2)
 //@EnableJpaRepositories(basePackages = {
-  //      "com.qslion.web.accounting.dao",
-//}, considerNestedRepositories = true)
+//        "com.qslion.web.accounting.dao"
+//}, entityManagerFactoryRef = "sobEntityManagerFactory",
+//        transactionManagerRef = "sobTransactionManager")
 public class SOBDataSourceConfig {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());
 
-    @Bean
+    @Bean(name = "multiSobConnectionProvider")
     @ConditionalOnBean(name = "entityManagerFactory")
     public MultiTenantConnectionProvider multiSobConnectionProvider() {
         return new MultiSOBConnectionProviderImpl();
     }
 
-    @Bean
+    @Bean(name = "currentSobIdentifierResolver")
     public CurrentTenantIdentifierResolver currentSobIdentifierResolver() {
         return new CurrentSOBIdentifierResolverImpl();
     }
@@ -54,15 +55,14 @@ public class SOBDataSourceConfig {
     /**
      * Primary ann is must.or it will be occur no transaction in progress exception...
      *
-     * @param multiTenantConnectionProvider   tenant connection provider
-     * @param currentTenantIdentifierResolver tenant resolver
+     * @param multiSobConnectionProvider   tenant connection provider
+     * @param currentSobIdentifierResolver tenant resolver
      * @return emf
      */
-    @Primary
     @Bean(name = "sobEntityManagerFactory")
     @ConditionalOnBean(name = "multiSobConnectionProvider")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(MultiTenantConnectionProvider multiTenantConnectionProvider,
-                                                                       CurrentTenantIdentifierResolver currentTenantIdentifierResolver) {
+    public LocalContainerEntityManagerFactoryBean sobEntityManagerFactory(@Qualifier("multiSobConnectionProvider") MultiTenantConnectionProvider multiSobConnectionProvider,
+                                                                       @Qualifier("currentSobIdentifierResolver") CurrentTenantIdentifierResolver currentSobIdentifierResolver) {
         // No dataSource is set to resulting entityManagerFactoryBean
         LocalContainerEntityManagerFactoryBean lcemf = new LocalContainerEntityManagerFactoryBean();
         lcemf.setPackagesToScan("com.qslion.web.accounting.entity");
@@ -70,11 +70,11 @@ public class SOBDataSourceConfig {
         lcemf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         Map<String, Object> hibernateProps = new LinkedHashMap<>();
         hibernateProps.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
-        hibernateProps.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
-        hibernateProps.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolver);
+        hibernateProps.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiSobConnectionProvider);
+        hibernateProps.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, currentSobIdentifierResolver);
         hibernateProps.put(Environment.STORAGE_ENGINE, "innodb");
         hibernateProps.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
-        hibernateProps.put(Environment.PHYSICAL_NAMING_STRATEGY, "com.qslion.framework.component.TableNameStrategy");
+        hibernateProps.put(Environment.PHYSICAL_NAMING_STRATEGY, TableNameStrategy.class.getName());
         hibernateProps.put(Environment.SHOW_SQL, true);
         hibernateProps.put(Environment.FORMAT_SQL, true);
         hibernateProps.put(Environment.HBM2DDL_AUTO, "update");
@@ -86,14 +86,13 @@ public class SOBDataSourceConfig {
     /**
      * Bean name is must transactionManager,because it is jpaRepository implementation SimpleJpaRepository default name
      *
-     * @param entityManagerFactory emf
+     * @param sobEntityManagerFactory emf
      * @return JpaTransactionManager
      */
-    @Primary
     @Bean(name = "sobTransactionManager")
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    public PlatformTransactionManager sobTransactionManager(@Qualifier("sobEntityManagerFactory") EntityManagerFactory sobEntityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        transactionManager.setEntityManagerFactory(sobEntityManagerFactory);
         logger.info("Setup of SOB transactionManager successfully...");
         return transactionManager;
     }
