@@ -6,7 +6,7 @@ import com.qslion.framework.entity.AttributeEntity;
 import com.qslion.framework.enums.CurrencyType;
 import com.qslion.web.accounting.entity.AccountAssist;
 import com.qslion.web.accounting.entity.AccountSubject;
-import com.qslion.web.accounting.enums.BalanceDir;
+import com.qslion.web.accounting.enums.AccountDir;
 import com.qslion.web.accounting.enums.SubjectType;
 import com.qslion.web.accounting.service.AccountAssistService;
 import com.qslion.web.accounting.service.AccountSubjectService;
@@ -79,7 +79,7 @@ public class AccountSubjectController extends BaseController<AccountSubject> {
             subject = accountSubjectService.findById(id);
         }
         EntityVo ev = EntityVo.getPageResult(subject);
-        ev.put("balanceDirMap", BalanceDir.getMapList());
+        ev.put("balanceDirMap", AccountDir.getMapList());
         ev.put("subjectTypeMap", SubjectType.getMapList());
         ev.put("isSystemMap", DictUtils.getMapList("isSystem"));
         List<String> assistTypes = Lists.newArrayList();

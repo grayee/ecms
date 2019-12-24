@@ -2,7 +2,7 @@ package com.qslion.web.accounting.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.web.accounting.enums.AcctBookType;
-import com.qslion.web.accounting.enums.BalanceDir;
+import com.qslion.web.accounting.enums.AccountDir;
 import com.qslion.web.accounting.enums.SubjectType;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
@@ -46,7 +46,7 @@ public class AccountSubject extends BaseEntity<Long> {
      * 余额方向
      */
     @DisplayField(id = 4, title = "余额方向")
-    private BalanceDir balanceDir;
+    private AccountDir balanceDir;
 
     /**
      * 4222科目层级：一级科目(4位)，二级科目，三级科目，四级科目
@@ -158,11 +158,11 @@ public class AccountSubject extends BaseEntity<Long> {
 
     @Basic
     @Column(name = "balance_dir", nullable = false)
-    public BalanceDir getBalanceDir() {
+    public AccountDir getBalanceDir() {
         return balanceDir;
     }
 
-    public void setBalanceDir(BalanceDir balanceDir) {
+    public void setBalanceDir(AccountDir balanceDir) {
         this.balanceDir = balanceDir;
     }
 

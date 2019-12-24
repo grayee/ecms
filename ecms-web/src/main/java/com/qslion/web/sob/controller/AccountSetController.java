@@ -6,6 +6,7 @@ import com.qslion.framework.controller.BaseController;
 
 import com.qslion.moudles.ddic.util.DictUtils;
 
+import com.qslion.tenant.TenantContextHolder;
 import com.qslion.web.accounting.enums.GaapType;
 import com.qslion.web.accounting.enums.VatType;
 
@@ -49,6 +50,8 @@ public class AccountSetController extends BaseController<AccountSet> {
     @PostMapping
     public Long save(@Validated @RequestBody AccountSet accountSet) {
         accountSet.setSystem(false);
+        accountSet.setTenant(TenantContextHolder.getTenant());
+        accountSet.setDbUrl(String.format("jdbc:mysql://localhost:3306/s%?useUnicode=true&characterEncoding=UTF-8&useSSL=true", accountSet.getSobName()));
         AccountSet bookSet = accountSetService.save(accountSet);
         return bookSet.getId();
     }

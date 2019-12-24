@@ -8,26 +8,29 @@ import com.qslion.framework.enums.IEnum;
 import java.util.*;
 
 /**
- * 增值税类型 value add tax
+ * 凭证类型
  *
  * @author Gray.Z
  * @date 2019/8/24 16:23.
  */
-public enum VatType implements IEnum<Integer> {
+public enum VoucherType implements IEnum<Integer> {
 
-    SMALL(0, "小规模纳税人"),
-    COMMON(1, "一般纳税人");
+    ACCOUNTING(0, "记"),
+    RECEIVE(1, "收"),
+    PAY(0, "付"),
+    TRANSFER(1, "转"),;
+
 
     private Integer id;
     private String name;
 
-    VatType(Integer id, String name) {
+    VoucherType(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Optional<VatType> get(Integer id) {
-        return Arrays.stream(VatType.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
+    public Optional<VoucherType> get(Integer id) {
+        return Arrays.stream(VoucherType.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
     }
 
     @Override
@@ -50,7 +53,7 @@ public enum VatType implements IEnum<Integer> {
 
     public static List<Map<String, Object>> getMapList() {
         List<Map<String, Object>> sType = Lists.newArrayList();
-        for (VatType balanceDir : VatType.values()) {
+        for (VoucherType balanceDir : VoucherType.values()) {
             Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
             sMap.put("value", balanceDir.getId());
             sMap.put("text", balanceDir.getName());
@@ -58,6 +61,7 @@ public enum VatType implements IEnum<Integer> {
         }
         return sType;
     }
+
     @Override
     public String getDisplayName() {
         return name;

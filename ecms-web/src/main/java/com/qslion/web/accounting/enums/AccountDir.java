@@ -8,12 +8,12 @@ import com.qslion.framework.enums.IEnum;
 import java.util.*;
 
 /**
- * 余额方向
+ * 借贷方向
  *
  * @author Gray.Z
  * @date 2019/8/24 16:23.
  */
-public enum BalanceDir implements IEnum<Integer> {
+public enum AccountDir implements IEnum<Integer> {
 
     DEBIT(0, "借方"),
     CREDIT(1, "贷方");
@@ -21,13 +21,13 @@ public enum BalanceDir implements IEnum<Integer> {
     private Integer id;
     private String name;
 
-    BalanceDir(Integer id, String name) {
+    AccountDir(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Optional<BalanceDir> get(Integer id) {
-        return Arrays.stream(BalanceDir.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
+    public Optional<AccountDir> get(Integer id) {
+        return Arrays.stream(AccountDir.values()).filter(bd -> Objects.equals(bd.getId(), id)).findFirst();
     }
 
     @Override
@@ -50,7 +50,7 @@ public enum BalanceDir implements IEnum<Integer> {
 
     public static List<Map<String, Object>> getMapList() {
         List<Map<String, Object>> sType = Lists.newArrayList();
-        for (BalanceDir balanceDir : BalanceDir.values()) {
+        for (AccountDir balanceDir : AccountDir.values()) {
             Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
             sMap.put("value", balanceDir.getId());
             sMap.put("text", balanceDir.getName());
