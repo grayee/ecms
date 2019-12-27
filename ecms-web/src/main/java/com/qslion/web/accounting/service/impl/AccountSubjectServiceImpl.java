@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019/8/27 21:40.
  */
 @Service
-@Transactional(value = "sobTransactionManager", rollbackFor = Exception.class)
+@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 public class AccountSubjectServiceImpl extends GenericServiceImpl<AccountSubject, Long> implements AccountSubjectService {
     @Autowired
     private AccountSubjectRepository accountSubjectRepository;

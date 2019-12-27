@@ -102,6 +102,20 @@ login:
 #spring
 spring:
   profiles: dev
+  redis:
+    host: 172.16.14.211
+    port: 6318
+    # 密码 没有则可以不填
+    password:
+    # 如果使用的jedis 则将lettuce改成jedis即可
+    lettuce:
+      pool:
+        # 最大活跃链接数 默认8
+        max-active: 8
+        # 最大空闲连接数 默认8
+        max-idle: 8
+        # 最小空闲连接数 默认0
+        min-idle: 0
   datasource:
     master:
       jdbc-url: jdbc:mysql://localhost:3306/ecms?useUnicode=true&characterEncoding=UTF-8&useSSL=true
