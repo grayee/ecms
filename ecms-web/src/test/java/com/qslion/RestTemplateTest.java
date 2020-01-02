@@ -8,7 +8,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Created by Administrator on 2019/8/7.
+ * Created by Administrator
+ * on 2019/8/7.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

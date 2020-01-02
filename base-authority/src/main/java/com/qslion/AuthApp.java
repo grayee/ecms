@@ -12,7 +12,7 @@ import org.springframework.web.context.request.RequestContextListener;
 @EnableDiscoveryClient
 @EnableJpaAuditing
 @EnableTransactionManagement(order = 10)
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
+//@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class AuthApp {
 
     public static void main(String[] args) throws Exception {

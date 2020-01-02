@@ -41,7 +41,7 @@ public class AccountVoucherController extends BaseController<AccountSubject> {
     }
 
 
-    @ApiOperation("保存科目信息")
+    @ApiOperation("保存凭证")
     @PostMapping
     public Long save(@Validated @RequestBody AccountVoucher accountVoucher) {
         AccountVoucher voucher = accountVoucherService.save(accountVoucher);
