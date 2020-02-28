@@ -137,13 +137,16 @@ INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_lea
 VALUES (6, '账务处理',0,NULL,'账务处理备注信息',6,1,1,false,1,'fa-o',6,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (601, '凭证管理',1,'/sys/dict','凭证管理备注信息',1,6,1,true,1,'fa-o',601,now(),now(),'Dictionary',1,1);
+VALUES (601, '凭证管理',1,'/accounting/voucher','凭证管理备注信息',1,6,1,true,1,'fa-o',601,now(),now(),'AccountVoucher',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (602, '期末处理',1,'/sys/dict','期末处理备注信息',2,6,1,true,1,'fa-o',602,now(),now(),'Dictionary',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (603, '账表输出',1,'/sys/dict','账表输出备注信息',3,6,1,true,1,'fa-o',603,now(),now(),'Dictionary',1,1);
+
+INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
+VALUES (604, '新增凭证',2,'/accounting/voucher/add','账表输出备注信息',3,601,1,true,1,'fa-o',604,now(),now(),'AccountVoucherAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (7, '出纳管理',0,NULL,'出纳管理备注信息',7,1,1,false,1,'fa-o',7,now(),now(),'',1,1);
@@ -270,13 +273,16 @@ INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,crea
 VALUES (6, '账务处理',NULL, '账务处理描述信息', 1, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
-VALUES (601, '凭证管理','/sys/ddic', '凭证管理描述信息', 6, 1,now(),now(),1);
+VALUES (601, '凭证管理','/accounting/voucher', '凭证管理描述信息', 6, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (602, '期末处理','/sys/ddic', '期末处理描述信息', 6, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (603, '账表输出','/sys/ddic', '账表输出描述信息', 6, 1,now(),now(),1);
+
+INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
+VALUES (604, '新增凭证','/baseSetting/accountSet/add', '新增凭证', 601, 1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,description,parent_id,enable_status,create_date, modify_date, version)
 VALUES (7, '出纳管理',NULL, '出纳管理描述信息', 1, 1,now(),now(),1);

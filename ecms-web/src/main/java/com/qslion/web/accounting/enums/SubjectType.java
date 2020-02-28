@@ -17,7 +17,7 @@ public enum SubjectType implements IEnum<Integer> {
     ASSETS(0, "资产类"),
     DEBTS(1, "负债类"),
     COMMON(2, "共同类"),
-    EQUITY(3, "权益类"),
+    EQUITY(3, "所有者权益类"),
     COSTS(4, "成本类"),
     GAINS(5, "损益类");
 

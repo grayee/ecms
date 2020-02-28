@@ -291,3 +291,8 @@ token 的过期时间问题：
 Authentication request failed: error="access_denied", error_description="Invalid token does not contain resource id (oauth2-resource)"
 
 https://blog.csdn.net/lixiang987654321/article/details/88133463
+
+SAAS:
+http://www.woshipm.com/pd/2956772.html/comment-page-1
+多租户：
+https://blog.csdn.net/zhangjin530/article/details/53312204

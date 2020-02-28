@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "会计凭证Controller", description = "会计凭证Controller", tags = {"会计凭证控制器"})
 @ResponseResult
 @RestController
-@RequestMapping(value = "/baseSetting/accountVoucher")
+@RequestMapping(value = "/accounting/voucher")
 public class AccountVoucherController extends BaseController<AccountSubject> {
     @Autowired
     private AccountSubjectService accountSubjectService;
