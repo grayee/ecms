@@ -1,5 +1,6 @@
 package com.qslion.authority.security.controller;
 
+import com.google.common.collect.Maps;
 import com.qslion.authority.core.entity.AuLoginLog;
 import com.qslion.authority.core.entity.AuLoginLog.LoginType;
 import com.qslion.authority.core.entity.AuRole;
@@ -16,19 +17,6 @@ import com.qslion.framework.util.SystemConfigUtil;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
 import com.qslion.tenant.TenantContextHolder;
 import io.swagger.annotations.Api;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
@@ -54,11 +42,20 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * ecms
@@ -86,16 +83,21 @@ public class Oauth2Controller extends BaseController {
     @Autowired
     private TokenStore tokenStore;
 
+    private static final String AUTH_TYPE_BASIC = "Basic";
+
     private static final String ECMS_PROVIDER = "ecms-oauth-provider";
 
     @PostMapping(value = "/login/oauth")
-    public OAuth2AccessToken login(HttpServletRequest request, @RequestBody @Validated LoginDTO loginDTO,
-                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String header, HttpServletResponse response) {
-        System.out.println("current tenant:"+ TenantContextHolder.getTenant());
+    public Map<String, Object> login(HttpServletRequest request, @RequestBody @Validated LoginDTO loginDTO,
+                                     @RequestHeader(value = HttpHeaders.AUTHORIZATION,required = false) String header, HttpServletResponse response) {
+        System.out.println("current tenant:" + TenantContextHolder.getTenant());
         String clientId = StringUtils.EMPTY;
         String clientSecret = StringUtils.EMPTY;
+        if (StringUtils.isEmpty(header)) {
+            header = String.format("%s %s", AUTH_TYPE_BASIC, "Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw");
+        }
         //这里需要注意为 Basic 而非 Bearer
-        if (header != null && header.startsWith("Basic ")) {
+        if (header != null && header.startsWith(AUTH_TYPE_BASIC)) {
             try {
                 String[] tokens = this.extractAndDecodeHeader(header);
                 assert tokens.length == 2;
@@ -167,7 +169,9 @@ public class Oauth2Controller extends BaseController {
             loginLog.setLoginType(LoginType.LOGIN);
             loginLogService.addLoginLog(loginLog);
         });
-        return oAuth2AccessToken;
+        Map<String, Object> resultMap = Maps.newHashMapWithExpectedSize(1);
+        resultMap.put("token", String.format("%s %s", oAuth2AccessToken.getTokenType(), oAuth2AccessToken.getValue()));
+        return resultMap;
     }
 
     private ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResourceDetails(LoginDTO loginDTO,
@@ -208,7 +212,7 @@ public class Oauth2Controller extends BaseController {
         userInfo.setName(user.getUsername());
         userInfo.setRoles(user.getRoles().stream().map(AuRole::getValue).collect(Collectors.toList()));
         userInfo.setAvatar(user.getAvatar());
-        userInfo.setInfo(user.getBirthday() + "" + user.getEmail());
+        userInfo.setIntroduction("birthday:"+user.getBirthday() + ",email:" + user.getEmail());
         return userInfo;
     }
 
@@ -275,7 +279,7 @@ public class Oauth2Controller extends BaseController {
         private String name;
         private String avatar;
         private List<String> roles;
-        private String info;
+        private String introduction;
 
         public String getId() {
             return id;
@@ -309,12 +313,12 @@ public class Oauth2Controller extends BaseController {
             this.roles = roles;
         }
 
-        public String getInfo() {
-            return info;
+        public String getIntroduction() {
+            return introduction;
         }
 
-        public void setInfo(String info) {
-            this.info = info;
+        public void setIntroduction(String introduction) {
+            this.introduction = introduction;
         }
     }
 

@@ -1,9 +1,9 @@
 -- 内置管理员 --
-INSERT INTO au_user (id, create_date, modify_date, age, birthday, email, enable_status, login_id, login_ip, mobile, nickname, password, username,login_failure_count,version)
-VALUES (1, now(), now(), 30, '1990-01-01', 'admin@company.com', '1', 'admin', '1.1.1.1', '13800138000', 'admin', '$2a$10$6/Kqyc16VJHvQQJAAfZQeOnGX1dISWqQfTgVHAM00aOqRjHgbl2Oa', 'admin',0,0);
+INSERT INTO au_user (id, create_date, modify_date, age, birthday, email, enable_status, login_id, login_ip, mobile, nickname, password, username,avatar,login_failure_count,version)
+VALUES (1, now(), now(), 30, '1990-01-01', 'admin@company.com', '1', 'admin', '1.1.1.1', '13800138000', 'admin', '$2a$10$6/Kqyc16VJHvQQJAAfZQeOnGX1dISWqQfTgVHAM00aOqRjHgbl2Oa', 'admin','https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',0,0);
 -- 内置普通用户（测试）--
-INSERT INTO au_user (id, create_date, modify_date, age, birthday, email, enable_status, login_id, login_ip, mobile, nickname, password, username,login_failure_count,version)
-VALUES (2, now(), now(), 30, '1990-01-01', 'test@company.com', '1', 'test', '1.1.1.1', '13800138000', 'test', '$2a$10$8zPhZE9L0Nflca5su/WV0.LioSd3WLUKqpVQhGyi00n2NsJr48M52', 'test',0,0);
+INSERT INTO au_user (id, create_date, modify_date, age, birthday, email, enable_status, login_id, login_ip, mobile, nickname, password, username,avatar,login_failure_count,version)
+VALUES (2, now(), now(), 30, '1990-01-01', 'test@company.com', '1', 'test', '1.1.1.1', '13800138000', 'test', '$2a$10$8zPhZE9L0Nflca5su/WV0.LioSd3WLUKqpVQhGyi00n2NsJr48M52', 'test','',0,0);
 
 -- 内置角色---
 INSERT INTO au_role (id, create_date, modify_date, remark, enable_status, name, value,type_id,version)
@@ -40,10 +40,10 @@ INSERT INTO au_role_permission (role_id, permission_id)VALUES (1, 1);
 
 -- OAUTH2 --
 INSERT INTO oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
-VALUES ('client_id_1234567890', 'resource_ids', '$2a$10$tGvVrgaz18nF7oVgN0H8puZ6No3yj.e4zjS2ieFTGiy9hKCGFHjli', 'select', 'password,refresh_token', 'http://localhost:8081/ecms/login', NULL, 0, 0, '{"country":"CN","country_code":"086"}', 'false');
+VALUES ('client_id_1234567890', '', '$2a$10$tGvVrgaz18nF7oVgN0H8puZ6No3yj.e4zjS2ieFTGiy9hKCGFHjli', 'select', 'password,refresh_token', 'http://localhost:8081/ecms/login', NULL, 0, 0, '{"country":"CN","country_code":"086"}', 'false');
 
 INSERT INTO clientdetails (appId, resourceIds, appSecret, scope, grantTypes, redirectUrl, authorities, access_token_validity, refresh_token_validity, additionalInformation, autoApproveScopes)
-VALUES ('appid-1234567890', 'resourceid', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null);
+VALUES ('appid-1234567890', '', 'appsecret-1234567890', null, null, '', '', 10000, 10000, '', null);
 
 -- au_menu --
 INSERT INTO au_menu (id, name,type,url,remark,order_no,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
