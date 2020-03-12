@@ -1,12 +1,12 @@
 package com.qslion.authority.core.controller.au;
 
 import com.google.common.collect.Lists;
-import com.qslion.authority.core.entity.AuPartyRelation;
+import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.entity.AuRole;
 import com.qslion.authority.core.entity.AuUser;
 import com.qslion.authority.core.service.AuRoleService;
 import com.qslion.authority.core.service.AuUserService;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.custom.entity.AuEmployee;
 import com.qslion.authority.custom.service.AuEmployeeService;
 import com.qslion.framework.bean.ResponseResult;
@@ -19,7 +19,6 @@ import com.qslion.framework.util.Constants;
 import io.swagger.annotations.Api;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -35,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +56,7 @@ public class AuUserController extends BaseController<AuUser> {
     @Autowired
     private AuRoleService roleService;
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
     @Autowired
     private AuEmployeeService auEmployeeService;
     @Autowired
@@ -133,8 +131,8 @@ public class AuUserController extends BaseController<AuUser> {
     public Long refSave(@Validated @RequestBody AuUser user) {
         String encrypt = passwordEncoder.encode(user.getPassword());
         user.setPassword(encrypt);
-        AuPartyRelation relation = partyRelationService.findById(Long.valueOf(user.getUsername()));
-        AuEmployee emp = auEmployeeService.findById(relation.getPartyId());
+        AuOrgRelation relation = auOrgRelationService.findById(Long.valueOf(user.getUsername()));
+        AuEmployee emp = auEmployeeService.findById(relation.getOrgId());
         user.setUsername(emp.getEnglishName());
         user.setEmail(emp.getEmail());
         user.setMobile(emp.getMobilePhone());
@@ -180,8 +178,8 @@ public class AuUserController extends BaseController<AuUser> {
     @PostMapping(value = "/role/{userId}")
     public Boolean grantRoleAuth(@PathVariable Long userId, @RequestBody Long[] relationIds) {
         AuUser user = auUserService.findById(userId);
-        List<AuPartyRelation> relations = partyRelationService.findList(relationIds);
-        Long[] roleIds = relations.stream().map(AuPartyRelation::getPartyId).collect(Collectors.toList()).toArray(new Long[0]);
+        List<AuOrgRelation> relations = auOrgRelationService.findList(relationIds);
+        Long[] roleIds = relations.stream().map(AuOrgRelation::getOrgId).collect(Collectors.toList()).toArray(new Long[0]);
         List<AuRole> roles = roleService.findList(roleIds);
         user.getRoles().addAll(roles);
         return auUserService.saveOrUpdate(user) == null;

@@ -7,7 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.qslion.framework.entity.BaseTree;
+import com.qslion.framework.entity.AbstractTree;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -30,11 +30,11 @@ public class TreeTools {
      * @param parentId parentId
      * @return String
      */
-    public static <T extends BaseTree<Long>> String getPathTreeStr(List<T> list, Long parentId) {
-        Map<Long, BaseTree<Long>> dictMap = Maps.newHashMapWithExpectedSize(list.size());
+    public static <T extends AbstractTree<Long>> String getPathTreeStr(List<T> list, Long parentId) {
+        Map<Long, AbstractTree<Long>> dictMap = Maps.newHashMapWithExpectedSize(list.size());
         list.forEach(tree -> dictMap.put(tree.getId(), tree));
         List<String> orgList = Lists.newArrayList();
-        BaseTree<Long> parent = dictMap.get(parentId);
+        AbstractTree<Long> parent = dictMap.get(parentId);
         int depth = 0;
         while (parent != null && depth < MAX_DEPTH) {
             orgList.add(parent.getName());
@@ -45,23 +45,32 @@ public class TreeTools {
         return Joiner.on(GlobalConstants.ORG_TREE_SEPARATOR).join(orgList);
     }
 
-    public static <T extends BaseTree<Long>> List<T> filterTreePath(List<T> list, List<Long> targetIds) {
+    /**
+     * 树结构数据
+     *
+     * @param dataList      全集数据
+     * @param targetIds 目标数据ID
+     * @param <T>       数据类型
+     * @return List<T>
+     */
+    public static <T extends AbstractTree<Long>> List<T> filterTreePath(List<T> dataList, List<Long> targetIds) {
         List<T> children = Lists.newArrayList();
-        Map<Long, T> dictMap = Maps.newHashMapWithExpectedSize(list.size());
-        list.forEach(resource -> {
-            if (targetIds.contains(resource.getId())) {
-                children.add(resource);
+        Map<Long, T> dictMap = Maps.newHashMapWithExpectedSize(dataList.size());
+        dataList.forEach(data -> {
+            dictMap.put(data.getId(), data);
+            if (targetIds.contains(data.getId())) {
+                children.add(data);
             }
-            dictMap.put(resource.getId(), resource);
         });
         return getTs(children, dictMap);
     }
 
-    private static <T extends BaseTree<Long>> List<T> getTs(List<T> children, Map<Long, T> dictMap) {
+    private static <T extends AbstractTree<Long>> List<T> getTs(List<T> children, Map<Long, T> dictMap) {
         Set<T> result = Sets.newHashSet(children);
         for (T t : children) {
             T parent = dictMap.get(t.getParentId());
             int depth = 0;
+            //自下而上遍历
             while (parent != null && depth < MAX_DEPTH) {
                 result.add(parent);
                 parent = dictMap.get(parent.getParentId());
@@ -71,7 +80,7 @@ public class TreeTools {
         return result.stream().collect(Collectors.toList());
     }
 
-    public static <T extends BaseTree<Long>> List<T> getChildTreeList(List<T> list) {
+    public static <T extends AbstractTree<Long>> List<T> getChildTreeList(List<T> list) {
         Map<Boolean, List<T>> dMap = list.stream().collect(Collectors.groupingBy(t -> t.getParentId() == null));
         List<T> rootList = dMap.get(true);
         List<T> subList = dMap.get(false);
@@ -83,7 +92,7 @@ public class TreeTools {
         return returnList;
     }
 
-    private static <T extends BaseTree<Long>> List<T> getChildren(List<T> list, T t) {
+    private static <T extends AbstractTree<Long>> List<T> getChildren(List<T> list, T t) {
         List<T> childList = getChildList(list, t);
         list = list.stream().filter(l -> !t.getId().equals(l.getId())).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(childList)) {
@@ -99,7 +108,7 @@ public class TreeTools {
         return childList;
     }
 
-    private static <T extends BaseTree<Long>> List<T> getChildList(List<T> list, T t) {
+    private static <T extends AbstractTree<Long>> List<T> getChildList(List<T> list, T t) {
         List<T> childList = new ArrayList<>();
         list.forEach(child -> {
             //判断集合的父ID是否等于上一级的id
@@ -111,12 +120,12 @@ public class TreeTools {
     }
 
 
-    public static <T extends BaseTree<Long>> boolean hasChild(List<T> list, T t) {
+    public static <T extends AbstractTree<Long>> boolean hasChild(List<T> list, T t) {
         return getChildList(list, t).size() > 0;
     }
 
 
-    public <T extends BaseTree<Long>> List<T> getTree(List<T> list) {   //调用的方法入口
+    public <T extends AbstractTree<Long>> List<T> getTree(List<T> list) {   //调用的方法入口
         Map<Boolean, List<T>> dMap = list.stream().collect(Collectors.groupingBy(t -> t.getParentId() == null));
         List<T> rootList = dMap.get(true);
         List<T> bodyList = dMap.get(false);
@@ -130,7 +139,7 @@ public class TreeTools {
         return null;
     }
 
-    private <T extends BaseTree<Long>> void getChild(T node, List<T> bodyList, Map<Long, Long> map) {
+    private <T extends AbstractTree<Long>> void getChild(T node, List<T> bodyList, Map<Long, Long> map) {
         List<T> childList = Lists.newArrayList();
         List<T> filteredList = bodyList.stream().filter(c -> !map.containsKey(c.getId()))
                 .filter(c -> c.getParentId().equals(node.getId()))

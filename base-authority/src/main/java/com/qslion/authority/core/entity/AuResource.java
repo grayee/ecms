@@ -2,7 +2,7 @@ package com.qslion.authority.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
-import com.qslion.framework.entity.BaseTree;
+import com.qslion.framework.entity.AbstractTree;
 import com.qslion.framework.enums.EnableStatus;
 
 import java.util.Set;
@@ -16,9 +16,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_resource")
-public class AuResource extends BaseTree<Long> {
+public class AuResource extends AbstractTree<Long> {
     private String value;
-    private String description;
     private EnableStatus enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
     private AuMenu menu;
@@ -54,17 +53,6 @@ public class AuResource extends BaseTree<Long> {
     }
 
     @Basic
-    @Column(name = "description")
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-    @Basic
     @Enumerated
     @Column(name = "enable_status", nullable = true, length = 1)
     public EnableStatus getEnableStatus() {
@@ -93,9 +81,6 @@ public class AuResource extends BaseTree<Long> {
         if (value != null ? !value.equals(that.value) : that.value != null) {
             return false;
         }
-        if (description != null ? !description.equals(that.description) : that.description != null) {
-            return false;
-        }
 
         if (enableStatus != null ? !enableStatus.equals(that.enableStatus)
                 : that.enableStatus != null) {
@@ -115,7 +100,6 @@ public class AuResource extends BaseTree<Long> {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (enableStatus != null ? enableStatus.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);

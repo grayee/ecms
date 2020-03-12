@@ -1,6 +1,6 @@
 package com.qslion.authority.core.entity;
 
-import com.qslion.authority.core.enums.AuPartyType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.enums.EnableStatus;
@@ -15,7 +15,7 @@ import java.util.Date;
  * @date 2018/4/30 13:56.
  */
 @MappedSuperclass
-public abstract class PartyEntity extends BaseEntity<Long> {
+public abstract class AbstractOrgEntity extends BaseEntity<Long> implements IOrg {
 
     private static final long serialVersionUID = 4656704236281853404L;
 
@@ -26,8 +26,8 @@ public abstract class PartyEntity extends BaseEntity<Long> {
     protected EnableStatus enableStatus;
     protected Date enableDate;
 
-    @Basic
-    @Column(name = "parent_id", length = 1)
+    @JsonIgnore
+    @Transient
     public Long getParentId() {
         return parentId;
     }
@@ -59,6 +59,7 @@ public abstract class PartyEntity extends BaseEntity<Long> {
 
     @Basic
     @Column(name = "remark")
+    @Override
     public String getRemark() {
         return remark;
     }
@@ -66,19 +67,18 @@ public abstract class PartyEntity extends BaseEntity<Long> {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-    /**
-     * 构建团体
-     *
-     * @return AuPartyType
-     */
-    @Transient
-    public abstract AuPartyType getPartyType();
 
-    /**
-     * 构建团体
-    *
-     * @return AuPartyType
-     */
+    @JsonIgnore
     @Transient
-    public abstract String getPartyName();
+    @Override
+    public Long getOrgId() {
+        return id;
+    }
+
+    @JsonIgnore
+    @Transient
+    @Override
+    public Long getParentRelId() {
+        return parentId;
+    }
 }

@@ -89,7 +89,7 @@ public class Oauth2Controller extends BaseController {
 
     @PostMapping(value = "/login/oauth")
     public Map<String, Object> login(HttpServletRequest request, @RequestBody @Validated LoginDTO loginDTO,
-                                     @RequestHeader(value = HttpHeaders.AUTHORIZATION,required = false) String header, HttpServletResponse response) {
+                                     @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String header, HttpServletResponse response) {
         System.out.println("current tenant:" + TenantContextHolder.getTenant());
         String clientId = StringUtils.EMPTY;
         String clientSecret = StringUtils.EMPTY;
@@ -148,7 +148,9 @@ public class Oauth2Controller extends BaseController {
                 oAuth2RestTemplate.setAccessTokenProvider(new ResourceOwnerPasswordAccessTokenProvider());
                 oAuth2AccessToken = oAuth2RestTemplate.getAccessToken();
                 response.addCookie(new Cookie("access_token", oAuth2AccessToken.getValue()));
-                response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
+                if (null != oAuth2AccessToken.getRefreshToken()) {
+                    response.addCookie(new Cookie("refresh_token", oAuth2AccessToken.getRefreshToken().getValue()));
+                }
             } catch (ClientRegistrationException e) {
                 throw new BusinessException(ResultCode.PERMISSION_NO_ACCESS);
             } catch (UserRedirectRequiredException e) {
@@ -212,7 +214,7 @@ public class Oauth2Controller extends BaseController {
         userInfo.setName(user.getUsername());
         userInfo.setRoles(user.getRoles().stream().map(AuRole::getValue).collect(Collectors.toList()));
         userInfo.setAvatar(user.getAvatar());
-        userInfo.setIntroduction("birthday:"+user.getBirthday() + ",email:" + user.getEmail());
+        userInfo.setIntroduction("birthday:" + user.getBirthday() + ",email:" + user.getEmail());
         return userInfo;
     }
 

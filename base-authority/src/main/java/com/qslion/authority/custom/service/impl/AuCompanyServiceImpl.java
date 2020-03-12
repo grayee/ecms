@@ -2,10 +2,10 @@
 package com.qslion.authority.custom.service.impl;
 
 
-import com.qslion.authority.core.dao.PartyRelationRepository;
-import com.qslion.authority.core.entity.AuPartyRelation;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.dao.AuOrgRelationRepository;
+import com.qslion.authority.core.entity.AuOrgRelation;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.custom.dao.AuCompanyRepository;
 import com.qslion.authority.custom.entity.AuCompany;
 import com.qslion.authority.custom.service.AuCompanyService;
@@ -35,10 +35,10 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     private AuCompanyRepository companyRepository;
 
     @Autowired
-    private PartyRelationRepository partyRelationRepository;
+    private AuOrgRelationRepository auOrgRelationRepository;
 
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
 
     @Override
     public AuCompany insert(AuCompany company) {
@@ -52,7 +52,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
         }
         AuCompany auCompany = companyRepository.save(company);
         //添加公司团体
-        partyRelationService.addPartyRelation(auCompany, AuPartyRelationType.ADMINISTRATIVE);
+        auOrgRelationService.addOrgRelation(auCompany, AuOrgRelationType.ADMINISTRATIVE);
         return auCompany;
     }
 
@@ -62,7 +62,7 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
             AuCompany company = companyRepository.findById(companyId).orElse(null);
             if (company != null) {
                 companyRepository.delete(company);
-                partyRelationService.removePartyRelation(company);
+                auOrgRelationService.removeOrgRelation(company);
             }
         });
         return true;
@@ -77,10 +77,10 @@ public class AuCompanyServiceImpl extends GenericServiceImpl<AuCompany, Long> im
     @Override
     public AuCompany update(AuCompany company) {
         AuCompany auCompany = companyRepository.findById(company.getId()).get();
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(company.getId(), company.getPartyType(), AuPartyRelationType.ADMINISTRATIVE);
-        partyRelation.setName(company.getCompanyName());
-        partyRelation.setRemark(company.getRemark());
-        partyRelationRepository.saveAndFlush(partyRelation);
+        AuOrgRelation orgRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(company.getId(), company.getOrgType(), AuOrgRelationType.ADMINISTRATIVE);
+        orgRelation.setName(company.getCompanyName());
+        orgRelation.setRemark(company.getRemark());
+        auOrgRelationRepository.saveAndFlush(orgRelation);
         CopyUtils.copyProperties(company, auCompany);
         return companyRepository.saveAndFlush(auCompany);
     }

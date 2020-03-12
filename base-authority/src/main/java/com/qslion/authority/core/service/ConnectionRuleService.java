@@ -4,9 +4,10 @@
 package com.qslion.authority.core.service;
 
 import com.qslion.authority.core.entity.AuConnectionRule;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.enums.AuOrgType;
+import com.qslion.authority.core.enums.AuOrgRelationType;
 import com.qslion.framework.service.IGenericService;
+
 import java.util.List;
 
 /**
@@ -14,39 +15,24 @@ import java.util.List;
  */
 public interface ConnectionRuleService extends IGenericService<AuConnectionRule, Long> {
 
-    List queryAll(int paramInt1, int paramInt2, String paramString);
-
-    int getRecordCount();
-
-    int getRecordCount(String paramString);
-
-    List simpleQuery(int paramInt1, int paramInt2, String paramString, Object paramObject);
-
-
-    Object find(String paramString);
-
-    int getRecordCount(String paramString1, String paramString2);
-
-    List queryByType(Object paramObject);
 
     /**
      * 根据父子团体类型ID和团体关系类型ID验证是否满足连接规则
      *
-     * @param curPartyType 当前团体类型
-     * @param subPartyType 下级团体类型
-     * @param relationType 团体关系
+     * @param curOrgType   当前组织团体类型
+     * @param subOrgType   下级组织类型
+     * @param relationType 组织关系
      * @return boolean
      */
-    boolean checkRule(AuPartyType curPartyType, AuPartyType subPartyType, AuPartyRelationType relationType);
-
-    //根据父团体类型ID和团体关系类型查找链接规则
-    List<AuConnectionRule> getRuleByParentPartyTypeId(String parentPartyTypeId, String relTypeId);
+    boolean checkRule(AuOrgType curOrgType, AuOrgType subOrgType, AuOrgRelationType relationType);
+ 
 
     /**
-     * 根据子团体类型ID和团体关系类型查找链接规则
-     * @param relationType 团体关系
-     * @param partyType 下级团体类型
+     * 根据子组织类型ID和组织关系类型查找链接规则
+     *
+     * @param relationType 组织关系
+     * @param orgType      下级组织类型
      * @return List
      */
-    List<AuConnectionRule> getRuleBySubParty(AuPartyRelationType relationType, AuPartyType partyType);
+    List<AuConnectionRule> getRuleBySubOrg(AuOrgRelationType relationType, AuOrgType orgType);
 }

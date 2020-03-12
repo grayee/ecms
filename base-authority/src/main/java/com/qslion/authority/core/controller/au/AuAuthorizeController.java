@@ -113,7 +113,7 @@ public class AuAuthorizeController extends BaseController<AuAuthorize> {
                 AuAuthorize authorize = new AuAuthorize();
                 // authorize.setAuResource(functree.getAuResource());
                 //authorize.setAuParty(auParty);
-                //authorize.setPartyType(auParty.getAuPartyType().getId());
+                //authorize.setOrgType(auParty.getAuPartyType().getId());
                 // auParty.getAuAuthorizes().add(authorize);
             }
         }

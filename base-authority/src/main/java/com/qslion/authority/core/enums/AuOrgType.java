@@ -11,42 +11,42 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 团体类型
+ * 组织类型
  *
  * @author Gray.Z
  * @date 2018/5/1 19:45.
  */
-public enum AuPartyType implements IEnum<Integer> {
+public enum AuOrgType implements IEnum<Integer> {
     /**
      * 公司
      */
-    COMPANY(1, "party_type_company", "party_type_category_organization"),
+    COMPANY(1, "org_type_company", "org_type_category_organization"),
     /**
      * 部门
      */
-    DEPARTMENT(2, "party_type_department", "party_type_category_organization"),
+    DEPARTMENT(2, "org_type_department", "org_type_category_organization"),
     /**
      * 岗位
      */
-    POSITION(3, "party_type_position", "party_type_category_organization"),
+    POSITION(3, "org_type_position", "org_type_category_organization"),
     /**
      * 员工
      */
-    EMPLOYEE(4, "party_type_employee", "party_type_category_person"),
+    EMPLOYEE(4, "org_type_employee", "org_type_category_person"),
     /**
      * 角色
      */
-    ROLE(5, "party_type_role", "party_type_category_role"),
+    ROLE(5, "org_type_role", "org_type_category_role"),
     /**
      * 代理
      */
-    PROXY(6, "party_type_proxy", "party_type_category_other"),;
+    PROXY(6, "org_type_proxy", "org_type_category_other"),;
 
     private int id;
     private String name;
     private String category;
 
-    AuPartyType(int id, String name, String category) {
+    AuOrgType(int id, String name, String category) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -65,22 +65,22 @@ public enum AuPartyType implements IEnum<Integer> {
         return Localize.getMessage(category);
     }
 
-    public static List<AuPartyType> getAllValues() {
-        return Lists.newArrayList(AuPartyType.values());
+    public static List<AuOrgType> getAllValues() {
+        return Lists.newArrayList(AuOrgType.values());
     }
 
     public static Set<String> getCategories() {
         Set<String> categories = Sets.newHashSet();
-        for (AuPartyType auPartyType : AuPartyType.values()) {
-            categories.add(auPartyType.getCategory());
+        for (AuOrgType auOrgType : AuOrgType.values()) {
+            categories.add(auOrgType.getCategory());
         }
         return categories;
     }
 
-    public static AuPartyType getPartyType(int id) {
-        for (AuPartyType auPartyType : AuPartyType.values()) {
-            if (auPartyType.getId() == id) {
-                return auPartyType;
+    public static AuOrgType getOrgType(int id) {
+        for (AuOrgType auOrgType : AuOrgType.values()) {
+            if (auOrgType.getId() == id) {
+                return auOrgType;
             }
         }
         return null;

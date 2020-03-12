@@ -1,10 +1,10 @@
 package com.qslion.authority.custom.service.impl;
 
 
-import com.qslion.authority.core.dao.PartyRelationRepository;
-import com.qslion.authority.core.entity.AuPartyRelation;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.dao.AuOrgRelationRepository;
+import com.qslion.authority.core.entity.AuOrgRelation;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.custom.dao.AuDepartmentRepository;
 import com.qslion.authority.custom.entity.AuDepartment;
 import com.qslion.authority.custom.service.AuDepartmentService;
@@ -33,10 +33,10 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
     private AuDepartmentRepository departmentRepository;
 
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
 
     @Autowired
-    private PartyRelationRepository partyRelationRepository;
+    private AuOrgRelationRepository auOrgRelationRepository;
 
     /**
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
@@ -52,7 +52,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
         }
         AuDepartment auDepartment = departmentRepository.save(department);
         //添加团体关系
-        partyRelationService.addPartyRelation(auDepartment, AuPartyRelationType.ADMINISTRATIVE);
+        auOrgRelationService.addOrgRelation(auDepartment, AuOrgRelationType.ADMINISTRATIVE);
         return auDepartment;
     }
 
@@ -68,7 +68,7 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
             AuDepartment department = departmentRepository.findById(departmentId).orElse(null);
             if (department != null) {
                 departmentRepository.delete(department);
-                partyRelationService.removePartyRelation(department);
+                auOrgRelationService.removeOrgRelation(department);
             }
         });
         return true;
@@ -83,10 +83,10 @@ public class AuDepartmentServiceImpl extends GenericServiceImpl<AuDepartment, Lo
     @Override
     public AuDepartment update(AuDepartment department) {
         AuDepartment auDepartment = departmentRepository.findById(department.getId()).get();
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(department.getId(), department.getPartyType(), AuPartyRelationType.ADMINISTRATIVE);
-        partyRelation.setName(department.getDeptName());
-        partyRelation.setRemark(department.getRemark());
-        partyRelationRepository.saveAndFlush(partyRelation);
+        AuOrgRelation orgRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(department.getId(), department.getOrgType(), AuOrgRelationType.ADMINISTRATIVE);
+        orgRelation.setName(department.getDeptName());
+        orgRelation.setRemark(department.getRemark());
+        auOrgRelationRepository.saveAndFlush(orgRelation);
         CopyUtils.copyProperties(department, auDepartment);
         return departmentRepository.saveAndFlush(auDepartment);
     }

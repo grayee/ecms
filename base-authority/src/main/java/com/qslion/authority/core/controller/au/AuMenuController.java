@@ -67,7 +67,7 @@ public class AuMenuController extends BaseController<AuMenu> {
                 resource.setName(menu.getName());
                 resource.setValue(menu.getUrl());
             }
-            menu.setLeaf(oldAuMenu.isLeaf());
+            menu.setLeaf(oldAuMenu.getLeaf());
             menu.setLevel(oldAuMenu.getLevel());
             menu.setEnableStatus(oldAuMenu.getEnableStatus());
             menu.setStatus(oldAuMenu.getStatus());

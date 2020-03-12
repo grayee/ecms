@@ -2,8 +2,8 @@
 package com.qslion.authority.custom.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qslion.authority.core.entity.PartyEntity;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.entity.AbstractOrgEntity;
+import com.qslion.authority.core.enums.AuOrgType;
 import com.qslion.framework.bean.DisplayField;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_position")
-public class AuPosition extends PartyEntity {
+public class AuPosition extends AbstractOrgEntity {
 
     @DisplayField(id = 1, title = "岗位编号")
     private String positionNo;
@@ -181,13 +181,13 @@ public class AuPosition extends PartyEntity {
     @JsonIgnore
     @Transient
     @Override
-    public AuPartyType getPartyType() {
-        return AuPartyType.POSITION;
+    public AuOrgType getOrgType() {
+        return AuOrgType.POSITION;
     }
     @JsonIgnore
     @Transient
     @Override
-    public String getPartyName() {
+    public String getOrgName() {
         return positionName;
     }
 

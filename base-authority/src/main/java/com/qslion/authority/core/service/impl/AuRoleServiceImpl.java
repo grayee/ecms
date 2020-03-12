@@ -6,14 +6,14 @@ import com.google.common.collect.Sets;
 import com.qslion.authority.core.dao.AuPermissionRepository;
 import com.qslion.authority.core.dao.AuResourceRepository;
 import com.qslion.authority.core.dao.AuRoleRepository;
-import com.qslion.authority.core.dao.PartyRelationRepository;
-import com.qslion.authority.core.entity.AuPartyRelation;
+import com.qslion.authority.core.dao.AuOrgRelationRepository;
+import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.entity.AuPermission;
 import com.qslion.authority.core.entity.AuResource;
 import com.qslion.authority.core.entity.AuRole;
-import com.qslion.authority.core.enums.AuPartyRelationType;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.service.AuRoleService;
-import com.qslion.authority.core.service.PartyRelationService;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.QueryFilter;
@@ -46,9 +46,9 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     @Autowired
     private AuPermissionRepository auPermissionRepository;
     @Autowired
-    private PartyRelationRepository partyRelationRepository;
+    private AuOrgRelationRepository auOrgRelationRepository;
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
     @Autowired
     private AuResourceRepository auResourceRepository;
 
@@ -70,7 +70,7 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     @Override
     public AuRole insert(AuRole role) {
         AuRole auRole = auRoleRepository.save(role);
-        partyRelationService.addPartyRelation(auRole, AuPartyRelationType.ROLE);
+        auOrgRelationService.addOrgRelation(auRole, AuOrgRelationType.ROLE);
         return auRole;
     }
 
@@ -114,12 +114,12 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     }
 
     @Override
-    public Boolean grantDataAuth(AuRole role, List<AuPartyRelation> partyRelations) {
+    public Boolean grantDataAuth(AuRole role, List<AuOrgRelation> partyRelations) {
         List<AuPermission> pList = partyRelations.stream().map(partyRelation -> {
             AuPermission permission = auPermissionRepository.findByTypeAndValue(AuPermission.PermitType.DATA, partyRelation.getId().toString());
             if (permission == null) {
                 permission = new AuPermission();
-                permission.setName(partyRelation.getPartyType() + ":" + partyRelation.getName());
+                permission.setName(partyRelation.getOrgType() + ":" + partyRelation.getName());
                 permission.setValue(partyRelation.getId().toString());
                 permission.setType(AuPermission.PermitType.DATA);
                 permission.setDescription(partyRelation.getName());
@@ -140,10 +140,10 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
     @Override
     public AuRole update(AuRole role) {
         AuRole auRole = auRoleRepository.findById(role.getId()).get();
-        AuPartyRelation partyRelation = partyRelationRepository.findByPartyIdAndPartyTypeAndRelationType(role.getId(), role.getPartyType(), AuPartyRelationType.ROLE);
+        AuOrgRelation partyRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(role.getId(), role.getOrgType(), AuOrgRelationType.ROLE);
         partyRelation.setName(role.getName());
         partyRelation.setRemark(role.getRemark());
-        partyRelationRepository.saveAndFlush(partyRelation);
+        auOrgRelationRepository.saveAndFlush(partyRelation);
         CopyUtils.copyProperties(role, auRole);
         return auRoleRepository.saveAndFlush(auRole);
     }
@@ -155,7 +155,7 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
             AuRole role = auRoleRepository.findById(roleId).orElse(null);
             if (role != null) {
                 auRoleRepository.delete(role);
-                partyRelationService.removePartyRelation(role);
+                auOrgRelationService.removeOrgRelation(role);
             }
         });
         return true;

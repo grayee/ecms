@@ -4,10 +4,10 @@
 package com.qslion.authority.custom.controller;
 
 
-import com.qslion.authority.core.entity.AuPartyRelation;
-import com.qslion.authority.core.enums.AuPartyRelationType;
+import com.qslion.authority.core.entity.AuOrgRelation;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.service.ConnectionRuleService;
-import com.qslion.authority.core.service.PartyRelationService;
 import com.qslion.authority.core.util.TreeTools;
 import com.qslion.framework.bean.EntityVo;
 import com.qslion.framework.bean.Pageable;
@@ -39,7 +39,7 @@ public class PositionController extends BaseController<AuPosition> {
     @Autowired
     public AuPositionService positionService;
     @Autowired
-    public PartyRelationService partyRelationService;
+    public AuOrgRelationService auOrgRelationService;
     @Autowired
     public ConnectionRuleService connectionRuleService;
 
@@ -78,7 +78,7 @@ public class PositionController extends BaseController<AuPosition> {
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
         Pager<AuPosition> pager = positionService.findPage(pageable);
-        List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(position -> {
             EntityVo ev = EntityVo.getPageResult(position);
             ev.put("parentId", TreeTools.getPathTreeStr(relations, position.getParentId()));

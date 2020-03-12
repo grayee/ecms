@@ -3,7 +3,7 @@ package com.qslion.authority.core.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.enums.AuOrgType;
 import com.qslion.framework.bean.DisplayField;
 
 import javax.persistence.*;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "au_role")
-public class AuRole extends PartyEntity {
+public class AuRole extends AbstractOrgEntity {
 
     private static final long serialVersionUID = 5739472491120418264L;
     @DisplayField(id = 1, title = "角色名称")
@@ -84,13 +84,13 @@ public class AuRole extends PartyEntity {
     @JsonIgnore
     @Transient
     @Override
-    public AuPartyType getPartyType() {
-        return AuPartyType.ROLE;
+    public AuOrgType getOrgType() {
+        return AuOrgType.ROLE;
     }
     @JsonIgnore
     @Transient
     @Override
-    public String getPartyName() {
+    public String getOrgName() {
         return name;
     }
 

@@ -2,7 +2,7 @@ package com.qslion.authority.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.authority.core.enums.MenuType;
-import com.qslion.framework.entity.BaseTree;
+import com.qslion.framework.entity.AbstractTree;
 import com.qslion.framework.enums.EnableStatus;
 
 import javax.persistence.Basic;
@@ -23,22 +23,18 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "au_menu")
-public class AuMenu  extends BaseTree<Long> {
+public class AuMenu  extends AbstractTree<Long> {
 
     private MenuType type;
     private String url;
-    private Integer level;
     private String icon;
-    private Short orderNo;
     private String component;
     private Short status;
     private EnableStatus enableStatus;
-    private String remark;
     /**
      * 权限编码，多个以逗号分隔
      */
     private String authCode;
-    private boolean isLeaf;
 
     private AuResource resource;
 
@@ -75,16 +71,6 @@ public class AuMenu  extends BaseTree<Long> {
     }
 
     @Basic
-    @Column(name = "level", nullable = true)
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    @Basic
     @Column(name = "icon", nullable = true, length = 30)
     public String getIcon() {
         return icon;
@@ -92,16 +78,6 @@ public class AuMenu  extends BaseTree<Long> {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    @Basic
-    @Column(name = "order_no", nullable = true)
-    public Short getOrderNo() {
-        return orderNo;
-    }
-
-    public void setOrderNo(Short orderNo) {
-        this.orderNo = orderNo;
     }
 
     @Basic
@@ -135,24 +111,6 @@ public class AuMenu  extends BaseTree<Long> {
         this.enableStatus = enableStatus;
     }
 
-    @Column(name = "remark")
-    public String getRemark() {
-        return this.remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    @Column(name = "is_leaf", nullable = false, length = 1)
-    public boolean isLeaf() {
-        return this.isLeaf;
-    }
-
-    public void setLeaf(boolean isLeaf) {
-        this.isLeaf = isLeaf;
-    }
-
     public String getAuthCode() {
         return authCode;
     }
@@ -179,16 +137,11 @@ public class AuMenu  extends BaseTree<Long> {
         if (url != null ? !url.equals(auMenu.url) : auMenu.url != null) {
             return false;
         }
-        if (level != null ? !level.equals(auMenu.level) : auMenu.level != null) {
-            return false;
-        }
 
         if (icon != null ? !icon.equals(auMenu.icon) : auMenu.icon != null) {
             return false;
         }
-        if (orderNo != null ? !orderNo.equals(auMenu.orderNo) : auMenu.orderNo != null) {
-            return false;
-        }
+
         if (status != null ? !status.equals(auMenu.status) : auMenu.status != null) {
             return false;
         }
@@ -210,9 +163,7 @@ public class AuMenu  extends BaseTree<Long> {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (url != null ? url.hashCode() : 0);
-        result = 31 * result + (level != null ? level.hashCode() : 0);
         result = 31 * result + (icon != null ? icon.hashCode() : 0);
-        result = 31 * result + (orderNo != null ? orderNo.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (enableStatus != null ? enableStatus.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
@@ -225,7 +176,7 @@ public class AuMenu  extends BaseTree<Long> {
         resource.setName(getName());
         resource.setValue(getUrl());
         resource.setMenu(this);
-        resource.setDescription(this.getRemark());
+        resource.setRemark(this.getRemark());
         resource.setParentId(this.getParentId());
         resource.setEnableStatus(getEnableStatus());
         return resource;

@@ -3,10 +3,10 @@
  */
 package com.qslion.authority.core.service.impl;
 
-import com.qslion.authority.core.dao.ConnectionRuleRepository;
+import com.qslion.authority.core.dao.AuConnectionRuleRepository;
 import com.qslion.authority.core.entity.AuConnectionRule;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.enums.AuOrgType;
+import com.qslion.authority.core.enums.AuOrgRelationType;
 import com.qslion.authority.core.service.ConnectionRuleService;
 import com.qslion.framework.service.impl.GenericServiceImpl;
 import java.util.List;
@@ -24,58 +24,20 @@ public class ConnectionRuleServiceImpl extends GenericServiceImpl<AuConnectionRu
     ConnectionRuleService {
 
     @Autowired
-    public ConnectionRuleRepository connectionRuleRepository;
+    public AuConnectionRuleRepository auConnectionRuleRepository;
 
 
     @Override
-    public List queryAll(int paramInt1, int paramInt2, String paramString) {
-        return null;
+    public boolean checkRule(AuOrgType curOrgType, AuOrgType subOrgType, AuOrgRelationType relationType) {
+        return auConnectionRuleRepository.findAll().stream().anyMatch(rule ->
+            rule.getSubOrgType() == subOrgType && rule.getCurOrgType() == curOrgType
+                && rule.getOrgRelationType() == relationType);
     }
 
-    @Override
-    public int getRecordCount() {
-        return 0;
-    }
+
 
     @Override
-    public int getRecordCount(String paramString) {
-        return 0;
-    }
-
-    @Override
-    public List simpleQuery(int paramInt1, int paramInt2, String paramString, Object paramObject) {
-        return null;
-    }
-
-    @Override
-    public Object find(String paramString) {
-        return null;
-    }
-
-    @Override
-    public int getRecordCount(String paramString1, String paramString2) {
-        return 0;
-    }
-
-    @Override
-    public List queryByType(Object paramObject) {
-        return null;
-    }
-
-    @Override
-    public boolean checkRule(AuPartyType curPartyType, AuPartyType subPartyType, AuPartyRelationType relationType) {
-        return connectionRuleRepository.findAll().stream().anyMatch(rule ->
-            rule.getSubPartyType() == subPartyType && rule.getCurPartyType() == curPartyType
-                && rule.getPartyRelationType() == relationType);
-    }
-
-    @Override
-    public List<AuConnectionRule> getRuleByParentPartyTypeId(String parentPartyTypeId, String relTypeId) {
-        return null;
-    }
-
-    @Override
-    public List<AuConnectionRule> getRuleBySubParty(AuPartyRelationType relationType, AuPartyType partyType) {
-        return connectionRuleRepository.findByPartyRelationTypeAndSubPartyType(relationType,partyType);
+    public List<AuConnectionRule> getRuleBySubOrg(AuOrgRelationType relationType, AuOrgType orgType) {
+        return auConnectionRuleRepository.findByOrgRelationTypeAndSubOrgType(relationType,orgType);
     }
 }

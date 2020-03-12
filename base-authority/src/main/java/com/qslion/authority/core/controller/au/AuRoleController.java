@@ -2,16 +2,16 @@ package com.qslion.authority.core.controller.au;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.qslion.authority.core.entity.AuPartyRelation;
+import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.entity.AuPermission;
 import com.qslion.authority.core.entity.AuRole;
 import com.qslion.authority.core.entity.AuUser;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.enums.AuOrgType;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.service.AuRoleService;
 import com.qslion.authority.core.service.AuUserService;
-import com.qslion.authority.core.service.PartyRelationService;
 import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import io.swagger.annotations.Api;
@@ -41,7 +41,7 @@ public class AuRoleController extends BaseController<AuRole> {
     @Autowired
     private AuRoleService auRoleService;
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
     @Autowired
     private AuUserService auUserService;
 
@@ -96,7 +96,7 @@ public class AuRoleController extends BaseController<AuRole> {
             AuUser authUser = auUserService.findById(userId);
             roles = authUser.getRoles();
         }
-        return partyRelationService.getPartyRelationTree(AuPartyRelationType.ROLE, roles);
+        return auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ROLE, roles);
     }
 
     /**
@@ -166,7 +166,7 @@ public class AuRoleController extends BaseController<AuRole> {
     @PostMapping(value = "/data/{roleId}")
     public Boolean grantDataAuth(@PathVariable Long roleId, @RequestBody List<Long> ids) {
         AuRole role = auRoleService.findById(roleId);
-        List<AuPartyRelation> partyRelations = partyRelationService.findList(ids.toArray(new Long[0]));
+        List<AuOrgRelation> partyRelations = auOrgRelationService.findList(ids.toArray(new Long[0]));
         return auRoleService.grantDataAuth(role, partyRelations);
     }
 
@@ -194,7 +194,7 @@ public class AuRoleController extends BaseController<AuRole> {
     @GetMapping(value = "/org/tree/{roleId}")
     public List<TreeNode> getPermOrgTree(@PathVariable Long roleId) {
         AuRole role = auRoleService.findById(roleId);
-        return partyRelationService.getPartyRelationTree(AuPartyType.COMPANY, Sets.newHashSet(role));
+        return auOrgRelationService.getOrgRelationTree(AuOrgType.COMPANY, Sets.newHashSet(role));
     }
 
 }

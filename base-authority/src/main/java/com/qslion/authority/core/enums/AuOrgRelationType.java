@@ -3,13 +3,13 @@ package com.qslion.authority.core.enums;
 import com.qslion.framework.enums.IEnum;
 
 /**
- * 团体关系类型
+ * 组织关系类型
  * Accountability Type
  *
  * @author Gray.Z
  * @date 2018-09-16
  */
-public enum AuPartyRelationType implements IEnum<Integer> {
+public enum AuOrgRelationType implements IEnum<Integer> {
 
     /**
      * 行政关系
@@ -32,7 +32,7 @@ public enum AuPartyRelationType implements IEnum<Integer> {
     private String name;
     private String value;
 
-    AuPartyRelationType(int id, String name, String value) {
+    AuOrgRelationType(int id, String name, String value) {
         this.id = id;
         this.name = name;
         this.value = value;
@@ -51,10 +51,10 @@ public enum AuPartyRelationType implements IEnum<Integer> {
         return value;
     }
 
-    public static AuPartyRelationType getPartyRelationType(int id) {
-        for (AuPartyRelationType auPartyRelationType : AuPartyRelationType.values()) {
-            if (auPartyRelationType.getId() == id) {
-                return auPartyRelationType;
+    public static AuOrgRelationType getOrgRelationType(int id) {
+        for (AuOrgRelationType auOrgRelationType : AuOrgRelationType.values()) {
+            if (auOrgRelationType.getId() == id) {
+                return auOrgRelationType;
             }
         }
         return null;

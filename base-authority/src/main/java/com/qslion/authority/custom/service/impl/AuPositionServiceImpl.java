@@ -2,9 +2,9 @@
 package com.qslion.authority.custom.service.impl;
 
 
-import com.qslion.authority.core.dao.PartyRelationRepository;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.dao.AuOrgRelationRepository;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.custom.dao.AuPositionRepository;
 import com.qslion.authority.custom.entity.AuPosition;
 import com.qslion.authority.custom.service.AuPositionService;
@@ -29,9 +29,9 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
     @Autowired
     private AuPositionRepository positionRepository;
     @Autowired
-    private PartyRelationRepository partyRelationRepository;
+    private AuOrgRelationRepository auOrgRelationRepository;
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
 
     /**
      * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
@@ -46,7 +46,7 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
         }
         AuPosition auPosition= positionRepository.save(position);
         //添加团体关系
-        partyRelationService.addPartyRelation(auPosition, AuPartyRelationType.ADMINISTRATIVE);
+        auOrgRelationService.addOrgRelation(auPosition, AuOrgRelationType.ADMINISTRATIVE);
         return auPosition;
     }
 
@@ -56,7 +56,7 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
             AuPosition position = positionRepository.findById(positionId).orElse(null);
             if (position != null) {
                 positionRepository.delete(position);
-                partyRelationService.removePartyRelation(position);
+                auOrgRelationService.removeOrgRelation(position);
             }
         });
         return true;
@@ -74,7 +74,7 @@ public class AuPositionServiceImpl extends GenericServiceImpl<AuPosition, Long> 
         //vo.setAuParty(party);
 //        positionDao.clear();
         //      boolean flag = positionDao.update(vo);
-        //    AuPartyRelation relation = partyRelationDao.findByPartyId(vo.getId(), GlobalConstants.getRelTypeComp());
+        //    AuOrgRelation relation = partyRelationDao.findByPartyId(vo.getId(), GlobalConstants.getRelTypeComp());
         //  relation.setName(vo.getPositionName());
         //partyRelationDao.update(relation);
         //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "更新了" + sum + "条记录,id=" + String.valueOf(vo.getId()));

@@ -1,9 +1,9 @@
 package com.qslion.authority.custom.service.impl;
 
 
-import com.qslion.authority.core.dao.PartyRelationRepository;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.dao.AuOrgRelationRepository;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.custom.dao.AuEmployeeRepository;
 import com.qslion.authority.custom.entity.AuEmployee;
 import com.qslion.authority.custom.service.AuEmployeeService;
@@ -29,10 +29,10 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
     private AuEmployeeRepository employeeRepository;
 
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
 
     @Autowired
-    private PartyRelationRepository partyRelationRepository;
+    private AuOrgRelationRepository auOrgRelationRepository;
 
 
     /**
@@ -48,7 +48,7 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
         }
         AuEmployee auEmployee = employeeRepository.save(employee);
         //添加团体关系
-        partyRelationService.addPartyRelation(auEmployee, AuPartyRelationType.ADMINISTRATIVE);
+        auOrgRelationService.addOrgRelation(auEmployee, AuOrgRelationType.ADMINISTRATIVE);
         return auEmployee;
     }
 
@@ -64,7 +64,7 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
             AuEmployee employee = employeeRepository.findById(employeeId).orElse(null);
             if (employee != null) {
                 employeeRepository.delete(employee);
-                partyRelationService.removePartyRelation(employee);
+                auOrgRelationService.removeOrgRelation(employee);
             }
         });
         return true;
@@ -82,7 +82,7 @@ public class AuEmployeeServiceImpl extends GenericServiceImpl<AuEmployee, Long> 
         //vo.setAuParty(party);
        /* employeeDao.clear();
         boolean flag = employeeDao.update(vo);
-        AuPartyRelation relation = partyRelationDao.findByPartyId(vo.getId(), GlobalConstants.getRelTypeComp());
+        AuOrgRelation relation = partyRelationDao.findByPartyId(vo.getId(), GlobalConstants.getRelTypeComp());
         relation.setName(vo.getPersonName());
         partyRelationDao.update(relation);*/
         //RmLogHelper.log(TABLE_LOG_TYPE_NAME, "更新了" + sum + "条记录,id=" + String.valueOf(vo.getId()));

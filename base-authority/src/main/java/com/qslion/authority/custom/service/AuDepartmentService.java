@@ -27,7 +27,7 @@ public interface AuDepartmentService extends IGenericService<AuDepartment, Long>
 
 
     /**
-     * 添加新记录，同时添加团体、团体关系（如果parentRelId为空则不添加团体关系）
+     * 添加新记录，同时添加组织和对应关系（如果parentRelId为空则不添加组织关系）
      *
      * @param vo 用于添加的VO对象
      * @return 若添加成功，则返回新添加记录的主键
@@ -36,7 +36,7 @@ public interface AuDepartmentService extends IGenericService<AuDepartment, Long>
 
 
     /**
-     * 删除多条记录，删除自身并同时删除相应的团体、团体关系
+     * 删除多条记录，删除自身并同时删除相应的组织和关系
      *
      * @param ids ids
      * @return boolean

@@ -4,10 +4,10 @@
 package com.qslion.authority.custom.controller;
 
 
-import com.qslion.authority.core.entity.AuPartyRelation;
-import com.qslion.authority.core.enums.AuPartyRelationType;
+import com.qslion.authority.core.entity.AuOrgRelation;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.service.ConnectionRuleService;
-import com.qslion.authority.core.service.PartyRelationService;
 import com.qslion.authority.core.util.TreeTools;
 import com.qslion.authority.custom.entity.AuEmployee;
 import com.qslion.authority.custom.service.AuEmployeeService;
@@ -40,7 +40,7 @@ public class EmployeeController extends BaseController<AuEmployee> {
     @Autowired
     public AuEmployeeService employeeService;
     @Autowired
-    public PartyRelationService partyRelationService;
+    public AuOrgRelationService auOrgRelationService;
     @Autowired
     public ConnectionRuleService connectionRuleService;
     /**
@@ -77,7 +77,7 @@ public class EmployeeController extends BaseController<AuEmployee> {
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
         Pager<AuEmployee> pager =employeeService.findPage(pageable);
-        List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(emp -> {
             EntityVo ev = EntityVo.getPageResult(emp);
             ev.put("parentId", TreeTools.getPathTreeStr(relations, emp.getParentId()));

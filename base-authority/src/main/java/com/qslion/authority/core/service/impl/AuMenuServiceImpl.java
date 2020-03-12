@@ -58,18 +58,21 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         if (auUser.isAdmin()) {
             menuList.addAll(auMenuRepository.findAll());
         } else {
-            Set<AuRole> auRoleSet = auUser.getRoles();
-            auUser.getUserGroups().forEach(auUserGroup -> auRoleSet.addAll(auUserGroup.getRoles()));
-            Set<AuPermission> permissionSet = Sets.newHashSet();
-            auRoleSet.forEach(auRole -> permissionSet.addAll(auRole.getPermissions()));
+            Set<AuRole> userRoleSet = auUser.getRoles();
+            Set<AuUserGroup> userGroupSet = auUser.getUserGroups();
+            if (CollectionUtils.isNotEmpty(userGroupSet)) {
+                userGroupSet.forEach(userGroup -> userRoleSet.addAll(userGroup.getRoles()));
+            }
 
-            List<AuMenu> finalMenuList = Lists.newArrayList();
-            permissionSet.stream().filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION)
-                    .forEach(permission -> finalMenuList.add(permission.getResource().getMenu()));
-            menuList.addAll(TreeTools.filterTreePath(auMenuRepository.findAll(), finalMenuList.stream().map(AuMenu::getId).collect(Collectors.toList())));
+            Set<AuPermission> permissionSet = Sets.newHashSet();
+            userRoleSet.forEach(userRole -> permissionSet.addAll(userRole.getPermissions()));
+            List<Long> menuIdList = permissionSet.stream().filter(perm -> perm.getType() == AuPermission.PermitType.FUNCTION)
+                    .map(AuPermission::getResource).map(AuResource::getMenu).map(AuMenu::getId).collect(Collectors.toList());
+
+            menuList.addAll(TreeTools.filterTreePath(auMenuRepository.findAll(), menuIdList));
         }
 
-        menuList.sort(Comparator.comparing(AuMenu::getOrderNo));
+        menuList.sort(Comparator.comparing(AuMenu::getOrderCode));
         return menuList.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId()))
                 .map(menu -> getTreeNode(menuList, menu)).collect(Collectors.toList());
     }
@@ -77,7 +80,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     private TreeNode getTreeNode(List<AuMenu> nodeList, AuMenu menu) {
         TreeNode treeNode = new TreeNode(String.valueOf(menu.getId()), menu.getName());
         treeNode.setIconCls(menu.getIcon());
-        if (menu.isLeaf() || StringUtils.isNotEmpty(menu.getUrl())) {
+        if (menu.getLeaf() || StringUtils.isNotEmpty(menu.getUrl())) {
             treeNode.setPath(menu.getUrl());
             treeNode.setState(NodeState.OPEN);
         } else {
@@ -110,14 +113,14 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
         Map<String, Object> attributeMap = Maps.newHashMap();
         attributeMap.put("modifyDate", menu.getModifyDate());
         attributeMap.put("menuType", menu.getType().ordinal());
-        attributeMap.put("orderNo", menu.getOrderNo());
+        attributeMap.put("orderNo", menu.getOrderCode());
         attributeMap.put("component", menu.getComponent());
         return attributeMap;
     }
 
     private List<TreeNode> getChildTreeNode(Long parentId, List<AuMenu> nodeList) {
-        return nodeList.stream().filter(
-                menu -> menu.getParentId() != null && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
+        return nodeList.stream().filter(menu -> menu.getParentId() != null
+                && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
                 .map(menu -> getTreeNode(nodeList, menu)).collect(Collectors.toList());
     }
 
@@ -173,7 +176,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             } else if (menu.getType() == MenuType.PAGE_BUTTON && parent.getType() != MenuType.FUNCTION_MENU) {
                 throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
             } else {
-                if (parent.isLeaf()) {
+                if (parent.getLeaf()) {
                     parent.setLeaf(false);
                     if (menu.getType() == MenuType.FUNCTION_MENU && parent.getType() != MenuType.CATALOG) {
                         parent.setType(MenuType.CATALOG);
@@ -227,7 +230,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     public boolean remove(List<Long> ids) {
         for (Long id : ids) {
             AuMenu auMenu = findById(id);
-            if (auMenu.isLeaf()) {
+            if (auMenu.getLeaf()) {
                 if (getParentChildren(auMenu).size() < 0) {
                     //父节点没有子节点则更新isLeaf状态
                     AuMenu parent = getParent(auMenu);

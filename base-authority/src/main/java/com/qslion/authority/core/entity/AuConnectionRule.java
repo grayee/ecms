@@ -1,7 +1,7 @@
 package com.qslion.authority.core.entity;
 
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.enums.AuOrgType;
+import com.qslion.authority.core.enums.AuOrgRelationType;
 import com.qslion.framework.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,40 +18,40 @@ import javax.persistence.Table;
 @Table(name = "au_connection_rule")
 public class AuConnectionRule extends BaseEntity<Long> {
 
-    private AuPartyType curPartyType;
-    private AuPartyType subPartyType;
-    private AuPartyRelationType partyRelationType;
+    private AuOrgType curOrgType;
+    private AuOrgType subOrgType;
+    private AuOrgRelationType orgRelationType;
     private String name;
     private String remark;
 
     @Enumerated
-    @Column(name = "cur_party_type")
-    public AuPartyType getCurPartyType() {
-        return this.curPartyType;
+    @Column(name = "cur_org_type")
+    public AuOrgType getCurOrgType() {
+        return this.curOrgType;
     }
 
-    public void setCurPartyType(AuPartyType curPartyType) {
-        this.curPartyType = curPartyType;
+    public void setCurOrgType(AuOrgType curOrgType) {
+        this.curOrgType = curOrgType;
     }
 
     @Enumerated
-    @Column(name = "sub_party_type")
-    public AuPartyType getSubPartyType() {
-        return this.subPartyType;
+    @Column(name = "sub_org_type")
+    public AuOrgType getSubOrgType() {
+        return this.subOrgType;
     }
 
-    public void setSubPartyType(AuPartyType subPartyType) {
-        this.subPartyType = subPartyType;
+    public void setSubOrgType(AuOrgType subOrgType) {
+        this.subOrgType = subOrgType;
     }
 
     @Enumerated
     @Column(name = "relation_type")
-    public AuPartyRelationType getPartyRelationType() {
-        return this.partyRelationType;
+    public AuOrgRelationType getOrgRelationType() {
+        return this.orgRelationType;
     }
 
-    public void setPartyRelationType(AuPartyRelationType partyRelationType) {
-        this.partyRelationType = partyRelationType;
+    public void setOrgRelationType(AuOrgRelationType orgRelationType) {
+        this.orgRelationType = orgRelationType;
     }
 
     @Column(name = "name", nullable = false, length = 64)

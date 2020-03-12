@@ -1,7 +1,7 @@
 package com.qslion.authority.core.service;
 
 
-import com.qslion.authority.core.entity.AuPartyRelation;
+import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.entity.AuRole;
 import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
@@ -53,7 +53,7 @@ public interface AuRoleService extends IGenericService<AuRole, Long> {
      * @param partyRelations 机构
      * @return
      */
-    Boolean grantDataAuth(AuRole role, List<AuPartyRelation> partyRelations);
+    Boolean grantDataAuth(AuRole role, List<AuOrgRelation> partyRelations);
 
     /**
      * 删除多条记录

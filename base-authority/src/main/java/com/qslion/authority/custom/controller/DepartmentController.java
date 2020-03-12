@@ -1,8 +1,8 @@
 package com.qslion.authority.custom.controller;
 
-import com.qslion.authority.core.entity.AuPartyRelation;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.entity.AuOrgRelation;
+import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.util.TreeTools;
 import com.qslion.authority.custom.entity.AuDepartment;
 import com.qslion.authority.custom.service.AuDepartmentService;
@@ -35,7 +35,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
     public AuDepartmentService departmentService;
 
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
 
 
     @PostMapping
@@ -62,7 +62,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
         Pager<AuDepartment> pager =departmentService.findPage(pageable);
-        List<AuPartyRelation> relations = partyRelationService.findByRelationType(AuPartyRelationType.ADMINISTRATIVE);
+        List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(dept -> {
             EntityVo ev = EntityVo.getPageResult(dept);
             ev.put("parentId", TreeTools.getPathTreeStr(relations, dept.getParentId()));

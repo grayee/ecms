@@ -7,12 +7,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.qslion.authority.core.entity.*;
-import com.qslion.authority.core.enums.AuPartyRelationType;
-import com.qslion.authority.core.enums.AuPartyType;
+import com.qslion.authority.core.enums.AuOrgType;
+import com.qslion.authority.core.enums.AuOrgRelationType;
 import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.service.AuRoleService;
 import com.qslion.authority.core.service.ConnectionRuleService;
-import com.qslion.authority.core.service.PartyRelationService;
+import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.vo.DetailVO;
 import com.qslion.authority.custom.service.AuCompanyService;
 import com.qslion.authority.custom.service.AuDepartmentService;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 @ResponseResult
 @RestController
 @RequestMapping(value = "/org/relation")
-public class OrgRelationController extends BaseController<AuPartyRelation> {
+public class OrgRelationController extends BaseController<AuOrgRelation> {
     @Autowired
-    private PartyRelationService partyRelationService;
+    private AuOrgRelationService auOrgRelationService;
     @Autowired
     private ConnectionRuleService connectionRuleService;
 
@@ -63,47 +63,47 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
 
 
     @PostMapping(value = "/list/{relationTypeId}")
-    public Pager<AuPartyRelation> list(@PathVariable int relationTypeId, @RequestParam Pageable pageable) {
-        QueryFilter queryFilter = new QueryFilter("auPartyRelationType", Operator.equal, relationTypeId);
+    public Pager<AuOrgRelation> list(@PathVariable int relationTypeId, @RequestParam Pageable pageable) {
+        QueryFilter queryFilter = new QueryFilter("auOrgRelationType", Operator.equal, relationTypeId);
         if (pageable.getQueryFilters().isEmpty()) {
             pageable.setQueryFilters(Lists.newArrayList(queryFilter));
         } else {
             pageable.getQueryFilters().add(queryFilter);
         }
-        return partyRelationService.findPage(pageable);
+        return auOrgRelationService.findPage(pageable);
     }
 
     @GetMapping(value = "/detail/{id}")
-    public DetailVO<PartyEntity> detail(@PathVariable Long id) {
-        AuPartyRelation partyRelation = partyRelationService.findById(id);
-        AuPartyType orgType = partyRelation.getPartyType();
-        PartyEntity content = null;
+    public DetailVO<AbstractOrgEntity> detail(@PathVariable Long id) {
+        AuOrgRelation orgRelation = auOrgRelationService.findById(id);
+        AuOrgType orgType = orgRelation.getOrgType();
+        AbstractOrgEntity content = null;
         switch (orgType) {
             case COMPANY:
-                content = auCompanyService.findById(partyRelation.getPartyId());
+                content = auCompanyService.findById(orgRelation.getOrgId());
                 break;
             case DEPARTMENT:
-                content = auDepartmentService.findById(partyRelation.getPartyId());
+                content = auDepartmentService.findById(orgRelation.getOrgId());
                 break;
             case POSITION:
-                content = auPositionService.findById(partyRelation.getPartyId());
+                content = auPositionService.findById(orgRelation.getOrgId());
                 break;
             case EMPLOYEE:
-                content = auEmployeeService.findById(partyRelation.getPartyId());
+                content = auEmployeeService.findById(orgRelation.getOrgId());
                 break;
             case ROLE:
-                content = auRoleService.findById(partyRelation.getPartyId());
+                content = auRoleService.findById(orgRelation.getOrgId());
                 break;
             case PROXY:
                 break;
             default:
                 break;
         }
-        DetailVO<PartyEntity> detailVO = new DetailVO<>(content);
+        DetailVO<AbstractOrgEntity> detailVO = new DetailVO<>(content);
 
-        List<AuPartyType> subOrgTypes = connectionRuleService.findAll().stream()
-                .filter(auConnectionRule -> auConnectionRule.getCurPartyType() == orgType)
-                .map(AuConnectionRule::getSubPartyType).collect(Collectors.toList());
+        List<AuOrgType> subOrgTypes = connectionRuleService.findAll().stream()
+                .filter(auConnectionRule -> auConnectionRule.getCurOrgType() == orgType)
+                .map(AuConnectionRule::getSubOrgType).collect(Collectors.toList());
 
         detailVO.addExtras("curOrgType", orgType.getId());
         detailVO.addExtras("subOrgTypes", subOrgTypes.stream().map(pType -> ImmutableMap.of("name", pType.getName(), "value", pType.getId()))
@@ -114,14 +114,14 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
                     .collect(Collectors.toList());
             detailVO.addExtras("displayColumns", columnList);
         }
-        if (orgType == AuPartyType.ROLE) {
+        if (orgType == AuOrgType.ROLE) {
             AuRole role = (AuRole) content;
             detailVO.addExtras("users", role != null ? role.getUsers() : Lists.newArrayList());
             if (role != null && CollectionUtils.isNotEmpty(role.getPermissions())) {
                 List<AuPermission> perms = role.getPermissions().stream()
                         .filter(permission -> permission.getType() == AuPermission.PermitType.FUNCTION).collect(Collectors.toList());
                 detailVO.addExtras("funcAuth", resourceService.getGrantedFuncTree(perms));
-                detailVO.addExtras("dataAuth", partyRelationService.getGrantedDataTree(AuPartyType.COMPANY, Sets.newHashSet(role)));
+                detailVO.addExtras("dataAuth", auOrgRelationService.getGrantedDataTree(AuOrgType.COMPANY, Sets.newHashSet(role)));
             }
         }
         return detailVO;
@@ -130,8 +130,8 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     @DeleteMapping
     public boolean deletes(Long[] ids) {
         try {
-            List<AuPartyRelation> list = partyRelationService.findList(ids);
-            partyRelationService.delete(list);
+            List<AuOrgRelation> list = auOrgRelationService.findList(ids);
+            auOrgRelationService.delete(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return false;
@@ -140,29 +140,29 @@ public class OrgRelationController extends BaseController<AuPartyRelation> {
     }
 
     @PutMapping
-    public Boolean update(@ModelAttribute("entity") AuPartyRelation entity) {
-        return partyRelationService.update(entity) == null;
+    public Boolean update(@ModelAttribute("entity") AuOrgRelation entity) {
+        return auOrgRelationService.update(entity) == null;
     }
 
     @GetMapping(value = "/type")
-    public List<AuPartyRelationType> getPartyRelationTypes() {
-        return Lists.newArrayList(AuPartyRelationType.values());
+    public List<AuOrgRelationType> getOrgRelationTypes() {
+        return Lists.newArrayList(AuOrgRelationType.values());
     }
 
     @GetMapping(value = {"/tree/{orgType}", "/tree"})
-    public List<TreeNode> getPartyRelationTree(@PathVariable(required = false) AuPartyType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
+    public List<TreeNode> getOrgRelationTree(@PathVariable(required = false) AuOrgType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         List<TreeNode> resultList;
         if (orgType == null) {
-            resultList = this.partyRelationService.getPartyRelationTree(AuPartyRelationType.ADMINISTRATIVE, user.getRoles());
+            resultList = this.auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ADMINISTRATIVE, user.getRoles());
         } else {
-            resultList = this.partyRelationService.getPartyRelationTree(orgType, user.getRoles());
+            resultList = this.auOrgRelationService.getOrgRelationTree(orgType, user.getRoles());
         }
         return resultList;
     }
 
     @GetMapping(value = "/tree/target/{orgType}")
-    public List<TreeNode> getTargetTypeTree(@PathVariable(required = false) AuPartyType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
-        return this.partyRelationService.getTargetTree(orgType, user.getRoles());
+    public List<TreeNode> getTargetTypeTree(@PathVariable(required = false) AuOrgType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
+        return this.auOrgRelationService.getTargetTree(orgType, user.getRoles());
     }
 
 }
