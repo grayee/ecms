@@ -69,59 +69,11 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             List<Long> menuIdList = permissionSet.stream().filter(perm -> perm.getType() == AuPermission.PermitType.FUNCTION)
                     .map(AuPermission::getResource).map(AuResource::getMenu).map(AuMenu::getId).collect(Collectors.toList());
 
-            menuList.addAll(TreeTools.filterTreePath(auMenuRepository.findAll(), menuIdList));
+            menuList.addAll(TreeTools.getTargetTreePath(auMenuRepository.findAll(), menuIdList));
         }
 
         menuList.sort(Comparator.comparing(AuMenu::getOrderCode));
-        return menuList.stream().filter(menu -> menu.getParentId() == null || menu.getParentId().equals(menu.getId()))
-                .map(menu -> getTreeNode(menuList, menu)).collect(Collectors.toList());
-    }
-
-    private TreeNode getTreeNode(List<AuMenu> nodeList, AuMenu menu) {
-        TreeNode treeNode = new TreeNode(String.valueOf(menu.getId()), menu.getName());
-        treeNode.setIconCls(menu.getIcon());
-        if (menu.getLeaf() || StringUtils.isNotEmpty(menu.getUrl())) {
-            treeNode.setPath(menu.getUrl());
-            treeNode.setState(NodeState.OPEN);
-        } else {
-            nodeList = nodeList.stream().filter(auMenu -> !auMenu.getId().equals(menu.getId()))
-                    .collect(Collectors.toList());
-            List<TreeNode> leafNodeList = this.getChildTreeNode(menu.getId(), nodeList);
-            treeNode.setChildren(leafNodeList);
-        }
-
-        Map<String, Object> attributeMap = getAttrMap(menu);
-
-        List<TreeNode> pageBtnList = nodeList.stream().filter(auMenu -> auMenu.getType() == MenuType.PAGE_BUTTON
-                && Objects.equals(auMenu.getParentId(), menu.getId())).map(auMenu -> {
-            TreeNode btnNode = new TreeNode(String.valueOf(auMenu.getId()), auMenu.getName());
-            btnNode.setPath(auMenu.getUrl());
-            btnNode.setState(NodeState.OPEN);
-            btnNode.setAttributes(getAttrMap(auMenu));
-            return btnNode;
-        }).collect(Collectors.toList());
-
-        if (CollectionUtils.isNotEmpty(pageBtnList)) {
-            attributeMap.put("pageBtn", pageBtnList);
-        }
-
-        treeNode.setAttributes(attributeMap);
-        return treeNode;
-    }
-
-    private Map<String, Object> getAttrMap(AuMenu menu) {
-        Map<String, Object> attributeMap = Maps.newHashMap();
-        attributeMap.put("modifyDate", menu.getModifyDate());
-        attributeMap.put("menuType", menu.getType().ordinal());
-        attributeMap.put("orderNo", menu.getOrderCode());
-        attributeMap.put("component", menu.getComponent());
-        return attributeMap;
-    }
-
-    private List<TreeNode> getChildTreeNode(Long parentId, List<AuMenu> nodeList) {
-        return nodeList.stream().filter(menu -> menu.getParentId() != null
-                && !menu.getId().equals(parentId) && menu.getParentId().equals(parentId))
-                .map(menu -> getTreeNode(nodeList, menu)).collect(Collectors.toList());
+        return TreeTools.getTreeList(menuList);
     }
 
     @Override

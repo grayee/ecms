@@ -81,7 +81,7 @@ public class PositionController extends BaseController<AuPosition> {
         List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(position -> {
             EntityVo ev = EntityVo.getPageResult(position);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations, position.getParentId()));
+            ev.put("parentId", TreeTools.getTreePathStr(relations, position.getParentId()));
             return ev;
         });
     }

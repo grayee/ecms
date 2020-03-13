@@ -50,19 +50,6 @@ public interface NestTreeable<ID> {
         return DEF_PARENT_NAME;
     }
 
-
-    /**
-     * 获得父节点ID
-     *
-     * @return 如果没有父节点，则返回null。
-     */
-    ID getParentId();
-
-    /**
-     * 获得树ID
-     */
-    ID getId();
-
     /**
      * 获得附加条件 <p> 通过附加条件可以维护多棵树相互独立的树，附加条件使用hql语句，实体别名为bean。例如：bean.website.id=5
      *
@@ -74,5 +61,60 @@ public interface NestTreeable<ID> {
         return ENTITY_ALIAS + "=?";
     }
 
+    /**
+     * 获得树ID
+     */
+    ID getId();
+
+    /**
+     * 获得父节点ID
+     *
+     * @return 如果没有父节点，则返回null。
+     */
+    ID getParentId();
+
+
+    /**
+     * 节点名称
+     *
+     * @return name
+     */
     String getName();
+
+    /**
+     * 排序码
+     *
+     * @return orderCode
+     */
+    Integer getOrderCode();
+
+    /**
+     * 层级
+     *
+     * @return level
+     */
+    Integer getLevel();
+
+    /**
+     * 是否是叶子节点
+     *
+     * @return boolean
+     */
+    Boolean getLeaf();
+
+    /**
+     * 备注信息
+     *
+     * @return remark
+     */
+    String getRemark();
+
+    /**
+     * 树结构
+     *
+     * @return TreeNode
+     */
+    default TreeNode getTreeNode() {
+        return new TreeNode(String.valueOf(getId()), this.getName());
+    }
 }

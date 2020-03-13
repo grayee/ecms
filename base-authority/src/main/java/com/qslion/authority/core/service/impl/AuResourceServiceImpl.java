@@ -60,7 +60,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
         List<Long> resIds = rolePerms.stream().filter(perm -> perm.getType() == AuPermission.PermitType.FUNCTION)
                 .map(perm -> perm.getResource().getId()).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(resIds)) {
-            resourceList = TreeTools.filterTreePath(resourceList, resIds);
+            resourceList = TreeTools.getTargetTreePath(resourceList, resIds);
         }
         return getTreeNodes(rolePerms, true, resourceList);
     }

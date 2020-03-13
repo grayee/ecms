@@ -1,19 +1,14 @@
 package com.qslion.authority.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Maps;
 import com.qslion.authority.core.enums.MenuType;
-import com.qslion.framework.entity.AbstractTree;
+import com.qslion.framework.bean.TreeNode;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.enums.EnableStatus;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Map;
 
 /**
  * 实体类 - 菜单
@@ -23,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "au_menu")
-public class AuMenu  extends AbstractTree<Long> {
+public class AuMenu extends BaseTree<Long> {
 
     private MenuType type;
     private String url;
@@ -180,5 +175,23 @@ public class AuMenu  extends AbstractTree<Long> {
         resource.setParentId(this.getParentId());
         resource.setEnableStatus(getEnableStatus());
         return resource;
+    }
+
+    @Override
+    @JsonIgnore
+    @Transient
+    public TreeNode getTreeNode() {
+        TreeNode treeNode = new TreeNode(String.valueOf(getId()), this.getName());
+        treeNode.setIconCls(getIcon());
+        treeNode.setPath(getUrl());
+        treeNode.setState(getLeaf() ? TreeNode.NodeState.OPEN : TreeNode.NodeState.CLOSED);
+
+        Map<String, Object> attributeMap = Maps.newHashMap();
+        attributeMap.put("modifyDate", getModifyDate());
+        attributeMap.put("menuType", getType().ordinal());
+        attributeMap.put("orderNo", getOrderCode());
+        attributeMap.put("component", getComponent());
+        treeNode.setAttributes(attributeMap);
+        return treeNode;
     }
 }

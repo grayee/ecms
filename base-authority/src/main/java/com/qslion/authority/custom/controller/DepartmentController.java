@@ -65,7 +65,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
         List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(dept -> {
             EntityVo ev = EntityVo.getPageResult(dept);
-            ev.put("parentId", TreeTools.getPathTreeStr(relations, dept.getParentId()));
+            ev.put("parentId", TreeTools.getTreePathStr(relations, dept.getParentId()));
             return ev;
         });
     }

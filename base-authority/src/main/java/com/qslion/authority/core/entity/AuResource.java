@@ -2,7 +2,8 @@ package com.qslion.authority.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
-import com.qslion.framework.entity.AbstractTree;
+import com.qslion.framework.bean.TreeNode;
+import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.enums.EnableStatus;
 
 import java.util.Set;
@@ -16,7 +17,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_resource")
-public class AuResource extends AbstractTree<Long> {
+public class AuResource extends BaseTree<Long> {
     private String value;
     private EnableStatus enableStatus;
     private Set<AuPermission> permissions = Sets.newHashSet();
@@ -104,5 +105,12 @@ public class AuResource extends AbstractTree<Long> {
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    @JsonIgnore
+    @Transient
+    public TreeNode getTreeNode() {
+        return new TreeNode(String.valueOf(getId()), this.getName());
     }
 }

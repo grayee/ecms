@@ -1,15 +1,11 @@
 package com.qslion.framework.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.bean.NestTreeable;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 树
@@ -18,7 +14,7 @@ import java.util.List;
  * @date 2018/9/22 22:05.
  */
 @MappedSuperclass
-public abstract class AbstractTree<ID extends Serializable> extends BaseEntity<ID> implements NestTreeable<ID> {
+public abstract class BaseTree<ID extends Serializable> extends BaseEntity<ID> implements NestTreeable<ID> {
     private static final long serialVersionUID = 1L;
     /**
      * 节点名称
@@ -36,18 +32,16 @@ public abstract class AbstractTree<ID extends Serializable> extends BaseEntity<I
     /**
      * 排序码
      */
-    private Long orderCode;
+    private Integer orderCode;
     /**
      * 是否叶子节点
      */
     private Boolean isLeaf;
-    /**
-     * 子节点
-     */
-    private List<? extends AbstractTree<ID>> children = new ArrayList<>();
+
 
     private String remark;
 
+    @Override
     @Basic
     @Column(name = "name")
     public String getName() {
@@ -58,6 +52,7 @@ public abstract class AbstractTree<ID extends Serializable> extends BaseEntity<I
         this.name = name;
     }
 
+    @Override
     @Column(name = "parent_id")
     public ID getParentId() {
         return parentId;
@@ -67,6 +62,7 @@ public abstract class AbstractTree<ID extends Serializable> extends BaseEntity<I
         this.parentId = parentId;
     }
 
+    @Override
     @Basic
     @Column(name = "level", nullable = true)
     public Integer getLevel() {
@@ -77,16 +73,17 @@ public abstract class AbstractTree<ID extends Serializable> extends BaseEntity<I
         this.level = level;
     }
 
+    @Override
     @Column(name = "order_code", length = 2)
-    public Long getOrderCode() {
+    public Integer getOrderCode() {
         return this.orderCode;
     }
 
-    public void setOrderCode(Long orderCode) {
+    public void setOrderCode(Integer orderCode) {
         this.orderCode = orderCode;
     }
 
-
+    @Override
     @Column(name = "is_leaf", nullable = false, length = 1)
     public Boolean getLeaf() {
         return isLeaf;
@@ -96,16 +93,7 @@ public abstract class AbstractTree<ID extends Serializable> extends BaseEntity<I
         isLeaf = leaf;
     }
 
-    @JsonIgnore
-    @Transient
-    public List<? extends AbstractTree<ID>> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<? extends AbstractTree<ID>> children) {
-        this.children = children;
-    }
-
+    @Override
     @Column(name = "remark")
     public String getRemark() {
         return this.remark;

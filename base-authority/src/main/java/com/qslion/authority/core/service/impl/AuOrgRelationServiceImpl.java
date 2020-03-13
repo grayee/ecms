@@ -21,6 +21,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
                     AuOrgRelation levelRelation = new AuOrgRelation();
                     levelRelation.setLevel(orgRelation.getLevel());
                     levelRelation.setParentId(parentId);
-                    long topLevelCnt = auOrgRelationRepository.count(Example.of(levelRelation));
+                    Integer topLevelCnt = new BigDecimal(auOrgRelationRepository.count(Example.of(levelRelation))).intValue();
                     orgRelation.setOrderCode(topLevelCnt + 1);
                     auOrgRelationRepository.save(orgRelation);
                     if (parentRelation.getLeaf()) {
@@ -117,7 +118,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
         orgRelation.setParentId(null);
         AuOrgRelation levelRelation = new AuOrgRelation();
         levelRelation.setLevel(0);
-        long topLevelCnt = auOrgRelationRepository.count(Example.of(levelRelation));
+        Integer topLevelCnt = new BigDecimal(auOrgRelationRepository.count(Example.of(levelRelation))).intValue();
         orgRelation.setOrderCode(topLevelCnt + 1);
         auOrgRelationRepository.save(orgRelation);
         return true;
@@ -138,7 +139,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
         List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(ADMINISTRATIVE);
         List<Long> filteredIds = relations.stream().filter(r -> orgType == r.getOrgType())
                 .map(AuOrgRelation::getId).collect(Collectors.toList());
-        relations = TreeTools.filterTreePath(relations, filteredIds);
+        relations = TreeTools.getTargetTreePath(relations, filteredIds);
         List<String> permIds = getCheckedPerms(roleSet);
         return getTreeNodes(permIds, relations);
     }
@@ -150,12 +151,12 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
             List<AuOrgType> pTypes = connectionRuleService.getRuleBySubOrg(ADMINISTRATIVE, orgType).stream()
                     .map(AuConnectionRule::getCurOrgType).collect(Collectors.toList());
             List<Long> filteredIds = relations.stream().filter(r -> pTypes.contains(r.getOrgType())).map(AuOrgRelation::getId).collect(Collectors.toList());
-            relations = TreeTools.filterTreePath(relations, filteredIds);
+            relations = TreeTools.getTargetTreePath(relations, filteredIds);
         }
         List<AuPermission> auPermissions = Lists.newArrayList();
         roleSet.forEach(role -> auPermissions.addAll(role.getPermissions().stream()
                 .filter(perm -> perm.getType() == AuPermission.PermitType.DATA).collect(Collectors.toList())));
-        relations = TreeTools.filterTreePath(relations, auPermissions.stream().map(perm -> Long.valueOf(perm.getValue())).collect(Collectors.toList()));
+        relations = TreeTools.getTargetTreePath(relations, auPermissions.stream().map(perm -> Long.valueOf(perm.getValue())).collect(Collectors.toList()));
         List<String> permIds = getCheckedPerms(roleSet);
         return getTreeNodes(permIds, relations);
     }
@@ -182,7 +183,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
                     .map(AuConnectionRule::getCurOrgType).collect(Collectors.toList());
             List<Long> filteredIds = relations.stream().filter(r -> pTypes.contains(r.getOrgType()))
                     .map(AuOrgRelation::getId).collect(Collectors.toList());
-            relations = TreeTools.filterTreePath(relations, filteredIds);
+            relations = TreeTools.getTargetTreePath(relations, filteredIds);
         }
         List<String> permIds = getCheckedPerms(roleSet);
         return getTreeNodes(permIds, relations);
