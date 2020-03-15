@@ -4,7 +4,6 @@ package com.qslion.framework.service.impl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qslion.framework.bean.*;
-import com.qslion.framework.bean.Order;
 import com.qslion.framework.dao.IGenericRepository;
 import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.service.IGenericService;
@@ -20,7 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

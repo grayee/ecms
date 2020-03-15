@@ -1,5 +1,6 @@
 package com.qslion.framework.entity;
 
+import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.bean.NestTreeable;
 
 import javax.persistence.Basic;
@@ -19,10 +20,12 @@ public abstract class BaseTree<ID extends Serializable> extends BaseEntity<ID> i
     /**
      * 节点名称
      */
+    @DisplayField(title = "%s名称")
     private String name;
     /**
      * 父节点ID
      */
+    @DisplayField(show = false)
     private ID parentId;
     /**
      * 层级
@@ -32,6 +35,7 @@ public abstract class BaseTree<ID extends Serializable> extends BaseEntity<ID> i
     /**
      * 排序码
      */
+    @DisplayField(title = "排序码")
     private Integer orderCode;
     /**
      * 是否叶子节点

@@ -3,8 +3,6 @@
  */
 package com.qslion.authority.core.service.impl;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.qslion.authority.core.dao.AuMenuRepository;
 import com.qslion.authority.core.dao.AuPermissionRepository;
@@ -14,6 +12,8 @@ import com.qslion.authority.core.entity.*;
 import com.qslion.authority.core.enums.MenuType;
 import com.qslion.authority.core.service.AuMenuService;
 import com.qslion.authority.core.util.TreeTools;
+import com.qslion.framework.bean.Pageable;
+import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.bean.TreeNode.NodeState;
 import com.qslion.framework.enums.EnableStatus;
@@ -28,7 +28,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -52,12 +54,26 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
 
     @Override
     public List<TreeNode> getMenuTree(String username) {
+        List<AuMenu> menuList = auMenuRepository.findAll();
+        menuList = getFilteredMenu(username, menuList);
+        return TreeTools.getTreeList(menuList);
+    }
+
+    @Override
+    public Pager<AuMenu> getMenuList(String username, Pageable pageable) {
+        if (pageable == null) {
+            pageable = new Pageable();
+        }
+        Pager<AuMenu> pager = findPage(pageable);
+        List<AuMenu> menuList = pager.getContent();
+        menuList = getFilteredMenu(username, menuList);
+        menuList = menuList.stream().filter(m -> m.getParentId() != null).collect(Collectors.toList());
+        return new Pager<>(menuList, menuList.size(), pageable, pager.getExtras());
+    }
+
+    private List<AuMenu> getFilteredMenu(String username, List<AuMenu> menuList) {
         AuUser auUser = auUserRepository.findUserByUsername(username);
-        //当前用户所拥有的权限菜单集合
-        List<AuMenu> menuList = Lists.newArrayList();
-        if (auUser.isAdmin()) {
-            menuList.addAll(auMenuRepository.findAll());
-        } else {
+        if (!auUser.isAdmin()) {
             Set<AuRole> userRoleSet = auUser.getRoles();
             Set<AuUserGroup> userGroupSet = auUser.getUserGroups();
             if (CollectionUtils.isNotEmpty(userGroupSet)) {
@@ -66,14 +82,14 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
 
             Set<AuPermission> permissionSet = Sets.newHashSet();
             userRoleSet.forEach(userRole -> permissionSet.addAll(userRole.getPermissions()));
+            //当前用户所拥有的功能权限菜单
             List<Long> menuIdList = permissionSet.stream().filter(perm -> perm.getType() == AuPermission.PermitType.FUNCTION)
                     .map(AuPermission::getResource).map(AuResource::getMenu).map(AuMenu::getId).collect(Collectors.toList());
 
-            menuList.addAll(TreeTools.getTargetTreePath(auMenuRepository.findAll(), menuIdList));
+            menuList = TreeTools.getTargetTreePath(menuList, menuIdList);
         }
-
         menuList.sort(Comparator.comparing(AuMenu::getOrderCode));
-        return TreeTools.getTreeList(menuList);
+        return menuList;
     }
 
     @Override

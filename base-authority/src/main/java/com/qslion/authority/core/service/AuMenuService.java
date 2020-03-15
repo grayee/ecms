@@ -4,8 +4,11 @@
 package com.qslion.authority.core.service;
 
 import com.qslion.authority.core.entity.AuMenu;
+import com.qslion.framework.bean.Pageable;
+import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.service.IGenericService;
+
 import java.util.List;
 
 /**
@@ -16,6 +19,14 @@ import java.util.List;
  */
 public interface AuMenuService extends IGenericService<AuMenu, Long> {
 
+    /**
+     * 菜单列表
+     *
+     * @param username 用户名
+     * @param pageable pageable
+     * @return pager List
+     */
+    Pager<AuMenu>  getMenuList(String username, Pageable pageable);
 
     /**
      * 根据访问者（用户，机构，角色）获得菜单树

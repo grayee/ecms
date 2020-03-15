@@ -3,6 +3,8 @@ package com.qslion.authority.core.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.qslion.authority.core.enums.MenuType;
+import com.qslion.framework.bean.DisplayField;
+import com.qslion.framework.bean.DisplayTitle;
 import com.qslion.framework.bean.TreeNode;
 import com.qslion.framework.entity.BaseTree;
 import com.qslion.framework.enums.EnableStatus;
@@ -18,9 +20,12 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "au_menu")
+@DisplayTitle(name = "菜单")
 public class AuMenu extends BaseTree<Long> {
 
+    @DisplayField(title = "菜单类型")
     private MenuType type;
+    @DisplayField(title = "菜单路径")
     private String url;
     private String icon;
     private String component;
@@ -29,6 +34,7 @@ public class AuMenu extends BaseTree<Long> {
     /**
      * 权限编码，多个以逗号分隔
      */
+    @DisplayField(title = "权限编码")
     private String authCode;
 
     private AuResource resource;

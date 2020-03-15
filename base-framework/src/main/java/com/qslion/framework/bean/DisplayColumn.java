@@ -1,17 +1,12 @@
 package com.qslion.framework.bean;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.qslion.framework.entity.BaseEntity;
 import com.qslion.framework.util.Localize;
 import com.qslion.framework.util.ReflectUtils;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 /**
@@ -30,10 +25,12 @@ public class DisplayColumn {
     private String align;
     private boolean sortable;
 
-    public DisplayColumn(String field, DisplayField displayField) {
+    public DisplayColumn(String field, DisplayTitle displayTitle, DisplayField displayField) {
         this.id = displayField.id();
-        if (displayField.title().startsWith("{") || displayField.title().endsWith("}")) {
+        if (displayField.title().startsWith("{") && displayField.title().endsWith("}")) {
             this.title = Localize.getMessage(displayField.title().replaceAll("[{|}]+", ""));
+        } else if (displayField.title().startsWith("%s")) {
+            this.title = displayTitle != null ? String.format(displayField.title(), displayTitle.name()) : displayField.title().replace("%s", "");
         } else {
             this.title = displayField.title();
         }
@@ -52,16 +49,15 @@ public class DisplayColumn {
     public static List<DisplayColumn> getDisplayColumns(Class<?> entityClazz) {
         List<DisplayColumn> displayColumns = Lists.newArrayList();
         List<Field> fieldList = ReflectUtils.getFields(entityClazz);
-
+        DisplayTitle displayTitle = entityClazz.getDeclaredAnnotation(DisplayTitle.class);
         fieldList.stream().filter(field -> field.isAnnotationPresent(DisplayField.class)).forEach(field -> {
-            DisplayField displayAnn = field.getAnnotation(DisplayField.class);
-            DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayAnn);
+            DisplayField displayField = field.getAnnotation(DisplayField.class);
+            DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayTitle, displayField);
             displayColumns.add(displayColumn);
         });
         displayColumns.sort(Comparator.comparing(DisplayColumn::getId));
         return displayColumns;
     }
-
 
 
     public double getId() {

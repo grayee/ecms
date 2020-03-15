@@ -10,10 +10,7 @@ import com.qslion.authority.core.entity.AuUser;
 import com.qslion.authority.core.service.AuMenuService;
 import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.service.AuUserService;
-import com.qslion.framework.bean.Pageable;
-import com.qslion.framework.bean.Pager;
-import com.qslion.framework.bean.ResponseResult;
-import com.qslion.framework.bean.TreeNode;
+import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.JSONUtils;
 import io.swagger.annotations.Api;
@@ -33,7 +30,7 @@ import java.util.List;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Api(value="菜单Controller",description="菜单Controller",tags={"菜单控制器"})
+@Api(value = "菜单Controller", description = "菜单Controller", tags = {"菜单控制器"})
 @ResponseResult
 @RestController
 @RequestMapping(value = "/auth/menu")
@@ -51,9 +48,11 @@ public class AuMenuController extends BaseController<AuMenu> {
         return auMenuService.findById(id);
     }
 
-    @GetMapping(value = "/list")
-    public Pager<AuMenu> list(Pageable pageable) {
-        return auMenuService.findPage(pageable);
+    @PostMapping(value = "/list")
+    public Pager<EntityVo> list(@RequestBody Pageable pageable, @AuthenticationPrincipal AuUser user) {
+        String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
+        Pager<AuMenu> pager = auMenuService.getMenuList(username, pageable);
+        return pager.wrap(EntityVo::getPageResult);
     }
 
     @PutMapping

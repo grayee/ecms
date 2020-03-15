@@ -1,6 +1,8 @@
 package com.qslion.authority.core.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.qslion.framework.enums.IEnum;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -10,7 +12,7 @@ import java.util.Optional;
  * @author Gray.Z
  * @date 2018/9/20.
  */
-public enum MenuType {
+public enum MenuType implements IEnum<Integer> {
 
   /**
    * 目录
@@ -37,6 +39,7 @@ public enum MenuType {
     return Arrays.stream(MenuType.values()).filter(menuType -> menuType.getId() == id).findFirst();
   }
 
+  @Override
   @JsonValue
   public Integer getId() {
     return id;
@@ -52,5 +55,10 @@ public enum MenuType {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return name;
   }
 }

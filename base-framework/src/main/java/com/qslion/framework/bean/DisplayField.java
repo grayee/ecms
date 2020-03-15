@@ -9,14 +9,14 @@ import java.lang.annotation.*;
  * @author Gray.Z
  * @date 2018/9/22 22:05.
  */
-@Target({ElementType.TYPE, ElementType.FIELD})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DisplayField {
 
     double id() default 0;
 
-    String title();
+    String title() default "";
 
     boolean show() default true;
 

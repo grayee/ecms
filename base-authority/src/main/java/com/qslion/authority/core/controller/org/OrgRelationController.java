@@ -13,7 +13,6 @@ import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.service.AuRoleService;
 import com.qslion.authority.core.service.ConnectionRuleService;
 import com.qslion.authority.core.service.AuOrgRelationService;
-import com.qslion.authority.core.vo.DetailVO;
 import com.qslion.authority.custom.service.AuCompanyService;
 import com.qslion.authority.custom.service.AuDepartmentService;
 import com.qslion.authority.custom.service.AuEmployeeService;
@@ -74,7 +73,7 @@ public class OrgRelationController extends BaseController<AuOrgRelation> {
     }
 
     @GetMapping(value = "/detail/{id}")
-    public DetailVO<AbstractOrgEntity> detail(@PathVariable Long id) {
+    public EntityVo detail(@PathVariable Long id) {
         AuOrgRelation orgRelation = auOrgRelationService.findById(id);
         AuOrgType orgType = orgRelation.getOrgType();
         AbstractOrgEntity content = null;
@@ -99,7 +98,7 @@ public class OrgRelationController extends BaseController<AuOrgRelation> {
             default:
                 break;
         }
-        DetailVO<AbstractOrgEntity> detailVO = new DetailVO<>(content);
+        EntityVo detailVO = EntityVo.getDetailResult(content);
 
         List<AuOrgType> subOrgTypes = connectionRuleService.findAll().stream()
                 .filter(auConnectionRule -> auConnectionRule.getCurOrgType() == orgType)
