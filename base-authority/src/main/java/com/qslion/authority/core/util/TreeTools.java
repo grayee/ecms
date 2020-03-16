@@ -99,6 +99,18 @@ public class TreeTools {
      * @return List<TreeNode>
      */
     public static <T extends BaseTree<Long>> List<TreeNode> getTreeList(List<T> dataList) {
+        return getTreeList(dataList, null);
+    }
+
+    /**
+     * treeNode树
+     *
+     * @param dataList   上下级关系数据集
+     * @param checkedIds 选择状态的数据
+     * @param <T>        BaseTree
+     * @return List<TreeNode>
+     */
+    public static <T extends BaseTree<Long>> List<TreeNode> getTreeList(List<T> dataList, List<String> checkedIds) {
         Map<Boolean, List<T>> dMap = dataList.stream().collect(Collectors.groupingBy(t -> t.getParentId() == null));
         List<T> rootList = dMap.get(true);
         List<T> subList = dMap.get(false);
@@ -106,7 +118,10 @@ public class TreeTools {
         if (subList != null && !subList.isEmpty()) {
             for (T rootNode : rootList) {
                 TreeNode rootTreeNode = rootNode.getTreeNode();
-                rootTreeNode.setChildren(getChildren(subList, rootNode));
+                if (CollectionUtils.isNotEmpty(checkedIds) && checkedIds.contains(rootTreeNode.getId())) {
+                    rootTreeNode.setChecked(true);
+                }
+                rootTreeNode.setChildren(getChildren(subList, rootNode, checkedIds));
                 treeList.add(rootTreeNode);
             }
         }
@@ -116,12 +131,12 @@ public class TreeTools {
     /**
      * 递归获取下级节点treeNode
      *
-     * @param subList 下级节点集合
-     * @param parent  上级节点
-     * @param <T>     BaseTree
+     * @param subList    下级节点集合
+     * @param parent     上级节点
+     * @param checkedIds 选择状态的数据
      * @return List<TreeNode>
      */
-    private static <T extends BaseTree<Long>> List<TreeNode> getChildren(List<T> subList, T parent) {
+    private static <T extends BaseTree<Long>> List<TreeNode> getChildren(List<T> subList, T parent, List<String> checkedIds) {
         subList = subList.stream().filter(c -> !parent.getId().equals(c.getId())).collect(Collectors.toList());
         List<T> childList = getChildList(subList, parent);
         List<TreeNode> children = Lists.newArrayList();
@@ -129,10 +144,13 @@ public class TreeTools {
             //迭代--这些子集的对象--时候还有下一级的子级对象
             for (T nextChild : childList) {
                 TreeNode treeNode = nextChild.getTreeNode();
+                if (CollectionUtils.isNotEmpty(checkedIds) && checkedIds.contains(treeNode.getId())) {
+                    treeNode.setChecked(true);
+                }
                 //下一个对象，与所有的资源集进行判断
                 if (hasChild(subList, nextChild)) {
                     //有下一个子节点,递归 所有的对象--跟当前这个childList 的对象子节点
-                    treeNode.setChildren(getChildren(subList, nextChild));
+                    treeNode.setChildren(getChildren(subList, nextChild, checkedIds));
                 }
                 children.add(treeNode);
             }

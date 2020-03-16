@@ -40,7 +40,6 @@ import static com.qslion.authority.core.enums.AuOrgRelationType.ADMINISTRATIVE;
 public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, Long> implements
         AuOrgRelationService {
 
-    private static final Integer nodeStateOpenLevel = 2;
     @Autowired
     private AuOrgRelationRepository auOrgRelationRepository;
     @Autowired
@@ -141,7 +140,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
                 .map(AuOrgRelation::getId).collect(Collectors.toList());
         relations = TreeTools.getTargetTreePath(relations, filteredIds);
         List<String> permIds = getCheckedPerms(roleSet);
-        return getTreeNodes(permIds, relations);
+        return TreeTools.getTreeList(relations, permIds);
     }
 
     @Override
@@ -158,7 +157,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
                 .filter(perm -> perm.getType() == AuPermission.PermitType.DATA).collect(Collectors.toList())));
         relations = TreeTools.getTargetTreePath(relations, auPermissions.stream().map(perm -> Long.valueOf(perm.getValue())).collect(Collectors.toList()));
         List<String> permIds = getCheckedPerms(roleSet);
-        return getTreeNodes(permIds, relations);
+        return TreeTools.getTreeList(relations, permIds);
     }
 
     @Override
@@ -173,7 +172,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
             permIds = getCheckedPerms(roleSet);
         }
 
-        return getTreeNodes(permIds, relations);
+        return TreeTools.getTreeList(relations, permIds);
     }
 
     private List<TreeNode> getTreeNodes(AuOrgRelationType relationType, AuOrgType orgType, Set<AuRole> roleSet) {
@@ -186,7 +185,7 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
             relations = TreeTools.getTargetTreePath(relations, filteredIds);
         }
         List<String> permIds = getCheckedPerms(roleSet);
-        return getTreeNodes(permIds, relations);
+        return TreeTools.getTreeList(relations, permIds);
     }
 
     private List<String> getCheckedPerms(Set<AuRole> roleSet) {
@@ -199,29 +198,6 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
         return permIds;
     }
 
-    private List<TreeNode> getTreeNodes(List<String> checkedIds, List<AuOrgRelation> orgRelationList) {
-        List<TreeNode> resultList = new ArrayList<>();
-        for (AuOrgRelation orgRelation : orgRelationList) {
-            if (null == orgRelation.getParentId()) {
-                TreeNode rootNode = new TreeNode(orgRelation.getId().toString(), orgRelation.getName());
-                //有子节点递归遍历
-                if (!orgRelation.getLeaf()) {
-                    orgRelationList = orgRelationList.stream().filter(relation ->
-                            !orgRelation.getId().equals(relation.getId())).collect(Collectors.toList());
-                    List<TreeNode> childrenList = this.getChildTreeNode(orgRelation.getId(), orgRelationList, checkedIds);
-                    rootNode.setChildren(childrenList);
-                }
-                rootNode.setState(TreeNode.NodeState.OPEN);
-                if (checkedIds.contains(rootNode.getId())) {
-                    rootNode.setChecked(true);
-                }
-                resultList.add(rootNode);
-            }
-        }
-        return resultList;
-    }
-
-
     @Override
     public List<TreeNode> getGlobalRelationTree(Set<AuRole> roleSet) {
         List<TreeNode> resultList = new ArrayList<TreeNode>();
@@ -232,29 +208,6 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
         }
         return resultList;
     }
-
-    private List<TreeNode> getChildTreeNode(Long parentId, List<AuOrgRelation> nodeList, List<String> checkedIds) {
-        List<TreeNode> resultList = new ArrayList<>();
-        for (AuOrgRelation relation : nodeList) {
-            if (relation.getParentId() != null && relation.getParentId().equals(parentId)) {
-                TreeNode leafNode = new TreeNode(relation.getId().toString(), relation.getName());
-                if (!relation.getLeaf()) {
-                    nodeList = nodeList.stream().filter(r -> !relation.getId().equals(r.getId())).collect(Collectors.toList());
-                    List<TreeNode> leafNodes = this.getChildTreeNode(relation.getId(), nodeList, checkedIds);
-                    leafNode.setChildren(leafNodes);
-                }
-                if (relation.getLevel() <= nodeStateOpenLevel || relation.getLeaf()) {
-                    leafNode.setState(TreeNode.NodeState.OPEN);
-                }
-                if (checkedIds.contains(leafNode.getId())) {
-                    leafNode.setChecked(true);
-                }
-                resultList.add(leafNode);
-            }
-        }
-        return resultList;
-    }
-
 
     @Override
     public void delete(AuOrgRelation entity) {
