@@ -14,11 +14,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface DisplayField {
 
-    double id() default 0;
+    double order() default 0;
 
     String title() default "";
 
-    boolean show() default true;
+    boolean visible() default true;
 
     boolean sortable() default false;
 

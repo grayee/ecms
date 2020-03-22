@@ -19,7 +19,7 @@ public abstract class AbstractOrgEntity extends BaseEntity<Long> implements IOrg
 
     private static final long serialVersionUID = 4656704236281853404L;
 
-    @DisplayField(id = 4.20, title = "组织机构")
+    @DisplayField(order = 4.20, title = "组织机构")
     protected Long parentId;
 
     protected String remark;

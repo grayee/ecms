@@ -1,5 +1,6 @@
 package com.qslion.framework.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.qslion.framework.util.Localize;
 import com.qslion.framework.util.ReflectUtils;
@@ -17,16 +18,17 @@ import java.util.List;
  */
 public class DisplayColumn {
 
-    private double id;
+    @JsonIgnore
+    private double order;
     private String title;
     private String field;
     private String width;
-    private boolean show;
+    private boolean visible;
     private String align;
     private boolean sortable;
 
     public DisplayColumn(String field, DisplayTitle displayTitle, DisplayField displayField) {
-        this.id = displayField.id();
+        this.order = displayField.order();
         if (displayField.title().startsWith("{") && displayField.title().endsWith("}")) {
             this.title = Localize.getMessage(displayField.title().replaceAll("[{|}]+", ""));
         } else if (displayField.title().startsWith("%s")) {
@@ -41,7 +43,7 @@ public class DisplayColumn {
             this.width = String.format("%s%%", displayField.width());
         }
 
-        this.show = displayField.show();
+        this.visible = displayField.visible();
         this.align = displayField.align();
         this.sortable = displayField.sortable();
     }
@@ -55,17 +57,17 @@ public class DisplayColumn {
             DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayTitle, displayField);
             displayColumns.add(displayColumn);
         });
-        displayColumns.sort(Comparator.comparing(DisplayColumn::getId));
+        displayColumns.sort(Comparator.comparing(DisplayColumn::getOrder));
         return displayColumns;
     }
 
 
-    public double getId() {
-        return id;
+    public double getOrder() {
+        return order;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOrder(double order) {
+        this.order = order;
     }
 
     public String getTitle() {
@@ -92,12 +94,12 @@ public class DisplayColumn {
         this.width = width;
     }
 
-    public boolean isShow() {
-        return show;
+    public boolean isVisible() {
+        return visible;
     }
 
-    public void setShow(boolean show) {
-        this.show = show;
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public String getAlign() {

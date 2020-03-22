@@ -28,49 +28,49 @@ public class AccountVoucher extends BaseEntity<Long> {
     /**
      * 业务日期
      */
-    @DisplayField(id = 1, title = "日期")
+    @DisplayField(order = 1, title = "日期")
     private Date businessDate;
 
     /**
      * 借方金额合计
      */
-    @DisplayField(id = 2, title = "借方合计")
+    @DisplayField(order = 2, title = "借方合计")
     private BigDecimal debitAmtSum;
 
     /**
      * 贷方金额合计
      */
-    @DisplayField(id = 3, title = "贷方合计")
+    @DisplayField(order = 3, title = "贷方合计")
     private BigDecimal creditAmtSum;
 
     /**
      * 余额
      */
-    @DisplayField(id = 4, title = "余额")
+    @DisplayField(order = 4, title = "余额")
     private BigDecimal balance;
 
     /**
      * 余额方向
      */
-    @DisplayField(id = 5, title = "余额方向")
+    @DisplayField(order = 5, title = "余额方向")
     private AccountDir balanceDir;
 
     /**
      * 凭证字
      */
-    @DisplayField(id = 6, title = "凭证字")
+    @DisplayField(order = 6, title = "凭证字")
     private VoucherType voucherType;
 
     /**
      * 凭证号
      */
-    @DisplayField(id = 7, title = "凭证号")
+    @DisplayField(order = 7, title = "凭证号")
     private String voucherNo;
 
     /**
      * 制单人
      */
-    @DisplayField(id = 8, title = "制单人")
+    @DisplayField(order = 8, title = "制单人")
     private String maker;
     /**
      * 备注信息

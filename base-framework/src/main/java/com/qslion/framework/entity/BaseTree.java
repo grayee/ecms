@@ -20,12 +20,12 @@ public abstract class BaseTree<ID extends Serializable> extends BaseEntity<ID> i
     /**
      * 节点名称
      */
-    @DisplayField(title = "%s名称")
+    @DisplayField(order = 1, title = "%s名称",width = "15")
     private String name;
     /**
      * 父节点ID
      */
-    @DisplayField(show = false)
+    @DisplayField(visible = false)
     private ID parentId;
     /**
      * 层级
@@ -35,7 +35,7 @@ public abstract class BaseTree<ID extends Serializable> extends BaseEntity<ID> i
     /**
      * 排序码
      */
-    @DisplayField(title = "排序码")
+    @DisplayField(order = 3.5, title = "排序码",width = "6")
     private Integer orderCode;
     /**
      * 是否叶子节点

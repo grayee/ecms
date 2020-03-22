@@ -18,16 +18,16 @@ import javax.persistence.*;
 @Table(name = "au_position")
 public class AuPosition extends AbstractOrgEntity {
 
-    @DisplayField(id = 1, title = "岗位编号")
+    @DisplayField(order = 1, title = "岗位编号")
     private String positionNo;
-    @DisplayField(id = 2, title = "岗位名称")
+    @DisplayField(order = 2, title = "岗位名称")
     private String positionName;
-    @DisplayField(id = 3, title = "岗位标识")
+    @DisplayField(order = 3, title = "岗位标识")
     private String positionFlag;
-    @DisplayField(id = 4, title = "岗位类型")
+    @DisplayField(order = 4, title = "岗位类型")
     private String positionType;
     private String positionLevel;
-    @DisplayField(id = 5, title = "领导标志")
+    @DisplayField(order = 5, title = "领导标志")
     private String leaderFlag;
     private String leaderLevel;
 

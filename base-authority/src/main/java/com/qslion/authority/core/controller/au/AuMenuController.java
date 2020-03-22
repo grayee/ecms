@@ -7,6 +7,7 @@ package com.qslion.authority.core.controller.au;
 import com.qslion.authority.core.entity.AuMenu;
 import com.qslion.authority.core.entity.AuResource;
 import com.qslion.authority.core.entity.AuUser;
+import com.qslion.authority.core.enums.MenuType;
 import com.qslion.authority.core.service.AuMenuService;
 import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.service.AuUserService;
@@ -52,6 +53,7 @@ public class AuMenuController extends BaseController<AuMenu> {
     public Pager<EntityVo> list(@RequestBody Pageable pageable, @AuthenticationPrincipal AuUser user) {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         Pager<AuMenu> pager = auMenuService.getMenuList(username, pageable);
+        pager.addExtras("menuTypeMap",  MenuType.getMapList());
         return pager.wrap(EntityVo::getPageResult);
     }
 

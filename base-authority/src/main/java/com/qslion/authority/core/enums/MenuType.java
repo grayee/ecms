@@ -1,9 +1,13 @@
 package com.qslion.authority.core.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.qslion.framework.enums.IEnum;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,6 +41,17 @@ public enum MenuType implements IEnum<Integer> {
 
   public Optional<MenuType> get(Integer id) {
     return Arrays.stream(MenuType.values()).filter(menuType -> menuType.getId() == id).findFirst();
+  }
+
+  public static List<Map<String, Object>> getMapList() {
+    List<Map<String, Object>> sType = Lists.newArrayList();
+    for (MenuType menuType : MenuType.values()) {
+      Map<String, Object> sMap = Maps.newHashMapWithExpectedSize(2);
+      sMap.put("value", menuType.getId());
+      sMap.put("text", menuType.getName());
+      sType.add(sMap);
+    }
+    return sType;
   }
 
   @Override

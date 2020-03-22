@@ -50,6 +50,7 @@ public class AccountSubjectController extends BaseController<AccountSubject> {
         pager.addExtras("subjectTypes", SubjectType.getMapList());
         return pager.wrap(subject -> {
             int spaceLen = subject.getSubjectCode().length() - 4;
+
             if (spaceLen > 0) {
                 spaceLen = subject.getSubjectCode().length() + spaceLen;
                 subject.setSubjectCode(String.format("%" + spaceLen + "s", subject.getSubjectCode()).replace(" ", "\r\n"));

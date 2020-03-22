@@ -23,37 +23,37 @@ import javax.validation.constraints.Pattern;
 @Table(name = "au_company")
 public class AuCompany extends AbstractOrgEntity {
 
-    @DisplayField(id = 1, title = "{display.column.title.company.no}")
+    @DisplayField(order = 1, title = "{display.column.title.company.no}")
     private String companyNo;
-    @DisplayField(id = 2, title = "公司名称")
+    @DisplayField(order = 2, title = "公司名称")
     @NotBlank(message = "{company.name.notBlank}")
     private String companyName;
-    @DisplayField(id = 5, title = "公司标识")
+    @DisplayField(order = 5, title = "公司标识")
     private String companyFlag;
     private String companyType;
     private Short companyLevel;
-    @DisplayField(id = 3, title = "公司简称")
+    @DisplayField(order = 3, title = "公司简称")
     private String shortName;
     private String area;
     private String linkMan;
-    @DisplayField(id = 9, title = "联系电话")
+    @DisplayField(order = 9, title = "联系电话")
     @Pattern(regexp = "^1([345789])\\d{9}$", message = "座机号码格式错误")
     @NotBlank(message = "手机号码不能为空", groups = {AddGroup.class})
     private String mobilePhone;
 
-    @DisplayField(id = 10, title = "座机电话")
+    @DisplayField(order = 10, title = "座机电话")
     @NotBlank(message = "座机号码不能为空", groups = {AddGroup.class})
     private String telPhone;
 
     private String fax;
-    @DisplayField(id = 11, title = "公司地址")
+    @DisplayField(order = 11, title = "公司地址")
     private String address;
-    @DisplayField(id = 6, title = "公司邮编")
+    @DisplayField(order = 6, title = "公司邮编")
     private String postalCode;
-    @DisplayField(id = 8, title = "邮箱")
+    @DisplayField(order = 8, title = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;
-    @DisplayField(id = 7, title = "公司网址")
+    @DisplayField(order = 7, title = "公司网址")
     private String webSite;
 
 

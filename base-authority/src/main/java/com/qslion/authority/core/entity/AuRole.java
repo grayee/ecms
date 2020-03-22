@@ -20,9 +20,9 @@ import java.util.Set;
 public class AuRole extends AbstractOrgEntity {
 
     private static final long serialVersionUID = 5739472491120418264L;
-    @DisplayField(id = 1, title = "角色名称")
+    @DisplayField(order = 1, title = "角色名称")
     private String name;
-    @DisplayField(id = 2, title = "角色编码")
+    @DisplayField(order = 2, title = "角色编码")
     private String value;
 
     @JsonIgnore

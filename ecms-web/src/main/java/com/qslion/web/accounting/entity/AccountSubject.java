@@ -25,12 +25,12 @@ public class AccountSubject extends BaseEntity<Long> {
     /**
      * 科目编码
      */
-    @DisplayField(id = 1, title = "科目编码", align = "left", width = "5")
+    @DisplayField(order = 1, title = "科目编码", align = "left", width = "5")
     private String subjectCode;
     /**
      * 科目名称
      */
-    @DisplayField(id = 2, title = "科目名称", align = "left")
+    @DisplayField(order = 2, title = "科目名称", align = "left")
     private String subjectName;
 
     /**
@@ -45,7 +45,7 @@ public class AccountSubject extends BaseEntity<Long> {
     /**
      * 余额方向
      */
-    @DisplayField(id = 4, title = "余额方向")
+    @DisplayField(order = 4, title = "余额方向")
     private AccountDir balanceDir;
 
     /**
@@ -56,7 +56,7 @@ public class AccountSubject extends BaseEntity<Long> {
     /**
      * 科目类型
      */
-    @DisplayField(id = 3, title = "科目类型")
+    @DisplayField(order = 3, title = "科目类型")
     private SubjectType subjectType;
 
     /**
@@ -102,7 +102,7 @@ public class AccountSubject extends BaseEntity<Long> {
     /**
      * 是否系统内置
      */
-    @DisplayField(id = 5, title = "是否内置")
+    @DisplayField(order = 5, title = "是否内置")
     private Boolean isSystem;
 
     @ManyToMany(targetEntity = AccountAssist.class)

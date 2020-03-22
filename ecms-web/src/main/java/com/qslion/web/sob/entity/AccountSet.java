@@ -24,36 +24,36 @@ public class AccountSet extends BaseEntity<Long> {
     /**
      * 单位名称
      */
-    @DisplayField(id = 1, title = "单位名称")
+    @DisplayField(order = 1, title = "单位名称")
     private String companyName;
     /**
      * 账套名称
      */
-    @DisplayField(id = 2, title = "账套名称")
+    @DisplayField(order = 2, title = "账套名称")
     private String sobName;
     /**
      * 账套期间
      */
-    @DisplayField(id = 3, title = "账套期间")
+    @DisplayField(order = 3, title = "账套期间")
     @JsonFormat(pattern = "yyyy-MM")
     private Date acctPeriod;
 
     /**
      * 增值税种类
      */
-    @DisplayField(id = 4, title = "增值税种类")
+    @DisplayField(order = 4, title = "增值税种类")
     private VatType vatType;
 
     /**
      * 会计原则类型
      */
-    @DisplayField(id = 5, title = "会计准则类型")
+    @DisplayField(order = 5, title = "会计准则类型")
     private GaapType gaapType;
 
     /**
      * 是否系统内置
      */
-    @DisplayField(id = 6, title = "是否内置")
+    @DisplayField(order = 6, title = "是否内置")
     private Boolean isSystem;
 
     /**

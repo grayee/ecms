@@ -18,22 +18,22 @@ import javax.persistence.*;
 @Table(name = "au_employee")
 public class AuEmployee extends AbstractOrgEntity {
 
-    @DisplayField(id = 1, title = "员工编号")
+    @DisplayField(order = 1, title = "员工编号")
     private String employeeNo;
-    @DisplayField(id = 2, title = "员工姓名")
+    @DisplayField(order = 2, title = "员工姓名")
     private String employeeName;
-    @DisplayField(id = 3, title = "英文名称")
+    @DisplayField(order = 3, title = "英文名称")
     private String englishName;
     private String employeeType;
-    @DisplayField(id = 4, title = "性别")
+    @DisplayField(order = 4, title = "性别")
     private SexEnum sex;
-    @DisplayField(id = 5, title = "手机号码")
+    @DisplayField(order = 5, title = "手机号码")
     private String mobilePhone;
-    @DisplayField(id = 6, title = "电话")
+    @DisplayField(order = 6, title = "电话")
     private String telPhone;
-    @DisplayField(id = 7, title = "邮箱")
+    @DisplayField(order = 7, title = "邮箱")
     private String email;
-    @DisplayField(id = 8, title = "联系地址")
+    @DisplayField(order = 8, title = "联系地址")
     private String address;
     private String postalCode;
 

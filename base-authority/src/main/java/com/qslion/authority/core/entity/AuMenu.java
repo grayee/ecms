@@ -23,18 +23,20 @@ import java.util.Map;
 @DisplayTitle(name = "菜单")
 public class AuMenu extends BaseTree<Long> {
 
-    @DisplayField(title = "菜单类型")
+    @DisplayField(order = 2,title = "菜单类型")
     private MenuType type;
-    @DisplayField(title = "菜单路径")
+    @DisplayField(order = 3,title = "菜单路径",align = "left")
     private String url;
+    @DisplayField(order = 1.5,title = "图标")
     private String icon;
+    @DisplayField(order = 4,title = "组件",align = "left")
     private String component;
     private Short status;
     private EnableStatus enableStatus;
     /**
      * 权限编码，多个以逗号分隔
      */
-    @DisplayField(title = "权限编码")
+    @DisplayField(order = 5,title = "权限编码")
     private String authCode;
 
     private AuResource resource;

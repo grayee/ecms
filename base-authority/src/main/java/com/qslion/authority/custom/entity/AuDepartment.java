@@ -18,19 +18,19 @@ import java.util.Date;
 @Table(name = "au_department")
 public class AuDepartment extends AbstractOrgEntity {
 
-    @DisplayField(id = 1, title = "部门编码")
+    @DisplayField(order = 1, title = "部门编码")
     private String deptNo;
-    @DisplayField(id = 2, title = "部门名称")
+    @DisplayField(order = 2, title = "部门名称")
     private String deptName;
-    @DisplayField(id = 3, title = "部门标识")
+    @DisplayField(order = 3, title = "部门标识")
     private String deptFlag;
-    @DisplayField(id = 4, title = "部门类型")
+    @DisplayField(order = 4, title = "部门类型")
     private String deptType;
-    @DisplayField(id = 5, title = "部门级别")
+    @DisplayField(order = 5, title = "部门级别")
     private String deptLevel;
-    @DisplayField(id = 6, title = "部门领导")
+    @DisplayField(order = 6, title = "部门领导")
     private String deptLeader;
-    @DisplayField(id = 7, title = "成立时间")
+    @DisplayField(order = 7, title = "成立时间")
     //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",timezone = "GMT+8")
     private Date foundDate;
 

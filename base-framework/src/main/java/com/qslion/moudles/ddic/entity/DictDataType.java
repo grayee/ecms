@@ -3,12 +3,9 @@ package com.qslion.moudles.ddic.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.entity.BaseEntity;
+
+import javax.persistence.*;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 /**
  * 实体类 - 数据字典类型
@@ -20,13 +17,13 @@ import javax.persistence.Table;
 @Table(name = "dict_data_type")
 public class DictDataType extends BaseEntity<Long> {
 
-    @DisplayField(id = 1, title = "类型名称")
+    @DisplayField(order = 1, title = "类型名称")
     private String name;
-    @DisplayField(id = 2, title = "类型编码")
+    @DisplayField(order = 2, title = "类型编码")
     private String code;
-    @DisplayField(id = 3, title = "描述信息")
+    @DisplayField(order = 3, title = "描述信息")
     private String description;
-    @DisplayField(id = 4, title = "是否内置")
+    @DisplayField(order = 4, title = "是否内置")
     private boolean isSystem;
     @JsonIgnore
     private List<DictDataValue> dictDataValueList;
