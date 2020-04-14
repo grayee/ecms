@@ -1,7 +1,7 @@
 package com.qslion.framework.enums;
 
 /**
- *  IEnum
+ * IEnum
  *
  * @author Gray.Z
  * @date 2018/9/22.
@@ -9,5 +9,16 @@ package com.qslion.framework.enums;
 public interface IEnum<T> {
     T getId();
 
+    /**
+     *
+     * @return
+     */
+    String getIdKey();
+
+    /**
+     * 显示名称
+     *
+     * @return DisplayName
+     */
     String getDisplayName();
 }

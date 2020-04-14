@@ -89,4 +89,9 @@ public enum AuOrgType implements IEnum<Integer> {
     public String getDisplayName() {
         return Localize.getMessage(name);
     }
+
+    @Override
+    public String getIdKey() {
+        return "orgTypeId";
+    }
 }

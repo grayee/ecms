@@ -58,9 +58,14 @@ public enum AccountDir implements IEnum<Integer> {
         }
         return sType;
     }
+
     @Override
     public String getDisplayName() {
         return name;
     }
 
+    @Override
+    public String getIdKey() {
+        return "accountDirId";
+    }
 }

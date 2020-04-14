@@ -53,10 +53,9 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
     private AuPermissionRepository auPermissionRepository;
 
     @Override
-    public List<TreeNode> getMenuTree(String username) {
+    public List<AuMenu> getMenuList(String username) {
         List<AuMenu> menuList = auMenuRepository.findAll();
-        menuList = getFilteredMenu(username, menuList);
-        return TreeTools.getTreeList(menuList);
+        return getFilteredMenu(username, menuList);
     }
 
     @Override

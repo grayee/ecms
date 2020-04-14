@@ -1,6 +1,5 @@
 package com.test;
 
-
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -20,6 +19,8 @@ import org.apache.zookeeper.ZooKeeper;
  * 一旦这些数据的状态发生变化，Zookeeper 就将负责通知已经在 Zookeeper 上注册的那些观察者做出相应的反应，从而实现集群中类似 Master/Slave 管理模式， 关于
  * Zookeeper 的详细架构等内部细节可以阅读 Zookeeper 的源码 https://www.ibm.com/developerworks/cn/opensource/os-cn-zookeeper/index.html
  * http://www.cnblogs.com/leesf456/p/6239578.html
+ * https://www.iteye.com/blog/coolxing-1871009
+ * https://www.cnblogs.com/erbing/p/9799098.html
  */
 public class ZookeeperTest {
 
@@ -109,8 +110,6 @@ public class ZookeeperTest {
         for (ChildData data : cache.getCurrentData()) {
             System.out.println("getCurrentData:" + data.getPath() + " = " + new String(data.getData()));
         }
-
-
     }
 
 }

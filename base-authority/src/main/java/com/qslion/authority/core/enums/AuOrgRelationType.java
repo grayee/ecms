@@ -63,4 +63,8 @@ public enum AuOrgRelationType implements IEnum<Integer> {
     public String getDisplayName() {
         return value;
     }
+    @Override
+    public String getIdKey() {
+        return "orgRelTypeId";
+    }
 }

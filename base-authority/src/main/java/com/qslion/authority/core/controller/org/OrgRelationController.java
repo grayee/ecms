@@ -98,7 +98,7 @@ public class OrgRelationController extends BaseController<AuOrgRelation> {
             default:
                 break;
         }
-        EntityVo detailVO = EntityVo.getDetailResult(content);
+        EntityVo detailVO = EntityVo.getEntityVo(content);
 
         List<AuOrgType> subOrgTypes = connectionRuleService.findAll().stream()
                 .filter(auConnectionRule -> auConnectionRule.getCurOrgType() == orgType)

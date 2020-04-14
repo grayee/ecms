@@ -17,37 +17,30 @@ import java.util.Map;
  */
 public class EntityVo extends LinkedHashMap<String, Object> {
 
-    public static EntityVo getPageResult(Object obj) {
+    private static final String FIELD_ID = "id";
+    private static final String EXTRAS = "extras";
+
+    public static EntityVo getEntityVo(Object obj) {
         EntityVo entityVo = new EntityVo();
         for (Field field : ReflectUtils.getFields(obj.getClass())) {
-            if (field.isAnnotationPresent(DisplayField.class) || "id".equals(field.getName())) {
+            if (field.isAnnotationPresent(DisplayField.class) || FIELD_ID.equals(field.getName())) {
                 Object fieldValueObj = ReflectUtils.getValueByField(field, obj);
-                if(fieldValueObj instanceof IEnum){
+                if (fieldValueObj instanceof IEnum) {
+                    entityVo.put(((IEnum) fieldValueObj).getIdKey(), fieldValueObj);
                     entityVo.put(field.getName(), ((IEnum) fieldValueObj).getDisplayName());
-                }else{
+                } else {
                     entityVo.put(field.getName(), fieldValueObj);
                 }
             }
         }
         return entityVo;
     }
-
-    public static EntityVo getDetailResult(Object obj) {
-        EntityVo entityVo = new EntityVo();
-        for (Field field : ReflectUtils.getFields(obj.getClass())) {
-            if (field.isAnnotationPresent(DisplayField.class) || "id".equals(field.getName())) {
-                Object fieldValueObj = ReflectUtils.getValueByField(field, obj);
-                entityVo.put(field.getName(), fieldValueObj);
-            }
-        }
-        return entityVo;
-    }
-
+    
     public void addExtras(String key, Object value) {
-        Map<String, Object> extraMap = (Map<String, Object>) get("extras");
+        Map<String, Object> extraMap = (Map<String, Object>) get(EXTRAS);
         if (extraMap == null) {
             extraMap = Maps.newHashMap();
-            put("extras", extraMap);
+            put(EXTRAS, extraMap);
         }
         extraMap.put(key, value);
     }
@@ -57,7 +50,7 @@ public class EntityVo extends LinkedHashMap<String, Object> {
         test.setCode("1");
         test.setSystem(true);
 
-        EntityVo vo = EntityVo.getPageResult(test);
+        EntityVo vo = EntityVo.getEntityVo(test);
         System.out.println(vo);
     }
 }

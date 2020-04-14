@@ -33,7 +33,7 @@ public class AccountAssistController extends BaseController<AccountAssist> {
     public List<EntityVo> list() {
         List<AccountAssist> list = accountAssistService.findList(Lists.newArrayList(),Lists.newArrayList());
         return list.stream().map(aat->{
-            EntityVo ev= EntityVo.getPageResult(aat.getClass());
+            EntityVo ev= EntityVo.getEntityVo(aat.getClass());
             ev.put("isSystem","");
             return ev;
         }).collect(Collectors.toList());

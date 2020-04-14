@@ -56,4 +56,9 @@ public enum EnableStatus implements IEnum<Integer> {
     public String getDisplayName() {
         return name;
     }
+
+    @Override
+    public String getIdKey() {
+        return "statusCode";
+    }
 }

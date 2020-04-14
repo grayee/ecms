@@ -11,6 +11,7 @@ import com.qslion.authority.core.enums.MenuType;
 import com.qslion.authority.core.service.AuMenuService;
 import com.qslion.authority.core.service.AuResourceService;
 import com.qslion.authority.core.service.AuUserService;
+import com.qslion.authority.core.util.TreeTools;
 import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.JSONUtils;
@@ -50,11 +51,11 @@ public class AuMenuController extends BaseController<AuMenu> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<EntityVo> list(@RequestBody Pageable pageable, @AuthenticationPrincipal AuUser user) {
+    public Pager<EntityVo> list(@RequestBody Pageable pageable, @ApiIgnore @AuthenticationPrincipal AuUser user) {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         Pager<AuMenu> pager = auMenuService.getMenuList(username, pageable);
-        pager.addExtras("menuTypeMap",  MenuType.getMapList());
-        return pager.wrap(EntityVo::getPageResult);
+        pager.addExtras("menuTypeMap", MenuType.getMapList());
+        return pager.wrap(EntityVo::getEntityVo);
     }
 
     @PutMapping
@@ -96,7 +97,8 @@ public class AuMenuController extends BaseController<AuMenu> {
     public List<TreeNode> getMenuTree(@ApiIgnore @AuthenticationPrincipal AuUser user) {
         String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
         //根据登录用户获取菜单树
-        List<TreeNode> menuTree = this.auMenuService.getMenuTree(username);
+        List<AuMenu> menuList = this.auMenuService.getMenuList(username);
+        List<TreeNode> menuTree = TreeTools.getTreeList(menuList);
         if (CollectionUtils.isNotEmpty(menuTree) && menuTree.size() <= 1) {
             menuTree = menuTree.get(0).getChildren();
         }

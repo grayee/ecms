@@ -4,7 +4,6 @@ import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
 import com.qslion.web.accounting.entity.AccountSubject;
 import com.qslion.web.accounting.entity.AccountVoucher;
-import com.qslion.web.accounting.enums.SubjectType;
 import com.qslion.web.accounting.service.AccountAssistService;
 import com.qslion.web.accounting.service.AccountSubjectService;
 import com.qslion.web.accounting.service.AccountVoucherService;
@@ -37,7 +36,7 @@ public class AccountVoucherController extends BaseController<AccountSubject> {
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
         Pager<AccountVoucher> pager = accountVoucherService.findPage(pageable);
-        return pager.wrap(EntityVo::getPageResult);
+        return pager.wrap(EntityVo::getEntityVo);
     }
 
 
@@ -57,7 +56,7 @@ public class AccountVoucherController extends BaseController<AccountSubject> {
         if (id != null) {
             voucher = accountVoucherService.findById(id);
         }
-        EntityVo ev = EntityVo.getDetailResult(voucher);
+        EntityVo ev = EntityVo.getEntityVo(voucher);
         return ev;
     }
 

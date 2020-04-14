@@ -110,7 +110,7 @@ public class AuRoleController extends BaseController<AuRole> {
             pageable.getQueryFilters().add(new QueryFilter("id", QueryFilter.Operator.notIn, userIds));
         }
         Pager<AuUser> pager = auUserService.findPage(pageable);
-        return pager.wrap(EntityVo::getPageResult);
+        return pager.wrap(EntityVo::getEntityVo);
     }
 
     /**

@@ -31,7 +31,7 @@ public interface AuMenuService extends IGenericService<AuMenu, Long> {
     /**
      * 根据访问者（用户，机构，角色）获得菜单树
      */
-    List<TreeNode> getMenuTree(String username);
+    List<AuMenu> getMenuList(String username);
 
     /**
      * 取得当前菜单节点下的所有子节点

@@ -39,7 +39,7 @@ public class AccountSetController extends BaseController<AccountSet> {
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
         Pager<AccountSet> pager = accountSetService.findPage(pageable);
         return pager.wrap(sob -> {
-            EntityVo ev = EntityVo.getPageResult(sob);
+            EntityVo ev = EntityVo.getEntityVo(sob);
             ev.put("isSystem", DictUtils.getValue("isSystem", sob.getSystem().toString()));
             return ev;
         });
@@ -65,7 +65,7 @@ public class AccountSetController extends BaseController<AccountSet> {
         if (id != null) {
             accountSet = accountSetService.findById(id);
         }
-        EntityVo ev = EntityVo.getDetailResult(accountSet);
+        EntityVo ev = EntityVo.getEntityVo(accountSet);
         ev.addExtras("vatTypeMap", VatType.getMapList());
         ev.addExtras("gaapTypeMap", GaapType.getMapList());
         ev.addExtras("isSystemMap", DictUtils.getMapList("isSystem"));

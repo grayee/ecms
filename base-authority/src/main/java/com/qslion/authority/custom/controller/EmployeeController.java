@@ -79,7 +79,7 @@ public class EmployeeController extends BaseController<AuEmployee> {
         Pager<AuEmployee> pager =employeeService.findPage(pageable);
         List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(emp -> {
-            EntityVo ev = EntityVo.getPageResult(emp);
+            EntityVo ev = EntityVo.getEntityVo(emp);
             ev.put("parentId", TreeTools.getTreePathStr(relations, emp.getParentId()));
             return ev;
         });

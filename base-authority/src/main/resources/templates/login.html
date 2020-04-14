@@ -26,7 +26,7 @@
         contentType: "application/json",
         success: function (result) {
           if (result.code == 0) {
-            window.location.href = "home?access_token=" + result.data.access_token;
+            window.location.href = "home?access_token=" + result.data.token.replace("bearer ","");
           } else {
             $("#login_error>span").html(result.message);
           }

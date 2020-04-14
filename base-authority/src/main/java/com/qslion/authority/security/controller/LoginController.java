@@ -21,6 +21,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(value = "登录Controller", description = "登录Controller", tags = {"登录控制器"})
 @ResponseResult
-@RestController
+@Controller
 public class LoginController extends BaseController {
 
     @Autowired

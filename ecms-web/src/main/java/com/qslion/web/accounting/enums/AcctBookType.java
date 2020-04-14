@@ -55,5 +55,9 @@ public enum AcctBookType implements IEnum<Integer> {
         this.name = name;
     }
 
+    @Override
+    public String getIdKey() {
+        return "bookTypeId";
+    }
 
 }
