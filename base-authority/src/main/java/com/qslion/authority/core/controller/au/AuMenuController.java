@@ -51,9 +51,8 @@ public class AuMenuController extends BaseController<AuMenu> {
     }
 
     @PostMapping(value = "/list")
-    public Pager<EntityVo> list(@RequestBody Pageable pageable, @ApiIgnore @AuthenticationPrincipal AuUser user) {
-        String username = StringUtils.defaultString(user.getUsername(), auUserService.getCurrentUsername());
-        Pager<AuMenu> pager = auMenuService.getMenuList(username, pageable);
+    public Pager<EntityVo> list(@RequestBody Pageable pageable) {
+        Pager<AuMenu> pager = auMenuService.getMenuList(pageable);
         pager.addExtras("menuTypeMap", MenuType.getMapList());
         return pager.wrap(EntityVo::getEntityVo);
     }

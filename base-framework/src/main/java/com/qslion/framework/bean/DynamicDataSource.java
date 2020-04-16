@@ -25,7 +25,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         String typeKey = DataSourceContextHolder.getDataSourceType().name();
-        logger.info("当前数据源类型为：{}", typeKey);
+        logger.debug("当前数据源类型为：{}", typeKey);
         return typeKey;
     }
 

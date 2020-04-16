@@ -20,13 +20,12 @@ import java.util.List;
 public interface AuMenuService extends IGenericService<AuMenu, Long> {
 
     /**
-     * 菜单列表
+     * 菜单列表,非分页
      *
-     * @param username 用户名
      * @param pageable pageable
      * @return pager List
      */
-    Pager<AuMenu>  getMenuList(String username, Pageable pageable);
+    Pager<AuMenu> getMenuList(Pageable pageable);
 
     /**
      * 根据访问者（用户，机构，角色）获得菜单树
