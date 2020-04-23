@@ -64,12 +64,7 @@ public class AuMenuServiceImpl extends GenericServiceImpl<AuMenu, Long> implemen
             pageable = new Pageable();
         }
         Pager<AuMenu> pager = findPage(pageable);
-        List<AuMenu> menuList = pager.getContent().stream().filter(m -> m.getParentId() != null).map(m -> {
-            if (m.getParentId() <= 1) {
-                m.setParentId(null);
-            }
-            return m;
-        }).collect(Collectors.toList());
+        List<AuMenu> menuList = pager.getContent().stream().filter(m -> m.getParentId() != null).collect(Collectors.toList());
         return new Pager<>(menuList, menuList.size(), pageable, pager.getExtras());
     }
 
