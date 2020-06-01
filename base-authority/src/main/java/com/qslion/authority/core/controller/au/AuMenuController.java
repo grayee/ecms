@@ -14,6 +14,8 @@ import com.qslion.authority.core.service.AuUserService;
 import com.qslion.authority.core.util.TreeTools;
 import com.qslion.framework.bean.*;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.util.CGlibMapper;
+import com.qslion.framework.util.CopyUtils;
 import com.qslion.framework.util.JSONUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections4.CollectionUtils;
@@ -59,8 +61,8 @@ public class AuMenuController extends BaseController<AuMenu> {
 
     @PutMapping
     public boolean update(@RequestBody AuMenu menu) {
+        AuMenu oldAuMenu = auMenuService.findById(menu.getId());
         if (menu.getResource() == null) {
-            AuMenu oldAuMenu = auMenuService.findById(menu.getId());
             AuResource resource = resourceService.findByMenu(oldAuMenu);
             if (resource == null) {
                 resource = menu.buildResource();
@@ -68,13 +70,10 @@ public class AuMenuController extends BaseController<AuMenu> {
                 resource.setName(menu.getName());
                 resource.setValue(menu.getUrl());
             }
-            menu.setLeaf(oldAuMenu.getLeaf());
-            menu.setLevel(oldAuMenu.getLevel());
-            menu.setEnableStatus(oldAuMenu.getEnableStatus());
-            menu.setStatus(oldAuMenu.getStatus());
-            menu.setResource(resource);
+            oldAuMenu.setResource(resource);
         }
-        AuMenu auMenu = auMenuService.update(menu);
+        CopyUtils.copyProperties(menu, oldAuMenu);
+        AuMenu auMenu = auMenuService.update(oldAuMenu);
         return auMenu != null;
     }
 

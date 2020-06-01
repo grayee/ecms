@@ -1,6 +1,7 @@
 package com.qslion.framework.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qslion.framework.enums.EnumConvertFactory;
@@ -64,6 +65,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         objMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objMapper.setSerializationInclusion(Include.NON_NULL);
         objMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objMapper;
     }
 

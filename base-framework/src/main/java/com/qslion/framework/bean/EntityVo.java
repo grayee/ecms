@@ -25,12 +25,7 @@ public class EntityVo extends LinkedHashMap<String, Object> {
         for (Field field : ReflectUtils.getFields(obj.getClass())) {
             if (field.isAnnotationPresent(DisplayField.class) || FIELD_ID.equals(field.getName())) {
                 Object fieldValueObj = ReflectUtils.getValueByField(field, obj);
-                if (fieldValueObj instanceof IEnum) {
-                    entityVo.put(((IEnum) fieldValueObj).getIdKey(), fieldValueObj);
-                    entityVo.put(field.getName(), ((IEnum) fieldValueObj).getDisplayName());
-                } else {
-                    entityVo.put(field.getName(), fieldValueObj);
-                }
+                entityVo.put(field.getName(), fieldValueObj);
             }
         }
         return entityVo;

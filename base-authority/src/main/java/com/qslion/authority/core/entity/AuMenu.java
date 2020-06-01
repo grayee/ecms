@@ -179,6 +179,7 @@ public class AuMenu extends BaseTree<Long> {
         resource.setName(getName());
         resource.setValue(getUrl());
         resource.setMenu(this);
+        resource.setLeaf(true);
         resource.setRemark(this.getRemark());
         resource.setParentId(this.getParentId());
         resource.setEnableStatus(getEnableStatus());
@@ -192,7 +193,9 @@ public class AuMenu extends BaseTree<Long> {
         TreeNode treeNode = new TreeNode(String.valueOf(getId()), this.getName());
         treeNode.setIconCls(getIcon());
         treeNode.setPath(getUrl());
-        treeNode.setState(getLeaf() ? TreeNode.NodeState.OPEN : TreeNode.NodeState.CLOSED);
+        if (getLeaf() != null) {
+            treeNode.setState(getLeaf() ? TreeNode.NodeState.OPEN : TreeNode.NodeState.CLOSED);
+        }
 
         Map<String, Object> attributeMap = Maps.newHashMap();
         attributeMap.put("modifyDate", getModifyDate());

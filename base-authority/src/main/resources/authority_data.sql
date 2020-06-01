@@ -149,7 +149,7 @@ INSERT INTO au_menu (id, name,type,url,remark,order_code,parent_id, status, is_l
 VALUES (604, '新增凭证',2,'voucher/add','账表输出备注信息',3,601,1,true,1,'fa-o',604,now(),now(),'AccountVoucherAdd',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_code,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (7, '出纳管理',0,NULL,'出纳管理备注信息',7,1,1,false,1,'fa-o',7,now(),now(),'',1,1);
+VALUES (7, '出纳管理',0,'/chuna','出纳管理备注信息',7,1,1,false,1,'fa-o',7,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_code,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (701, '现金日记账',1,'dict','现金日记账备注信息',1,7,1,true,1,'fa-o',701,now(),now(),'Dictionary',1,1);
@@ -161,7 +161,7 @@ INSERT INTO au_menu (id, name,type,url,remark,order_code,parent_id, status, is_l
 VALUES (703, '结账管理',1,'dict','结账管理备注信息',3,7,1,true,1,'fa-o',703,now(),now(),'Dictionary',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_code,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
-VALUES (8, '报表管理',0,NULL,'账务处理备注信息',8,1,1,false,1,'fa-o',8,now(),now(),'',1,1);
+VALUES (8, '报表管理',0,'/report','账务处理备注信息',8,1,1,false,1,'fa-o',8,now(),now(),'',1,1);
 
 INSERT INTO au_menu (id, name,type,url,remark,order_code,parent_id, status, is_leaf, level,icon, resource_id,create_date, modify_date, component,version, enable_status)
 VALUES (801, '资产负债表',1,'dict','资产负债表备注信息',1,8,1,true,1,'fa-o',801,now(),now(),'Dictionary',1,1);
@@ -285,7 +285,7 @@ INSERT INTO au_resource (id, name,value,remark,parent_id,is_leaf,enable_status,c
 VALUES (604, '新增凭证','accountSet/add', '新增凭证', 601, true,1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,remark,parent_id,is_leaf,enable_status,create_date, modify_date, version)
-VALUES (7, '出纳管理',NULL, '出纳管理描述信息', 1, true,1,now(),now(),1);
+VALUES (7, '出纳管理','/chuna', '出纳管理描述信息', 1, true,1,now(),now(),1);
 
 INSERT INTO au_resource (id, name,value,remark,parent_id,is_leaf,enable_status,create_date, modify_date, version)
 VALUES (701, '现金日记账','ddic', '现金日记账描述信息', 7, true,1,now(),now(),1);
