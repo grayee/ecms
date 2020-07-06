@@ -99,6 +99,14 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
     T save(T entity);
 
     /**
+     * 保存实体对象
+     *
+     * @param entity 实体对象
+     * @return 实体对象
+     */
+    T insert(T entity);
+
+    /**
      * 更新实体对象
      *
      * @param entity 实体对象
@@ -134,4 +142,12 @@ public interface IGenericService<T extends BaseEntity<ID>, ID extends Serializab
      * @param entity 实体对象
      */
     void delete(T entity);
+
+    /**
+     * 删除多个
+     *
+     * @param ids id集合
+     */
+    void deleteByIds(List<ID> ids);
+
 }

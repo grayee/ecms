@@ -12,6 +12,8 @@ import com.qslion.framework.controller.BaseController;
 
 import io.swagger.annotations.Api;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +42,10 @@ public class DepartmentController extends BaseController<AuDepartment> {
 
     @PostMapping
     public Long save(@Validated @RequestBody AuDepartment department) {
+        //如果用户不手工编号，则系统自动编号
+        if (StringUtils.isEmpty(department.getDeptNo())) {
+            department.setDeptNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
+        }
         AuDepartment auDepartment = departmentService.insert(department);
         return auDepartment.getId();
     }
@@ -48,7 +54,8 @@ public class DepartmentController extends BaseController<AuDepartment> {
     @DeleteMapping
     public boolean delete(@RequestBody List<Long> ids) {
         if (CollectionUtils.isNotEmpty(ids)) {
-            return departmentService.remove(ids);
+            departmentService.deleteByIds(ids);
+            return true;
         }
         return false;
     }
@@ -61,7 +68,7 @@ public class DepartmentController extends BaseController<AuDepartment> {
 
     @PostMapping(value = "/list")
     public Pager<EntityVo> list(@RequestBody Pageable pageable) {
-        Pager<AuDepartment> pager =departmentService.findPage(pageable);
+        Pager<AuDepartment> pager = departmentService.findPage(pageable);
         List<AuOrgRelation> relations = auOrgRelationService.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         return pager.wrap(dept -> {
             EntityVo ev = EntityVo.getEntityVo(dept);

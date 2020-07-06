@@ -20,6 +20,8 @@ import com.qslion.framework.controller.BaseController;
 import com.qslion.framework.util.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +54,10 @@ public class EmployeeController extends BaseController<AuEmployee> {
     @ApiOperation("保存员工信息")
     @PostMapping
     public Long save(@Validated({ValidatorUtils.AddGroup.class}) @RequestBody AuEmployee employee) {
+        //如果用户不手工编号，则系统自动编号
+        if (StringUtils.isEmpty(employee.getEmployeeNo())) {
+            employee.setEmployeeNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
+        }
         AuEmployee auEmployee = employeeService.insert(employee);
         return auEmployee.getId();
     }
@@ -62,7 +68,11 @@ public class EmployeeController extends BaseController<AuEmployee> {
      */
     @DeleteMapping
     public boolean delete(@RequestBody List<Long> ids) {
-        return CollectionUtils.isNotEmpty(ids) && employeeService.remove(ids);
+        if (CollectionUtils.isNotEmpty(ids)) {
+            employeeService.deleteByIds(ids);
+            return true;
+        }
+        return false;
     }
 
     /**

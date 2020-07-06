@@ -16,11 +16,14 @@ import com.qslion.authority.custom.service.AuPositionService;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+
 import java.util.List;
 
 import com.qslion.framework.util.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +56,10 @@ public class PositionController extends BaseController<AuPosition> {
     @ApiOperation("保存岗位信息")
     @PostMapping
     public Long save(@Validated({ValidatorUtils.AddGroup.class}) @RequestBody AuPosition position) {
+        //如果用户不手工编号，则系统自动编号
+        if (StringUtils.isEmpty(position.getPositionNo())) {
+            position.setPositionNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
+        }
         AuPosition auPosition = positionService.insert(position);
         return auPosition.getId();
     }
@@ -63,7 +70,11 @@ public class PositionController extends BaseController<AuPosition> {
      */
     @DeleteMapping
     public boolean delete(@RequestBody List<Long> ids) {
-        return CollectionUtils.isNotEmpty(ids) && positionService.remove(ids);
+        if (CollectionUtils.isNotEmpty(ids)) {
+            positionService.deleteByIds(ids);
+            return true;
+        }
+        return false;
     }
 
     /**

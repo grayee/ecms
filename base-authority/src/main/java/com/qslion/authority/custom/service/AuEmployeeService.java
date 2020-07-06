@@ -17,20 +17,5 @@ import java.util.List;
  */
 public interface AuEmployeeService extends IGenericService<AuEmployee, Long> {
 
-    /**
-     * 添加新记录，同时添加组织和对应关系（如果parentRelId为空则不添加组织关系）
-     *
-     * @param employee 用于添加的VO对象
-     * @return AuEmployee
-     */
-    AuEmployee insert(AuEmployee employee);
 
-
-    /**
-     * 删除多条记录，删除自身并同时删除相应的组织和关系
-     *
-     * @param ids ids
-     * @return boolean
-     */
-    boolean remove(List<Long> ids);
 }

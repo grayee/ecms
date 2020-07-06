@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -162,7 +163,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Override
     public T findById(ID id) {
-        return genericRepository.findById(id).orElse(null);
+        return genericRepository.findById(id).orElseGet(() -> null);
     }
 
     @Override
@@ -224,6 +225,11 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     }
 
     @Override
+    public T insert(T entity) {
+        return genericRepository.save(entity);
+    }
+
+    @Override
     public T update(T entity) {
         return genericRepository.saveAndFlush(entity);
     }
@@ -246,5 +252,12 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
     @Override
     public void delete(T entity) {
         genericRepository.delete(entity);
+    }
+
+    @Override
+    public void deleteByIds(List<ID> ids) {
+        if (CollectionUtils.isNotEmpty(ids)) {
+            ids.forEach(id -> genericRepository.deleteById(id));
+        }
     }
 }

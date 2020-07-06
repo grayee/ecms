@@ -12,12 +12,17 @@ import com.qslion.framework.bean.Pageable;
 import com.qslion.framework.bean.Pager;
 import com.qslion.framework.bean.ResponseResult;
 import com.qslion.framework.controller.BaseController;
+import com.qslion.framework.enums.EnableStatus;
 import com.qslion.framework.util.ValidatorUtils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Gray.Z
  * @date 2018/4/21 13:43.
  */
-@Api(value="公司Controller",description="公司Controller",tags={"公司控制器"})
+@Api(value = "公司Controller", description = "公司Controller", tags = {"公司控制器"})
 @ResponseResult
 @RestController
 @RequestMapping(value = "/org/company")
@@ -56,6 +61,14 @@ public class CompanyController extends BaseController<AuCompany> {
     @ApiOperation("保存公司信息")
     @PostMapping
     public Long save(@Validated({AddGroup.class}) @RequestBody AuCompany company) {
+        //如果用户不手工编号，则系统自动编号
+        if (StringUtils.isEmpty(company.getCompanyNo())) {
+            company.setCompanyNo(String.valueOf(RandomUtils.nextInt(1000, 9999)));
+        }
+        if (company.getEnableStatus() == null) {
+            company.setEnableStatus(EnableStatus.ENABLE);
+            company.setEnableDate(DateTime.now().toDate());
+        }
         AuCompany auCompany = companyService.insert(company);
         return auCompany.getId();
     }
@@ -66,7 +79,10 @@ public class CompanyController extends BaseController<AuCompany> {
      */
     @DeleteMapping
     public boolean delete(@RequestBody List<Long> ids) {
-        return CollectionUtils.isNotEmpty(ids) && companyService.remove(ids);
+        if (CollectionUtils.isNotEmpty(ids)) {
+            companyService.deleteByIds(ids);
+        }
+        return true;
     }
 
     /**
