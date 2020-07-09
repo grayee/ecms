@@ -76,7 +76,7 @@ public class OrgRelationController extends BaseController<AuOrgRelation> {
     public EntityVo detail(@PathVariable Long id) {
         AuOrgRelation orgRelation = auOrgRelationService.findById(id);
         AuOrgType orgType = orgRelation.getOrgType();
-        AbstractOrgEntity content = null;
+        BaseOrg content = null;
         switch (orgType) {
             case COMPANY:
                 content = auCompanyService.findById(orgRelation.getOrgId());

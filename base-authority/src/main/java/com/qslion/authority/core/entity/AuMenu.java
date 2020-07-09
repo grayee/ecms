@@ -186,11 +186,10 @@ public class AuMenu extends BaseTree<Long> {
         return resource;
     }
 
-    @Override
     @JsonIgnore
     @Transient
     public TreeNode getTreeNode() {
-        TreeNode treeNode = new TreeNode(String.valueOf(getId()), this.getName());
+        TreeNode treeNode = new TreeNode(getId(), this.getName());
         treeNode.setIconCls(getIcon());
         treeNode.setPath(getUrl());
         if (getLeaf() != null) {

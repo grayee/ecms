@@ -54,8 +54,10 @@ public class DisplayColumn {
         DisplayTitle displayTitle = entityClazz.getDeclaredAnnotation(DisplayTitle.class);
         fieldList.stream().filter(field -> field.isAnnotationPresent(DisplayField.class)).forEach(field -> {
             DisplayField displayField = field.getAnnotation(DisplayField.class);
-            DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayTitle, displayField);
-            displayColumns.add(displayColumn);
+            if(!displayField.hidden()){
+                DisplayColumn displayColumn = new DisplayColumn(field.getName(), displayTitle, displayField);
+                displayColumns.add(displayColumn);
+            }
         });
         displayColumns.sort(Comparator.comparing(DisplayColumn::getOrder));
         return displayColumns;

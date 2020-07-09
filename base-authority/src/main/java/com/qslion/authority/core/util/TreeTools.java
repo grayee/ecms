@@ -115,13 +115,15 @@ public class TreeTools {
         List<T> rootList = dMap.get(true);
         List<T> subList = dMap.get(false);
         List<TreeNode> treeList = new ArrayList<>();
-        if (subList != null && !subList.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(rootList)) {
             for (T rootNode : rootList) {
                 TreeNode rootTreeNode = rootNode.getTreeNode();
                 if (CollectionUtils.isNotEmpty(checkedIds) && checkedIds.contains(rootTreeNode.getId())) {
                     rootTreeNode.setChecked(true);
                 }
-                rootTreeNode.setChildren(getChildren(subList, rootNode, checkedIds));
+                if(CollectionUtils.isNotEmpty(subList)){
+                    rootTreeNode.setChildren(getChildren(subList, rootNode, checkedIds));
+                }
                 treeList.add(rootTreeNode);
             }
         }

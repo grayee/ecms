@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "au_role")
-public class AuRole extends AbstractOrgEntity {
+public class AuRole extends BaseOrg {
 
     private static final long serialVersionUID = 5739472491120418264L;
     @DisplayField(order = 1, title = "角色名称")

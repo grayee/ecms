@@ -27,11 +27,12 @@ public class AuOrgServiceImpl<T extends BaseEntity<ID>, ID extends Serializable>
     private AuOrgRelationRepository auOrgRelationRepository;
 
     @Override
-    public T insert(T org) {
-        T t = this.save(org);
+    public T insert(T entity) {
+        T t = this.save(entity);
         if (t != null) {
+            IOrg org = (IOrg) entity;
             //添加行政关系
-            auOrgRelationService.addOrgRelation((IOrg) t, AuOrgRelationType.ADMINISTRATIVE);
+            auOrgRelationService.addOrgRelation(org, AuOrgRelationType.ADMINISTRATIVE);
         }
         return t;
     }

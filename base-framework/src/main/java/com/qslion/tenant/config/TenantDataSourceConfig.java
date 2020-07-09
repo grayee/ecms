@@ -1,6 +1,7 @@
 package com.qslion.tenant.config;
 
 import com.qslion.framework.component.TableNameStrategy;
+import com.qslion.framework.dao.impl.GenericRepositoryImpl;
 import com.qslion.tenant.CurrentTenantIdentifierResolverImpl;
 import com.qslion.tenant.MultiTenantConnectionProviderImpl;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +38,7 @@ import java.util.Map;
         "com.qslion.web.*.dao",
         "com.qslion.authority.*.dao",
         "com.qslion.moudles.*.dao",
-}, considerNestedRepositories = true)
+}, considerNestedRepositories = true,repositoryBaseClass = GenericRepositoryImpl.class)
 public class TenantDataSourceConfig {
 
     protected final Logger logger = LogManager.getLogger(this.getClass());

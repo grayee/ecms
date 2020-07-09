@@ -1,7 +1,7 @@
 package com.qslion.authority.custom.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qslion.authority.core.entity.AbstractOrgEntity;
+import com.qslion.authority.core.entity.BaseOrg;
 import com.qslion.authority.core.enums.AuOrgType;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.util.ValidatorUtils.AddGroup;
@@ -21,7 +21,7 @@ import javax.validation.constraints.Pattern;
 @ApiModel(description = "公司对象Company")
 @Entity
 @Table(name = "au_company")
-public class AuCompany extends AbstractOrgEntity {
+public class AuCompany extends BaseOrg {
 
     @DisplayField(order = 1, title = "{display.column.title.company.no}")
     private String companyNo;

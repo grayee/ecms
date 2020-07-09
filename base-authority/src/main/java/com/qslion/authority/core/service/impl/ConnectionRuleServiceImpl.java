@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 项目名称：authority 类名称：ConnectionRuleServiceImpl 类描述： 创建人：Administrator 创建时间：2011-8-8 下午03:26:02 修改人：Administrator
- * 修改时间：2011-8-8 下午03:26:02 修改备注：
+ * 关系连接规则Service实现
+ *
+ * @author Gray.Z
+ * @date 2018/4/30 19:15.
  */
 @Service("connectRuleService")
 @Transactional(value = "transactionManager", rollbackFor = Exception.class)

@@ -18,7 +18,19 @@ public @interface DisplayField {
 
     String title() default "";
 
+    /**
+     * 显示列是否可见
+     *
+     * @return boolean
+     */
     boolean visible() default true;
+
+    /**
+     * 是否隐藏显示列，会覆盖visible（列不隐藏）
+     *
+     * @return boolean
+     */
+    boolean hidden() default false;
 
     boolean sortable() default false;
 

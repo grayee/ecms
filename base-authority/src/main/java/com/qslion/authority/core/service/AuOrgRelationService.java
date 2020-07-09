@@ -2,7 +2,6 @@ package com.qslion.authority.core.service;
 
 import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.entity.AuRole;
-import com.qslion.authority.core.entity.AbstractOrgEntity;
 import com.qslion.authority.core.entity.IOrg;
 import com.qslion.authority.core.enums.AuOrgRelationType;
 import com.qslion.authority.core.enums.AuOrgType;

@@ -1,7 +1,7 @@
 package com.qslion.authority.custom.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qslion.authority.core.entity.AbstractOrgEntity;
+import com.qslion.authority.core.entity.BaseOrg;
 import com.qslion.authority.core.enums.AuOrgType;
 import com.qslion.framework.bean.DisplayField;
 
@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "au_department")
-public class AuDepartment extends AbstractOrgEntity {
+public class AuDepartment extends BaseOrg {
 
     @DisplayField(order = 1, title = "部门编码")
     private String deptNo;

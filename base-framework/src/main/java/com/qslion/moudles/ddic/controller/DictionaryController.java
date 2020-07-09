@@ -33,11 +33,11 @@ public class DictionaryController extends BaseController<DictDataType> {
     @GetMapping(value = "/tree/{typeId}")
     public List<TreeNode> tree(@PathVariable Long typeId) {
         DictDataType dictDataType = dictionaryService.findById(typeId);
-        TreeNode root = new TreeNode(dictDataType.getId().toString(), dictDataType.getName());
+        TreeNode root = new TreeNode(dictDataType.getId(), dictDataType.getName());
         root.setState(TreeNode.NodeState.OPEN);
         if (dictDataType != null) {
             List<TreeNode> valueNodes = dictDataType.getDictDataValueList().stream().map(dictDataValue -> {
-                TreeNode tn = new TreeNode(dictDataValue.getId().toString(), dictDataValue.getName());
+                TreeNode tn = new TreeNode(dictDataValue.getId(), dictDataValue.getName());
                 tn.setState(TreeNode.NodeState.OPEN);
                 tn.addAttribute("meta",dictDataValue);
                 return tn;

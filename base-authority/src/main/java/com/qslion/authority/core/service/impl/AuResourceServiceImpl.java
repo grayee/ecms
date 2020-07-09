@@ -70,7 +70,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
         for (AuResource resource : resourceList) {
             //获取跟节点
             if (resource.getParentId() == null) {
-                TreeNode rootNode = new TreeNode(resource.getId().toString(), resource.getName());
+                TreeNode rootNode = new TreeNode(resource.getId(), resource.getName());
                 if (StringUtils.isEmpty(resource.getValue())) {
                     resourceList = resourceList.stream().filter(auResource ->
                             !resource.getId().equals(auResource.getId())).collect(Collectors.toList());
@@ -109,7 +109,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
 
     private List<TreeNode> getPermTreeNodes(List<AuPermission> rolePerms, Set<AuPermission> perms) {
         return perms.stream().map(perm -> {
-            TreeNode permNode = new TreeNode(perm.getId().toString(), perm.getName());
+            TreeNode permNode = new TreeNode(perm.getId(), perm.getName());
             if (rolePerms.contains(perm)) {
                 permNode.setChecked(true);
             }
@@ -122,7 +122,7 @@ public class AuResourceServiceImpl extends GenericServiceImpl<AuResource, Long> 
         List<TreeNode> resultList = new ArrayList<>();
         for (AuResource resource : nodeList) {
             if (resource.getParentId() != null && parentId.equals(resource.getParentId())) {
-                TreeNode leafNode = new TreeNode(resource.getId().toString(), resource.getName());
+                TreeNode leafNode = new TreeNode(resource.getId(), resource.getName());
                 if (StringUtils.isEmpty(resource.getValue())) {
                     nodeList = nodeList.stream().filter(auResource ->
                             !resource.getId().equals(auResource.getId())).collect(Collectors.toList());

@@ -30,7 +30,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<CommonDistrict, Long
         List<TreeNode> resultList = new ArrayList<>();
         List<CommonDistrict> list = districtRepository.findByUpid(Long.valueOf(upid));
         for (CommonDistrict district : list) {
-            TreeNode treeNode = new TreeNode(district.getId().toString(), district.getName());
+            TreeNode treeNode = new TreeNode(district.getId(), district.getName());
            // treeNode.setUrl("admin/district/index.jspx?id=" + district.getId());
             //treeNode.setTarget("rightFrame");
             //treeNode.setPid(district.getUpid());

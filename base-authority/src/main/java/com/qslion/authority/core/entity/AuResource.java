@@ -107,10 +107,9 @@ public class AuResource extends BaseTree<Long> {
         return result;
     }
 
-    @Override
     @JsonIgnore
     @Transient
     public TreeNode getTreeNode() {
-        return new TreeNode(String.valueOf(getId()), this.getName());
+        return new TreeNode(getId(), this.getName());
     }
 }

@@ -25,7 +25,7 @@ public abstract class BaseTree<ID extends Serializable> extends BaseEntity<ID> i
     /**
      * 父节点ID
      */
-    @DisplayField(visible = false)
+    @DisplayField(hidden = true)
     private ID parentId;
     /**
      * 层级

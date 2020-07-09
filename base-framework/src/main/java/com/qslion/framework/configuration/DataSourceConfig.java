@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import com.qslion.framework.component.TableNameStrategy;
+import com.qslion.framework.dao.impl.GenericRepositoryImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.cfg.Environment;
@@ -36,6 +37,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement(order = 0)
 @EnableJpaRepositories(basePackages = {"com.qslion.tenant.dao"},
+        repositoryBaseClass = GenericRepositoryImpl.class,
         entityManagerFactoryRef = "masterEntityManagerFactory",
         transactionManagerRef = "masterTransactionManager")
 public class DataSourceConfig {

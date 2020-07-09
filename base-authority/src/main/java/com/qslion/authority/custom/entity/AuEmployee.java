@@ -1,7 +1,7 @@
 package com.qslion.authority.custom.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qslion.authority.core.entity.AbstractOrgEntity;
+import com.qslion.authority.core.entity.BaseOrg;
 import com.qslion.authority.core.enums.AuOrgType;
 import com.qslion.framework.bean.DisplayField;
 import com.qslion.framework.enums.SexEnum;
@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "au_employee")
-public class AuEmployee extends AbstractOrgEntity {
+public class AuEmployee extends BaseOrg {
 
     @DisplayField(order = 1, title = "员工编号")
     private String employeeNo;

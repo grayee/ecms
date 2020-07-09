@@ -38,7 +38,7 @@ public class CopyUtils {
 
     public static void main(String[] args) {
         TreeNode tn = new TreeNode();
-        tn.setId("111");
+        tn.setId(111L);
         tn.setText("222");
 
         TreeNode tn2 = new TreeNode();

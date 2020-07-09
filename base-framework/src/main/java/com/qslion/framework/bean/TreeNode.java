@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * easy ui tree
+ * treeNode
  *
  * @author Gray.Z
  * @date 2018/4/30 19:15.
@@ -24,7 +24,7 @@ public class TreeNode {
         CLOSED
     }
 
-    private String id;
+    private Long id;
 
     /**
      * 显示的节点文本
@@ -61,16 +61,16 @@ public class TreeNode {
         super();
     }
 
-    public TreeNode(String id, String text) {
+    public TreeNode(Long id, String text) {
         this.id = id;
         this.text = text;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

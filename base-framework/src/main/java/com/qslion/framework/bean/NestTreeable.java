@@ -115,6 +115,6 @@ public interface NestTreeable<ID> {
      * @return TreeNode
      */
     default TreeNode getTreeNode() {
-        return new TreeNode(String.valueOf(getId()), this.getName());
+        return new TreeNode();
     }
 }

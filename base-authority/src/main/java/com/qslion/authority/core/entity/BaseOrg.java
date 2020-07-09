@@ -15,7 +15,7 @@ import java.util.Date;
  * @date 2018/4/30 13:56.
  */
 @MappedSuperclass
-public abstract class AbstractOrgEntity extends BaseEntity<Long> implements IOrg {
+public abstract class BaseOrg extends BaseEntity<Long> implements IOrg {
 
     private static final long serialVersionUID = 4656704236281853404L;
 
@@ -26,7 +26,6 @@ public abstract class AbstractOrgEntity extends BaseEntity<Long> implements IOrg
     protected EnableStatus enableStatus;
     protected Date enableDate;
 
-    @JsonIgnore
     @Transient
     public Long getParentId() {
         return parentId;
@@ -75,7 +74,6 @@ public abstract class AbstractOrgEntity extends BaseEntity<Long> implements IOrg
         return id;
     }
 
-    @JsonIgnore
     @Transient
     @Override
     public Long getParentRelId() {

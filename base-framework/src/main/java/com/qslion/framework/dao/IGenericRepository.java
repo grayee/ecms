@@ -13,4 +13,9 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface IGenericRepository<T extends BaseEntity<ID>, ID extends Serializable> extends JpaRepository<T, ID>,
     JpaSpecificationExecutor<T> {
 
+    <S extends T> Iterable<S> batchSave(Iterable<S> var1);
+
+    <S extends T> Iterable<S> batchUpdate(Iterable<S> var1);
+
+    T treeSave(T entity);
 }
