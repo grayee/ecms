@@ -96,7 +96,7 @@ public class AuRoleController extends BaseController<AuRole> {
             AuUser authUser = auUserService.findById(userId);
             roles = authUser.getRoles();
         }
-        return auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ROLE, roles);
+        return auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ROLE, AuOrgType.ROLE, roles);
     }
 
     /**
@@ -194,7 +194,7 @@ public class AuRoleController extends BaseController<AuRole> {
     @GetMapping(value = "/org/tree/{roleId}")
     public List<TreeNode> getPermOrgTree(@PathVariable Long roleId) {
         AuRole role = auRoleService.findById(roleId);
-        return auOrgRelationService.getOrgRelationTree(AuOrgType.COMPANY, Sets.newHashSet(role));
+        return auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ROLE, AuOrgType.COMPANY, Sets.newHashSet(role));
     }
 
 }

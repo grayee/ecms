@@ -150,13 +150,7 @@ public class OrgRelationController extends BaseController<AuOrgRelation> {
 
     @GetMapping(value = {"/tree/{orgType}", "/tree"})
     public List<TreeNode> getOrgRelationTree(@PathVariable(required = false) AuOrgType orgType, @ApiIgnore @AuthenticationPrincipal AuUser user) {
-        List<TreeNode> resultList;
-        if (orgType == null) {
-            resultList = this.auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ADMINISTRATIVE, user.getRoles());
-        } else {
-            resultList = this.auOrgRelationService.getOrgRelationTree(orgType, user.getRoles());
-        }
-        return resultList;
+        return this.auOrgRelationService.getOrgRelationTree(AuOrgRelationType.ADMINISTRATIVE,orgType, user.getRoles());
     }
 
     @GetMapping(value = "/tree/target/{orgType}")

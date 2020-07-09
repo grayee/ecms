@@ -1,7 +1,5 @@
 package com.qslion.authority.custom.service.impl;
 
-import com.qslion.authority.core.dao.AuOrgRelationRepository;
-import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.entity.IOrg;
 import com.qslion.authority.core.enums.AuOrgRelationType;
 import com.qslion.authority.core.service.AuOrgRelationService;
@@ -23,8 +21,6 @@ public class AuOrgServiceImpl<T extends BaseEntity<ID>, ID extends Serializable>
 
     @Autowired
     private AuOrgRelationService auOrgRelationService;
-    @Autowired
-    private AuOrgRelationRepository auOrgRelationRepository;
 
     @Override
     public T insert(T entity) {
@@ -43,7 +39,7 @@ public class AuOrgServiceImpl<T extends BaseEntity<ID>, ID extends Serializable>
             T t = this.findById(id);
             if (t != null) {
                 this.delete(t);
-                auOrgRelationService.removeOrgRelation((IOrg) t);
+                auOrgRelationService.removeOrgRelation((IOrg) t, AuOrgRelationType.ADMINISTRATIVE);
             }
         });
     }
@@ -51,12 +47,9 @@ public class AuOrgServiceImpl<T extends BaseEntity<ID>, ID extends Serializable>
     @Override
     public T update(T entity) {
         T t = this.findById(entity.getId());
-        IOrg org = (IOrg) t;
-        AuOrgRelation orgRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(org.getOrgId(), org.getOrgType(), AuOrgRelationType.ADMINISTRATIVE);
-        orgRelation.setName(org.getOrgName());
-        orgRelation.setRemark(org.getRemark());
-        auOrgRelationRepository.saveAndFlush(orgRelation);
+        auOrgRelationService.updateOrgRelation((IOrg) entity, AuOrgRelationType.ADMINISTRATIVE);
         CopyUtils.copyProperties(entity, t);
         return this.save(t);
     }
+
 }

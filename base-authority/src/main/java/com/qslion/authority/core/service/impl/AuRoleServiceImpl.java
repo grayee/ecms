@@ -155,7 +155,7 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
             AuRole role = auRoleRepository.findById(roleId).orElse(null);
             if (role != null) {
                 auRoleRepository.delete(role);
-                auOrgRelationService.removeOrgRelation(role);
+                auOrgRelationService.removeOrgRelation(role, AuOrgRelationType.ROLE);
             }
         });
         return true;

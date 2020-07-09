@@ -3,6 +3,7 @@ package com.qslion.authority.custom.controller;
 
 import com.qslion.authority.core.entity.AuOrgRelation;
 import com.qslion.authority.core.enums.AuOrgRelationType;
+import com.qslion.authority.core.enums.AuOrgType;
 import com.qslion.authority.core.service.AuOrgRelationService;
 import com.qslion.authority.core.util.TreeTools;
 import com.qslion.authority.custom.entity.AuCompany;
@@ -110,7 +111,12 @@ public class CompanyController extends BaseController<AuCompany> {
      */
     @GetMapping(value = "/detail/{id}")
     public AuCompany detail(@PathVariable Long id) {
-        return companyService.findById(id);
+        AuCompany company = companyService.findById(id);
+        AuOrgRelation relation = auOrgRelationService.findByOrg(AuOrgRelationType.ADMINISTRATIVE, AuOrgType.COMPANY, id);
+        if (relation != null) {
+            company.setParentId(relation.getParentId());
+        }
+        return company;
     }
 
 }

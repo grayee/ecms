@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.qslion.authority.core.enums.AuOrgRelationType.ADMINISTRATIVE;
-
 /**
  * 团体关系Service实现
  *
@@ -49,36 +47,41 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
     public boolean addOrgRelation(IOrg org, AuOrgRelationType relationType) {
         Long parentId = org.getParentRelId();
         if (parentId != null) {
-            AuOrgRelation parentRelation = auOrgRelationRepository.findById(parentId).orElse(null);
-            if (parentRelation != null) {
-                AuOrgType curPartyType = parentRelation.getOrgType();
-                if (connectionRuleService.checkRule(curPartyType, org.getOrgType(), relationType)) {
-                    AuOrgRelation orgRelation = new AuOrgRelation();
-                    orgRelation.setParentId(parentId);
-                    orgRelation.setLeaf(true);
-                    orgRelation.setOrgId(org.getOrgId());
-                    orgRelation.setOrgType(org.getOrgType());
-                    orgRelation.setName(org.getOrgName());
-                    orgRelation.setRemark(org.getRemark());
-                    orgRelation.setRelationType(relationType);
-                    orgRelation.setLevel(parentRelation.getLevel() + 1);
+            AuOrgRelation orgRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(org.getOrgId(), org.getOrgType(), relationType);
+            if (orgRelation != null) {
+                this.updateOrgRelation(org, orgRelation);
+            } else {
+                AuOrgRelation parentRelation = auOrgRelationRepository.findById(parentId).orElse(null);
+                if (parentRelation != null) {
+                    AuOrgType curPartyType = parentRelation.getOrgType();
+                    if (connectionRuleService.checkRule(curPartyType, org.getOrgType(), relationType)) {
+                        orgRelation = new AuOrgRelation();
+                        orgRelation.setParentId(parentId);
+                        orgRelation.setLeaf(true);
+                        orgRelation.setOrgId(org.getOrgId());
+                        orgRelation.setOrgType(org.getOrgType());
+                        orgRelation.setName(org.getOrgName());
+                        orgRelation.setRemark(org.getRemark());
+                        orgRelation.setRelationType(relationType);
+                        orgRelation.setLevel(parentRelation.getLevel() + 1);
 
-                    AuOrgRelation levelRelation = new AuOrgRelation();
-                    levelRelation.setLevel(orgRelation.getLevel());
-                    levelRelation.setParentId(parentId);
-                    Integer topLevelCnt = new BigDecimal(auOrgRelationRepository.count(Example.of(levelRelation))).intValue();
-                    orgRelation.setOrderCode(topLevelCnt + 1);
-                    auOrgRelationRepository.save(orgRelation);
-                    if (parentRelation.getLeaf()) {
-                        //更新父节点isLeaf 为false
-                        auOrgRelationRepository.updateLeaf(parentId, false);
+                        AuOrgRelation levelRelation = new AuOrgRelation();
+                        levelRelation.setLevel(orgRelation.getLevel());
+                        levelRelation.setParentId(parentId);
+                        Integer topLevelCnt = new BigDecimal(auOrgRelationRepository.count(Example.of(levelRelation))).intValue();
+                        orgRelation.setOrderCode(topLevelCnt + 1);
+                        auOrgRelationRepository.save(orgRelation);
+                        if (parentRelation.getLeaf()) {
+                            //更新父节点isLeaf 为false
+                            auOrgRelationRepository.updateLeaf(parentId, false);
+                        }
+                    } else {
+                        logger.error("添加团系关系失败，没有找到符合要求的连接规则....");
+                        throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
                     }
                 } else {
-                    logger.error("添加团系关系失败，没有找到符合要求的连接规则....");
-                    throw new BusinessException(ResultCode.SPECIFIED_QUESTIONED_USER_NOT_EXIST);
+                    throw new BusinessException(ResultCode.PARAMETER_IS_INVALID);
                 }
-            } else {
-                throw new BusinessException(ResultCode.PARAMETER_IS_INVALID);
             }
         } else {
             return initRoot(org, relationType);
@@ -87,11 +90,25 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
     }
 
     @Override
-    public boolean removeOrgRelation(IOrg org) {
-        AuOrgRelationType relationType = AuOrgRelationType.ADMINISTRATIVE;
-        if (org.getOrgType() == AuOrgType.ROLE) {
-            relationType = AuOrgRelationType.ROLE;
+    public boolean updateOrgRelation(IOrg org, AuOrgRelationType relationType) {
+        AuOrgRelation orgRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(org.getOrgId(), org.getOrgType(), relationType);
+        updateOrgRelation(org, orgRelation);
+        return true;
+    }
+
+    private void updateOrgRelation(IOrg org, AuOrgRelation orgRelation) {
+        Long newPid = org.getParentRelId();
+        Long oldPid = orgRelation.getParentId();
+        if (newPid != null && !newPid.equals(oldPid)) {
+            orgRelation.setParentId(newPid);
         }
+        orgRelation.setName(org.getOrgName());
+        orgRelation.setRemark(org.getRemark());
+        auOrgRelationRepository.saveAndFlush(orgRelation);
+    }
+
+    @Override
+    public boolean removeOrgRelation(IOrg org, AuOrgRelationType relationType) {
         AuOrgRelation orgRelation = auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(org.getOrgId(), org.getOrgType(), relationType);
         if (orgRelation != null) {
             if (orgRelation.getLeaf()) {
@@ -129,13 +146,13 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
     }
 
     @Override
-    public List<TreeNode> getOrgRelationTree(AuOrgType orgType, Set<AuRole> roleSet) {
-        return getTreeNodes(ADMINISTRATIVE, orgType, roleSet);
+    public AuOrgRelation findByOrg(AuOrgRelationType relationType, AuOrgType orgType, Long orgId) {
+        return auOrgRelationRepository.findByOrgIdAndOrgTypeAndRelationType(orgId, orgType, relationType);
     }
 
     @Override
     public List<TreeNode> getTargetTree(AuOrgType orgType, Set<AuRole> roleSet) {
-        List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(ADMINISTRATIVE);
+        List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         List<Long> filteredIds = relations.stream().filter(r -> orgType == r.getOrgType())
                 .map(AuOrgRelation::getId).collect(Collectors.toList());
         relations = TreeTools.getTargetTreePath(relations, filteredIds);
@@ -145,9 +162,9 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
 
     @Override
     public List<TreeNode> getGrantedDataTree(AuOrgType orgType, Set<AuRole> roleSet) {
-        List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(ADMINISTRATIVE);
+        List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(AuOrgRelationType.ADMINISTRATIVE);
         if (orgType != null) {
-            List<AuOrgType> pTypes = connectionRuleService.getRuleBySubOrg(ADMINISTRATIVE, orgType).stream()
+            List<AuOrgType> pTypes = connectionRuleService.getRuleBySubOrg(AuOrgRelationType.ADMINISTRATIVE, orgType).stream()
                     .map(AuConnectionRule::getCurOrgType).collect(Collectors.toList());
             List<Long> filteredIds = relations.stream().filter(r -> pTypes.contains(r.getOrgType())).map(AuOrgRelation::getId).collect(Collectors.toList());
             relations = TreeTools.getTargetTreePath(relations, filteredIds);
@@ -161,22 +178,13 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
     }
 
     @Override
-    public List<TreeNode> getOrgRelationTree(AuOrgRelationType relationType, Set<AuRole> roleSet) {
-        List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(relationType);
-        List<String> permIds;
-        if (relationType == AuOrgRelationType.ROLE) {
-            List<Long> roleIds = roleSet.stream().map(AuRole::getId).collect(Collectors.toList());
-            permIds = relations.stream().filter(r -> roleIds.contains(r.getOrgId()))
-                    .map(r -> String.valueOf(r.getId())).collect(Collectors.toList());
-        } else {
-            permIds = getCheckedPerms(roleSet);
-        }
-
-        return TreeTools.getTreeList(relations, permIds);
+    public List<TreeNode> getOrgRelationTree(AuOrgRelationType relationType, AuOrgType orgType, Set<AuRole> roleSet) {
+        return getTreeNodes(relationType, orgType, roleSet);
     }
 
     private List<TreeNode> getTreeNodes(AuOrgRelationType relationType, AuOrgType orgType, Set<AuRole> roleSet) {
         List<AuOrgRelation> relations = auOrgRelationRepository.findByRelationType(relationType);
+
         if (orgType != null) {
             List<AuOrgType> pTypes = connectionRuleService.getRuleBySubOrg(relationType, orgType).stream()
                     .map(AuConnectionRule::getCurOrgType).collect(Collectors.toList());
@@ -184,7 +192,13 @@ public class AuOrgRelationServiceImpl extends GenericServiceImpl<AuOrgRelation, 
                     .map(AuOrgRelation::getId).collect(Collectors.toList());
             relations = TreeTools.getTargetTreePath(relations, filteredIds);
         }
+
         List<String> permIds = getCheckedPerms(roleSet);
+        if (relationType == AuOrgRelationType.ROLE) {
+            List<Long> roleIds = roleSet.stream().map(AuRole::getId).collect(Collectors.toList());
+            permIds = relations.stream().filter(r -> roleIds.contains(r.getOrgId()))
+                    .map(r -> String.valueOf(r.getId())).collect(Collectors.toList());
+        }
         return TreeTools.getTreeList(relations, permIds);
     }
 
