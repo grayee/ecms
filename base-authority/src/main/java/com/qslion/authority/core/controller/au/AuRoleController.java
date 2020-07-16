@@ -107,7 +107,7 @@ public class AuRoleController extends BaseController<AuRole> {
         AuRole role = auRoleService.findById(roleId);
         List<Long> userIds = role.getUsers().stream().map(AuUser::getId).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(userIds)) {
-            pageable.getQueryFilters().add(new QueryFilter("id", QueryFilter.Operator.notIn, userIds));
+            pageable.getQueryFilters().add(new QueryFilter("id", QueryFilter.Operator.NOT_IN, userIds));
         }
         Pager<AuUser> pager = auUserService.findPage(pageable);
         return pager.wrap(EntityVo::getEntityVo);

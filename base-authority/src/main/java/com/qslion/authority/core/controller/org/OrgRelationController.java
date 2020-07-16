@@ -63,7 +63,7 @@ public class OrgRelationController extends BaseController<AuOrgRelation> {
 
     @PostMapping(value = "/list/{relationTypeId}")
     public Pager<AuOrgRelation> list(@PathVariable int relationTypeId, @RequestParam Pageable pageable) {
-        QueryFilter queryFilter = new QueryFilter("auOrgRelationType", Operator.equal, relationTypeId);
+        QueryFilter queryFilter = new QueryFilter("auOrgRelationType", Operator.EQUAL, relationTypeId);
         if (pageable.getQueryFilters().isEmpty()) {
             pageable.setQueryFilters(Lists.newArrayList(queryFilter));
         } else {

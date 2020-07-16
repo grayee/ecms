@@ -23,78 +23,78 @@ public class QueryFilter implements Serializable {
         /**
          * filed = value
          */
-        equal,
+        EQUAL,
 
         //下面四个用于Number类型的比较
         /**
          * filed > value
          */
-        gt,
+        GT,
         /**
          * field >= value
          */
-        ge,
+        GE,
         /**
          * field < value
          */
-        lt,
+        LT,
         /**
          * field <= value
          */
-        le,
+        LE,
 
         /**
          * field != value
          */
-        notEqual,
+        NOT_EQUAL,
         /**
          * field like value
          */
-        like,
+        LIKE,
         /**
          * field not like value
          */
-        notLike,
+        NOT_LIKE,
 
         // 下面四个用于可比较类型(Comparable)的比较
         /**
          * field > value
          */
-        greaterThan,
+        GREATER_THAN,
         /**
          * field >= value
          */
-        greaterThanOrEqualTo,
+        GREATER_THAN_OR_EQUAL_TO,
         /**
          * field < value
          */
-        lessThan,
+        LESS_THAN,
         /**
          * field <= value
          */
-        lessThanOrEqualTo,
+        LESS_THAN_OR_EQUAL_TO,
         /**
          * 包含
          */
-        in,
+        IN,
         /**
          * 不包含
          */
-        notIn,
+        NOT_IN,
 
         /**
          * 为Null
          */
-        isNull,
+        IS_NULL,
 
         /**
          * 不为Null
          */
-        isNotNull,
+        IS_NOT_NULL,
         /**
          * 区间
          */
-        between,
+        BETWEEN,
     }
 
     /**
@@ -164,7 +164,7 @@ public class QueryFilter implements Serializable {
      * @return 等于筛选
      */
     public static QueryFilter eq(String property, Object value) {
-        return new QueryFilter(property, Operator.equal, value);
+        return new QueryFilter(property, Operator.EQUAL, value);
     }
 
     /**
@@ -176,7 +176,7 @@ public class QueryFilter implements Serializable {
      * @return 等于筛选
      */
     public static QueryFilter eq(String property, Object value, boolean ignoreCase) {
-        return new QueryFilter(property, Operator.equal, value, ignoreCase);
+        return new QueryFilter(property, Operator.EQUAL, value, ignoreCase);
     }
 
     /**
@@ -187,7 +187,7 @@ public class QueryFilter implements Serializable {
      * @return 不等于筛选
      */
     public static QueryFilter ne(String property, Object value) {
-        return new QueryFilter(property, Operator.notEqual, value);
+        return new QueryFilter(property, Operator.NOT_EQUAL, value);
     }
 
     /**
@@ -199,7 +199,7 @@ public class QueryFilter implements Serializable {
      * @return 不等于筛选
      */
     public static QueryFilter ne(String property, Object value, boolean ignoreCase) {
-        return new QueryFilter(property, Operator.notEqual, value, ignoreCase);
+        return new QueryFilter(property, Operator.NOT_EQUAL, value, ignoreCase);
     }
 
     /**
@@ -210,7 +210,7 @@ public class QueryFilter implements Serializable {
      * @return 大于筛选
      */
     public static QueryFilter gt(String property, Object value) {
-        return new QueryFilter(property, Operator.gt, value);
+        return new QueryFilter(property, Operator.GT, value);
     }
 
     /**
@@ -221,7 +221,7 @@ public class QueryFilter implements Serializable {
      * @return 小于筛选
      */
     public static QueryFilter lt(String property, Object value) {
-        return new QueryFilter(property, Operator.lt, value);
+        return new QueryFilter(property, Operator.LT, value);
     }
 
     /**
@@ -232,7 +232,7 @@ public class QueryFilter implements Serializable {
      * @return 大于等于筛选
      */
     public static QueryFilter ge(String property, Object value) {
-        return new QueryFilter(property, Operator.ge, value);
+        return new QueryFilter(property, Operator.GE, value);
     }
 
     /**
@@ -243,7 +243,7 @@ public class QueryFilter implements Serializable {
      * @return 小于等于筛选
      */
     public static QueryFilter le(String property, Object value) {
-        return new QueryFilter(property, Operator.le, value);
+        return new QueryFilter(property, Operator.LE, value);
     }
 
     /**
@@ -254,7 +254,7 @@ public class QueryFilter implements Serializable {
      * @return 相似筛选
      */
     public static QueryFilter like(String property, Object value) {
-        return new QueryFilter(property, Operator.like, value);
+        return new QueryFilter(property, Operator.LIKE, value);
     }
 
     /**
@@ -265,7 +265,7 @@ public class QueryFilter implements Serializable {
      * @return 包含筛选
      */
     public static QueryFilter in(String property, Object value) {
-        return new QueryFilter(property, Operator.in, value);
+        return new QueryFilter(property, Operator.IN, value);
     }
 
     /**
@@ -275,7 +275,7 @@ public class QueryFilter implements Serializable {
      * @return 为Null筛选
      */
     public static QueryFilter isNull(String property) {
-        return new QueryFilter(property, Operator.isNull, null);
+        return new QueryFilter(property, Operator.IS_NULL, null);
     }
 
     /**
@@ -285,7 +285,7 @@ public class QueryFilter implements Serializable {
      * @return 不为Null筛选
      */
     public static QueryFilter isNotNull(String property) {
-        return new QueryFilter(property, Operator.isNotNull, null);
+        return new QueryFilter(property, Operator.IS_NOT_NULL, null);
     }
 
     /**

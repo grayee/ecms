@@ -55,7 +55,7 @@ public class AuRoleServiceImpl extends GenericServiceImpl<AuRole, Long> implemen
 
     @Override
     public Pager<AuRole> findByType(Long typeId, Pageable pageable) {
-        QueryFilter queryFilter = new QueryFilter("roleType", Operator.equal, typeId);
+        QueryFilter queryFilter = new QueryFilter("roleType", Operator.EQUAL, typeId);
         List<QueryFilter> queryFilterList = pageable.getQueryFilters();
         queryFilterList.add(queryFilter);
         return findPage(pageable);

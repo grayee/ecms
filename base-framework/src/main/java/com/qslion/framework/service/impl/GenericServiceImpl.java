@@ -28,7 +28,6 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -101,55 +100,55 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
                     }
                 }
                 switch (filter.getOperator()) {
-                    case equal:
+                    case EQUAL:
                         predicates.add(criteriaBuilder.equal(path, valueObj));
                         break;
-                    case notEqual:
+                    case NOT_EQUAL:
                         predicates.add(criteriaBuilder.notEqual(path, valueObj));
                         break;
-                    case gt:
+                    case GT:
                         predicates.add(criteriaBuilder.gt(path, (Number) valueObj));
                         break;
-                    case lt:
+                    case LT:
                         predicates.add(criteriaBuilder.lt(path, (Number) valueObj));
                         break;
-                    case ge:
+                    case GE:
                         predicates.add(criteriaBuilder.le(path, (Number) valueObj));
                         break;
-                    case le:
+                    case LE:
                         predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Comparable) valueObj));
                         break;
-                    case like:
+                    case LIKE:
                         predicates.add(criteriaBuilder.like(path, "%" + valueObj + "%"));
                         break;
-                    case notLike:
+                    case NOT_LIKE:
                         predicates.add(criteriaBuilder.notLike(path, "%" + valueObj + "%"));
                         break;
-                    case in:
+                    case IN:
                         predicates.add(path.in(valueObj));
                         break;
-                    case notIn:
+                    case NOT_IN:
                         predicates.add(criteriaBuilder.not(path.in(valueObj)));
                         break;
-                    case isNull:
+                    case IS_NULL:
                         predicates.add(criteriaBuilder.isNull(path));
                         break;
-                    case isNotNull:
+                    case IS_NOT_NULL:
                         predicates.add(criteriaBuilder.isNotNull(path));
                         break;
-                    case between:
+                    case BETWEEN:
                         criteriaBuilder.between(path, (Comparable) valueObj, (Comparable) valueObj);
                         break;
-                    case greaterThan:
+                    case GREATER_THAN:
                         predicates.add(criteriaBuilder.greaterThan(path, (Comparable) valueObj));
                         break;
-                    case greaterThanOrEqualTo:
+                    case GREATER_THAN_OR_EQUAL_TO:
                         predicates.add(criteriaBuilder.greaterThanOrEqualTo(path, (Comparable) valueObj));
                         break;
-                    case lessThan:
+                    case LESS_THAN:
                         predicates.add(criteriaBuilder.lessThan(path, (Comparable) valueObj));
                         break;
-                    case lessThanOrEqualTo:
+                    case LESS_THAN_OR_EQUAL_TO:
                         predicates.add(criteriaBuilder.lessThanOrEqualTo(path, (Comparable) valueObj));
                         break;
                     default:
@@ -178,7 +177,7 @@ public class GenericServiceImpl<T extends BaseEntity<ID>, ID extends Serializabl
 
     @Override
     public List<T> findList(List<QueryFilter> queryFilters, List<Order> orders) {
-        Pageable pageable = new Pageable(1, 100000);
+        Pageable pageable = new Pageable(1, 10000);
         pageable.setQueryFilters(queryFilters);
         pageable.setOrders(orders);
         return findPage(pageable).getContent();
